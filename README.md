@@ -18,3 +18,10 @@ Go here for more information and downloads of the current version. Both source a
 
 I've gotten old enough to give a shit. FOSS has done a lot of good for me over the years and its well past time I start returning the favor.
 
+### 5. FOSS? This is .NET you silly man!
+
+Yeah this port is being developed 100% on Linux.  The goal is for it to be able to work in a cross platform context, but I will be primarily developing it using tools available to me on Arch Linux.
+
+### 6. What tools?
+
+VS Code is what I'm using at the moment though it does leave a bit to be desired.  Once Rider gets debugging working on Linux again (thanks a lot for that monkey wrench MS), I'll more than likely switch over to using it.
