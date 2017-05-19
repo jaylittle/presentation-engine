@@ -27,5 +27,27 @@ namespace PEngine.Core.Data
         });
       }
     }
+
+    public void InsertPost(PostModel post)
+    {
+      post.UpdateGuid();
+      post.UpdateTimestamps(true);
+      
+      using (var ct = Database.OpenConnection(Database.DatabaseType.PEngine))
+      {
+        ct.DbConnection.Execute(ReadQuery("InsertPost"), post);
+      }
+    }
+
+    public void UpdatePost(PostModel post)
+    {
+      post.UpdateGuid();
+      post.UpdateTimestamps(false);
+
+      using (var ct = Database.OpenConnection(Database.DatabaseType.PEngine))
+      {
+        ct.DbConnection.Execute(ReadQuery("UpdatePost"), post);
+      }
+    }
   }
 }

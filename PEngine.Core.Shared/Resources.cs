@@ -9,7 +9,7 @@ namespace PEngine.Core.Shared
 {
   public class Resources
   {
-    private static ConcurrentDictionary<string, byte[]> _queryCache = new ConcurrentDictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
+    private static ConcurrentDictionary<string, byte[]> _resourceCache = new ConcurrentDictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
 
     public static byte[] ReadBinaryResource<TService>(string resourceName)
     {
@@ -60,7 +60,7 @@ namespace PEngine.Core.Shared
 
       string actualResourceName = $"{type.Namespace}.{type.Name}.{resourceName}";
 
-      if (!_queryCache.ContainsKey(actualResourceName))
+      if (!_resourceCache.ContainsKey(actualResourceName))
       {
         using (Stream stream = type.GetTypeInfo().Assembly.GetManifestResourceStream(actualResourceName))
         {
@@ -68,14 +68,14 @@ namespace PEngine.Core.Shared
           {
             stream.CopyTo(result);
             var byteArray = result.ToArray();
-            while(!_queryCache.ContainsKey(actualResourceName) && !_queryCache.TryAdd(actualResourceName, byteArray));
+            while(!_resourceCache.ContainsKey(actualResourceName) && !_resourceCache.TryAdd(actualResourceName, byteArray));
             return byteArray;
           }
         }
       }
       else
       {
-        return _queryCache[actualResourceName];
+        return _resourceCache[actualResourceName];
       }
     }
 

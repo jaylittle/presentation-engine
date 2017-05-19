@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Data;
+using PEngine.Core.Logic.Interfaces;
+using PEngine.Core.Logic;
 
 namespace PEngine.Core.Web
 {
@@ -34,6 +36,7 @@ namespace PEngine.Core.Web
       services.AddScoped<IPostDal, PostDal>();
       services.AddScoped<IArticleDal, ArticleDal>();
       services.AddScoped<IVersionDal, VersionDal>();
+      services.AddScoped<IPostService, PostService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

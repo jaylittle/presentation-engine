@@ -3,7 +3,7 @@ using PEngine.Core.Shared.Interfaces;
 
 namespace PEngine.Core.Shared.Models
 {
-  public class ArticleModel : IGuidModel, ITimestampModel
+  public class ArticleModel : IGuidModel, ITimestampModel, IUniqueNameModel
   {
     public Guid Guid { get; set; }
     public int? LegacyID { get; set; }

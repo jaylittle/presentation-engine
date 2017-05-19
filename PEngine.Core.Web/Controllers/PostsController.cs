@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
+using PEngine.Core.Logic;
+using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Web.Constraints;
 
 namespace PEngine.Core.Web.Controllers
@@ -14,9 +16,11 @@ namespace PEngine.Core.Web.Controllers
     public class PostsController : Controller
     {
         private IPostDal _postDal;
-        public PostsController(IPostDal postDal)
+        private IPostService _postService;
+        public PostsController(IPostDal postDal, IPostService postService)
         {
           _postDal = postDal;
+          _postService = postService;
         }
 
         [HttpGet]
@@ -29,6 +33,20 @@ namespace PEngine.Core.Web.Controllers
         public IActionResult GetByGuid(Guid guid)
         {
           return this.Ok(_postDal.GetPostById(guid, null, null));
+        }
+
+        [HttpPost]
+        public IActionResult UpsertPost([FromBody]PostModel post)
+        {
+          var errors = new List<string>();
+          if (_postService.UpsertPost(post, ref errors))
+          {
+            return this.Ok(post);
+          }
+          else
+          {
+            return this.StatusCode(400, new { errors });
+          }
         }
     }
 }
