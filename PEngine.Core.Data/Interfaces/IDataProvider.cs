@@ -10,7 +10,7 @@ namespace PEngine.Core.Data.Interfaces
     string Name { get; }
     bool RequiresFolder { get; }
     bool SingleWrite { get; }
-    void Init(string contentRootPath);
+    void Init(string databaseFolderPath);
     DbConnection GetConnection(DatabaseType type, bool readOnly = true);
     DbTransaction GetTransaction(DatabaseType type, bool readOnly = false);
   }
