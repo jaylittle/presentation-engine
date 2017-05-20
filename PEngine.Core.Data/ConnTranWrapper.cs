@@ -5,17 +5,28 @@ namespace PEngine.Core.Data
 {
   public class ConnTranWrapper : IDisposable
   {
-    public ConnTranWrapper(IDbConnection connection)
+    private DatabaseType _databaseType;
+    private bool _isSingleWrite;
+    private int _originalThreadId;
+
+    public ConnTranWrapper(IDbConnection connection, DatabaseType databaseType, bool isSingleWrite, int originalThreadId)
     {
+      _databaseType = databaseType;
+      _isSingleWrite = isSingleWrite;
+      _originalThreadId = originalThreadId;
       DbConnection = connection;
       DbTransaction = null;
     }
 
-    public ConnTranWrapper(IDbTransaction transaction)
+    public ConnTranWrapper(IDbTransaction transaction, DatabaseType databaseType, bool isSingleWrite, int originalThreadId)
     {
+      _databaseType = databaseType;
+      _isSingleWrite = isSingleWrite;
+      _originalThreadId = originalThreadId;
       DbConnection = transaction.Connection;
       DbTransaction = transaction;
     }
+    
     public IDbConnection DbConnection { get; set; }
     public IDbTransaction DbTransaction { get; set; }
 
@@ -24,6 +35,10 @@ namespace PEngine.Core.Data
       if (DbTransaction == null)
       {
         DbConnection.Dispose();
+        if (_isSingleWrite)
+        {
+          Database.ReleaseSingleWriteAccess(_databaseType, _originalThreadId);
+        }
       }
     }
 
@@ -36,6 +51,10 @@ namespace PEngine.Core.Data
         DbTransaction.Dispose();
         DbConnection.Dispose();
         HasBeenRolledBack = true;
+        if (_isSingleWrite)
+        {
+          Database.ReleaseSingleWriteAccess(_databaseType, _originalThreadId);
+        }
       }
     }
 
@@ -48,6 +67,10 @@ namespace PEngine.Core.Data
         DbTransaction.Dispose();
         DbConnection.Dispose();
         HasBeenCommited = true;
+        if (_isSingleWrite)
+        {
+          Database.ReleaseSingleWriteAccess(_databaseType, _originalThreadId);
+        }
       }
     }
 

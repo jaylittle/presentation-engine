@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Data;
-using PEngine.Core.Logic.Interfaces;
+using PEngine.Core.Data.Interfaces;
+using PEngine.Core.Data.Providers;
 using PEngine.Core.Logic;
+using PEngine.Core.Logic.Interfaces;
 
 namespace PEngine.Core.Web
 {
@@ -47,7 +48,7 @@ namespace PEngine.Core.Web
 
       app.UseMvc();
 
-      PEngine.Core.Data.Database.Startup(env.ContentRootPath);
+      PEngine.Core.Data.Database.Startup(env.ContentRootPath, new SQLiteDataProvider());
     }
   }
 }

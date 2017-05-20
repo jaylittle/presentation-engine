@@ -1,46 +1,40 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Threading;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using PEngine.Core.Shared.Models;
+using PEngine.Core.Data.Interfaces;
 
 namespace PEngine.Core.Data
 {
-  public class Database
+  public enum DatabaseType
   {
+    PEngine,
+    Misc
+  }
 
-    public enum DatabaseType
-    {
-      PEngine,
-      Misc
-    }
+  public static class Database
+  {
+    private static IDataProvider _dataProvider;
+    private static Dictionary<DatabaseType, ConcurrentQueue<int?>> _singleWriteQueue = new Dictionary<DatabaseType, ConcurrentQueue<int?>>();
+    private static Dictionary<DatabaseType, int?> _singleWriteQueueCurrentThreadId = new Dictionary<DatabaseType, int?>();
 
-    public static void Startup(string contentRootPath)
+    public static void Startup(string contentRootPath, IDataProvider dataProvider)
     {
       ContentRootPath = contentRootPath;
-      SetupDapper();
+      var databaseTypes = Enum.GetValues(typeof(DatabaseType));
+      foreach (var databaseType in databaseTypes)
+      {
+       _singleWriteQueue.Add((DatabaseType)databaseType, new ConcurrentQueue<int?>());
+       _singleWriteQueueCurrentThreadId.Add((DatabaseType)databaseType, null);
+      }
+      _dataProvider = dataProvider;
+      dataProvider.Init(dataProvider.RequiresFolder ? DatabaseFolderPath : null);
       Update();
     }
-
-    public static void SetupDapper()
-    {
-      Dapper.SqlMapper.AddTypeHandler(typeof(Guid), new SqliteGuidTypeHandler());
-    }
-
-    public class SqliteGuidTypeHandler : SqlMapper.TypeHandler<Guid>
-    {
-      public override Guid Parse(object value)
-      {
-        return value != null ? new Guid((byte[])value) : Guid.Empty;
-      }
-
-      public override void SetValue(System.Data.IDbDataParameter parameter, Guid value)
-      {
-        parameter.Value = value.ToByteArray();
-      }
-    }
-
     public static void Update()
     {
       var databases = Enum.GetValues(typeof(DatabaseType));
@@ -63,7 +57,7 @@ namespace PEngine.Core.Data
               .Split(new string[] { ";\n" }, StringSplitOptions.None)
               .Where(uc => !string.IsNullOrWhiteSpace(uc));
 
-            using (var ct = OpenTransaction(databaseType))
+            using (var ct = OpenTransaction(databaseType, false))
             {
               var versionDal = new VersionDal();
               versionDal.AddTransaction(databaseType, ct);
@@ -96,46 +90,63 @@ namespace PEngine.Core.Data
       }
     }
     
-    public static ConnTranWrapper OpenConnection(DatabaseType type)
+    public static ConnTranWrapper OpenConnection(DatabaseType type, bool readOnly)
     {
-      var conn = new SqliteConnection(ConnectionString(type));
-      conn.Open();
-      return new ConnTranWrapper(conn);
-    }
-
-    public static ConnTranWrapper OpenTransaction(DatabaseType type)
-    {
-      var conn = new SqliteConnection(ConnectionString(type));
-      conn.Open();
-      var transaction = conn.BeginTransaction();
-      return new ConnTranWrapper(transaction);
-    }
-
-    public static string ConnectionString(DatabaseType type)
-    {
-      string relativePath = string.Empty;
-      switch (type)
+      var threadId = Thread.CurrentThread.ManagedThreadId;
+      if (!readOnly && _dataProvider.SingleWrite)
       {
-        case DatabaseType.PEngine:
-          relativePath = $"{DatabaseFolderPath}pengine.db";
-          break;
-        case DatabaseType.Misc:
-          relativePath = $"{DatabaseFolderPath}misc.db";
-          break;
+        WaitForSingleWriteAccess(type, threadId);
+        return new ConnTranWrapper(_dataProvider.GetConnection(type, readOnly), type, true, threadId);
       }
-      return $"Data Source={System.IO.Path.Combine(ContentRootPath, relativePath)}";
+      return new ConnTranWrapper(_dataProvider.GetConnection(type, readOnly), type, false, threadId);
     }
 
-    public static string DatabaseFolderPath
+    public static ConnTranWrapper OpenTransaction(DatabaseType type, bool readOnly)
     {
-      get
+      var threadId = Thread.CurrentThread.ManagedThreadId;
+      if (!readOnly && _dataProvider.SingleWrite)
       {
-        var databasePath = $"{ContentRootPath}data{System.IO.Path.DirectorySeparatorChar}";
-        if (!System.IO.Directory.Exists(databasePath))
+        WaitForSingleWriteAccess(type, threadId);
+        return new ConnTranWrapper(_dataProvider.GetTransaction(type, readOnly), type, true, threadId);
+      }
+      return new ConnTranWrapper(_dataProvider.GetTransaction(type, false), type, false, threadId);
+    }
+
+    private static void WaitForSingleWriteAccess(DatabaseType type, int threadId)
+    {
+      if (_singleWriteQueueCurrentThreadId[type].HasValue)
+      {
+        _singleWriteQueue[type].Enqueue(threadId);
+      }
+      else
+      {
+        _singleWriteQueueCurrentThreadId[type] = threadId;
+      }
+      while (_singleWriteQueueCurrentThreadId[type].HasValue && _singleWriteQueueCurrentThreadId[type].Value != threadId)
+      {
+        Thread.Sleep(100);
+      }
+    }
+
+    public static void ReleaseSingleWriteAccess(DatabaseType type, int threadId)
+    {
+      int? currentThreadId = _singleWriteQueueCurrentThreadId[type];
+      if (currentThreadId.HasValue && currentThreadId.Value == threadId)
+      {
+        int? nextThreadId = null;
+        while (_singleWriteQueue[type].Count > 0 && !_singleWriteQueue[type].TryDequeue(out nextThreadId));
+        _singleWriteQueueCurrentThreadId[type] = nextThreadId;
+      }
+      else
+      {
+        if (currentThreadId.HasValue)
         {
-          System.IO.Directory.CreateDirectory(databasePath);
+          throw new Exception($"Thead {threadId} attempted to release single write access lock belonging to {currentThreadId.Value}");
         }
-        return databasePath;
+        else
+        {
+          throw new Exception($"Thead {threadId} attempted to release non-existent single write access lock");
+        }
       }
     }
 
@@ -144,9 +155,14 @@ namespace PEngine.Core.Data
       return System.IO.Directory.EnumerateFiles(DatabaseUpdatePath(type), "*.sql");
     }
 
-    public static string DatabaseUpdatePath(DatabaseType type)
+    private static string DatabaseUpdatePath(DatabaseType type)
     {
       var databaseUpdatePath = $"{ContentRootPath}sql{System.IO.Path.DirectorySeparatorChar}";
+      if (!System.IO.Directory.Exists(databaseUpdatePath))
+      {
+        System.IO.Directory.CreateDirectory(databaseUpdatePath);
+      }
+      databaseUpdatePath += $"{_dataProvider.Name}{System.IO.Path.DirectorySeparatorChar}";
       if (!System.IO.Directory.Exists(databaseUpdatePath))
       {
         System.IO.Directory.CreateDirectory(databaseUpdatePath);
@@ -161,6 +177,24 @@ namespace PEngine.Core.Data
       return null;
     }
 
+    private static string DatabaseFolderPath
+    {
+      get
+      {
+        var databasePath = $"{ContentRootPath}data{System.IO.Path.DirectorySeparatorChar}";
+        if (!System.IO.Directory.Exists(databasePath))
+        {
+          System.IO.Directory.CreateDirectory(databasePath);
+        }
+        databasePath += $"{_dataProvider.Name}{System.IO.Path.DirectorySeparatorChar}";
+        if (!System.IO.Directory.Exists(databasePath))
+        {
+          System.IO.Directory.CreateDirectory(databasePath);
+        }
+        return databasePath;
+      }
+    }
+
     private static string _contentRootPath;
     public static string ContentRootPath
     {
@@ -168,7 +202,7 @@ namespace PEngine.Core.Data
       {
         return _contentRootPath;
       }
-      set 
+      private set 
       {
         _contentRootPath = value + (value.EndsWith(System.IO.Path.DirectorySeparatorChar.ToString()) ? string.Empty : System.IO.Path.DirectorySeparatorChar.ToString());
       }

@@ -12,7 +12,7 @@ namespace PEngine.Core.Data
   {
     public IEnumerable<ArticleModel> ListArticles()
     {
-      using (var ct = Database.OpenConnection(Database.DatabaseType.PEngine))
+      using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
         return ct.DbConnection.Query<ArticleModel>(ReadQuery("ListArticles"));
       }

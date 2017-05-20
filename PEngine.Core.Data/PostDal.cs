@@ -12,7 +12,7 @@ namespace PEngine.Core.Data
   {
     public IEnumerable<PostModel> ListPosts()
     {
-      using (var ct = Database.OpenConnection(Database.DatabaseType.PEngine))
+      using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
         return ct.DbConnection.Query<PostModel>(ReadQuery("ListPosts"));
       }
@@ -20,7 +20,7 @@ namespace PEngine.Core.Data
 
     public PostModel GetPostById(Guid? guid, int? legacyId, string uniqueName)
     {
-      using (var ct = Database.OpenConnection(Database.DatabaseType.PEngine))
+      using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
         return ct.DbConnection.QueryFirst<PostModel>(ReadQuery("GetPostById"), new { 
           guid, legacyId, uniqueName
@@ -33,7 +33,7 @@ namespace PEngine.Core.Data
       post.UpdateGuid();
       post.UpdateTimestamps(true);
       
-      using (var ct = Database.OpenConnection(Database.DatabaseType.PEngine))
+      using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
         ct.DbConnection.Execute(ReadQuery("InsertPost"), post);
       }
@@ -41,10 +41,9 @@ namespace PEngine.Core.Data
 
     public void UpdatePost(PostModel post)
     {
-      post.UpdateGuid();
       post.UpdateTimestamps(false);
 
-      using (var ct = Database.OpenConnection(Database.DatabaseType.PEngine))
+      using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
         ct.DbConnection.Execute(ReadQuery("UpdatePost"), post);
       }
