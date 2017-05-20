@@ -15,7 +15,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(type, true))
       {
-        return ct.DbConnection.Query<VersionModel>(ReadQuery("ListVersions"));
+        return ct.DbConnection.Query<VersionModel>(ReadQuery("ListVersions", ct.ProviderName));
       }
     }
 
@@ -47,7 +47,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(type, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertVersion"), version);
+        ct.DbConnection.Execute(ReadQuery("InsertVersion", ct.ProviderName), version);
       }
     }
   }

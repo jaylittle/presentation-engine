@@ -9,26 +9,30 @@ namespace PEngine.Core.Data
     private bool _isSingleWrite;
     private int _originalThreadId;
 
-    public ConnTranWrapper(IDbConnection connection, DatabaseType databaseType, bool isSingleWrite, int originalThreadId)
+    public ConnTranWrapper(IDbConnection connection, DatabaseType databaseType, bool isSingleWrite, int originalThreadId, string providerName)
     {
       _databaseType = databaseType;
       _isSingleWrite = isSingleWrite;
       _originalThreadId = originalThreadId;
       DbConnection = connection;
       DbTransaction = null;
+      ProviderName = providerName;
     }
 
-    public ConnTranWrapper(IDbTransaction transaction, DatabaseType databaseType, bool isSingleWrite, int originalThreadId)
+    public ConnTranWrapper(IDbTransaction transaction, DatabaseType databaseType, bool isSingleWrite, int originalThreadId, string providerName)
     {
       _databaseType = databaseType;
       _isSingleWrite = isSingleWrite;
       _originalThreadId = originalThreadId;
       DbConnection = transaction.Connection;
       DbTransaction = transaction;
+      ProviderName = providerName;
     }
-    
+
     public IDbConnection DbConnection { get; set; }
     public IDbTransaction DbTransaction { get; set; }
+
+    public string ProviderName { get; private set; }
 
     public void Dispose()
     {

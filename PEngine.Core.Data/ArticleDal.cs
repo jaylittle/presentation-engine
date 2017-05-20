@@ -14,7 +14,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.Query<ArticleModel>(ReadQuery("ListArticles"));
+        return ct.DbConnection.Query<ArticleModel>(ReadQuery("ListArticles", ct.ProviderName));
       }
     }
   }

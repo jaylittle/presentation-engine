@@ -1,5 +1,5 @@
 UPDATE
-  main.Post
+  Post
 SET
   LegacyID = @LegacyID,
   Title = @Title,

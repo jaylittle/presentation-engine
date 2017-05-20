@@ -1,7 +1,7 @@
 SELECT
   *
 FROM
-  main.Post
+  Post
 WHERE
   (@guid IS NULL OR Guid = @guid) AND
   (@legacyId IS NULL OR LegacyId = @legacyId) AND

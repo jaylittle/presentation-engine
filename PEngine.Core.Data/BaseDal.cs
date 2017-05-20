@@ -20,9 +20,9 @@ namespace PEngine.Core.Data
   {
     protected Dictionary<DatabaseType, ConnTranWrapper> Transactions = new Dictionary<DatabaseType, ConnTranWrapper>();
     
-    protected string ReadQuery(string queryName)
+    protected string ReadQuery(string queryName, string providerName)
     {
-      return Resources.ReadQueryResource<TService>(queryName);
+      return Resources.ReadQueryResource<TService>(queryName, providerName);
     }
 
     public ConnTranWrapper GetConnection(DatabaseType databaseType, bool readOnly)

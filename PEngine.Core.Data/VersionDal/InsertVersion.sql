@@ -1,4 +1,4 @@
-INSERT INTO main.Version (
+INSERT INTO Version (
   Guid,
   Major,
   Minor,

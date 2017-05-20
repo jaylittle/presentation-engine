@@ -96,9 +96,9 @@ namespace PEngine.Core.Data
       if (!readOnly && _dataProvider.SingleWrite)
       {
         WaitForSingleWriteAccess(type, threadId);
-        return new ConnTranWrapper(_dataProvider.GetConnection(type, readOnly), type, true, threadId);
+        return new ConnTranWrapper(_dataProvider.GetConnection(type, readOnly), type, true, threadId, _dataProvider.Name);
       }
-      return new ConnTranWrapper(_dataProvider.GetConnection(type, readOnly), type, false, threadId);
+      return new ConnTranWrapper(_dataProvider.GetConnection(type, readOnly), type, false, threadId, _dataProvider.Name);
     }
 
     public static ConnTranWrapper OpenTransaction(DatabaseType type, bool readOnly)
@@ -107,9 +107,9 @@ namespace PEngine.Core.Data
       if (!readOnly && _dataProvider.SingleWrite)
       {
         WaitForSingleWriteAccess(type, threadId);
-        return new ConnTranWrapper(_dataProvider.GetTransaction(type, readOnly), type, true, threadId);
+        return new ConnTranWrapper(_dataProvider.GetTransaction(type, readOnly), type, true, threadId, _dataProvider.Name);
       }
-      return new ConnTranWrapper(_dataProvider.GetTransaction(type, false), type, false, threadId);
+      return new ConnTranWrapper(_dataProvider.GetTransaction(type, false), type, false, threadId, _dataProvider.Name);
     }
 
     private static void WaitForSingleWriteAccess(DatabaseType type, int threadId)

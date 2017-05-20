@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.IO;
 using System.Xml.Linq;
 using System.Reflection;
@@ -40,18 +41,39 @@ namespace PEngine.Core.Shared
       }
     }
 
-    public static string ReadQueryResource<TService>(string queryName)
+    public static string ReadQueryResource<TService>(string queryName, string providerName)
     {
-      using (MemoryStream resourceData = GetResourceStream<TService>(queryName + ".sql"))
+      Type type = typeof(TService);
+      var genericResourceName = queryName + ".sql";
+      var providerResourceName = providerName + "." + genericResourceName;
+      string chosenResourceName = HasResource<TService>(providerResourceName) ? 
+        providerResourceName : (HasResource<TService>(genericResourceName) ? genericResourceName : null);
+        
+      if (chosenResourceName != null)
       {
-        var lines = ReadAllLinesFromStream(resourceData);
-        return string.Join(System.Environment.NewLine, lines);
+        using (MemoryStream resourceData = GetResourceStream<TService>(chosenResourceName))
+        {
+          var lines = ReadAllLinesFromStream(resourceData);
+          return string.Join(System.Environment.NewLine, lines);
+        }
+      }
+      else
+      {
+        throw new Exception($"Requested Query resource {queryName} for {providerName} cannot be located in type {type}");
       }
     }
 
     private static MemoryStream GetResourceStream<TService>(string resourceName)
     {
       return new MemoryStream(GetResourceBytes<TService>(resourceName));
+    }
+
+    private static bool HasResource<TService>(string resourceName)
+    {
+      Type type = typeof(TService);
+      string actualResourceName = $"{type.Namespace}.{type.Name}.{resourceName}";
+      var validResourceNames = type.GetTypeInfo().Assembly.GetManifestResourceNames();      
+      return validResourceNames.Any(rn => String.Equals(actualResourceName, rn, StringComparison.OrdinalIgnoreCase));
     }
 
     private static byte[] GetResourceBytes<TService>(string resourceName)

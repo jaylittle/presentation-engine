@@ -1,4 +1,4 @@
-INSERT INTO main.Post (
+INSERT INTO Post (
   Guid,
   LegacyID,
   Title,

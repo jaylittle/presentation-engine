@@ -14,7 +14,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.Query<PostModel>(ReadQuery("ListPosts"));
+        return ct.DbConnection.Query<PostModel>(ReadQuery("ListPosts", ct.ProviderName));
       }
     }
 
@@ -22,7 +22,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.QueryFirst<PostModel>(ReadQuery("GetPostById"), new { 
+        return ct.DbConnection.QueryFirst<PostModel>(ReadQuery("GetPostById", ct.ProviderName), new { 
           guid, legacyId, uniqueName
         });
       }
@@ -35,7 +35,7 @@ namespace PEngine.Core.Data
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertPost"), post);
+        ct.DbConnection.Execute(ReadQuery("InsertPost", ct.ProviderName), post);
       }
     }
 
@@ -45,7 +45,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdatePost"), post);
+        ct.DbConnection.Execute(ReadQuery("UpdatePost", ct.ProviderName), post);
       }
     }
   }
