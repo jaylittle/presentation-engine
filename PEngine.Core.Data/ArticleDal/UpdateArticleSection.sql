@@ -1,11 +1,10 @@
 UPDATE
-  Post
+  ArticleSection
 SET
-  LegacyID = @LegacyID,
+  ArticleGuid = @ArticleGuid,
   Name = @Name,
   Data = @Data,
-  IconFileName = @IconFileName,
-  VisibleFlag = @VisibleFlag,
+  SortOrder = @SortOrder,
   UniqueName = @UniqueName,
   CreatedUTC = @CreatedUTC,
   ModifiedUTC = @ModifiedUTC

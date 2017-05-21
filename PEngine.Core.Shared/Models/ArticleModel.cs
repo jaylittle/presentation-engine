@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using PEngine.Core.Shared.Interfaces;
 
 namespace PEngine.Core.Shared.Models
@@ -7,17 +8,18 @@ namespace PEngine.Core.Shared.Models
   {
     public Guid Guid { get; set; }
     public int? LegacyID { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string Category { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
     public string ContentURL { get; set; }
-    public string DefaultSection { get; set; }
+    public string DefaultSection { get; set; } = string.Empty;
     public bool VisibleFlag { get; set; }
-    public string UniqueName { get; set; }
+    public string UniqueName { get; set; } = string.Empty;
     public bool HideDropDownFlag { get; set; }
     public bool HideButtonsFlag { get; set; }
-    public string AdminPass { get; set; }
+    public string AdminPass { get; set; } = string.Empty;
     public DateTime? CreatedUTC { get; set; }
     public DateTime? ModifiedUTC { get; set; }
+    public List<ArticleSectionModel> Sections { get; set; } = new List<ArticleSectionModel>();
   }
 }

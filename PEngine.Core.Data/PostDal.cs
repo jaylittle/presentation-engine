@@ -48,5 +48,15 @@ namespace PEngine.Core.Data
         ct.DbConnection.Execute(ReadQuery("UpdatePost", ct.ProviderName), post);
       }
     }
+
+    public void DeletePost(Guid guid)
+    {
+      using (var ct = GetConnection(DatabaseType.PEngine, false))
+      {
+        ct.DbConnection.Execute(ReadQuery("DeletePost", ct.ProviderName), new {
+          guid
+        });
+      }
+    }
   }
 }

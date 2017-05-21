@@ -13,35 +13,35 @@ using PEngine.Core.Web.Constraints;
 namespace PEngine.Core.Web.Controllers
 {
     [Route("api/[controller]")]
-    public class PostsController : Controller
+    public class ArticlesController : Controller
     {
-        private IPostDal _postDal;
-        private IPostService _postService;
-        public PostsController(IPostDal postDal, IPostService postService)
+        private IArticleDal _articleDal;
+        private IArticleService _articleService;
+        public ArticlesController(IArticleDal articleDal, IArticleService articleService)
         {
-          _postDal = postDal;
-          _postService = postService;
+          _articleDal = articleDal;
+          _articleService = articleService;
         }
 
         [HttpGet]
-        public IEnumerable<PostModel> Get()
+        public IEnumerable<ArticleModel> Get()
         {
-          return _postDal.ListPosts();
+          return _articleDal.ListArticles();
         }
 
         [HttpGet("{guid}")]
         public IActionResult GetByGuid(Guid guid)
         {
-          return this.Ok(_postDal.GetPostById(guid, null, null));
+          return this.Ok(_articleDal.GetArticleById(guid, null, null));
         }
 
         [HttpPost]
-        public IActionResult InsertPost([FromBody]PostModel post)
+        public IActionResult InsertArticle([FromBody]ArticleModel article)
         {
           var errors = new List<string>();
-          if (_postService.UpsertPost(post, ref errors))
+          if (_articleService.UpsertArticle(article, ref errors))
           {
-            return this.Ok(post);
+            return this.Ok(article);
           }
           else
           {
@@ -50,16 +50,16 @@ namespace PEngine.Core.Web.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdatePost([FromBody]PostModel post)
+        public IActionResult UpdateArticle([FromBody]ArticleModel article)
         {
-          return InsertPost(post);
+          return InsertArticle(article);
         }
 
         [HttpDelete("{guid}")]
-        public IActionResult DeletePost(Guid guid)
+        public IActionResult DeleteArticle(Guid guid)
         {
           var errors = new List<string>();
-          _postDal.DeletePost(guid);
+          _articleDal.DeleteArticle(guid);
           return this.Ok();
         }
     }

@@ -38,6 +38,7 @@ namespace PEngine.Core.Web
       services.AddScoped<IArticleDal, ArticleDal>();
       services.AddScoped<IVersionDal, VersionDal>();
       services.AddScoped<IPostService, PostService>();
+      services.AddScoped<IArticleService, ArticleService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

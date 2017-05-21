@@ -1,20 +1,18 @@
-INSERT INTO Post (
+INSERT INTO ArticleSection (
   Guid,
-  LegacyID,
+  ArticleGuid,
   Name,
   Data,
-  IconFileName,
-  VisibleFlag,
+  SortOrder,
   UniqueName,
   CreatedUTC,
   ModifiedUTC
 ) VALUES (
   @Guid,
-  @LegacyID,
+  @ArticleGuid,
   @Name,
   @Data,
-  @IconFileName,
-  @VisibleFlag,
+  @SortOrder,
   @UniqueName,
   @CreatedUTC,
   @ModifiedUTC

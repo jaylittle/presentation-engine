@@ -14,10 +14,7 @@ namespace PEngine.Core.Shared
       {
         record.CreatedUTC = currentTime;
       }
-      if (!record.ModifiedUTC.HasValue)
-      {
-        record.ModifiedUTC = currentTime;
-      }
+      record.ModifiedUTC = currentTime;
     }
 
     public static void UpdateGuid(this IGuidModel record)
@@ -28,17 +25,17 @@ namespace PEngine.Core.Shared
       }
     }
 
-    public static string GenerateUniqueName(this IUniqueNameModel record)
+    public static void GenerateUniqueName(this IUniqueNameModel record)
     {
       if (string.IsNullOrWhiteSpace(record.UniqueName) && !string.IsNullOrWhiteSpace(record.Name))
       {
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         var name = Encoding.ASCII.GetString(Encoding.GetEncoding("Cyrillic").GetBytes(record.Name));
         var sb = new StringBuilder(Regex.Replace(name, @"[^\w ]", "").Trim());
         sb.Replace(" ", "-");
         sb.Replace("--", "-");
-        return sb.ToString().ToLower();
+        record.UniqueName = sb.ToString().ToLower();
       }
-      return null;
     }
   }
 }

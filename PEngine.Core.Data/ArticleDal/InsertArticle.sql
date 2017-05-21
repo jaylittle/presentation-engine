@@ -1,0 +1,31 @@
+INSERT INTO Article (
+  Guid,
+  LegacyID,
+  Name,
+  Description,
+  Category,
+  ContentURL,
+  DefaultSection,
+  VisibleFlag,
+  UniqueName,
+  HideButtonsFlag,
+  HideDropDownFlag,
+  AdminPass,
+  CreatedUTC,
+  ModifiedUTC
+) VALUES (
+  @Guid,
+  @LegacyID,
+  @Name,
+  @Description,
+  @Category,
+  @ContentURL,
+  @DefaultSection,
+  @VisibleFlag,
+  @UniqueName,
+  @HideButtonsFlag,
+  @HideDropDownFlag,
+  @AdminPass,
+  @CreatedUTC,
+  @ModifiedUTC
+);
