@@ -6,7 +6,6 @@ SET
   Data = @Data,
   SortOrder = @SortOrder,
   UniqueName = @UniqueName,
-  CreatedUTC = @CreatedUTC,
   ModifiedUTC = @ModifiedUTC
 WHERE
   Guid = @Guid;

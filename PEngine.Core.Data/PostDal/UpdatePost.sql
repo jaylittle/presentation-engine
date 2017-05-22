@@ -7,7 +7,6 @@ SET
   IconFileName = @IconFileName,
   VisibleFlag = @VisibleFlag,
   UniqueName = @UniqueName,
-  CreatedUTC = @CreatedUTC,
   ModifiedUTC = @ModifiedUTC
 WHERE
   Guid = @Guid;

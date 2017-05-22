@@ -1,0 +1,31 @@
+INSERT INTO ResumePersonal (
+  Guid,
+  LegacyID,
+  FullName,
+  Address1,
+  Address2,
+  City,
+  State,
+  Zip,
+  Phone,
+  Fax,
+  Email,
+  WebsiteURL,
+  CreatedUTC,
+  ModifiedUTC
+) VALUES (
+  @Guid,
+  @LegacyID,
+  @FullName,
+  @Address1,
+  @Address2,
+  @City,
+  @State,
+  @Zip,
+  @Phone,
+  @Fax,
+  @Email,
+  @WebsiteURL,
+  @CreatedUTC,
+  @ModifiedUTC
+);

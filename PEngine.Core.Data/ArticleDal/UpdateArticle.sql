@@ -12,7 +12,6 @@ SET
   HideButtonsFlag = @HideButtonsFlag,
   HideDropDownFlag = @HideDropDownFlag,
   AdminPass = @AdminPass,
-  CreatedUTC = @CreatedUTC,
   ModifiedUTC = @ModifiedUTC
 WHERE
   Guid = @Guid;
