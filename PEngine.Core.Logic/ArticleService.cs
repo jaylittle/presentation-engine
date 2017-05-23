@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using PEngine.Core.Shared.Models;
+using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Shared;
@@ -39,41 +40,51 @@ namespace PEngine.Core.Logic
       if (retvalue)
       {
         article.GenerateUniqueName();
-        var existingSectionGuids = new List<Guid>();
-        if (article.Guid == Guid.Empty)
+        var existingSectionGuids = (article.Guid == Guid.Empty ? new List<Guid>() : _articleDal.ListArticleSections(article.Guid).Select(a => a.Guid).ToList());
+
+        _articleDal.AddTransaction(DatabaseType.PEngine, Database.OpenTransaction(DatabaseType.PEngine, false));
+        try
         {
-          //TODO Obviously this field should not store plaintext password data
-          //This is just a placeholder until I get off my ass and research .NET
-          //Core Cryptography calls
-          article.AdminPass = article.AdminPass ?? string.Empty;
-          _articleDal.InsertArticle(article);
-        }
-        else
-        {
-          //TODO Obviously this field should not store plaintext password data
-          //This is just a placeholder until I get off my ass and research .NET
-          //Core Cryptography calls
-          article.AdminPass = article.AdminPass ?? string.Empty;
-          _articleDal.UpdateArticle(article);
-          existingSectionGuids = _articleDal.ListArticleSections(article.Guid).Select(a => a.Guid).ToList();
-        }
-        foreach (var section in article.Sections)
-        {
-          section.ArticleGuid = article.Guid;
-          section.GenerateUniqueName();
-          if (section.Guid == Guid.Empty || !existingSectionGuids.Contains(section.Guid))
+          if (article.Guid == Guid.Empty)
           {
-            _articleDal.InsertArticleSection(section);
+            //TODO Obviously this field should not store plaintext password data
+            //This is just a placeholder until I get off my ass and research .NET
+            //Core Cryptography calls
+            article.AdminPass = article.AdminPass ?? string.Empty;
+            _articleDal.InsertArticle(article);
           }
           else
           {
-            _articleDal.UpdateArticleSection(section);
+            //TODO Obviously this field should not store plaintext password data
+            //This is just a placeholder until I get off my ass and research .NET
+            //Core Cryptography calls
+            article.AdminPass = article.AdminPass ?? string.Empty;
+            _articleDal.UpdateArticle(article);
           }
-          existingSectionGuids.Remove(section.Guid);
+          foreach (var section in article.Sections)
+          {
+            section.ArticleGuid = article.Guid;
+            section.GenerateUniqueName();
+            if (section.Guid == Guid.Empty || !existingSectionGuids.Contains(section.Guid))
+            {
+              _articleDal.InsertArticleSection(section);
+            }
+            else
+            {
+              _articleDal.UpdateArticleSection(section);
+            }
+            existingSectionGuids.Remove(section.Guid);
+          }
+          foreach (var sectionGuidToDelete in existingSectionGuids)
+          {
+            _articleDal.DeleteArticleSection(sectionGuidToDelete);
+          }
+          _articleDal.CommitTransaction(DatabaseType.PEngine);
         }
-        foreach (var sectionGuidToDelete in existingSectionGuids)
+        catch (Exception ex)
         {
-          _articleDal.DeleteArticleSection(sectionGuidToDelete);
+          _articleDal.RollBackTransaction(DatabaseType.PEngine);
+          throw new Exception("Article Transaction Failed", ex);
         }
       }
       return retvalue;

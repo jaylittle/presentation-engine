@@ -14,7 +14,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.Query<ResumeObjectiveModel>(ReadQuery("ListResumeObjectives", ct.ProviderName));
+        return ct.DbConnection.Query<ResumeObjectiveModel>(ReadQuery("ListResumeObjectives", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
 
@@ -25,7 +25,7 @@ namespace PEngine.Core.Data
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertResumeObjective", ct.ProviderName), objective);
+        ct.DbConnection.Execute(ReadQuery("InsertResumeObjective", ct.ProviderName), objective, transaction: ct.DbTransaction);
       }
     }
 
@@ -35,7 +35,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateResumeObjective", ct.ProviderName), objective);
+        ct.DbConnection.Execute(ReadQuery("UpdateResumeObjective", ct.ProviderName), objective, transaction: ct.DbTransaction);
       }
     }
 
@@ -45,7 +45,7 @@ namespace PEngine.Core.Data
       {
         ct.DbConnection.Execute(ReadQuery("DeleteResumeObjective", ct.ProviderName), new {
           guid
-        });
+        }, transaction: ct.DbTransaction);
       }
     }
 
@@ -53,7 +53,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.Query<ResumePersonalModel>(ReadQuery("ListResumePersonals", ct.ProviderName));
+        return ct.DbConnection.Query<ResumePersonalModel>(ReadQuery("ListResumePersonals", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
 
@@ -64,7 +64,7 @@ namespace PEngine.Core.Data
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertResumePersonal", ct.ProviderName), personal);
+        ct.DbConnection.Execute(ReadQuery("InsertResumePersonal", ct.ProviderName), personal, transaction: ct.DbTransaction);
       }
     }
     
@@ -74,7 +74,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateResumePersonal", ct.ProviderName), personal);
+        ct.DbConnection.Execute(ReadQuery("UpdateResumePersonal", ct.ProviderName), personal, transaction: ct.DbTransaction);
       }
     }
 
@@ -84,7 +84,7 @@ namespace PEngine.Core.Data
       {
         ct.DbConnection.Execute(ReadQuery("DeleteResumePersonal", ct.ProviderName), new {
           guid
-        });
+        }, transaction: ct.DbTransaction);
       }
     }
 
@@ -92,7 +92,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.Query<ResumeSkillModel>(ReadQuery("ListResumeSkills", ct.ProviderName));
+        return ct.DbConnection.Query<ResumeSkillModel>(ReadQuery("ListResumeSkills", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
 
@@ -103,7 +103,7 @@ namespace PEngine.Core.Data
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertResumeSkill", ct.ProviderName), skill);
+        ct.DbConnection.Execute(ReadQuery("InsertResumeSkill", ct.ProviderName), skill, transaction: ct.DbTransaction);
       }
     }
 
@@ -113,7 +113,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateResumeSkill", ct.ProviderName), skill);
+        ct.DbConnection.Execute(ReadQuery("UpdateResumeSkill", ct.ProviderName), skill, transaction: ct.DbTransaction);
       }
     }
 
@@ -123,7 +123,7 @@ namespace PEngine.Core.Data
       {
         ct.DbConnection.Execute(ReadQuery("DeleteResumeSkill", ct.ProviderName), new {
           guid
-        });
+        }, transaction: ct.DbTransaction);
       }
     }
 
@@ -131,7 +131,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.Query<ResumeEducationModel>(ReadQuery("ListResumeEducations", ct.ProviderName));
+        return ct.DbConnection.Query<ResumeEducationModel>(ReadQuery("ListResumeEducations", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
 
@@ -142,7 +142,7 @@ namespace PEngine.Core.Data
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertResumeEducation", ct.ProviderName), education);
+        ct.DbConnection.Execute(ReadQuery("InsertResumeEducation", ct.ProviderName), education, transaction: ct.DbTransaction);
       }
     }
 
@@ -152,7 +152,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateResumeEducation", ct.ProviderName), education);
+        ct.DbConnection.Execute(ReadQuery("UpdateResumeEducation", ct.ProviderName), education, transaction: ct.DbTransaction);
       }
     }
 
@@ -162,7 +162,7 @@ namespace PEngine.Core.Data
       {
         ct.DbConnection.Execute(ReadQuery("DeleteResumeEducation", ct.ProviderName), new {
           guid
-        });
+        }, transaction: ct.DbTransaction);
       }
     }
 
@@ -170,7 +170,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.Query<ResumeWorkHistoryModel>(ReadQuery("ListResumeWorkHistories", ct.ProviderName));
+        return ct.DbConnection.Query<ResumeWorkHistoryModel>(ReadQuery("ListResumeWorkHistories", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
 
@@ -181,7 +181,7 @@ namespace PEngine.Core.Data
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertResumeWorkHistory", ct.ProviderName), workHistory);
+        ct.DbConnection.Execute(ReadQuery("InsertResumeWorkHistory", ct.ProviderName), workHistory, transaction: ct.DbTransaction);
       }
     }
 
@@ -191,7 +191,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateResumeWorkHistory", ct.ProviderName), workHistory);
+        ct.DbConnection.Execute(ReadQuery("UpdateResumeWorkHistory", ct.ProviderName), workHistory, transaction: ct.DbTransaction);
       }
     }
 
@@ -201,7 +201,7 @@ namespace PEngine.Core.Data
       {
         ct.DbConnection.Execute(ReadQuery("DeleteResumeWorkHistory", ct.ProviderName), new {
           guid
-        });
+        }, transaction: ct.DbTransaction);
       }
     }
   }

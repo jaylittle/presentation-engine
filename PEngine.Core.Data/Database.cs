@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
 using Dapper;
-using Microsoft.Data.Sqlite;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data.Interfaces;
 
@@ -35,6 +34,7 @@ namespace PEngine.Core.Data
       dataProvider.Init(dataProvider.RequiresFolder ? DatabaseFolderPath : null);
       Update();
     }
+
     public static void Update()
     {
       var databases = Enum.GetValues(typeof(DatabaseType));

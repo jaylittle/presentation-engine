@@ -36,9 +36,11 @@ namespace PEngine.Core.Web
       services.AddMvc();
       services.AddScoped<IPostDal, PostDal>();
       services.AddScoped<IArticleDal, ArticleDal>();
+      services.AddScoped<IResumeDal, ResumeDal>();
       services.AddScoped<IVersionDal, VersionDal>();
       services.AddScoped<IPostService, PostService>();
       services.AddScoped<IArticleService, ArticleService>();
+      services.AddScoped<IResumeService, ResumeService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

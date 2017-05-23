@@ -5,7 +5,7 @@ using PEngine.Core.Data;
 
 namespace PEngine.Core.Data.Interfaces
 {
-  public interface IVersionDal
+  public interface IVersionDal : IBaseDal
   {
     IEnumerable<VersionModel> ListVersions(DatabaseType type);
     VersionModel GetCurrentVersion(DatabaseType type);

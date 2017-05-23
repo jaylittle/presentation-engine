@@ -4,7 +4,7 @@ using PEngine.Core.Shared.Models;
 
 namespace PEngine.Core.Data.Interfaces
 {
-    public interface IArticleDal
+    public interface IArticleDal : IBaseDal
     {
       IEnumerable<ArticleModel> ListArticles();
       ArticleModel GetArticleById(Guid? guid, int? legacyId, string uniqueName);

@@ -15,7 +15,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.Query<ArticleModel>(ReadQuery("ListArticles", ct.ProviderName));
+        return ct.DbConnection.Query<ArticleModel>(ReadQuery("ListArticles", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
 
@@ -35,7 +35,7 @@ namespace PEngine.Core.Data
           guid,
           legacyId,
           uniqueName
-        }, splitOn: "Guid");
+        }, splitOn: "Guid", transaction: ct.DbTransaction);
         foreach (var kv in output)
         {
           kv.Value.Sections = kv.Value.Sections.OrderBy(s => s.SortOrder).ToList();
@@ -51,7 +51,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertArticle", ct.ProviderName), article);
+        ct.DbConnection.Execute(ReadQuery("InsertArticle", ct.ProviderName), article, transaction: ct.DbTransaction);
       }
     }
 
@@ -61,7 +61,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateArticle", ct.ProviderName), article);
+        ct.DbConnection.Execute(ReadQuery("UpdateArticle", ct.ProviderName), article, transaction: ct.DbTransaction);
       }
     }
 
@@ -71,7 +71,7 @@ namespace PEngine.Core.Data
       {
         ct.DbConnection.Execute(ReadQuery("DeleteArticle", ct.ProviderName), new {
           guid
-        });
+        }, transaction: ct.DbTransaction);
       }
     }
 
@@ -81,7 +81,7 @@ namespace PEngine.Core.Data
       {
         return ct.DbConnection.Query<ArticleSectionModel>(ReadQuery("ListArticleSections", ct.ProviderName), new {
           articleGuid
-        });
+        }, transaction: ct.DbTransaction);
       }
     }
 
@@ -92,7 +92,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertArticleSection", ct.ProviderName), articleSection);
+        ct.DbConnection.Execute(ReadQuery("InsertArticleSection", ct.ProviderName), articleSection, transaction: ct.DbTransaction);
       }
     }
 
@@ -102,7 +102,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateArticleSection", ct.ProviderName), articleSection);
+        ct.DbConnection.Execute(ReadQuery("UpdateArticleSection", ct.ProviderName), articleSection, transaction: ct.DbTransaction);
       }
     }
 
@@ -112,7 +112,7 @@ namespace PEngine.Core.Data
       {
         ct.DbConnection.Execute(ReadQuery("DeleteArticleSection", ct.ProviderName), new {
           guid
-        });
+        }, transaction: ct.DbTransaction);
       }
     }
   }

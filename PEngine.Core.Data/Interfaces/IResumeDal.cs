@@ -4,7 +4,7 @@ using PEngine.Core.Shared.Models;
 
 namespace PEngine.Core.Data.Interfaces
 {
-    public interface IResumeDal
+    public interface IResumeDal : IBaseDal
     {
       IEnumerable<ResumeObjectiveModel> ListResumeObjectives();
       void InsertResumeObjective(ResumeObjectiveModel objective);
