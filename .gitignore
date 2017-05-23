@@ -4,9 +4,6 @@
 # PEngine specific files
 data/
 
-# VSCode files
-.vscode/
-
 # JetBrains IDE files
 .idea/
 
