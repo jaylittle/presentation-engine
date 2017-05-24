@@ -12,7 +12,8 @@ namespace PEngine.Core.Data
   public enum DatabaseType
   {
     PEngine,
-    Misc
+    Misc,
+    Forum
   }
 
   public static class Database
@@ -173,6 +174,8 @@ namespace PEngine.Core.Data
           return $"{databaseUpdatePath}pengine{System.IO.Path.DirectorySeparatorChar}";
         case DatabaseType.Misc:
           return $"{databaseUpdatePath}misc{System.IO.Path.DirectorySeparatorChar}";
+        case DatabaseType.Forum:
+          return $"{databaseUpdatePath}forum{System.IO.Path.DirectorySeparatorChar}";
       }
       return null;
     }
