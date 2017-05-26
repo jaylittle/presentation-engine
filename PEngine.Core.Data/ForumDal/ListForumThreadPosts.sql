@@ -4,7 +4,7 @@ SELECT
   ForumThread.UniqueName as ForumThreadUniqueName,
   Forum.Name as ForumName,
   Forum.UniqueName as ForumUniqueName,
-  ForumUser.Name as ForumUserName
+  ForumUser.UserId as ForumUserId
 FROM
   ForumThreadPost INNER JOIN
   ForumThread ON ForumThreadPost.ForumThreadGuid = ForumThread.Guid INNER JOIN

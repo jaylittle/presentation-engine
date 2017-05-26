@@ -19,6 +19,11 @@ namespace PEngine.Core.Logic
     public bool UpsertPost(PostModel post, ref List<string> errors)
     {
       var startErrorCount = errors.Count;
+      if (post == null)
+      {
+        errors.Add("Post data must be provided");
+        return false;
+      }
       if (string.IsNullOrWhiteSpace(post.Name))
       {
         errors.Add("Post Title is a required field");

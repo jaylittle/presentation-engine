@@ -1,5 +1,6 @@
 using System;
 using PEngine.Core.Shared.Interfaces;
+using Newtonsoft.Json;
 
 namespace PEngine.Core.Shared.Models
 {
@@ -7,7 +8,6 @@ namespace PEngine.Core.Shared.Models
   {
     public Guid Guid { get; set; }
     public string UserId { get; set; }
-    public string Password { get; set; }
     public bool AdminFlag { get; set; }
     public bool BanFlag { get; set; }
     public string Email { get; set; }
@@ -17,5 +17,9 @@ namespace PEngine.Core.Shared.Models
     public DateTime? LastLogon { get; set; }
     public DateTime? CreatedUTC { get; set; }
     public DateTime? ModifiedUTC { get; set; }
+
+    [JsonIgnore]
+    public string Password { get; set; }
+    public NewPasswordModel NewPassword { get; set; } = new NewPasswordModel();
   }
 }

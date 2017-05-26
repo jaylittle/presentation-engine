@@ -18,6 +18,16 @@ namespace PEngine.Core.Data
       }
     }
 
+    public ForumModel GetForumById(Guid? guid, string uniqueName)
+    {
+      using (var ct = GetConnection(DatabaseType.Forum, true))
+      {
+        return ct.DbConnection.QueryFirstOrDefault<ForumModel>(ReadQuery("GetForumById", ct.ProviderName), new {
+          guid, uniqueName
+        }, transaction: ct.DbTransaction);
+      }
+    }
+
     public void InsertForum(ForumModel forum)
     {
       forum.UpdateGuid();
@@ -45,6 +55,16 @@ namespace PEngine.Core.Data
       {
         return ct.DbConnection.Query<ForumThreadModel>(ReadQuery("ListForumThreads", ct.ProviderName), new {
             forumGuid, forumUniqueName
+        }, transaction: ct.DbTransaction);
+      }
+    }
+
+    public ForumThreadModel GetForumThreadById(Guid? guid, string uniqueName)
+    {
+      using (var ct = GetConnection(DatabaseType.Forum, true))
+      {
+        return ct.DbConnection.QueryFirstOrDefault<ForumThreadModel>(ReadQuery("GetForumThreadById", ct.ProviderName), new {
+          guid, uniqueName
         }, transaction: ct.DbTransaction);
       }
     }
@@ -80,6 +100,16 @@ namespace PEngine.Core.Data
       }
     }
 
+    public ForumThreadPostModel GetForumThreadPostById(Guid guid)
+    {
+      using (var ct = GetConnection(DatabaseType.Forum, true))
+      {
+        return ct.DbConnection.QueryFirstOrDefault<ForumThreadPostModel>(ReadQuery("GetForumThreadPostById", ct.ProviderName), new {
+          guid
+        }, transaction: ct.DbTransaction);
+      }
+    }
+
     public void InsertForumThreadPost(ForumThreadPostModel forumThreadPost)
     {
       forumThreadPost.UpdateGuid();
@@ -109,6 +139,16 @@ namespace PEngine.Core.Data
       }
     }
 
+    public ForumUserModel GetForumUserById(Guid guid)
+    {
+      using (var ct = GetConnection(DatabaseType.Forum, true))
+      {
+        return ct.DbConnection.QueryFirstOrDefault<ForumUserModel>(ReadQuery("GetForumUserById", ct.ProviderName), new {
+          guid
+        }, transaction: ct.DbTransaction);
+      }
+    }
+
     public void InsertForumUser(ForumUserModel forumUser)
     {
       forumUser.UpdateGuid();
@@ -116,7 +156,7 @@ namespace PEngine.Core.Data
       
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertForumUser", ct.ProviderName), forumUser, transaction: ct.DbTransaction);
+        ct.DbConnection.Execute(ReadQuery("InsertForumUser", ct.ProviderName), param: forumUser, transaction: ct.DbTransaction);
       }
     }
 
@@ -126,7 +166,7 @@ namespace PEngine.Core.Data
 
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateForumUser", ct.ProviderName), forumUser, transaction: ct.DbTransaction);
+        ct.DbConnection.Execute(ReadQuery("UpdateForumUser", ct.ProviderName), param: forumUser, transaction: ct.DbTransaction);
       }
     }
   }

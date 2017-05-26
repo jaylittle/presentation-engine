@@ -42,6 +42,7 @@ namespace PEngine.Core.Web
       services.AddScoped<IPostService, PostService>();
       services.AddScoped<IArticleService, ArticleService>();
       services.AddScoped<IResumeService, ResumeService>();
+      services.AddScoped<IForumService, ForumService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

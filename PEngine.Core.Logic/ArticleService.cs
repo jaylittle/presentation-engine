@@ -20,6 +20,11 @@ namespace PEngine.Core.Logic
     public bool UpsertArticle(ArticleModel article, ref List<string> errors)
     {
       var startErrorCount = errors.Count;
+      if (article == null)
+      {
+        errors.Add("Article data must be provided");
+        return false;
+      }
       if (string.IsNullOrWhiteSpace(article.Name))
       {
         errors.Add("Article Title is a required field");
@@ -39,6 +44,7 @@ namespace PEngine.Core.Logic
       var retvalue = (errors == null || errors.Count == startErrorCount);
       if (retvalue)
       {
+        ArticleModel existingArticle = article.Guid != Guid.Empty ? _articleDal.GetArticleById(article.Guid, null, null) : null;
         article.GenerateUniqueName();
         var existingSectionGuids = (article.Guid == Guid.Empty ? new List<Guid>() : _articleDal.ListArticleSections(article.Guid).Select(a => a.Guid).ToList());
 
@@ -47,18 +53,23 @@ namespace PEngine.Core.Logic
         {
           if (article.Guid == Guid.Empty)
           {
-            //TODO Obviously this field should not store plaintext password data
-            //This is just a placeholder until I get off my ass and research .NET
-            //Core Cryptography calls
-            article.AdminPass = article.AdminPass ?? string.Empty;
+            article.AdminPass = Security.Encrypt(article.NewAdminPass.Value ?? string.Empty);
             _articleDal.InsertArticle(article);
           }
           else
           {
-            //TODO Obviously this field should not store plaintext password data
-            //This is just a placeholder until I get off my ass and research .NET
-            //Core Cryptography calls
-            article.AdminPass = article.AdminPass ?? string.Empty;
+            if (article.NewAdminPass.Reset)
+            {
+              article.AdminPass = Security.Encrypt(string.Empty);
+            }
+            else if (!string.IsNullOrEmpty(article.NewAdminPass.Value))
+            {
+              article.AdminPass = Security.Encrypt(article.NewAdminPass.Value);
+            }
+            else
+            {
+              article.AdminPass = existingArticle?.AdminPass ?? string.Empty;
+            }
             _articleDal.UpdateArticle(article);
           }
           foreach (var section in article.Sections)

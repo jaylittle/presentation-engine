@@ -5,5 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.3.0"/>
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2"/>
   </ItemGroup>
 </Project>

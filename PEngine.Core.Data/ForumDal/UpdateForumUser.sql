@@ -1,7 +1,7 @@
 UPDATE
   ForumUser
 SET
-  UserID = @UserID,
+  UserId = @UserId,
   Password = @Password,
   AdminFlag = @AdminFlag,
   BanFlag = @BanFlag,

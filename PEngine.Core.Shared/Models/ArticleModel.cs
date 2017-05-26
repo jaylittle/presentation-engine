@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PEngine.Core.Shared.Interfaces;
+using Newtonsoft.Json;
 
 namespace PEngine.Core.Shared.Models
 {
@@ -17,9 +18,14 @@ namespace PEngine.Core.Shared.Models
     public string UniqueName { get; set; } = string.Empty;
     public bool HideDropDownFlag { get; set; }
     public bool HideButtonsFlag { get; set; }
-    public string AdminPass { get; set; } = string.Empty;
     public DateTime? CreatedUTC { get; set; }
     public DateTime? ModifiedUTC { get; set; }
+
     public List<ArticleSectionModel> Sections { get; set; } = new List<ArticleSectionModel>();
+
+    [JsonIgnore]
+    public string AdminPass { get; set; } = string.Empty;
+
+    public NewPasswordModel NewAdminPass { get; set; } = new NewPasswordModel();
   }
 }

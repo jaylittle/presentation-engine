@@ -22,7 +22,7 @@ namespace PEngine.Core.Data
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.QueryFirst<PostModel>(ReadQuery("GetPostById", ct.ProviderName), new { 
+        return ct.DbConnection.QueryFirstOrDefault<PostModel>(ReadQuery("GetPostById", ct.ProviderName), new { 
           guid, legacyId, uniqueName
         }, transaction: ct.DbTransaction);
       }

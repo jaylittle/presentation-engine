@@ -32,7 +32,8 @@ namespace PEngine.Core.Web.Controllers
         [HttpGet("{guid}")]
         public IActionResult GetByGuid(Guid guid)
         {
-          return this.Ok(_articleDal.GetArticleById(guid, null, null));
+          var article = _articleDal.GetArticleById(guid, null, null);
+          return article != null ? (IActionResult) this.Ok(article) : this.NotFound();
         }
 
         [HttpPost]

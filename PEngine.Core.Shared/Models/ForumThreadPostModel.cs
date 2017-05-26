@@ -12,7 +12,7 @@ namespace PEngine.Core.Shared.Models
     public string ForumName { get; set; }
     public string ForumUniqueName { get; set; }
     public Guid ForumUserGuid { get; set; }
-    public string ForumUserName { get; set; }
+    public string ForumUserId { get; set; }
     public bool VisibleFlag { get; set; }
     public bool LockFlag { get; set; }
     public string Data { get; set; }

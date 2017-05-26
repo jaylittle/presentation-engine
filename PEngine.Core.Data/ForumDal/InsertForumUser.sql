@@ -1,6 +1,6 @@
 INSERT INTO ForumUser (
   Guid,
-  UserID,
+  UserId,
   Password,
   AdminFlag,
   BanFlag,
@@ -13,7 +13,7 @@ INSERT INTO ForumUser (
   ModifiedUTC
 ) VALUES (
   @Guid,
-  @UserID,
+  @UserId,
   @Password,
   @AdminFlag,
   @BanFlag,

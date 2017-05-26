@@ -7,7 +7,7 @@ namespace PEngine.Core.Shared.Models
   {
     public Guid Guid { get; set; }
     public string Name { get; set; }
-    public string Data { get; set; }
+    public string Description { get; set; }
     public bool VisibleFlag { get; set; }
     public string UniqueName { get; set; }
     public DateTime? CreatedUTC { get; set; }
