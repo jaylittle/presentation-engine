@@ -1,16 +1,29 @@
 {
-    "version": "0.1.0",
-    "command": "dotnet",
-    "isShellCommand": true,
-    "args": [],
-    "tasks": [
-        {
-            "taskName": "build",
-            "args": [
-                "${workspaceRoot}/PEngine.Core.Web/PEngine.Core.Web.csproj"
-            ],
-            "isBuildCommand": true,
-            "problemMatcher": "$msCompile"
-        }
-    ]
+  "version": "0.1.0",
+  "tasks": [
+    {
+      "taskName": "build",
+      "command": "dotnet",
+      "isShellCommand": true,
+      "args": [
+        "build",
+        "${workspaceRoot}/PEngine.Core.Web/PEngine.Core.Web.csproj"
+      ],
+      "isBuildCommand": true,
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "taskName": "test",
+      "command": "dotnet",
+      "isShellCommand": true,
+      "args": [
+        "xunit",
+        "-verbose"
+      ],
+      "options": {
+        "cwd": "${workspaceRoot}/PEngine.Core.Tests"
+      },
+      "isTestCommand": true
+    }
+  ]
 }
