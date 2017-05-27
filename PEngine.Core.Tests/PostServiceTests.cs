@@ -30,7 +30,7 @@ namespace pengine.tests
       var errors = new List<string>();
       Assert.True(
         !postService.UpsertPost(postData, ref errors) &&
-        errors.Any(e => string.Equals("Post Title is a required field", e, StringComparison.OrdinalIgnoreCase))
+        errors.Any(e => string.Equals(PostService.POST_ERROR_TITLE_IS_REQUIRED, e))
       );
 
       //Verify that record with name/title is accepted

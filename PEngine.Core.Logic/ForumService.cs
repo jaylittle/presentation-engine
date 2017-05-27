@@ -11,7 +11,22 @@ namespace PEngine.Core.Logic
 {
   public class ForumService : IForumService
   {
+    public const string FORUM_ERROR_DATA_MUST_BE_PROVIDED = "Forum data must be provided";
+    public const string FORUM_ERROR_TITLE_IS_REQUIRED = "Forum Title is a required field";
+    public const string FORUM_ERROR_DESCRIPTION_IS_REQUIRED = "Forum Description is a required field";
+    public const string THREAD_ERROR_DATA_MUST_BE_PROVIDED = "Forum Thread data must be provided";
+    public const string THREAD_ERROR_TITLE_IS_REQUIRED = "Forum Thread Title is a required field";
+    public const string THREAD_ERROR_INITIAL_POST_IS_REQUIRED = "New Forum Threads require an initial post";
+    public const string POST_ERROR_DATA_MUST_BE_PROVIDED = "Forum Thread Post data must be provided";
+    public const string POST_ERROR_CONTENT_IS_REQUIRED = "Forum Thread Post content is required";
+    public const string USER_ERROR_DATA_MUST_BE_PROVIDED = "Forum User data must be provided";
+    public const string USER_ERROR_USER_ID_IS_REQUIRED = "Forum User Id is a required field";
+    public const string USER_ERROR_EMAIL_IS_REQUIRED = "Forum User Email is a required field";
+    public const string USER_ERROR_PASSWORD_IS_REQUIRED_FOR_NEW_USERS = "Forum User Password is a required field for new users";
+    public const string USER_ERROR_COMMENT_IS_REQUIRED = "Forum User Comment is a required field";
+
     private IForumDal _forumDal;
+    
     public ForumService(IForumDal forumDal)
     {
       _forumDal = forumDal;
@@ -22,16 +37,16 @@ namespace PEngine.Core.Logic
       var startErrorCount = errors.Count;
       if (forum == null)
       {
-        errors.Add("Forum data must be provided");
+        errors.Add(FORUM_ERROR_DATA_MUST_BE_PROVIDED);
         return false;
       }
       if (string.IsNullOrWhiteSpace(forum.Name))
       {
-        errors.Add("Forum Title is a required field");
+        errors.Add(FORUM_ERROR_TITLE_IS_REQUIRED);
       }
       if (string.IsNullOrWhiteSpace(forum.Description))
       {
-        errors.Add("Forum Description is a required field");
+        errors.Add(FORUM_ERROR_DESCRIPTION_IS_REQUIRED);
       }
       var retvalue = (errors == null || errors.Count == startErrorCount);
       if (retvalue)
@@ -55,18 +70,18 @@ namespace PEngine.Core.Logic
       var startErrorCount = errors.Count;
       if (forumThread == null)
       {
-        errors.Add("Forum Thread data must be provided");
+        errors.Add(THREAD_ERROR_DATA_MUST_BE_PROVIDED);
         return false;
       }
       if (string.IsNullOrWhiteSpace(forumThread.Name))
       {
-        errors.Add("Forum Thread Title is a required field");
+        errors.Add(THREAD_ERROR_TITLE_IS_REQUIRED);
       }
       if (forumThread.Guid == Guid.Empty)
       {
         if (forumThread.InitialPost == null)
         {
-          errors.Add("New Forum Threads require an initial post");
+          errors.Add(THREAD_ERROR_INITIAL_POST_IS_REQUIRED);
         }
       }
       var retvalue = (errors == null || errors.Count == startErrorCount);
@@ -106,12 +121,12 @@ namespace PEngine.Core.Logic
       var startErrorCount = errors.Count;
       if (forumThreadPost == null)
       {
-        errors.Add("Forum Thread Post data must be provided");
+        errors.Add(POST_ERROR_DATA_MUST_BE_PROVIDED);
         return false;
       }
       if (string.IsNullOrWhiteSpace(forumThreadPost.Data))
       {
-        errors.Add("Forum Thread Post must contain actual content");
+        errors.Add(POST_ERROR_CONTENT_IS_REQUIRED);
       }
       var retvalue = (errors == null || errors.Count == startErrorCount);
       if (retvalue)
@@ -133,24 +148,24 @@ namespace PEngine.Core.Logic
       var startErrorCount = errors.Count;
       if (forumUser == null)
       {
-        errors.Add("Forum User data must be provided");
+        errors.Add(USER_ERROR_DATA_MUST_BE_PROVIDED);
         return false;
       }
       if (string.IsNullOrWhiteSpace(forumUser.UserId))
       {
-        errors.Add("Forum User Id is a required field");
+        errors.Add(USER_ERROR_USER_ID_IS_REQUIRED);
       }
       if (string.IsNullOrWhiteSpace(forumUser.Email))
       {
-        errors.Add("Forum User Email is a required field");
+        errors.Add(USER_ERROR_EMAIL_IS_REQUIRED);
       }
       if (forumUser.Guid == Guid.Empty && string.IsNullOrWhiteSpace(forumUser.NewPassword.Value))
       {
-        errors.Add("Forum User Password is a required field for new users");
+        errors.Add(USER_ERROR_PASSWORD_IS_REQUIRED_FOR_NEW_USERS);
       }
       if (string.IsNullOrEmpty(forumUser.Comment))
       {
-        errors.Add("Forum User Comment is a required field");
+        errors.Add(USER_ERROR_COMMENT_IS_REQUIRED);
       }
       var retvalue = (errors == null || errors.Count == startErrorCount);
       if (retvalue)

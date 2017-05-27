@@ -11,7 +11,27 @@ namespace PEngine.Core.Logic
 {
   public class ResumeService : IResumeService
   {
+    public const string PERSONAL_ERROR_FULL_NAME_IS_REQUIRED = "Personal #{0}: Full Name is required";
+    public const string PERSONAL_ERROR_ADDRESS_1_IS_REQUIRED = "Personal #{0}: Address 1 is required";
+    public const string PERSONAL_ERROR_CITY_IS_REQUIRED = "Personal #{0}: City is required";
+    public const string PERSONAL_ERROR_STATE_IS_REQUIRED = "Personal #{0}: State is required";
+    public const string PERSONAL_ERROR_ZIP_IS_REQUIRED = "Personal #{0}: Zip is required";
+    public const string PERSONAL_ERROR_EMAIL_IS_REQUIRED = "Personal #{0}: Email is required";
+    public const string PERSONAL_ERROR_DATA_MUST_BE_PROVIDED = "At least one Personal record is required";
+    public const string OBJECTIVE_ERROR_CONTENT_IS_REQUIRED = "Objective #{0}: Content is required";
+    public const string OBJECTIVE_ERROR_DATA_MUST_BE_PROVIDED = "At least one Objective record is required";
+    public const string SKILL_ERROR_TYPE_IS_REQUIRED = "Skill #{0}: Type is required";
+    public const string SKILL_ERROR_NAME_IS_REQUIRED = "Skill #{0}: Name is required";
+    public const string EDUCATION_ERROR_INSTITUTE_IS_REQUIRED = "Education #{0}: Institute is required";
+    public const string EDUCATION_ERROR_PROGRAM_IS_REQUIRED = "Education #{0}: Program is required";
+    public const string EDUCATION_ERROR_STARTED_IS_REQUIRED = "Education #{0}: Started is required";
+    public const string WORK_ERROR_EMPLOYER_IS_REQUIRED = "Work History #{0}: Employer is required";
+    public const string WORK_ERROR_JOB_TITLE_IS_REQUIRED = "Work History #{0}: Job Title is required";
+    public const string WORK_ERROR_JOB_DESCRIPTION_IS_REQUIRED = "Work History #{0}: Job Description is required";
+    public const string WORK_ERROR_STARTED_IS_REQUIRED = "Work History #{0}: Started is required";
+
     private IResumeDal _resumeDal;
+
     public ResumeService(IResumeDal resumeDal)
     {
       _resumeDal = resumeDal;
@@ -39,34 +59,34 @@ namespace PEngine.Core.Logic
         {
           if (string.IsNullOrWhiteSpace(personal.FullName))
           {
-            errors.Add($"Personal #{counter}: Full Name is required");
+            errors.Add(string.Format(PERSONAL_ERROR_FULL_NAME_IS_REQUIRED, counter));
           }
           if (string.IsNullOrWhiteSpace(personal.Address1))
           {
-            errors.Add($"Personal #{counter}: Address 1 is required");
+            errors.Add(string.Format(PERSONAL_ERROR_ADDRESS_1_IS_REQUIRED, counter));
           }
           if (string.IsNullOrWhiteSpace(personal.City))
           {
-            errors.Add($"Personal #{counter}: City is required");
+            errors.Add(string.Format(PERSONAL_ERROR_CITY_IS_REQUIRED, counter));
           }
           if (string.IsNullOrWhiteSpace(personal.State))
           {
-            errors.Add($"Personal #{counter}: State is required");
+            errors.Add(string.Format(PERSONAL_ERROR_STATE_IS_REQUIRED, counter));
           }
           if (string.IsNullOrWhiteSpace(personal.Zip))
           {
-            errors.Add($"Personal #{counter}: Zip is required");
+            errors.Add(string.Format(PERSONAL_ERROR_ZIP_IS_REQUIRED, counter));
           }
           if (string.IsNullOrWhiteSpace(personal.Email))
           {
-            errors.Add($"Personal #{counter}: Email is required");
+            errors.Add(string.Format(PERSONAL_ERROR_EMAIL_IS_REQUIRED, counter));
           }
           counter++;
         }
       }
       else
       {
-        errors.Add("At least one Personal record is required");
+        errors.Add(PERSONAL_ERROR_DATA_MUST_BE_PROVIDED);
       }
       if (resume.Objectives != null && resume.Objectives.Count > 0)
       {
@@ -75,14 +95,14 @@ namespace PEngine.Core.Logic
         {
           if (string.IsNullOrWhiteSpace(objective.Data))
           {
-            errors.Add($"Objective #{counter}: Text is required");
+            errors.Add(string.Format(OBJECTIVE_ERROR_CONTENT_IS_REQUIRED, counter));
           }
           counter++;
         }
       }
       else
       {
-        errors.Add("At least one Objective record is required");
+        errors.Add(OBJECTIVE_ERROR_DATA_MUST_BE_PROVIDED);
       }
       if (resume.Skills != null && resume.Skills.Count > 0 && resume.Skills.Any(s => s.Value != null && s.Value.Count > 0))
       {
@@ -95,11 +115,11 @@ namespace PEngine.Core.Logic
             {
               if (string.IsNullOrWhiteSpace(skill.Type))
               {
-                errors.Add($"Skill #{counter}: Type is required");
+                errors.Add(string.Format(SKILL_ERROR_TYPE_IS_REQUIRED, counter));
               }
               if (string.IsNullOrWhiteSpace(skill.Name))
               {
-                errors.Add($"Skill #{counter}: Name is required");
+                errors.Add(string.Format(SKILL_ERROR_NAME_IS_REQUIRED, counter));
               }
               counter++;
             }
@@ -113,15 +133,15 @@ namespace PEngine.Core.Logic
         {
           if (string.IsNullOrWhiteSpace(education.Institute))
           {
-            errors.Add($"Education #{counter}: Institute is required");
+            errors.Add(string.Format(EDUCATION_ERROR_INSTITUTE_IS_REQUIRED, counter));
           }
           if (string.IsNullOrWhiteSpace(education.Program))
           {
-            errors.Add($"Education #{counter}: Program is required");
+            errors.Add(string.Format(EDUCATION_ERROR_PROGRAM_IS_REQUIRED, counter));
           }
           if (!education.Started.HasValue)
           {
-            errors.Add($"Education #{counter}: Started is required");
+            errors.Add(string.Format(EDUCATION_ERROR_STARTED_IS_REQUIRED, counter));
           }
           counter++;
         }
@@ -133,19 +153,19 @@ namespace PEngine.Core.Logic
         {
           if (string.IsNullOrWhiteSpace(workHistory.Employer))
           {
-            errors.Add($"Work History #{counter}: Employer is required");
+            errors.Add(string.Format(WORK_ERROR_EMPLOYER_IS_REQUIRED, counter));
           }
           if (string.IsNullOrWhiteSpace(workHistory.JobTitle))
           {
-            errors.Add($"Work History #{counter}: Job Title is required");
+            errors.Add(string.Format(WORK_ERROR_JOB_TITLE_IS_REQUIRED, counter));
           }
           if (string.IsNullOrWhiteSpace(workHistory.JobDescription))
           {
-            errors.Add($"Work History #{counter}: Job Description is required");
+            errors.Add(string.Format(WORK_ERROR_JOB_DESCRIPTION_IS_REQUIRED, counter));
           }
           if (!workHistory.Started.HasValue)
           {
-            errors.Add($"Work History #{counter}: Started is required");
+            errors.Add(string.Format(WORK_ERROR_STARTED_IS_REQUIRED, counter));
           }
           counter++;
         }

@@ -11,7 +11,14 @@ namespace PEngine.Core.Logic
 {
   public class ArticleService : IArticleService
   {
+    public const string ARTICLE_ERROR_DATA_MUST_BE_PROVIDED = "Article data must be provided";
+    public const string ARTICLE_ERROR_TITLE_IS_REQUIRED = "Article Title is a required field";
+    public const string ARTICLE_ERROR_DESCRIPTION_IS_REQUIRED = "Article Description is a required field";
+    public const string ARTICLE_ERROR_CATEGORY_IS_REQUIRED = "Article Category is a required field";
+    public const string ARTICLE_ERROR_SECTION_IS_REQUIRED = "Article requires at least one section";
+
     private IArticleDal _articleDal;
+    
     public ArticleService(IArticleDal articleDal)
     {
       _articleDal = articleDal;
@@ -22,24 +29,24 @@ namespace PEngine.Core.Logic
       var startErrorCount = errors.Count;
       if (article == null)
       {
-        errors.Add("Article data must be provided");
+        errors.Add(ARTICLE_ERROR_DATA_MUST_BE_PROVIDED);
         return false;
       }
       if (string.IsNullOrWhiteSpace(article.Name))
       {
-        errors.Add("Article Title is a required field");
+        errors.Add(ARTICLE_ERROR_TITLE_IS_REQUIRED);
       }
       if (string.IsNullOrEmpty(article.Description))
       {
-        errors.Add("Article Description is a required field");
+        errors.Add(ARTICLE_ERROR_DESCRIPTION_IS_REQUIRED);
       }
       if (string.IsNullOrEmpty(article.Category))
       {
-        errors.Add("Article Category is a required field");
+        errors.Add(ARTICLE_ERROR_CATEGORY_IS_REQUIRED);
       }
       if (article.Sections == null || !article.Sections.Any())
       {
-        errors.Add("Article requires at least one section");
+        errors.Add(ARTICLE_ERROR_SECTION_IS_REQUIRED);
       }
       var retvalue = (errors == null || errors.Count == startErrorCount);
       if (retvalue)

@@ -10,7 +10,12 @@ namespace PEngine.Core.Logic
 {
   public class PostService : IPostService
   {
+    public const string POST_ERROR_DATA_MUST_BE_PROVIDED = "Post data must be provided";
+    public const string POST_ERROR_TITLE_IS_REQUIRED = "Post Title is a required field";
+    public const string POST_ERROR_CONTENT_IS_REQUIRD = "Post Content is a required field";
+
     private IPostDal _postDal;
+
     public PostService(IPostDal postDal)
     {
       _postDal = postDal;
@@ -21,16 +26,16 @@ namespace PEngine.Core.Logic
       var startErrorCount = errors.Count;
       if (post == null)
       {
-        errors.Add("Post data must be provided");
+        errors.Add(POST_ERROR_DATA_MUST_BE_PROVIDED);
         return false;
       }
       if (string.IsNullOrWhiteSpace(post.Name))
       {
-        errors.Add("Post Title is a required field");
+        errors.Add(POST_ERROR_TITLE_IS_REQUIRED);
       }
       if (string.IsNullOrEmpty(post.Data))
       {
-        errors.Add("Post Content is a required field");
+        errors.Add(POST_ERROR_CONTENT_IS_REQUIRD);
       }
       var retvalue = (errors == null || errors.Count == startErrorCount);
       if (retvalue)
