@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using PEngine.Core.Shared.Interfaces;
@@ -25,7 +26,7 @@ namespace PEngine.Core.Shared
       }
     }
 
-    public static void GenerateUniqueName(this IUniqueNameModel record)
+    public static void GenerateUniqueName(this IUniqueNameModel record, Dictionary<string, bool> existingUniqueNames)
     {
       if (string.IsNullOrWhiteSpace(record.UniqueName) && !string.IsNullOrWhiteSpace(record.Name))
       {
@@ -34,7 +35,15 @@ namespace PEngine.Core.Shared
         var sb = new StringBuilder(Regex.Replace(name, @"[^\w ]", "").Trim());
         sb.Replace(" ", "-");
         sb.Replace("--", "-");
-        record.UniqueName = sb.ToString().ToLower();
+        var baseUniqueName = sb.ToString().ToLower();
+        var uniqueNameCounter = 0;
+        var currentUniqueName = baseUniqueName;
+        while (existingUniqueNames != null && existingUniqueNames.ContainsKey(currentUniqueName))
+        {
+          uniqueNameCounter++;
+          currentUniqueName = $"{baseUniqueName}{uniqueNameCounter}";
+        }
+        record.UniqueName = currentUniqueName;
       }
     }
   }

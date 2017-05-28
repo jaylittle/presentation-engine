@@ -12,10 +12,10 @@ namespace PEngine.Core.Logic
   public class ArticleService : IArticleService
   {
     public const string ARTICLE_ERROR_DATA_MUST_BE_PROVIDED = "Article data must be provided";
+    public const string ARTICLE_ERROR_INVALID_RECORD = "Article Guid refers to an invalid record";
     public const string ARTICLE_ERROR_TITLE_IS_REQUIRED = "Article Title is a required field";
     public const string ARTICLE_ERROR_DESCRIPTION_IS_REQUIRED = "Article Description is a required field";
     public const string ARTICLE_ERROR_CATEGORY_IS_REQUIRED = "Article Category is a required field";
-    public const string ARTICLE_ERROR_SECTION_IS_REQUIRED = "Article requires at least one section";
 
     private IArticleDal _articleDal;
     
@@ -27,10 +27,26 @@ namespace PEngine.Core.Logic
     public bool UpsertArticle(ArticleModel article, ref List<string> errors)
     {
       var startErrorCount = errors.Count;
+      ArticleModel existingArticle = null;
+
       if (article == null)
       {
         errors.Add(ARTICLE_ERROR_DATA_MUST_BE_PROVIDED);
         return false;
+      }
+      if (article.Guid != Guid.Empty)
+      {
+        existingArticle = _articleDal.GetArticleById(article.Guid, null, null);
+        if (existingArticle == null)
+        {
+          errors.Add(ARTICLE_ERROR_INVALID_RECORD);
+        }
+        else
+        {
+          article.UniqueName = existingArticle.UniqueName;
+          article.CreatedUTC = existingArticle.CreatedUTC;
+          article.ModifiedUTC = existingArticle.ModifiedUTC;
+        }
       }
       if (string.IsNullOrWhiteSpace(article.Name))
       {
@@ -44,17 +60,18 @@ namespace PEngine.Core.Logic
       {
         errors.Add(ARTICLE_ERROR_CATEGORY_IS_REQUIRED);
       }
-      if (article.Sections == null || !article.Sections.Any())
-      {
-        errors.Add(ARTICLE_ERROR_SECTION_IS_REQUIRED);
-      }
       var retvalue = (errors == null || errors.Count == startErrorCount);
       if (retvalue)
       {
-        ArticleModel existingArticle = article.Guid != Guid.Empty ? _articleDal.GetArticleById(article.Guid, null, null) : null;
-        article.GenerateUniqueName();
-        var existingSectionGuids = (article.Guid == Guid.Empty ? new List<Guid>() : _articleDal.ListArticleSections(article.Guid).Select(a => a.Guid).ToList());
+        Dictionary<string, bool> existingUniqueNames = _articleDal.ListArticles()
+          .ToDictionary(a => a.UniqueName, a => true, StringComparer.OrdinalIgnoreCase);
+        article.GenerateUniqueName(existingUniqueNames);
 
+        var existingSectionGuids = new List<Guid>();
+        if (existingArticle != null && existingArticle.Sections != null)
+        {
+          existingSectionGuids = existingArticle.Sections.Select(s => s.Guid).ToList();
+        }
         _articleDal.AddTransaction(DatabaseType.PEngine, Database.OpenTransaction(DatabaseType.PEngine, false));
         try
         {
@@ -79,19 +96,29 @@ namespace PEngine.Core.Logic
             }
             _articleDal.UpdateArticle(article);
           }
-          foreach (var section in article.Sections)
+          if (article.Sections != null)
           {
-            section.ArticleGuid = article.Guid;
-            section.GenerateUniqueName();
-            if (section.Guid == Guid.Empty || !existingSectionGuids.Contains(section.Guid))
+            var previousSectionUniqueNames = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+            foreach (var section in article.Sections)
             {
-              _articleDal.InsertArticleSection(section);
+              if (section.Guid != Guid.Empty && !existingSectionGuids.Contains(section.Guid))
+              {
+                section.Guid = Guid.Empty;
+              }
+              section.ArticleGuid = article.Guid;
+              section.GenerateUniqueName(previousSectionUniqueNames);
+              previousSectionUniqueNames.Add(section.UniqueName, true);
+
+              if (section.Guid == Guid.Empty || !existingSectionGuids.Contains(section.Guid))
+              {
+                _articleDal.InsertArticleSection(section);
+              }
+              else
+              {
+                _articleDal.UpdateArticleSection(section);
+              }
+              existingSectionGuids.Remove(section.Guid);
             }
-            else
-            {
-              _articleDal.UpdateArticleSection(section);
-            }
-            existingSectionGuids.Remove(section.Guid);
           }
           foreach (var sectionGuidToDelete in existingSectionGuids)
           {

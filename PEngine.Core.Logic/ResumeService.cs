@@ -11,20 +11,21 @@ namespace PEngine.Core.Logic
 {
   public class ResumeService : IResumeService
   {
+    public const string PERSONAL_ERROR_INVALID_RECORD = "Personal #{0}: Guid refers to an invalid record";
     public const string PERSONAL_ERROR_FULL_NAME_IS_REQUIRED = "Personal #{0}: Full Name is required";
-    public const string PERSONAL_ERROR_ADDRESS_1_IS_REQUIRED = "Personal #{0}: Address 1 is required";
-    public const string PERSONAL_ERROR_CITY_IS_REQUIRED = "Personal #{0}: City is required";
-    public const string PERSONAL_ERROR_STATE_IS_REQUIRED = "Personal #{0}: State is required";
-    public const string PERSONAL_ERROR_ZIP_IS_REQUIRED = "Personal #{0}: Zip is required";
     public const string PERSONAL_ERROR_EMAIL_IS_REQUIRED = "Personal #{0}: Email is required";
     public const string PERSONAL_ERROR_DATA_MUST_BE_PROVIDED = "At least one Personal record is required";
+    public const string OBJECTIVE_ERROR_INVALID_RECORD = "Objective #{0}: Guid refers to an invalid record";
     public const string OBJECTIVE_ERROR_CONTENT_IS_REQUIRED = "Objective #{0}: Content is required";
     public const string OBJECTIVE_ERROR_DATA_MUST_BE_PROVIDED = "At least one Objective record is required";
+    public const string SKILL_ERROR_INVALID_RECORD = "Skill #{0}: Guid refers to an invalid record";
     public const string SKILL_ERROR_TYPE_IS_REQUIRED = "Skill #{0}: Type is required";
     public const string SKILL_ERROR_NAME_IS_REQUIRED = "Skill #{0}: Name is required";
+    public const string EDUCATION_ERROR_INVALID_RECORD = "Education #{0}: Guid refers to an invalid record";
     public const string EDUCATION_ERROR_INSTITUTE_IS_REQUIRED = "Education #{0}: Institute is required";
     public const string EDUCATION_ERROR_PROGRAM_IS_REQUIRED = "Education #{0}: Program is required";
     public const string EDUCATION_ERROR_STARTED_IS_REQUIRED = "Education #{0}: Started is required";
+    public const string WORK_ERROR_INVALID_RECORD = "Work History #{0}: Guid refers to an invalid record";
     public const string WORK_ERROR_EMPLOYER_IS_REQUIRED = "Work History #{0}: Employer is required";
     public const string WORK_ERROR_JOB_TITLE_IS_REQUIRED = "Work History #{0}: Job Title is required";
     public const string WORK_ERROR_JOB_DESCRIPTION_IS_REQUIRED = "Work History #{0}: Job Description is required";
@@ -52,30 +53,19 @@ namespace PEngine.Core.Logic
     public bool UpsertResume(ResumeModel resume, ref List<string> errors)
     {
       var startErrorCount = errors.Count;
+      ResumeModel existingResume = GetResume();
       if (resume.Personals != null  && resume.Personals.Count > 0)
       {
         var counter = 1;
         foreach (var personal in resume.Personals)
         {
+          if (personal.Guid != Guid.Empty && !existingResume.Personals.Any(p => p.Guid == personal.Guid))
+          {
+            errors.Add(string.Format(PERSONAL_ERROR_INVALID_RECORD, counter));
+          }
           if (string.IsNullOrWhiteSpace(personal.FullName))
           {
             errors.Add(string.Format(PERSONAL_ERROR_FULL_NAME_IS_REQUIRED, counter));
-          }
-          if (string.IsNullOrWhiteSpace(personal.Address1))
-          {
-            errors.Add(string.Format(PERSONAL_ERROR_ADDRESS_1_IS_REQUIRED, counter));
-          }
-          if (string.IsNullOrWhiteSpace(personal.City))
-          {
-            errors.Add(string.Format(PERSONAL_ERROR_CITY_IS_REQUIRED, counter));
-          }
-          if (string.IsNullOrWhiteSpace(personal.State))
-          {
-            errors.Add(string.Format(PERSONAL_ERROR_STATE_IS_REQUIRED, counter));
-          }
-          if (string.IsNullOrWhiteSpace(personal.Zip))
-          {
-            errors.Add(string.Format(PERSONAL_ERROR_ZIP_IS_REQUIRED, counter));
           }
           if (string.IsNullOrWhiteSpace(personal.Email))
           {
@@ -93,6 +83,10 @@ namespace PEngine.Core.Logic
         var counter = 1;
         foreach(var objective in resume.Objectives)
         {
+          if (objective.Guid != Guid.Empty && !existingResume.Objectives.Any(o => o.Guid == objective.Guid))
+          {
+            errors.Add(string.Format(OBJECTIVE_ERROR_INVALID_RECORD, counter));
+          }
           if (string.IsNullOrWhiteSpace(objective.Data))
           {
             errors.Add(string.Format(OBJECTIVE_ERROR_CONTENT_IS_REQUIRED, counter));
@@ -113,6 +107,10 @@ namespace PEngine.Core.Logic
           {
             foreach (var skill in skillType.Value)
             {
+              if (skill.Guid != Guid.Empty && !existingResume.Skills.Any(t => t.Value.Any(s => s.Guid == skill.Guid)))
+              {
+                errors.Add(string.Format(SKILL_ERROR_INVALID_RECORD, counter));
+              }
               if (string.IsNullOrWhiteSpace(skill.Type))
               {
                 errors.Add(string.Format(SKILL_ERROR_TYPE_IS_REQUIRED, counter));
@@ -131,6 +129,10 @@ namespace PEngine.Core.Logic
         var counter = 1;
         foreach (var education in resume.Educations)
         {
+          if (education.Guid != Guid.Empty && !existingResume.Educations.Any(e => e.Guid == education.Guid))
+          {
+            errors.Add(string.Format(EDUCATION_ERROR_INVALID_RECORD, counter));
+          }
           if (string.IsNullOrWhiteSpace(education.Institute))
           {
             errors.Add(string.Format(EDUCATION_ERROR_INSTITUTE_IS_REQUIRED, counter));
@@ -151,6 +153,10 @@ namespace PEngine.Core.Logic
         var counter = 1;
         foreach (var workHistory in resume.WorkHistories)
         {
+          if (workHistory.Guid != Guid.Empty && !existingResume.WorkHistories.Any(wh => wh.Guid == workHistory.Guid))
+          {
+            errors.Add(string.Format(WORK_ERROR_INVALID_RECORD, counter));
+          }
           if (string.IsNullOrWhiteSpace(workHistory.Employer))
           {
             errors.Add(string.Format(WORK_ERROR_EMPLOYER_IS_REQUIRED, counter));
