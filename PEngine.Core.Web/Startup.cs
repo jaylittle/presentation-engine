@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -55,8 +56,20 @@ namespace PEngine.Core.Web
       loggerFactory.AddConsole(Configuration.GetSection("Logging"));
       loggerFactory.AddDebug();
 
-      var secretKey = Guid.NewGuid().ToString();
+      //TODO Generate secret key on first run of app and store in PEngine settings
+      var secretKey = "jaytestjwtcrapjaytestjwtcrapjaytestjwtcrap"; //Guid.NewGuid().ToString();
       var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+
+      // Add JWT generation
+      var options = new TokenProviderOptions
+      {
+        Audience = "PEngine",
+        Issuer = "PEngine",
+        SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
+      };
+      app.UseMiddleware<TokenProviderMiddleware>(Options.Create(options));
+
+      // Add JWT authorization
       var tokenValidationParameters = new TokenValidationParameters
       {
         // The signing key must match!
@@ -77,18 +90,12 @@ namespace PEngine.Core.Web
         // If you want to allow a certain amount of clock drift, set that here:
         ClockSkew = TimeSpan.Zero
       };
-      
-      app.UseCookieAuthentication(new CookieAuthenticationOptions
+
+      app.UseJwtBearerAuthentication(new JwtBearerOptions
       {
         AutomaticAuthenticate = true,
         AutomaticChallenge = true,
-        AuthenticationScheme = "Cookie",
-        CookieName = "access_token",
-        CookieHttpOnly = true,
-        //CookieSecure = true,
-        TicketDataFormat = new PEngineJwtDataFormat(
-          SecurityAlgorithms.HmacSha256,
-          tokenValidationParameters)
+        TokenValidationParameters = tokenValidationParameters
       });
 
       app.UseMvc();
