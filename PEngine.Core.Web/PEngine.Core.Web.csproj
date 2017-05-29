@@ -14,7 +14,6 @@
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.3.0"/>
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.1.3"/>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.2"/>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj"/>
