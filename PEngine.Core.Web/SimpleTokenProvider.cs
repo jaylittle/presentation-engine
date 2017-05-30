@@ -22,7 +22,6 @@ namespace PEngine.Core.Web
     public string ForumPath { get; set; } = "/token/forum";
     public string Issuer { get; set; }
     public string Audience { get; set; }
-    public TimeSpan Expiration { get; set; } = TimeSpan.FromMinutes(15);
     public SigningCredentials SigningCredentials { get; set; }
   }
 
@@ -72,6 +71,7 @@ namespace PEngine.Core.Web
       if (Security.EncryptAndCompare(password, Settings.Current.PasswordGod))
       {
         roleClaims.Add("PEngineGod");
+        roleClaims.Add("PEngineAdmin");
         username = "PEngineGod";
       }
       else if (Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin))
@@ -85,7 +85,7 @@ namespace PEngine.Core.Web
       {
         identity = await GetIdentity(username, roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, username);
+      await GenerateToken(context, identity, username, Settings.Current.TimeLimitAdminToken);
     }
 
     private async Task ValidateForumUser(HttpContext context)
@@ -112,10 +112,10 @@ namespace PEngine.Core.Web
         }
         identity = await GetIdentity(username, roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, username);
+      await GenerateToken(context, identity, username, Settings.Current.TimeLimitForumToken);
     }
 
-    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string username)
+    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string username, int expirationMinutes)
     {
       if (identity == null)
       {
@@ -141,14 +141,14 @@ namespace PEngine.Core.Web
         audience: _options.Audience,
         claims: claims.Union(identity.Claims),
         notBefore: now,
-        expires: now.Add(_options.Expiration),
+        expires: now.AddMinutes(expirationMinutes),
         signingCredentials: _options.SigningCredentials);
       var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
     
       var response = new
       {
         access_token = encodedJwt,
-        expires_in = (int)_options.Expiration.TotalSeconds
+        expires_in = (int)expirationMinutes * 60
       };
   
       // Serialize and return the response

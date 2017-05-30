@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
@@ -24,12 +25,14 @@ namespace PEngine.Core.Web.Controllers
           _forumService = forumService;
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpGet]
         public IEnumerable<ForumModel> GetForums()
         {
           return _forumDal.ListForums();
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpGet("{guid}")]
         public IActionResult GetForumByGuid(Guid guid)
         {
@@ -37,6 +40,7 @@ namespace PEngine.Core.Web.Controllers
           return forum != null ? (IActionResult) this.Ok(forum) : this.NotFound();
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpPost]
         public IActionResult InsertForum([FromBody]ForumModel forum)
         {
@@ -51,18 +55,21 @@ namespace PEngine.Core.Web.Controllers
           }
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpPut]
         public IActionResult UpdateForum([FromBody]ForumModel forum)
         {
           return InsertForum(forum);
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpGet("{forumGuid}/threads/")]
         public IEnumerable<ForumThreadModel> GetForumThreads(Guid forumGuid)
         {
           return _forumDal.ListForumThreads(forumGuid, null);
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpGet("thread/{guid}")]
         public IActionResult GetForumThreadByGuid(Guid guid)
         {
@@ -70,6 +77,7 @@ namespace PEngine.Core.Web.Controllers
           return forumThread != null ? (IActionResult) this.Ok(forumThread) : this.NotFound();
         }
 
+        [Authorize(Roles = "ForumUser")]
         [HttpPost("thread")]
         public IActionResult InsertForumThread([FromBody]ForumThreadModel forumThread)
         {
@@ -84,18 +92,21 @@ namespace PEngine.Core.Web.Controllers
           }
         }
 
+        [Authorize(Roles = "ForumUser")]
         [HttpPut("thread")]
         public IActionResult UpdateForumThread([FromBody]ForumThreadModel forumThread)
         {
           return InsertForumThread(forumThread);
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpGet("thread/{forumThreadGuid}/posts")]
         public IEnumerable<ForumThreadPostModel> GetForumThreadPosts(Guid forumThreadGuid)
         {
           return _forumDal.ListForumThreadPosts(null, null, forumThreadGuid, null);
         }
 
+        [Authorize(Roles = "ForumUser")]
         [HttpGet("post/{guid}")]
         public IActionResult GetForumThreadPostByGuid(Guid guid)
         {
@@ -103,6 +114,7 @@ namespace PEngine.Core.Web.Controllers
           return forumThreadPost != null ? (IActionResult) this.Ok(forumThreadPost) : this.NotFound();
         }
 
+        [Authorize(Roles = "ForumUser")]
         [HttpPost("post")]
         public IActionResult InsertForumThreadPost([FromBody]ForumThreadPostModel forumThreadPost)
         {
@@ -117,18 +129,21 @@ namespace PEngine.Core.Web.Controllers
           }
         }
 
+        [Authorize(Roles = "ForumUser")]
         [HttpPut("post")]
         public IActionResult UpdateForumThreadPost([FromBody]ForumThreadPostModel forumThreadPost)
         {
           return InsertForumThreadPost(forumThreadPost);
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpGet("users")]
         public IEnumerable<ForumUserModel> GetForumUsers()
         {
           return _forumDal.ListForumUsers();
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpGet("user/{guid}")]
         public IActionResult GetForumUserByGuid(Guid guid)
         {
@@ -136,6 +151,7 @@ namespace PEngine.Core.Web.Controllers
           return forumUser != null ? (IActionResult) this.Ok(forumUser) : this.NotFound();
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpPost("user")]
         public IActionResult InsertForumUser([FromBody]ForumUserModel forumUser)
         {
@@ -150,6 +166,7 @@ namespace PEngine.Core.Web.Controllers
           }
         }
 
+        [Authorize(Roles = "ForumAdmin")]
         [HttpPut("user")]
         public IActionResult UpdateForumUser([FromBody]ForumUserModel forumUser)
         {

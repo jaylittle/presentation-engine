@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
@@ -23,12 +24,14 @@ namespace PEngine.Core.Web.Controllers
           _postService = postService;
         }
 
+        [Authorize(Roles = "PEngineAdmin")]
         [HttpGet]
         public IEnumerable<PostModel> Get()
         {
           return _postDal.ListPosts();
         }
 
+        [Authorize(Roles = "PEngineAdmin")]
         [HttpGet("{guid}")]
         public IActionResult GetByGuid(Guid guid)
         {
@@ -36,6 +39,7 @@ namespace PEngine.Core.Web.Controllers
           return post != null ? (IActionResult) this.Ok(post) : this.NotFound();
         }
 
+        [Authorize(Roles = "PEngineAdmin")]
         [HttpPost]
         public IActionResult InsertPost([FromBody]PostModel post)
         {
@@ -50,12 +54,14 @@ namespace PEngine.Core.Web.Controllers
           }
         }
 
+        [Authorize(Roles = "PEngineAdmin")]
         [HttpPut]
         public IActionResult UpdatePost([FromBody]PostModel post)
         {
           return InsertPost(post);
         }
 
+        [Authorize(Roles = "PEngineAdmin")]
         [HttpDelete("{guid}")]
         public IActionResult DeletePost(Guid guid)
         {

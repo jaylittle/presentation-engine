@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
@@ -21,12 +22,14 @@ namespace PEngine.Core.Web.Controllers
           _resumeService = resumeService;
         }
 
+        [Authorize(Roles = "PEngineAdmin")]
         [HttpGet]
         public ResumeModel Get()
         {
           return _resumeService.GetResume();
         }
 
+        [Authorize(Roles = "PEngineAdmin")]
         [HttpPost]
         public IActionResult InsertResume([FromBody]ResumeModel resume)
         {
@@ -41,6 +44,7 @@ namespace PEngine.Core.Web.Controllers
           }
         }
 
+        [Authorize(Roles = "PEngineAdmin")]
         [HttpPut]
         public IActionResult UpdateResume([FromBody]ResumeModel resume)
         {
