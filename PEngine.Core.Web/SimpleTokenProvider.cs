@@ -66,36 +66,36 @@ namespace PEngine.Core.Web
     private async Task ValidatePEngineUser(HttpContext context)
     {
       var password = (string)context.Request.Form["password"] ?? string.Empty;
-      var username = string.Empty;
+      var userId = string.Empty;
       var roleClaims = new List<string>();
       if (Security.EncryptAndCompare(password, Settings.Current.PasswordGod))
       {
         roleClaims.Add("PEngineGod");
         roleClaims.Add("PEngineAdmin");
-        username = "PEngineGod";
+        userId = "PEngineGod";
       }
       else if (Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin))
       {
         roleClaims.Add("PEngineAdmin");
-        username = "PEngineAdmin";
+        userId = "PEngineAdmin";
       }
 
       ClaimsIdentity identity = null;
-      if (!string.IsNullOrEmpty(username))
+      if (!string.IsNullOrEmpty(userId))
       {
-        identity = await GetIdentity(username, roleClaims.ToArray());
+        identity = await GetIdentity(userId, userId, "PEngine", roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, username, Settings.Current.TimeLimitAdminToken);
+      await GenerateToken(context, identity, userId, Settings.Current.TimeLimitAdminToken);
     }
 
     private async Task ValidateForumUser(HttpContext context)
     {
-      var username = (string)context.Request.Form["username"] ?? string.Empty;
+      var userName = (string)context.Request.Form["username"] ?? string.Empty;
       var password = (string)context.Request.Form["password"] ?? string.Empty;
       var roleClaims = new List<string>();
 
       ClaimsIdentity identity = null;
-      var forumUser = _forumDal.GetForumUserById(null, username);
+      var forumUser = _forumDal.GetForumUserById(null, userName);
       if (forumUser != null && Security.EncryptAndCompare(password, forumUser.Password))
       {
         if (!forumUser.BanFlag)
@@ -110,12 +110,12 @@ namespace PEngine.Core.Web
         {
           roleClaims.Add("ForumBanned");
         }
-        identity = await GetIdentity(username, roleClaims.ToArray());
+        identity = await GetIdentity(forumUser.Guid.ToString(), userName, "Forum", roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, username, Settings.Current.TimeLimitForumToken);
+      await GenerateToken(context, identity, forumUser?.Guid.ToString(), Settings.Current.TimeLimitForumToken);
     }
 
-    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string username, int expirationMinutes)
+    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string userId, int expirationMinutes)
     {
       if (identity == null)
       {
@@ -130,7 +130,7 @@ namespace PEngine.Core.Web
       // You can add other claims here, if you want:
       var claims = new Claim[]
       {
-        new Claim(JwtRegisteredClaimNames.Sub, username),
+        new Claim(JwtRegisteredClaimNames.Sub, userId),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
       };
@@ -143,12 +143,13 @@ namespace PEngine.Core.Web
         notBefore: now,
         expires: now.AddMinutes(expirationMinutes),
         signingCredentials: _options.SigningCredentials);
+
       var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
     
       var response = new
       {
-        access_token = encodedJwt,
-        expires_in = (int)expirationMinutes * 60
+        acessToken = encodedJwt,
+        expiresIn = (int)expirationMinutes * 60
       };
   
       // Serialize and return the response
@@ -156,10 +157,12 @@ namespace PEngine.Core.Web
       await context.Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
     }
 
-    private Task<ClaimsIdentity> GetIdentity(string username, string[] roleClaims)
+    private Task<ClaimsIdentity> GetIdentity(string userId, string userName, string userType, string[] roleClaims)
     {
-      var identity = new System.Security.Principal.GenericIdentity(username, "Token");
-      var claims = roleClaims.Select(rc => new Claim(identity.RoleClaimType, rc)).ToArray();
+      var identity = new System.Security.Principal.GenericIdentity(userId, "Token");
+      var claims = roleClaims.Select(rc => new Claim(identity.RoleClaimType, rc)).ToList();
+      claims.Add(new Claim("PEngineUserName", userName));
+      claims.Add(new Claim("PEngineUserType", userType));
       return Task.FromResult(new ClaimsIdentity(identity, claims));
     }
   }
