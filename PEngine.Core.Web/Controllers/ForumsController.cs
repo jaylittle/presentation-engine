@@ -132,7 +132,7 @@ namespace PEngine.Core.Web.Controllers
         [HttpGet("user/{guid}")]
         public IActionResult GetForumUserByGuid(Guid guid)
         {
-          var forumUser = _forumDal.GetForumUserById(guid);
+          var forumUser = _forumDal.GetForumUserById(guid, null);
           return forumUser != null ? (IActionResult) this.Ok(forumUser) : this.NotFound();
         }
 

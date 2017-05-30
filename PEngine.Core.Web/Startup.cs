@@ -55,15 +55,17 @@ namespace PEngine.Core.Web
       loggerFactory.AddConsole(Configuration.GetSection("Logging"));
       loggerFactory.AddDebug();
 
+      PEngine.Core.Shared.Settings.Startup(env.ContentRootPath);
+
       //TODO Generate secret key on first run of app and store in PEngine settings
-      var secretKey = "jaytestjwtcrapjaytestjwtcrapjaytestjwtcrap"; //Guid.NewGuid().ToString();
+      var secretKey = PEngine.Core.Shared.Settings.Current.SecretKey.ToString();
       var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
       // Add JWT generation
       var options = new TokenProviderOptions
       {
-        Audience = "PEngine",
-        Issuer = "PEngine",
+        Audience = PEngine.Core.Shared.Settings.Current.DefaultTitle,
+        Issuer = PEngine.Core.Shared.Settings.Current.DefaultTitle,
         SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
       };
       app.UseMiddleware<TokenProviderMiddleware>(Options.Create(options));
@@ -77,11 +79,11 @@ namespace PEngine.Core.Web
     
         // Validate the JWT Issuer (iss) claim
         ValidateIssuer = true,
-        ValidIssuer = "PEngine",
+        ValidIssuer = PEngine.Core.Shared.Settings.Current.DefaultTitle,
     
         // Validate the JWT Audience (aud) claim
         ValidateAudience = true,
-        ValidAudience = "PEngine",
+        ValidAudience = PEngine.Core.Shared.Settings.Current.DefaultTitle,
     
         // Validate the token expiry
         ValidateLifetime = true,

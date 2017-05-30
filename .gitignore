@@ -3,6 +3,7 @@
 
 # PEngine specific files
 data/
+pengine.settings.json
 
 # JetBrains IDE files
 .idea/

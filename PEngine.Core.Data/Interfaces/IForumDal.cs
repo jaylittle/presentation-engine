@@ -19,7 +19,7 @@ namespace PEngine.Core.Data.Interfaces
       void InsertForumThreadPost(ForumThreadPostModel forumThreadPost);
       void UpdateForumThreadPost(ForumThreadPostModel forumThreadPost);
       IEnumerable<ForumUserModel> ListForumUsers();
-      ForumUserModel GetForumUserById(Guid guid);
+      ForumUserModel GetForumUserById(Guid? guid, string userId);
       void InsertForumUser(ForumUserModel forumUser);
       void UpdateForumUser(ForumUserModel forumUser);
     }

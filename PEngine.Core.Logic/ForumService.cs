@@ -205,7 +205,7 @@ namespace PEngine.Core.Logic
       }
       if (forumUser.Guid != Guid.Empty)
       {
-        existingForumUser = _forumDal.GetForumUserById(forumUser.Guid);
+        existingForumUser = _forumDal.GetForumUserById(forumUser.Guid, null);
         if (existingForumUser == null)
         {
           errors.Add(USER_ERROR_INVALID_RECORD);

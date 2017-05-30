@@ -1,8 +1,12 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using PEngine.Core.Shared;
+using PEngine.Core.Shared.Models;
+using PEngine.Core.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.IdentityModel.Tokens;
@@ -14,7 +18,8 @@ namespace PEngine.Core.Web
 {
   public class TokenProviderOptions
   {
-    public string Path { get; set; } = "/token";
+    public string PEnginePath { get; set; } = "/token/pengine";
+    public string ForumPath { get; set; } = "/token/forum";
     public string Issuer { get; set; }
     public string Audience { get; set; }
     public TimeSpan Expiration { get; set; } = TimeSpan.FromMinutes(15);
@@ -25,41 +30,96 @@ namespace PEngine.Core.Web
   {
     private readonly RequestDelegate _next;
     private readonly TokenProviderOptions _options;
+    private IForumDal _forumDal;
 
-    public TokenProviderMiddleware(RequestDelegate next, IOptions<TokenProviderOptions> options)
+    public TokenProviderMiddleware(RequestDelegate next, IOptions<TokenProviderOptions> options, IForumDal forumDal)
     {
       _next = next;
       _options = options.Value;
+      _forumDal = forumDal;
     }
 
     public Task Invoke(HttpContext context)
     {
       // If the request path doesn't match, skip
-      if (!context.Request.Path.Equals(_options.Path, StringComparison.Ordinal))
+      if (!context.Request.Path.Equals(_options.PEnginePath, StringComparison.OrdinalIgnoreCase)
+        && !context.Request.Path.Equals(_options.ForumPath, StringComparison.OrdinalIgnoreCase))
       {
         return _next(context);
       }
 
-      // Request must be POST with Content-Type: application/x-www-form-urlencoded
-      if (!context.Request.Method.Equals("POST")
-        || !context.Request.HasFormContentType)
+      if (context.Request.Method.Equals("POST") && context.Request.HasFormContentType)
       {
-        context.Response.StatusCode = 400;
-        return context.Response.WriteAsync("Bad request.");
+        if (context.Request.Path.Equals(_options.PEnginePath, StringComparison.OrdinalIgnoreCase))
+        {
+          return ValidatePEngineUser(context);
+        }
+        if (context.Request.Path.Equals(_options.ForumPath, StringComparison.OrdinalIgnoreCase))
+        {
+          return ValidateForumUser(context);
+        }
       }
-
-      return GenerateToken(context);
+      
+      context.Response.StatusCode = 400;
+      return context.Response.WriteAsync("Bad request.");
     }
 
-    private async Task GenerateToken(HttpContext context)
+    private async Task ValidatePEngineUser(HttpContext context)
     {
-      var username = context.Request.Form["username"];
-      var password = context.Request.Form["password"];
-  
-      var identity = await GetIdentity(username, password);
+      var password = (string)context.Request.Form["password"] ?? string.Empty;
+      var username = string.Empty;
+      var roleClaims = new List<string>();
+      if (Security.EncryptAndCompare(password, Settings.Current.PasswordGod))
+      {
+        roleClaims.Add("PEngineGod");
+        username = "PEngineGod";
+      }
+      else if (Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin))
+      {
+        roleClaims.Add("PEngineAdmin");
+        username = "PEngineAdmin";
+      }
+
+      ClaimsIdentity identity = null;
+      if (!string.IsNullOrEmpty(username))
+      {
+        identity = await GetIdentity(username, roleClaims.ToArray());
+      }
+      await GenerateToken(context, identity, username);
+    }
+
+    private async Task ValidateForumUser(HttpContext context)
+    {
+      var username = (string)context.Request.Form["username"] ?? string.Empty;
+      var password = (string)context.Request.Form["password"] ?? string.Empty;
+      var roleClaims = new List<string>();
+
+      ClaimsIdentity identity = null;
+      var forumUser = _forumDal.GetForumUserById(null, username);
+      if (forumUser != null && Security.EncryptAndCompare(password, forumUser.Password))
+      {
+        if (!forumUser.BanFlag)
+        {
+          roleClaims.Add("ForumUser");
+          if (forumUser.AdminFlag)
+          {
+            roleClaims.Add("ForumAdmin");
+          }
+        }
+        else
+        {
+          roleClaims.Add("ForumBanned");
+        }
+        identity = await GetIdentity(username, roleClaims.ToArray());
+      }
+      await GenerateToken(context, identity, username);
+    }
+
+    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string username)
+    {
       if (identity == null)
       {
-        context.Response.StatusCode = 400;
+        context.Response.StatusCode = 401;
         await context.Response.WriteAsync("Invalid username or password.");
         return;
       }
@@ -96,20 +156,11 @@ namespace PEngine.Core.Web
       await context.Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
     }
 
-    private Task<ClaimsIdentity> GetIdentity(string username, string password)
+    private Task<ClaimsIdentity> GetIdentity(string username, string[] roleClaims)
     {
-      // DON'T do this in production, obviously!
-      if (username == "admin" && password == "pengine")
-      {
-        var identity = new System.Security.Principal.GenericIdentity(username, "Token");
-        return Task.FromResult(new ClaimsIdentity(identity, new Claim[] 
-        {
-          new Claim(identity.RoleClaimType, "Admin")
-        }));
-      }
-  
-      // Credentials are invalid, or account doesn't exist
-      return Task.FromResult<ClaimsIdentity>(null);
+      var identity = new System.Security.Principal.GenericIdentity(username, "Token");
+      var claims = roleClaims.Select(rc => new Claim(identity.RoleClaimType, rc)).ToArray();
+      return Task.FromResult(new ClaimsIdentity(identity, claims));
     }
   }
 }

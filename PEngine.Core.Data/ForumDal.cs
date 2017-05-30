@@ -139,12 +139,12 @@ namespace PEngine.Core.Data
       }
     }
 
-    public ForumUserModel GetForumUserById(Guid guid)
+    public ForumUserModel GetForumUserById(Guid? guid, string userId)
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
         return ct.DbConnection.QueryFirstOrDefault<ForumUserModel>(ReadQuery("GetForumUserById", ct.ProviderName), new {
-          guid
+          guid, userId
         }, transaction: ct.DbTransaction);
       }
     }

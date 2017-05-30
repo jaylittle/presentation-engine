@@ -3,4 +3,5 @@ SELECT
 FROM
   ForumUser
 WHERE
-  ForumUser.Guid = @guid;
+  (@guid IS NULL OR ForumUser.Guid = @guid) AND
+  (@userId IS NULL OR ForumUser.UserID = @userId);
