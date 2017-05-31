@@ -1,0 +1,233 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using PEngine.Core.Data.Interfaces;
+using PEngine.Core.Logic;
+using PEngine.Core.Shared.Models;
+using Xunit;
+using Moq;
+using Newtonsoft.Json;
+
+namespace PEngine.Core.Tests
+{
+  public class ArticleServiceTests
+  {
+    private ArticleModel articleData;
+    private Mock<IArticleDal> mockedArticleDal;
+    private Guid validGuid = Guid.NewGuid();
+    private Guid invalidGuid = Guid.NewGuid();
+    private ArticleService articleService;
+    
+    public ArticleServiceTests()
+    {
+      //Setup
+      articleData = new ArticleModel();
+      mockedArticleDal = new Mock<IArticleDal>();
+      mockedArticleDal.Setup(ad => ad.InsertArticle(articleData));
+      mockedArticleDal.Setup(ad => ad.UpdateArticle(articleData));
+      mockedArticleDal.Setup(ad => ad.GetArticleById(invalidGuid, null, null)).Returns((ArticleModel)null);
+      mockedArticleDal.Setup(ad => ad.GetArticleById(validGuid, null, null)).Returns(new ArticleModel());
+      articleService = new ArticleService(mockedArticleDal.Object);
+    }
+
+    [Fact]
+    public void ArticleService_Upsert_ObjectIsValidated()
+    {
+      //Verify that record with null object is rejected
+      Assert.True(TestHelpers.CallProducedError(e => 
+      {
+        articleService.UpsertArticle(null, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_DATA_MUST_BE_PROVIDED));
+
+      //Verify that record with non-null object is accepted
+      Assert.False(TestHelpers.CallProducedError(e => 
+      {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_DATA_MUST_BE_PROVIDED));
+    }
+
+    [Fact]
+    public void ArticleService_Upsert_GuidIsValidated()
+    {
+      //Verify that record with invalid guid is rejected
+      articleData.Guid = invalidGuid;
+      Assert.True(TestHelpers.CallProducedError(e => 
+      {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_INVALID_RECORD));
+
+      //Verify that record with valid Guid is accepted
+      articleData.Guid = validGuid;
+      Assert.False(TestHelpers.CallProducedError(e => 
+      {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_INVALID_RECORD));
+
+      //Verify that record with no Guid is accepted
+      articleData.Guid = Guid.Empty;
+      Assert.False(TestHelpers.CallProducedError(e => 
+      {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_INVALID_RECORD));
+    }
+
+    [Fact]
+    public void ArticleService_Upsert_NameIsValidated()
+    { 
+      //Verify that record with no name/title is rejected
+      Assert.True(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_TITLE_IS_REQUIRED));
+
+      //Verify that record with name/title is accepted
+      articleData.Name = "Crap Title";
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_TITLE_IS_REQUIRED));
+    }
+
+    [Fact]
+    public void ArticleService_Upsert_DescriptionIsValidated()
+    { 
+      //Verify that record without description is rejected
+      Assert.True(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_DESCRIPTION_IS_REQUIRED));
+
+      //Verify that record with description is accepted
+      articleData.Description = "Crap Description";
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_DESCRIPTION_IS_REQUIRED));
+    }
+
+    [Fact]
+    public void ArticleService_Upsert_CategoryIsValidated()
+    { 
+      //Verify that record without category is rejected
+      Assert.True(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_CATEGORY_IS_REQUIRED));
+
+      //Verify that record with category is accepted
+      articleData.Category = "Crap Description";
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_CATEGORY_IS_REQUIRED));
+    }
+
+    [Fact]
+    public void ArticleService_Upsert_DefaultSectionIsValidated()
+    { 
+      //Verify that record with no sections but default section not set is accepted
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_DEFAULT_SECTION_INVALID));
+
+      //Verify that record with no sections but default section set is rejected
+      articleData.DefaultSection = "Section B";
+      Assert.True(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_DEFAULT_SECTION_INVALID));
+
+      //Verify that record with some sections but default section set incorrectly is rejected
+      articleData.Sections.Add(new ArticleSectionModel() {
+        Name = "Section A"
+      });
+      Assert.True(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_DEFAULT_SECTION_INVALID));
+
+      //Verify that record with some sections and default section set correctly is accepted
+      articleData.Sections.Add(new ArticleSectionModel() {
+        Name = "Section B"
+      });
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_DEFAULT_SECTION_INVALID));
+    }
+
+    [Fact]
+    public void ArticleService_Upsert_SectionNameIsValidated()
+    { 
+      //Verify that record with section lacking name is rejected
+      articleData.Sections.Add(new ArticleSectionModel());
+      Assert.True(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, string.Format(ArticleService.SECTION_ERROR_NAME_IS_REQUIRED, 1)));
+
+      //Verify that record with section with name is accepted
+      articleData.Sections[0].Name = "Crap Name";
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, string.Format(ArticleService.SECTION_ERROR_NAME_IS_REQUIRED, 1)));
+    }
+
+    [Fact]
+    public void ArticleService_Upsert_SectionContentIsValidated()
+    { 
+      //Verify that record with section lacking description is rejected
+      articleData.Sections.Add(new ArticleSectionModel());
+      Assert.True(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, string.Format(ArticleService.SECTION_ERROR_CONTENT_IS_REQUIRED, 1)));
+
+      //Verify that record with section with description is accepted
+      articleData.Sections[0].Data = "Crap Content";
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, string.Format(ArticleService.SECTION_ERROR_CONTENT_IS_REQUIRED, 1)));
+    }
+
+    [Fact]
+    public void ArticleService_Upsert_URLOrSectionIsValidated()
+    { 
+      //Verify that record without either section or content URL is rejected
+      Assert.True(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_EITHER_URL_OR_SECTION_REQUIRED));
+
+      //Verify that record with content URL is accepted
+      articleData.ContentURL = "http://blah.com";
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_EITHER_URL_OR_SECTION_REQUIRED));
+
+      //Verify that record with section is accepted
+      articleData.ContentURL = null;
+      articleData.Sections.Add(new ArticleSectionModel());
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_EITHER_URL_OR_SECTION_REQUIRED));
+
+      //Verify that record with section and content URL is accepted
+      articleData.ContentURL = "http://blah2.com";
+      Assert.False(TestHelpers.CallProducedError(e => {
+        articleService.UpsertArticle(articleData, ref e);
+        return e;
+      }, ArticleService.ARTICLE_ERROR_EITHER_URL_OR_SECTION_REQUIRED));
+    }
+  }
+}

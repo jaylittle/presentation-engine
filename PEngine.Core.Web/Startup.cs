@@ -42,6 +42,7 @@ namespace PEngine.Core.Web
       services.AddScoped<IArticleDal, ArticleDal>();
       services.AddScoped<IResumeDal, ResumeDal>();
       services.AddScoped<IForumDal, ForumDal>();
+      services.AddScoped<IQuoteDal, QuoteDal>();
       services.AddScoped<IVersionDal, VersionDal>();
       services.AddScoped<IPostService, PostService>();
       services.AddScoped<IArticleService, ArticleService>();

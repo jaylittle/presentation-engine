@@ -13,164 +13,164 @@ using PEngine.Core.Web.Constraints;
 
 namespace PEngine.Core.Web.Controllers
 {
-    [Route("api/[controller]")]
-    public class ForumsController : Controller
+  [Route("api/[controller]")]
+  public class ForumsController : Controller
+  {
+    private IForumDal _forumDal;
+    private IForumService _forumService;
+
+    public ForumsController(IForumDal forumDal, IForumService forumService)
     {
-        private IForumDal _forumDal;
-        private IForumService _forumService;
-
-        public ForumsController(IForumDal forumDal, IForumService forumService)
-        {
-          _forumDal = forumDal;
-          _forumService = forumService;
-        }
-
-        [Authorize(Roles = "ForumAdmin")]
-        [HttpGet]
-        public IEnumerable<ForumModel> GetForums()
-        {
-          return _forumService.ListForums(HttpContext.User.IsInRole("ForumAdmin"));
-        }
-
-        [Authorize(Roles = "ForumAdmin")]
-        [HttpGet("{guid}")]
-        public IActionResult GetForumByGuid(Guid guid)
-        {
-          var forum = _forumDal.GetForumById(guid, null);
-          return forum != null ? (IActionResult) this.Ok(forum) : this.NotFound();
-        }
-
-        [Authorize(Roles = "ForumAdmin")]
-        [HttpPost]
-        public IActionResult InsertForum([FromBody]ForumModel forum)
-        {
-          var errors = new List<string>();
-          if (_forumService.UpsertForum(forum, ref errors))
-          {
-            return this.Ok(forum);
-          }
-          else
-          {
-            return this.StatusCode(400, new { errors });
-          }
-        }
-
-        [Authorize(Roles = "ForumAdmin")]
-        [HttpPut]
-        public IActionResult UpdateForum([FromBody]ForumModel forum)
-        {
-          return InsertForum(forum);
-        }
-
-        [Authorize(Roles = "ForumAdmin")]
-        [HttpGet("{forumGuid}/threads/")]
-        public IEnumerable<ForumThreadModel> GetForumThreads(Guid forumGuid)
-        {
-          return _forumService.ListForumThreads(forumGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
-        }
-
-        [Authorize(Roles = "ForumUser")]
-        [HttpGet("thread/{guid}")]
-        public IActionResult GetForumThreadByGuid(Guid guid)
-        {
-          var forumThread = _forumDal.GetForumThreadById(guid, null);
-          return forumThread != null ? (IActionResult) this.Ok(forumThread) : this.NotFound();
-        }
-
-        [Authorize(Roles = "ForumUser")]
-        [HttpPost("thread")]
-        public IActionResult InsertForumThread([FromBody]ForumThreadModel forumThread)
-        {
-          var errors = new List<string>();
-          if (_forumService.UpsertForumThread(forumThread, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"), ref errors))
-          {
-            return this.Ok(forumThread);
-          }
-          else
-          {
-            return this.StatusCode(400, new { errors });
-          }
-        }
-
-        [Authorize(Roles = "ForumUser")]
-        [HttpPut("thread")]
-        public IActionResult UpdateForumThread([FromBody]ForumThreadModel forumThread)
-        {
-          return InsertForumThread(forumThread);
-        }
-
-        [Authorize(Roles = "ForumAdmin")]
-        [HttpGet("thread/{forumThreadGuid}/posts")]
-        public IEnumerable<ForumThreadPostModel> GetForumThreadPosts(Guid forumThreadGuid)
-        {
-          return _forumService.ListForumThreadPosts(null, null, forumThreadGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
-        }
-
-        [Authorize(Roles = "ForumUser")]
-        [HttpGet("post/{guid}")]
-        public IActionResult GetForumThreadPostByGuid(Guid guid)
-        {
-          var forumThreadPost = _forumDal.GetForumThreadPostById(guid);
-          return forumThreadPost != null ? (IActionResult) this.Ok(forumThreadPost) : this.NotFound();
-        }
-
-        [Authorize(Roles = "ForumUser")]
-        [HttpPost("post")]
-        public IActionResult InsertForumThreadPost([FromBody]ForumThreadPostModel forumThreadPost)
-        {
-          var errors = new List<string>();
-          if (_forumService.UpsertForumThreadPost(forumThreadPost, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"), ref errors))
-          {
-            return this.Ok(forumThreadPost);
-          }
-          else
-          {
-            return this.StatusCode(400, new { errors });
-          }
-        }
-
-        [Authorize(Roles = "ForumUser")]
-        [HttpPut("post")]
-        public IActionResult UpdateForumThreadPost([FromBody]ForumThreadPostModel forumThreadPost)
-        {
-          return InsertForumThreadPost(forumThreadPost);
-        }
-
-        [Authorize(Roles = "ForumAdmin")]
-        [HttpGet("users")]
-        public IEnumerable<ForumUserModel> GetForumUsers()
-        {
-          return _forumDal.ListForumUsers();
-        }
-
-        [Authorize(Roles = "ForumUser")]
-        [HttpGet("user/{guid}")]
-        public IActionResult GetForumUserByGuid(Guid guid)
-        {
-          var forumUser = _forumService.GetForumUserById(guid, null, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"));
-          return forumUser != null ? (IActionResult) this.Ok(forumUser) : this.NotFound();
-        }
-
-        [Authorize(Roles = "ForumUser")]
-        [HttpPost("user")]
-        public IActionResult InsertForumUser([FromBody]ForumUserModel forumUser)
-        {
-          var errors = new List<string>();
-          if (_forumService.UpsertForumUser(forumUser, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"), ref errors))
-          {
-            return this.Ok(forumUser);
-          }
-          else
-          {
-            return this.StatusCode(400, new { errors });
-          }
-        }
-
-        [Authorize(Roles = "ForumUser")]
-        [HttpPut("user")]
-        public IActionResult UpdateForumUser([FromBody]ForumUserModel forumUser)
-        {
-          return InsertForumUser(forumUser);
-        }
+      _forumDal = forumDal;
+      _forumService = forumService;
     }
+
+    [Authorize(Roles = "ForumAdmin")]
+    [HttpGet]
+    public IEnumerable<ForumModel> GetForums()
+    {
+      return _forumService.ListForums(HttpContext.User.IsInRole("ForumAdmin"));
+    }
+
+    [Authorize(Roles = "ForumAdmin")]
+    [HttpGet("{guid}")]
+    public IActionResult GetForumByGuid(Guid guid)
+    {
+      var forum = _forumDal.GetForumById(guid, null);
+      return forum != null ? (IActionResult) this.Ok(forum) : this.NotFound();
+    }
+
+    [Authorize(Roles = "ForumAdmin")]
+    [HttpPost]
+    public IActionResult InsertForum([FromBody]ForumModel forum)
+    {
+      var errors = new List<string>();
+      if (_forumService.UpsertForum(forum, ref errors))
+      {
+        return this.Ok(forum);
+      }
+      else
+      {
+        return this.StatusCode(400, new { errors });
+      }
+    }
+
+    [Authorize(Roles = "ForumAdmin")]
+    [HttpPut]
+    public IActionResult UpdateForum([FromBody]ForumModel forum)
+    {
+      return InsertForum(forum);
+    }
+
+    [Authorize(Roles = "ForumAdmin")]
+    [HttpGet("{forumGuid}/threads/")]
+    public IEnumerable<ForumThreadModel> GetForumThreads(Guid forumGuid)
+    {
+      return _forumService.ListForumThreads(forumGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
+    }
+
+    [Authorize(Roles = "ForumUser")]
+    [HttpGet("thread/{guid}")]
+    public IActionResult GetForumThreadByGuid(Guid guid)
+    {
+      var forumThread = _forumDal.GetForumThreadById(guid, null);
+      return forumThread != null ? (IActionResult) this.Ok(forumThread) : this.NotFound();
+    }
+
+    [Authorize(Roles = "ForumUser")]
+    [HttpPost("thread")]
+    public IActionResult InsertForumThread([FromBody]ForumThreadModel forumThread)
+    {
+      var errors = new List<string>();
+      if (_forumService.UpsertForumThread(forumThread, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"), ref errors))
+      {
+        return this.Ok(forumThread);
+      }
+      else
+      {
+        return this.StatusCode(400, new { errors });
+      }
+    }
+
+    [Authorize(Roles = "ForumUser")]
+    [HttpPut("thread")]
+    public IActionResult UpdateForumThread([FromBody]ForumThreadModel forumThread)
+    {
+      return InsertForumThread(forumThread);
+    }
+
+    [Authorize(Roles = "ForumAdmin")]
+    [HttpGet("thread/{forumThreadGuid}/posts")]
+    public IEnumerable<ForumThreadPostModel> GetForumThreadPosts(Guid forumThreadGuid)
+    {
+      return _forumService.ListForumThreadPosts(null, null, forumThreadGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
+    }
+
+    [Authorize(Roles = "ForumUser")]
+    [HttpGet("post/{guid}")]
+    public IActionResult GetForumThreadPostByGuid(Guid guid)
+    {
+      var forumThreadPost = _forumDal.GetForumThreadPostById(guid);
+      return forumThreadPost != null ? (IActionResult) this.Ok(forumThreadPost) : this.NotFound();
+    }
+
+    [Authorize(Roles = "ForumUser")]
+    [HttpPost("post")]
+    public IActionResult InsertForumThreadPost([FromBody]ForumThreadPostModel forumThreadPost)
+    {
+      var errors = new List<string>();
+      if (_forumService.UpsertForumThreadPost(forumThreadPost, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"), ref errors))
+      {
+        return this.Ok(forumThreadPost);
+      }
+      else
+      {
+        return this.StatusCode(400, new { errors });
+      }
+    }
+
+    [Authorize(Roles = "ForumUser")]
+    [HttpPut("post")]
+    public IActionResult UpdateForumThreadPost([FromBody]ForumThreadPostModel forumThreadPost)
+    {
+      return InsertForumThreadPost(forumThreadPost);
+    }
+
+    [Authorize(Roles = "ForumAdmin")]
+    [HttpGet("users")]
+    public IEnumerable<ForumUserModel> GetForumUsers()
+    {
+      return _forumDal.ListForumUsers();
+    }
+
+    [Authorize(Roles = "ForumUser")]
+    [HttpGet("user/{guid}")]
+    public IActionResult GetForumUserByGuid(Guid guid)
+    {
+      var forumUser = _forumService.GetForumUserById(guid, null, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"));
+      return forumUser != null ? (IActionResult) this.Ok(forumUser) : this.NotFound();
+    }
+
+    [Authorize(Roles = "ForumUser")]
+    [HttpPost("user")]
+    public IActionResult InsertForumUser([FromBody]ForumUserModel forumUser)
+    {
+      var errors = new List<string>();
+      if (_forumService.UpsertForumUser(forumUser, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"), ref errors))
+      {
+        return this.Ok(forumUser);
+      }
+      else
+      {
+        return this.StatusCode(400, new { errors });
+      }
+    }
+
+    [Authorize(Roles = "ForumUser")]
+    [HttpPut("user")]
+    public IActionResult UpdateForumUser([FromBody]ForumUserModel forumUser)
+    {
+      return InsertForumUser(forumUser);
+    }
+  }
 }

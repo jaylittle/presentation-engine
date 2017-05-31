@@ -11,6 +11,7 @@ namespace PEngine.Core.Logic
 {
   public class ResumeService : IResumeService
   {
+    public const string RESUME_ERROR_DATA_MUST_BE_PROVIDED = "Resume data must be provided";
     public const string PERSONAL_ERROR_INVALID_RECORD = "Personal #{0}: Guid refers to an invalid record";
     public const string PERSONAL_ERROR_FULL_NAME_IS_REQUIRED = "Personal #{0}: Full Name is required";
     public const string PERSONAL_ERROR_EMAIL_IS_REQUIRED = "Personal #{0}: Email is required";
@@ -54,6 +55,12 @@ namespace PEngine.Core.Logic
     {
       var startErrorCount = errors.Count;
       ResumeModel existingResume = GetResume();
+      if (resume == null)
+      {
+        errors.Add(RESUME_ERROR_DATA_MUST_BE_PROVIDED);
+        return false;
+      }
+
       if (resume.Personals != null  && resume.Personals.Count > 0)
       {
         var counter = 1;

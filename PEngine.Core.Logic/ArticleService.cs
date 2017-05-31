@@ -16,7 +16,10 @@ namespace PEngine.Core.Logic
     public const string ARTICLE_ERROR_TITLE_IS_REQUIRED = "Article Title is a required field";
     public const string ARTICLE_ERROR_DESCRIPTION_IS_REQUIRED = "Article Description is a required field";
     public const string ARTICLE_ERROR_CATEGORY_IS_REQUIRED = "Article Category is a required field";
-
+    public const string ARTICLE_ERROR_DEFAULT_SECTION_INVALID = "Article Default Section refers to an invalid section";
+    public const string ARTICLE_ERROR_EITHER_URL_OR_SECTION_REQUIRED = "Article requires either a URL or section(s) to be provided";
+    public const string SECTION_ERROR_NAME_IS_REQUIRED = "Article Section #{0}: Name must be provided";
+    public const string SECTION_ERROR_CONTENT_IS_REQUIRED = "Article Section #{0}: Content must be provided";
     private IArticleDal _articleDal;
     
     public ArticleService(IArticleDal articleDal)
@@ -59,6 +62,31 @@ namespace PEngine.Core.Logic
       if (string.IsNullOrEmpty(article.Category))
       {
         errors.Add(ARTICLE_ERROR_CATEGORY_IS_REQUIRED);
+      }
+      if (!string.IsNullOrEmpty(article.DefaultSection) && article.Sections != null 
+        && !article.Sections.Any(s => s.Name != null && s.Name.Equals(article.DefaultSection, StringComparison.OrdinalIgnoreCase)))
+      {
+        errors.Add(ARTICLE_ERROR_DEFAULT_SECTION_INVALID);
+      }
+      if (article.Sections != null)
+      {
+        var counter = 0;
+        foreach (var section in article.Sections)
+        {
+          counter++;
+          if (string.IsNullOrEmpty(section.Name))
+          {
+            errors.Add(string.Format(SECTION_ERROR_NAME_IS_REQUIRED, counter));
+          }
+          if (string.IsNullOrEmpty(section.Data))
+          {
+            errors.Add(string.Format(SECTION_ERROR_CONTENT_IS_REQUIRED, counter));
+          }
+        }
+      }
+      if ((article.Sections == null || article.Sections.Count <= 0) && string.IsNullOrEmpty(article.ContentURL))
+      {
+        errors.Add(ARTICLE_ERROR_EITHER_URL_OR_SECTION_REQUIRED);
       }
       var retvalue = (errors == null || errors.Count == startErrorCount);
       if (retvalue)
