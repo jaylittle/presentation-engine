@@ -29,7 +29,7 @@ namespace PEngine.Core.Web.Controllers
         [HttpGet]
         public IEnumerable<ForumModel> GetForums()
         {
-          return _forumDal.ListForums();
+          return _forumService.ListForums(HttpContext.User.IsInRole("ForumAdmin"));
         }
 
         [Authorize(Roles = "ForumAdmin")]
@@ -66,10 +66,10 @@ namespace PEngine.Core.Web.Controllers
         [HttpGet("{forumGuid}/threads/")]
         public IEnumerable<ForumThreadModel> GetForumThreads(Guid forumGuid)
         {
-          return _forumDal.ListForumThreads(forumGuid, null);
+          return _forumService.ListForumThreads(forumGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
         }
 
-        [Authorize(Roles = "ForumAdmin")]
+        [Authorize(Roles = "ForumUser")]
         [HttpGet("thread/{guid}")]
         public IActionResult GetForumThreadByGuid(Guid guid)
         {
@@ -82,7 +82,7 @@ namespace PEngine.Core.Web.Controllers
         public IActionResult InsertForumThread([FromBody]ForumThreadModel forumThread)
         {
           var errors = new List<string>();
-          if (_forumService.UpsertForumThread(forumThread, ref errors))
+          if (_forumService.UpsertForumThread(forumThread, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"), ref errors))
           {
             return this.Ok(forumThread);
           }
@@ -103,7 +103,7 @@ namespace PEngine.Core.Web.Controllers
         [HttpGet("thread/{forumThreadGuid}/posts")]
         public IEnumerable<ForumThreadPostModel> GetForumThreadPosts(Guid forumThreadGuid)
         {
-          return _forumDal.ListForumThreadPosts(null, null, forumThreadGuid, null);
+          return _forumService.ListForumThreadPosts(null, null, forumThreadGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
         }
 
         [Authorize(Roles = "ForumUser")]
@@ -119,7 +119,7 @@ namespace PEngine.Core.Web.Controllers
         public IActionResult InsertForumThreadPost([FromBody]ForumThreadPostModel forumThreadPost)
         {
           var errors = new List<string>();
-          if (_forumService.UpsertForumThreadPost(forumThreadPost, ref errors))
+          if (_forumService.UpsertForumThreadPost(forumThreadPost, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"), ref errors))
           {
             return this.Ok(forumThreadPost);
           }
@@ -143,20 +143,20 @@ namespace PEngine.Core.Web.Controllers
           return _forumDal.ListForumUsers();
         }
 
-        [Authorize(Roles = "ForumAdmin")]
+        [Authorize(Roles = "ForumUser")]
         [HttpGet("user/{guid}")]
         public IActionResult GetForumUserByGuid(Guid guid)
         {
-          var forumUser = _forumDal.GetForumUserById(guid, null);
+          var forumUser = _forumService.GetForumUserById(guid, null, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"));
           return forumUser != null ? (IActionResult) this.Ok(forumUser) : this.NotFound();
         }
 
-        [Authorize(Roles = "ForumAdmin")]
+        [Authorize(Roles = "ForumUser")]
         [HttpPost("user")]
         public IActionResult InsertForumUser([FromBody]ForumUserModel forumUser)
         {
           var errors = new List<string>();
-          if (_forumService.UpsertForumUser(forumUser, ref errors))
+          if (_forumService.UpsertForumUser(forumUser, Guid.Parse(HttpContext.User.Identity.Name), HttpContext.User.IsInRole("ForumAdmin"), ref errors))
           {
             return this.Ok(forumUser);
           }
@@ -166,7 +166,7 @@ namespace PEngine.Core.Web.Controllers
           }
         }
 
-        [Authorize(Roles = "ForumAdmin")]
+        [Authorize(Roles = "ForumUser")]
         [HttpPut("user")]
         public IActionResult UpdateForumUser([FromBody]ForumUserModel forumUser)
         {

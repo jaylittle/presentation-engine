@@ -10,7 +10,6 @@ INSERT INTO Article (
   UniqueName,
   HideButtonsFlag,
   HideDropDownFlag,
-  AdminPass,
   CreatedUTC,
   ModifiedUTC
 ) VALUES (
@@ -25,7 +24,6 @@ INSERT INTO Article (
   @UniqueName,
   @HideButtonsFlag,
   @HideDropDownFlag,
-  @AdminPass,
   @CreatedUTC,
   @ModifiedUTC
 );

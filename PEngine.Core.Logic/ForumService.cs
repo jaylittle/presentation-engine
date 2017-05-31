@@ -19,21 +19,31 @@ namespace PEngine.Core.Logic
     public const string THREAD_ERROR_INVALID_RECORD = "Forum Thread Guid refers to an invalid record";
     public const string THREAD_ERROR_TITLE_IS_REQUIRED = "Forum Thread Title is a required field";
     public const string THREAD_ERROR_INITIAL_POST_IS_REQUIRED = "New Forum Threads require an initial post";
+    public const string THREAD_ERROR_NOT_AUTHORIZED = "Forum Thread can only be updated by Original Poster";
+    public const string THREAD_ERROR_TOO_LATE_TO_UPDATE = "Forum Thread is too old to be edited";
     public const string POST_ERROR_DATA_MUST_BE_PROVIDED = "Forum Thread Post data must be provided";
     public const string POST_ERROR_INVALID_RECORD = "Form Thread Post Guid refers to an invalid record";
     public const string POST_ERROR_CONTENT_IS_REQUIRED = "Forum Thread Post content is required";
+    public const string POST_ERROR_NOT_AUTHORIZED = "Forum Thread Post can only be updated by Original Poster";
+    public const string POST_ERROR_TOO_LATE_TO_UPDATE = "Forum Thread Post is too old to be edited";
     public const string USER_ERROR_DATA_MUST_BE_PROVIDED = "Forum User data must be provided";
     public const string USER_ERROR_INVALID_RECORD = "Forum User Guid refers to an invalid record";
     public const string USER_ERROR_USER_ID_IS_REQUIRED = "Forum User Id is a required field";
     public const string USER_ERROR_EMAIL_IS_REQUIRED = "Forum User Email is a required field";
     public const string USER_ERROR_PASSWORD_IS_REQUIRED_FOR_NEW_USERS = "Forum User Password is a required field for new users";
     public const string USER_ERROR_COMMENT_IS_REQUIRED = "Forum User Comment is a required field";
+    public const string USER_ERROR_NOT_AUTHORIZED = "Forum User can only be updated by itself";
 
     private IForumDal _forumDal;
     
     public ForumService(IForumDal forumDal)
     {
       _forumDal = forumDal;
+    }
+
+    public IEnumerable<ForumModel> ListForums(bool isForumAdmin)
+    {
+      return _forumDal.ListForums().Where(f => isForumAdmin || f.VisibleFlag);
     }
 
     public bool UpsertForum(ForumModel forum, ref List<string> errors)
@@ -84,8 +94,19 @@ namespace PEngine.Core.Logic
       }
       return retvalue;
     }
+
+    public IEnumerable<ForumThreadModel> ListForumThreads(Guid? forumGuid, string forumUniqueName, bool isForumAdmin)
+    {
+      return _forumDal.ListForumThreads(forumGuid, forumUniqueName).Where(ft => isForumAdmin || ft.VisibleFlag);
+    }
+
+    public ForumThreadModel GetForumThreadById(Guid? guid, string uniqueName, Guid forumUserGuid, bool isForumAdmin)
+    {
+      var forumThread = _forumDal.GetForumThreadById(guid, uniqueName);
+      return (forumThread == null || isForumAdmin || forumThread.ForumUserGuid == forumUserGuid) ? forumThread : null;
+    }
     
-    public bool UpsertForumThread(ForumThreadModel forumThread, ref List<string> errors)
+    public bool UpsertForumThread(ForumThreadModel forumThread, Guid forumUserGuid, bool isForumAdmin, ref List<string> errors)
     {
       var startErrorCount = errors.Count;
       ForumThreadModel existingForumThread = null;
@@ -106,6 +127,22 @@ namespace PEngine.Core.Logic
           forumThread.UniqueName = existingForumThread.UniqueName;
           forumThread.CreatedUTC = existingForumThread.CreatedUTC;
           forumThread.ModifiedUTC = existingForumThread.ModifiedUTC;
+          forumThread.ForumUserGuid = existingForumThread.ForumUserGuid;
+          if (!isForumAdmin)
+          {
+            forumThread.ForumGuid = existingForumThread.ForumGuid;
+            forumThread.LockFlag = existingForumThread.LockFlag;
+            forumThread.VisibleFlag = existingForumThread.VisibleFlag; 
+            if (forumThread.ForumUserGuid != forumUserGuid || !forumThread.VisibleFlag || forumThread.LockFlag)
+            {
+              errors.Add(THREAD_ERROR_NOT_AUTHORIZED);
+            }
+            if (forumThread.CreatedUTC.HasValue
+              && (DateTime.Now - forumThread.CreatedUTC.Value).TotalMinutes > Settings.Current.TimeLimitForumPostEdit)
+            {
+              errors.Add(THREAD_ERROR_TOO_LATE_TO_UPDATE);
+            }
+          }
         }
       }
       if (string.IsNullOrWhiteSpace(forumThread.Name))
@@ -140,7 +177,7 @@ namespace PEngine.Core.Logic
           if (forumThread.InitialPost != null)
           {
             forumThread.InitialPost.ForumThreadGuid = forumThread.Guid;
-            UpsertForumThreadPost(forumThread.InitialPost, ref errors);
+            UpsertForumThreadPost(forumThread.InitialPost, forumUserGuid, isForumAdmin, ref errors);
           }
           _forumDal.CommitTransaction(DatabaseType.Forum);
         }
@@ -153,7 +190,19 @@ namespace PEngine.Core.Logic
       return retvalue;
     }
 
-    public bool UpsertForumThreadPost(ForumThreadPostModel forumThreadPost, ref List<string> errors)
+    public IEnumerable<ForumThreadPostModel> ListForumThreadPosts(Guid? forumGuid, string forumUniqueName, Guid? forumThreadGuid, string forumThreadUniqueName, bool isForumAdmin)
+    {
+      return _forumDal.ListForumThreadPosts(forumGuid, forumUniqueName, forumThreadGuid, forumThreadUniqueName)
+        .Where(ftp => isForumAdmin || ftp.VisibleFlag);
+    }
+
+    public ForumThreadPostModel GetForumThreadPostById(Guid guid, Guid forumUserGuid, bool isForumAdmin)
+    {
+      var forumThreadPost = _forumDal.GetForumThreadPostById(guid);
+      return (forumThreadPost == null || isForumAdmin || forumThreadPost.ForumUserGuid == forumUserGuid) ? forumThreadPost : null;
+    }
+
+    public bool UpsertForumThreadPost(ForumThreadPostModel forumThreadPost, Guid forumUserGuid, bool isForumAdmin, ref List<string> errors)
     {
       var startErrorCount = errors.Count;
       ForumThreadPostModel existingForumThreadPost = null;
@@ -173,6 +222,22 @@ namespace PEngine.Core.Logic
         {
           forumThreadPost.CreatedUTC = existingForumThreadPost.CreatedUTC;
           forumThreadPost.ModifiedUTC = existingForumThreadPost.ModifiedUTC;
+          forumThreadPost.ForumUserGuid = existingForumThreadPost.ForumUserGuid;
+          if (!isForumAdmin)
+          {
+            forumThreadPost.ForumThreadGuid = existingForumThreadPost.ForumThreadGuid;
+            forumThreadPost.LockFlag = existingForumThreadPost.LockFlag;
+            forumThreadPost.VisibleFlag = existingForumThreadPost.VisibleFlag;
+            if (forumThreadPost.ForumUserGuid != forumUserGuid || !forumThreadPost.VisibleFlag || forumThreadPost.LockFlag)
+            {
+              errors.Add(POST_ERROR_NOT_AUTHORIZED);
+            }
+            if (forumThreadPost.CreatedUTC.HasValue
+              && (DateTime.Now - forumThreadPost.CreatedUTC.Value).TotalMinutes > Settings.Current.TimeLimitForumPostEdit)
+            {
+              errors.Add(POST_ERROR_TOO_LATE_TO_UPDATE);
+            }
+          }
         }
       }
       if (string.IsNullOrWhiteSpace(forumThreadPost.Data))
@@ -194,7 +259,13 @@ namespace PEngine.Core.Logic
       return retvalue;
     }
 
-    public bool UpsertForumUser(ForumUserModel forumUser, ref List<string> errors)
+    public ForumUserModel GetForumUserById(Guid? guid, string userId, Guid forumUserGuid, bool isForumAdmin)
+    {
+      var forumUser = _forumDal.GetForumUserById(guid, userId);
+      return (forumUser == null || isForumAdmin || forumUser.Guid == forumUserGuid) ? forumUser : null;
+    }
+
+    public bool UpsertForumUser(ForumUserModel forumUser, Guid forumUserGuid, bool isForumAdmin, ref List<string> errors)
     {
       var startErrorCount = errors.Count;
       ForumUserModel existingForumUser = null;
@@ -216,6 +287,16 @@ namespace PEngine.Core.Logic
           forumUser.ModifiedUTC = existingForumUser.ModifiedUTC;
           forumUser.LastIPAddress = existingForumUser.LastIPAddress;
           forumUser.LastLogon = existingForumUser.LastLogon;
+          if (!isForumAdmin)
+          {
+            forumUser.AdminFlag = existingForumUser.AdminFlag;
+            forumUser.BanFlag = existingForumUser.BanFlag;
+            forumUser.UserId = existingForumUser.UserId;
+            if (forumUser.Guid != forumUserGuid)
+            {
+              errors.Add(USER_ERROR_NOT_AUTHORIZED);
+            }
+          }
         }
       }
       if (string.IsNullOrWhiteSpace(forumUser.UserId))

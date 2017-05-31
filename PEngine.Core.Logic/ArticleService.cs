@@ -77,23 +77,10 @@ namespace PEngine.Core.Logic
         {
           if (article.Guid == Guid.Empty)
           {
-            article.AdminPass = Security.Encrypt(article.NewAdminPass.Value ?? string.Empty);
             _articleDal.InsertArticle(article);
           }
           else
           {
-            if (article.NewAdminPass.Reset)
-            {
-              article.AdminPass = Security.Encrypt(string.Empty);
-            }
-            else if (!string.IsNullOrEmpty(article.NewAdminPass.Value))
-            {
-              article.AdminPass = Security.Encrypt(article.NewAdminPass.Value);
-            }
-            else
-            {
-              article.AdminPass = existingArticle?.AdminPass ?? string.Empty;
-            }
             _articleDal.UpdateArticle(article);
           }
           if (article.Sections != null)

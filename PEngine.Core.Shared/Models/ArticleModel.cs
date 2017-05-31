@@ -22,10 +22,5 @@ namespace PEngine.Core.Shared.Models
     public DateTime? ModifiedUTC { get; set; }
 
     public List<ArticleSectionModel> Sections { get; set; } = new List<ArticleSectionModel>();
-
-    [JsonIgnore]
-    public string AdminPass { get; set; } = string.Empty;
-
-    public NewPasswordModel NewAdminPass { get; set; } = new NewPasswordModel();
   }
 }
