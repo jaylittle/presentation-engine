@@ -16,6 +16,7 @@ using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Data.Providers;
 using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
+using PEngine.Core.Shared;
 
 namespace PEngine.Core.Web
 {
@@ -44,6 +45,7 @@ namespace PEngine.Core.Web
       services.AddScoped<IForumDal, ForumDal>();
       services.AddScoped<IQuoteDal, QuoteDal>();
       services.AddScoped<IVersionDal, VersionDal>();
+      services.AddScoped<ISettingsProvider, SettingsProvider>();
       services.AddScoped<IPostService, PostService>();
       services.AddScoped<IArticleService, ArticleService>();
       services.AddScoped<IResumeService, ResumeService>();

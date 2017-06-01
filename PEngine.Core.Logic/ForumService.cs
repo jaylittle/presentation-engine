@@ -35,10 +35,12 @@ namespace PEngine.Core.Logic
     public const string USER_ERROR_NOT_AUTHORIZED = "Forum User can only be updated by itself";
 
     private IForumDal _forumDal;
+    private ISettingsProvider _settingsProvider;
     
-    public ForumService(IForumDal forumDal)
+    public ForumService(IForumDal forumDal, ISettingsProvider settingsProvider)
     {
       _forumDal = forumDal;
+      _settingsProvider = settingsProvider;
     }
 
     public IEnumerable<ForumModel> ListForums(bool isForumAdmin)
@@ -138,12 +140,16 @@ namespace PEngine.Core.Logic
               errors.Add(THREAD_ERROR_NOT_AUTHORIZED);
             }
             if (forumThread.CreatedUTC.HasValue
-              && (DateTime.Now - forumThread.CreatedUTC.Value).TotalMinutes > Settings.Current.TimeLimitForumPostEdit)
+              && (DateTime.UtcNow - forumThread.CreatedUTC.Value).TotalMinutes > _settingsProvider.Current.TimeLimitForumPostEdit)
             {
               errors.Add(THREAD_ERROR_TOO_LATE_TO_UPDATE);
             }
           }
         }
+      }
+      else
+      {
+        forumThread.ForumUserGuid = forumUserGuid;
       }
       if (string.IsNullOrWhiteSpace(forumThread.Name))
       {
@@ -233,12 +239,16 @@ namespace PEngine.Core.Logic
               errors.Add(POST_ERROR_NOT_AUTHORIZED);
             }
             if (forumThreadPost.CreatedUTC.HasValue
-              && (DateTime.Now - forumThreadPost.CreatedUTC.Value).TotalMinutes > Settings.Current.TimeLimitForumPostEdit)
+              && (DateTime.UtcNow - forumThreadPost.CreatedUTC.Value).TotalMinutes > _settingsProvider.Current.TimeLimitForumPostEdit)
             {
               errors.Add(POST_ERROR_TOO_LATE_TO_UPDATE);
             }
           }
         }
+      }
+      else
+      {
+        forumThreadPost.ForumUserGuid = forumUserGuid;
       }
       if (string.IsNullOrWhiteSpace(forumThreadPost.Data))
       {

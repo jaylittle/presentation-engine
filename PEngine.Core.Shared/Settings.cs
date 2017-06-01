@@ -99,6 +99,21 @@ namespace PEngine.Core.Shared
     public Guid SecretKey { get; set; } = Guid.NewGuid();
   }
 
+  public class SettingsProvider : ISettingsProvider
+  {
+    public SettingsData Current
+    {
+      get
+      {
+        return Settings.Current;
+      }
+      set
+      {
+        Settings.Current = value;
+      }
+    }
+  }
+
   public class Settings
   {
     public static void Startup(string contentRootPath)
