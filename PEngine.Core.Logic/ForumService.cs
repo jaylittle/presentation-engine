@@ -48,6 +48,12 @@ namespace PEngine.Core.Logic
       return _forumDal.ListForums().Where(f => isForumAdmin || f.VisibleFlag);
     }
 
+    public ForumModel GetForumById(Guid? guid, string uniqueName, bool isForumAdmin)
+    {
+      var forum = _forumDal.GetForumById(guid, uniqueName);
+      return (forum == null || isForumAdmin || forum.VisibleFlag) ? forum : null;
+    }
+
     public bool UpsertForum(ForumModel forum, ref List<string> errors)
     {
       var startErrorCount = errors.Count;
@@ -105,7 +111,7 @@ namespace PEngine.Core.Logic
     public ForumThreadModel GetForumThreadById(Guid? guid, string uniqueName, Guid forumUserGuid, bool isForumAdmin)
     {
       var forumThread = _forumDal.GetForumThreadById(guid, uniqueName);
-      return (forumThread == null || isForumAdmin || forumThread.ForumUserGuid == forumUserGuid) ? forumThread : null;
+      return (forumThread == null || isForumAdmin || forumThread.VisibleFlag) ? forumThread : null;
     }
     
     public bool UpsertForumThread(ForumThreadModel forumThread, Guid forumUserGuid, bool isForumAdmin, ref List<string> errors)
@@ -205,7 +211,7 @@ namespace PEngine.Core.Logic
     public ForumThreadPostModel GetForumThreadPostById(Guid guid, Guid forumUserGuid, bool isForumAdmin)
     {
       var forumThreadPost = _forumDal.GetForumThreadPostById(guid);
-      return (forumThreadPost == null || isForumAdmin || forumThreadPost.ForumUserGuid == forumUserGuid) ? forumThreadPost : null;
+      return (forumThreadPost == null || isForumAdmin || forumThreadPost.VisibleFlag) ? forumThreadPost : null;
     }
 
     public bool UpsertForumThreadPost(ForumThreadPostModel forumThreadPost, Guid forumUserGuid, bool isForumAdmin, ref List<string> errors)

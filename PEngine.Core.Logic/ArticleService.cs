@@ -27,6 +27,17 @@ namespace PEngine.Core.Logic
       _articleDal = articleDal;
     }
 
+    public IEnumerable<ArticleModel> ListArticles(string category, bool isAdmin)
+    {
+      return _articleDal.ListArticles(category).Where(a => isAdmin || a.VisibleFlag);
+    }
+
+    public ArticleModel GetArticleById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
+    {
+      var article = _articleDal.GetArticleById(guid, legacyId, uniqueName);
+      return (article == null || isAdmin || article.VisibleFlag) ? article : null;
+    }
+
     public bool UpsertArticle(ArticleModel article, ref List<string> errors)
     {
       var startErrorCount = errors.Count;
@@ -91,7 +102,7 @@ namespace PEngine.Core.Logic
       var retvalue = (errors == null || errors.Count == startErrorCount);
       if (retvalue)
       {
-        Dictionary<string, bool> existingUniqueNames = _articleDal.ListArticles()
+        Dictionary<string, bool> existingUniqueNames = _articleDal.ListArticles(null)
           .ToDictionary(a => a.UniqueName, a => true, StringComparer.OrdinalIgnoreCase);
         article.GenerateUniqueName(existingUniqueNames);
 

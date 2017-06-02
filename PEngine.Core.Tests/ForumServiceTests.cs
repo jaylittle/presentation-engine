@@ -24,6 +24,8 @@ namespace PEngine.Core.Tests
     private Guid semiValidGuid1 = Guid.NewGuid();
     private Guid semiValidGuid2 = Guid.NewGuid();
     private Guid invalidGuid = Guid.NewGuid();
+    private Guid visibleGuid = Guid.NewGuid();
+    private Guid hiddenGuid = Guid.NewGuid();
     private SettingsData settingsData;
     
     public ForumServiceTests()
@@ -43,24 +45,68 @@ namespace PEngine.Core.Tests
       mockedForumDal.Setup(fd => fd.UpdateForum(forumData));
       mockedForumDal.Setup(fd => fd.GetForumById(invalidGuid, null)).Returns((ForumModel)null);
       mockedForumDal.Setup(fd => fd.GetForumById(validGuid, null)).Returns(new ForumModel());
+      mockedForumDal.Setup(ad => ad.GetForumById(visibleGuid, null)).Returns(new ForumModel() { VisibleFlag = true });
+      mockedForumDal.Setup(ad => ad.GetForumById(hiddenGuid, null)).Returns(new ForumModel() { VisibleFlag = false });
+      mockedForumDal.Setup(ad => ad.ListForums()).Returns(new List<ForumModel> {
+        new ForumModel() { VisibleFlag = true },
+        new ForumModel() { VisibleFlag = false }
+      });
       mockedForumDal.Setup(fd => fd.InsertForumThread(forumThreadData));
       mockedForumDal.Setup(fd => fd.UpdateForumThread(forumThreadData));
       mockedForumDal.Setup(fd => fd.GetForumThreadById(invalidGuid, null)).Returns((ForumThreadModel)null);
       mockedForumDal.Setup(fd => fd.GetForumThreadById(validGuid, null)).Returns(new ForumThreadModel() { ForumUserGuid = validGuid, VisibleFlag = true, LockFlag = false, CreatedUTC = DateTime.UtcNow.AddMinutes(-1) });
       mockedForumDal.Setup(fd => fd.GetForumThreadById(semiValidGuid1, null)).Returns(new ForumThreadModel() { ForumUserGuid = validGuid, VisibleFlag = false, LockFlag = false, CreatedUTC = DateTime.UtcNow.AddMinutes((-1 * settingsData.TimeLimitForumPostEdit) - 1) });
       mockedForumDal.Setup(fd => fd.GetForumThreadById(semiValidGuid2, null)).Returns(new ForumThreadModel() { ForumUserGuid = validGuid, VisibleFlag = true, LockFlag = true, CreatedUTC = DateTime.UtcNow.AddMinutes((-1 * settingsData.TimeLimitForumPostEdit) - 1) });
+      mockedForumDal.Setup(ad => ad.GetForumThreadById(visibleGuid, null)).Returns(new ForumThreadModel() { VisibleFlag = true });
+      mockedForumDal.Setup(ad => ad.GetForumThreadById(hiddenGuid, null)).Returns(new ForumThreadModel() { VisibleFlag = false });
+      mockedForumDal.Setup(ad => ad.ListForumThreads(null, null)).Returns(new List<ForumThreadModel> {
+        new ForumThreadModel() { VisibleFlag = true },
+        new ForumThreadModel() { VisibleFlag = false }
+      });
       mockedForumDal.Setup(fd => fd.InsertForumThreadPost(forumThreadPostData));
       mockedForumDal.Setup(fd => fd.UpdateForumThreadPost(forumThreadPostData));
       mockedForumDal.Setup(fd => fd.GetForumThreadPostById(invalidGuid)).Returns((ForumThreadPostModel)null);
       mockedForumDal.Setup(fd => fd.GetForumThreadPostById(validGuid)).Returns(new ForumThreadPostModel() { ForumUserGuid = validGuid, VisibleFlag = true, LockFlag = false, CreatedUTC = DateTime.UtcNow.AddMinutes(-1) });
       mockedForumDal.Setup(fd => fd.GetForumThreadPostById(semiValidGuid1)).Returns(new ForumThreadPostModel() { ForumUserGuid = validGuid, VisibleFlag = false, LockFlag = false, CreatedUTC = DateTime.UtcNow.AddMinutes((-1 * settingsData.TimeLimitForumPostEdit) - 1) });
       mockedForumDal.Setup(fd => fd.GetForumThreadPostById(semiValidGuid2)).Returns(new ForumThreadPostModel() { ForumUserGuid = validGuid, VisibleFlag = true, LockFlag = true, CreatedUTC = DateTime.UtcNow.AddMinutes((-1 * settingsData.TimeLimitForumPostEdit) - 1) });
+      mockedForumDal.Setup(ad => ad.GetForumThreadPostById(visibleGuid)).Returns(new ForumThreadPostModel() { VisibleFlag = true });
+      mockedForumDal.Setup(ad => ad.GetForumThreadPostById(hiddenGuid)).Returns(new ForumThreadPostModel() { VisibleFlag = false });
+      mockedForumDal.Setup(ad => ad.ListForumThreadPosts(null, null, null, null)).Returns(new List<ForumThreadPostModel> {
+        new ForumThreadPostModel() { VisibleFlag = true },
+        new ForumThreadPostModel() { VisibleFlag = false }
+      });
       mockedForumDal.Setup(fd => fd.InsertForumUser(forumUserData));
       mockedForumDal.Setup(fd => fd.UpdateForumUser(forumUserData));
       mockedForumDal.Setup(fd => fd.GetForumUserById(invalidGuid, null)).Returns((ForumUserModel)null);
       mockedForumDal.Setup(fd => fd.GetForumUserById(validGuid, null)).Returns(new ForumUserModel());
 
       forumService = new ForumService(mockedForumDal.Object, mockedSettingsProvider.Object);
+    }
+
+    [Fact]
+    public void ForumService_List_Forum_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users only get visible records
+      Assert.Equal(forumService.ListForums(false).Count(), 1);
+
+      //Verify that dmin users get all the records
+      Assert.Equal(forumService.ListForums(true).Count(), 2);
+    }
+
+    [Fact]
+    public void ForumService_Get_Forum_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users can get visible records
+      Assert.NotNull(forumService.GetForumById(visibleGuid, null, false));
+
+      //Verify that non-admin users cannot get hidden records
+      Assert.Null(forumService.GetForumById(hiddenGuid, null, false));
+
+      //Verify that admin users can get visible records
+      Assert.NotNull(forumService.GetForumById(visibleGuid, null, true));
+
+      //Verify that admin users can get hidden records
+      Assert.NotNull(forumService.GetForumById(hiddenGuid, null, true));
     }
 
     [Fact]
@@ -141,6 +187,32 @@ namespace PEngine.Core.Tests
         forumService.UpsertForum(forumData, ref e);
         return e;
       }, ForumService.FORUM_ERROR_DESCRIPTION_IS_REQUIRED));
+    }
+
+    [Fact]
+    public void ForumService_List_Thread_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users only get visible records
+      Assert.Equal(forumService.ListForumThreads(null, null, false).Count(), 1);
+
+      //Verify that dmin users get all the records
+      Assert.Equal(forumService.ListForumThreads(null, null, true).Count(), 2);
+    }
+
+    [Fact]
+    public void ForumService_Get_Thread_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users can get visible records
+      Assert.NotNull(forumService.GetForumThreadById(visibleGuid, null, validGuid, false));
+
+      //Verify that non-admin users cannot get hidden records
+      Assert.Null(forumService.GetForumThreadById(hiddenGuid, null, validGuid, false));
+
+      //Verify that admin users can get visible records
+      Assert.NotNull(forumService.GetForumThreadById(visibleGuid, null, validGuid, true));
+
+      //Verify that admin users can get hidden records
+      Assert.NotNull(forumService.GetForumThreadById(hiddenGuid, null, validGuid, true));
     }
 
     [Fact]
@@ -303,6 +375,32 @@ namespace PEngine.Core.Tests
         forumService.UpsertForumThread(forumThreadData, validGuid, true, ref e);
         return e;
       }, ForumService.THREAD_ERROR_TOO_LATE_TO_UPDATE));
+    }
+
+    [Fact]
+    public void ForumService_List_Post_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users only get visible records
+      Assert.Equal(forumService.ListForumThreadPosts(null, null, null, null, false).Count(), 1);
+
+      //Verify that dmin users get all the records
+      Assert.Equal(forumService.ListForumThreadPosts(null, null, null, null, true).Count(), 2);
+    }
+
+    [Fact]
+    public void ForumService_Get_Post_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users can get visible records
+      Assert.NotNull(forumService.GetForumThreadPostById(visibleGuid, validGuid, false));
+
+      //Verify that non-admin users cannot get hidden records
+      Assert.Null(forumService.GetForumThreadPostById(hiddenGuid, validGuid, false));
+
+      //Verify that admin users can get visible records
+      Assert.NotNull(forumService.GetForumThreadPostById(visibleGuid, validGuid, true));
+
+      //Verify that admin users can get hidden records
+      Assert.NotNull(forumService.GetForumThreadPostById(hiddenGuid, validGuid, true));
     }
 
     [Fact]

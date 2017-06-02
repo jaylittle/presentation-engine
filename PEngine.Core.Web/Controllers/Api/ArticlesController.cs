@@ -11,7 +11,7 @@ using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Web.Constraints;
 
-namespace PEngine.Core.Web.Controllers
+namespace PEngine.Core.Web.Controllers.Api
 {
   [Route("api/[controller]")]
   public class ArticlesController : Controller
@@ -28,7 +28,14 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet]
     public IEnumerable<ArticleModel> Get()
     {
-      return _articleDal.ListArticles();
+      return _articleDal.ListArticles(null);
+    }
+
+    [Authorize(Roles = "PEngineAdmin")]
+    [HttpGet("/category/{category}")]
+    public IEnumerable<ArticleModel> Get(string category)
+    {
+      return _articleDal.ListArticles(category);
     }
 
     [Authorize(Roles = "PEngineAdmin")]

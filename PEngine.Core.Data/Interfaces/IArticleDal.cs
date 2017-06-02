@@ -6,7 +6,7 @@ namespace PEngine.Core.Data.Interfaces
 {
     public interface IArticleDal : IBaseDal
     {
-      IEnumerable<ArticleModel> ListArticles();
+      IEnumerable<ArticleModel> ListArticles(string category);
       ArticleModel GetArticleById(Guid? guid, int? legacyId, string uniqueName);
       void InsertArticle(ArticleModel article);
       void UpdateArticle(ArticleModel article);

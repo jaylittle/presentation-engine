@@ -8,6 +8,8 @@ namespace PEngine.Core.Logic.Interfaces
 {
   public interface IArticleService
   {
+    IEnumerable<ArticleModel> ListArticles(string category, bool isAdmin);
+    ArticleModel GetArticleById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin);
     bool UpsertArticle(ArticleModel article, ref List<string> errors);
   }
 }

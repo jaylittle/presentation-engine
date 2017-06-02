@@ -1,4 +1,6 @@
 SELECT
   *
 FROM
-  Article;
+  Article
+WHERE
+  (@category IS NULL OR Category = @category);

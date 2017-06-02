@@ -25,6 +25,34 @@ namespace PEngine.Core.Web
     public SigningCredentials SigningCredentials { get; set; }
   }
 
+  public class TokenCookieOptions
+  {
+    public string CookieName { get; set; } = "access_token";
+  }
+
+  public class TokenCookieMiddleware
+  {
+    private readonly RequestDelegate _next;
+    private readonly TokenCookieOptions _options;
+
+    public TokenCookieMiddleware(RequestDelegate next, IOptions<TokenCookieOptions> options)
+    {
+      _next = next;
+      _options = options.Value;
+    }
+
+    public async Task Invoke(HttpContext context)
+    {
+      var cookie = context.Request.Cookies[_options.CookieName];
+      if (!string.IsNullOrWhiteSpace(cookie))
+      {
+        context.Request.Headers.Append("Authorization", "Bearer " + cookie);
+      }
+
+      await _next.Invoke(context);
+    }
+  }
+
   public class TokenProviderMiddleware
   {
     private readonly RequestDelegate _next;
@@ -68,13 +96,7 @@ namespace PEngine.Core.Web
       var password = (string)context.Request.Form["password"] ?? string.Empty;
       var userId = string.Empty;
       var roleClaims = new List<string>();
-      if (Security.EncryptAndCompare(password, Settings.Current.PasswordGod))
-      {
-        roleClaims.Add("PEngineGod");
-        roleClaims.Add("PEngineAdmin");
-        userId = "PEngineGod";
-      }
-      else if (Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin))
+      if (Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin))
       {
         roleClaims.Add("PEngineAdmin");
         userId = "PEngineAdmin";

@@ -11,7 +11,7 @@ using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Web.Constraints;
 
-namespace PEngine.Core.Web.Controllers
+namespace PEngine.Core.Web.Controllers.Api
 {
   [Route("api/[controller]")]
   public class QuotesController : Controller

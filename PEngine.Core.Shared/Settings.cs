@@ -84,8 +84,6 @@ namespace PEngine.Core.Shared
     public string LabelClippyButton { get; set; } = "Help!";
     // app_pass_admin,
     public string PasswordAdmin { get; set; } = string.Empty;
-    // app_pass_god,
-    public string PasswordGod { get; set; } = string.Empty;
     // app_label_forum,
     public string LabelForumButton { get; set; } = "Forums";
     // app_label_forum_login,

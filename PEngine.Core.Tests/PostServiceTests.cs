@@ -17,6 +17,8 @@ namespace PEngine.Core.Tests
     private PostService postService;
     private Guid validGuid = Guid.NewGuid();
     private Guid invalidGuid = Guid.NewGuid();
+    private Guid visibleGuid = Guid.NewGuid();
+    private Guid hiddenGuid = Guid.NewGuid();
     
     public PostServiceTests()
     {
@@ -27,7 +29,39 @@ namespace PEngine.Core.Tests
       mockedPostDal.Setup(pd => pd.UpdatePost(postData));
       mockedPostDal.Setup(pd => pd.GetPostById(invalidGuid, null, null)).Returns((PostModel)null);
       mockedPostDal.Setup(pd => pd.GetPostById(validGuid, null, null)).Returns(new PostModel());
+      mockedPostDal.Setup(ad => ad.GetPostById(visibleGuid, null, null)).Returns(new PostModel() { VisibleFlag = true });
+      mockedPostDal.Setup(ad => ad.GetPostById(hiddenGuid, null, null)).Returns(new PostModel() { VisibleFlag = false });
+      mockedPostDal.Setup(ad => ad.ListPosts()).Returns(new List<PostModel> {
+        new PostModel() { VisibleFlag = true },
+        new PostModel() { VisibleFlag = false }
+      });
       postService = new PostService(mockedPostDal.Object);
+    }
+
+    [Fact]
+    public void PostService_List_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users only get visible records
+      Assert.Equal(postService.ListPosts(false).Count(), 1);
+
+      //Verify that dmin users get all the records
+      Assert.Equal(postService.ListPosts(true).Count(), 2);
+    }
+
+    [Fact]
+    public void PostService_Get_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users can get visible records
+      Assert.NotNull(postService.GetPostById(visibleGuid, null, null, false));
+
+      //Verify that non-admin users cannot get hidden records
+      Assert.Null(postService.GetPostById(hiddenGuid, null, null, false));
+
+      //Verify that admin users can get visible records
+      Assert.NotNull(postService.GetPostById(visibleGuid, null, null, true));
+
+      //Verify that admin users can get hidden records
+      Assert.NotNull(postService.GetPostById(hiddenGuid, null, null, true));
     }
 
     [Fact]

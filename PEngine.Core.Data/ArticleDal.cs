@@ -11,11 +11,11 @@ namespace PEngine.Core.Data
 {
   public class ArticleDal : BaseDal<ArticleDal>, IArticleDal
   {
-    public IEnumerable<ArticleModel> ListArticles()
+    public IEnumerable<ArticleModel> ListArticles(string category)
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
-        return ct.DbConnection.Query<ArticleModel>(ReadQuery("ListArticles", ct.ProviderName), transaction: ct.DbTransaction);
+        return ct.DbConnection.Query<ArticleModel>(ReadQuery("ListArticles", ct.ProviderName), new { category }, transaction: ct.DbTransaction);
       }
     }
 

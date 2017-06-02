@@ -9,6 +9,7 @@ namespace PEngine.Core.Logic.Interfaces
   public interface IForumService
   {
     IEnumerable<ForumModel> ListForums(bool isForumAdmin);
+    ForumModel GetForumById(Guid? guid, string uniqueName, bool isForumAdmin);
     bool UpsertForum(ForumModel forum, ref List<string> errors);
     IEnumerable<ForumThreadModel> ListForumThreads(Guid? forumGuid, string forumUniqueName, bool isForumAdmin);
     ForumThreadModel GetForumThreadById(Guid? guid, string uniqueName, Guid forumUserGuid, bool isForumAdmin);

@@ -1,0 +1,18 @@
+@using PEngine.Core.Shared.Models
+@using PEngine.Core.Web.Models
+@model PEngineGenericList<PostModel>
+
+<html>
+  <body>
+    <h1>@Model.Settings.DefaultTitle</h1>
+    <ul>
+      @foreach (var post in Model.Data)
+      {
+      <li>
+        <h3>@post.Name</h3>
+        <p>@post.Data</p>
+      </li>
+      }
+    </ul>
+  </body>
+</html>

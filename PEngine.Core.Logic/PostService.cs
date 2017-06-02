@@ -22,6 +22,17 @@ namespace PEngine.Core.Logic
       _postDal = postDal;
     }
 
+    public IEnumerable<PostModel> ListPosts(bool isAdmin)
+    {
+      return _postDal.ListPosts().Where(p => isAdmin || p.VisibleFlag);
+    }
+
+    public PostModel GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
+    {
+      var post = _postDal.GetPostById(guid, legacyId, uniqueName);
+      return (post == null || isAdmin || post.VisibleFlag) ? post : null;
+    }
+
     public bool UpsertPost(PostModel post, ref List<string> errors)
     {
       var startErrorCount = errors.Count;

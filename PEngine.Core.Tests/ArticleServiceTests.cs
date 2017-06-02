@@ -16,6 +16,8 @@ namespace PEngine.Core.Tests
     private Mock<IArticleDal> mockedArticleDal;
     private Guid validGuid = Guid.NewGuid();
     private Guid invalidGuid = Guid.NewGuid();
+    private Guid visibleGuid = Guid.NewGuid();
+    private Guid hiddenGuid = Guid.NewGuid();
     private ArticleService articleService;
     
     public ArticleServiceTests()
@@ -27,7 +29,39 @@ namespace PEngine.Core.Tests
       mockedArticleDal.Setup(ad => ad.UpdateArticle(articleData));
       mockedArticleDal.Setup(ad => ad.GetArticleById(invalidGuid, null, null)).Returns((ArticleModel)null);
       mockedArticleDal.Setup(ad => ad.GetArticleById(validGuid, null, null)).Returns(new ArticleModel());
+      mockedArticleDal.Setup(ad => ad.GetArticleById(visibleGuid, null, null)).Returns(new ArticleModel() { VisibleFlag = true });
+      mockedArticleDal.Setup(ad => ad.GetArticleById(hiddenGuid, null, null)).Returns(new ArticleModel() { VisibleFlag = false });
+      mockedArticleDal.Setup(ad => ad.ListArticles(null)).Returns(new List<ArticleModel> {
+        new ArticleModel() { VisibleFlag = true },
+        new ArticleModel() { VisibleFlag = false }
+      });
       articleService = new ArticleService(mockedArticleDal.Object);
+    }
+
+    [Fact]
+    public void ArticleService_List_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users only get visible records
+      Assert.Equal(articleService.ListArticles(null, false).Count(), 1);
+
+      //Verify that dmin users get all the records
+      Assert.Equal(articleService.ListArticles(null, true).Count(), 2);
+    }
+
+    [Fact]
+    public void ArticleService_Get_NonVisibleRecordsAreFiltered()
+    {
+      //Verify that non-admin users can get visible records
+      Assert.NotNull(articleService.GetArticleById(visibleGuid, null, null, false));
+
+      //Verify that non-admin users cannot get hidden records
+      Assert.Null(articleService.GetArticleById(hiddenGuid, null, null, false));
+
+      //Verify that admin users can get visible records
+      Assert.NotNull(articleService.GetArticleById(visibleGuid, null, null, true));
+
+      //Verify that admin users can get hidden records
+      Assert.NotNull(articleService.GetArticleById(hiddenGuid, null, null, true));
     }
 
     [Fact]

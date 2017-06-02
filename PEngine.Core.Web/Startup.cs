@@ -65,13 +65,20 @@ namespace PEngine.Core.Web
       var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
       // Add JWT generation
-      var options = new TokenProviderOptions
+      var providerOptions = new TokenProviderOptions
       {
         Audience = PEngine.Core.Shared.Settings.Current.DefaultTitle,
         Issuer = PEngine.Core.Shared.Settings.Current.DefaultTitle,
         SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
       };
-      app.UseMiddleware<TokenProviderMiddleware>(Options.Create(options));
+      app.UseMiddleware<TokenProviderMiddleware>(Options.Create(providerOptions));
+
+      // Add Support for JWTs passed in cookies
+      var cookieOptions = new TokenCookieOptions
+      {
+        CookieName = "access_token"
+      };
+      app.UseMiddleware<TokenCookieMiddleware>(Options.Create(cookieOptions));
 
       // Add JWT authorization
       var tokenValidationParameters = new TokenValidationParameters
