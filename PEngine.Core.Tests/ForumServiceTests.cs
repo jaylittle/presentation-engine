@@ -87,10 +87,10 @@ namespace PEngine.Core.Tests
     public void ForumService_List_Forum_NonVisibleRecordsAreFiltered()
     {
       //Verify that non-admin users only get visible records
-      Assert.Equal(forumService.ListForums(false).Count(), 1);
+      Assert.Equal(1, forumService.ListForums(false).Count());
 
       //Verify that dmin users get all the records
-      Assert.Equal(forumService.ListForums(true).Count(), 2);
+      Assert.Equal(2, forumService.ListForums(true).Count());
     }
 
     [Fact]
@@ -193,10 +193,10 @@ namespace PEngine.Core.Tests
     public void ForumService_List_Thread_NonVisibleRecordsAreFiltered()
     {
       //Verify that non-admin users only get visible records
-      Assert.Equal(forumService.ListForumThreads(null, null, false).Count(), 1);
+      Assert.Equal(1, forumService.ListForumThreads(null, null, false).Count());
 
       //Verify that dmin users get all the records
-      Assert.Equal(forumService.ListForumThreads(null, null, true).Count(), 2);
+      Assert.Equal(2, forumService.ListForumThreads(null, null, true).Count());
     }
 
     [Fact]
@@ -381,10 +381,10 @@ namespace PEngine.Core.Tests
     public void ForumService_List_Post_NonVisibleRecordsAreFiltered()
     {
       //Verify that non-admin users only get visible records
-      Assert.Equal(forumService.ListForumThreadPosts(null, null, null, null, false).Count(), 1);
+      Assert.Equal(1, forumService.ListForumThreadPosts(null, null, null, null, false).Count());
 
       //Verify that dmin users get all the records
-      Assert.Equal(forumService.ListForumThreadPosts(null, null, null, null, true).Count(), 2);
+      Assert.Equal(2, forumService.ListForumThreadPosts(null, null, null, null, true).Count());
     }
 
     [Fact]
