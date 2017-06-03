@@ -4,6 +4,11 @@
 
 <html>
   <body>
+    <div id="pengine-app">
+      {{ message }}
+      <hr>
+      {{ evenOnlyOutput }}
+    </div>
     <h1>@Model.Settings.DefaultTitle</h1>
     <ul>
       @foreach (var post in Model.Data)
@@ -14,5 +19,6 @@
       </li>
       }
     </ul>
+    <script src="dist/app.bundle.min.js"></script>
   </body>
 </html>

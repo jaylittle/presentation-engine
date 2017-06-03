@@ -8,6 +8,12 @@ pengine.settings.json
 # JetBrains IDE files
 .idea/
 
+# Webpack bundles
+dist/
+
+# Node files
+node_modules/
+
 # User-specific files
 *.suo
 *.user

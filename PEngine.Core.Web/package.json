@@ -1,0 +1,21 @@
+{
+  "name": "pengine.core.web",
+  "version": "5.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack -w"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "uglifyjs": "^2.4.11",
+    "uglifyjs-webpack-plugin": "^0.4.3",
+    "webpack": "^2.6.1"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "vue": "^2.3.3"
+  }
+}

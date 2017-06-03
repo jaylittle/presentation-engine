@@ -111,6 +111,8 @@ namespace PEngine.Core.Web
 
       app.UseMvc();
 
+      app.UseStaticFiles();
+
       PEngine.Core.Data.Database.Startup(env.ContentRootPath, new SQLiteDataProvider());
     }
   }
