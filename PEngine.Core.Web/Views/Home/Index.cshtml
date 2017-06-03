@@ -1,5 +1,6 @@
 @using PEngine.Core.Shared.Models
 @using PEngine.Core.Web.Models
+@using PEngine.Core.Web
 @model PEngineGenericList<PostModel>
 
 <html>
@@ -19,6 +20,6 @@
       </li>
       }
     </ul>
-    <script src="dist/app.bundle.min.js"></script>
+    <script src="@Html.ContentHashFile("dist/app.bundle.min.js")"></script>
   </body>
 </html>

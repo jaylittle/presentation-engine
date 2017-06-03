@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,17 @@ namespace PEngine.Core.Web
 {
   public class Startup
   {
+    private static IHttpContextAccessor _httpContextAccessor;
+    public static HttpContext HttpContext
+    {
+      get
+      {
+        return _httpContextAccessor.HttpContext;
+      }
+    }
+
+    public static string ContentRootPath { get; private set; }
+
     public Startup(IHostingEnvironment env)
     {
       var builder = new ConfigurationBuilder()
@@ -50,11 +62,15 @@ namespace PEngine.Core.Web
       services.AddScoped<IArticleService, ArticleService>();
       services.AddScoped<IResumeService, ResumeService>();
       services.AddScoped<IForumService, ForumService>();
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
     {
+      _httpContextAccessor = svp.GetRequiredService<IHttpContextAccessor>();
+      ContentRootPath = env.ContentRootPath;
+      
       loggerFactory.AddConsole(Configuration.GetSection("Logging"));
       loggerFactory.AddDebug();
 
