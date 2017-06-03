@@ -15,7 +15,7 @@ namespace PEngine.Core.Web
     public static HtmlString ContentHashFile(this IHtmlHelper HtmlHelper, string webPath)
     {
       var cacheEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath);
-      return new HtmlString($"hash/{cacheEntry.HashedPath}");
+      return new HtmlString($"hash/{cacheEntry.Hash}/{cacheEntry.WebPath}");
     }
   }
 }

@@ -16,28 +16,17 @@ namespace PEngine.Core.Web.Controllers
     {
     }
 
-    [HttpGet("{*hashedPath}")]
-    public IActionResult GetHashedFileName(string hashedPath)
+    [HttpGet("{hash}/{*filePath}")]
+    public IActionResult GetHashedFileName(string hash, string filePath)
     {
-      if (!string.IsNullOrWhiteSpace(hashedPath))
+      if (_md5HashRegex.Matches(hash).Count == 1 && !string.IsNullOrWhiteSpace(filePath))
       {
-        string[] elements = hashedPath.Split('.');
-        string originalPath = hashedPath;
-        switch (elements.Last().ToLower())
-        {
-          //Certain file types are assumed to be exempt from hash mapping, including .map files
-          case "map":
-            break;
-          default:
-            originalPath = String.Join(".", elements.Where((e) => _md5HashRegex.Matches(e).Count != 1));
-            break;
-        }
-        string originalFullPath = System.IO.Path.Combine(Startup.ContentRootPath, "wwwroot", originalPath);
-        if (System.IO.File.Exists(originalFullPath))
+        string fullPath = System.IO.Path.Combine(Startup.ContentRootPath, "wwwroot", filePath);
+        if (System.IO.File.Exists(fullPath))
         {
           string contentType;
-          new FileExtensionContentTypeProvider().TryGetContentType(originalFullPath, out contentType);
-          return File(System.IO.File.OpenRead(originalFullPath), contentType ?? "application/octet-stream");
+          new FileExtensionContentTypeProvider().TryGetContentType(fullPath, out contentType);
+          return File(System.IO.File.OpenRead(fullPath), contentType ?? "application/octet-stream");
         }
         return NotFound();
       }

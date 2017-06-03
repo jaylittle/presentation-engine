@@ -9,7 +9,8 @@ namespace PEngine.Core.Shared
   public class ContentHashEntry
   {
     public string FullPath { get; set; }
-    public string HashedPath { get; set; }
+    public string WebPath { get; set; }
+    public string Hash { get; set; }
     public DateTime Modified { get; set; }
   }
 
@@ -37,22 +38,22 @@ namespace PEngine.Core.Shared
       }
       if (output == null)
       {
-        var hashEntry = new ContentHashEntry();
+        var hashEntry = new ContentHashEntry() {
+          WebPath = webPath
+        };
 
         var oppDirectorySeperatorChar = Path.DirectorySeparatorChar == '/' ? '\\' : '/';
 
         hashEntry.FullPath = System.IO.Path.Combine(
           contentRootPath,
           wwwRootFolder,
-          webPath.Replace(oppDirectorySeperatorChar, Path.DirectorySeparatorChar));
+          webPath).Replace(oppDirectorySeperatorChar, Path.DirectorySeparatorChar);
 
         var md5 = System.Security.Cryptography.MD5.Create();
         using (var reader = System.IO.File.OpenRead(hashEntry.FullPath))
         {
           var md5Bytes = md5.ComputeHash(reader);
-          List<string> webPathElements = new List<string>(webPath.Split('.'));
-          webPathElements.Insert(webPathElements.Count - 1, Security.BytesToHex(md5Bytes));
-          hashEntry.HashedPath = String.Join(".", webPathElements);
+          hashEntry.Hash = Security.BytesToHex(md5Bytes);
         }
 
         hashEntry.Modified = System.IO.File.GetLastWriteTimeUtc(hashEntry.FullPath);
