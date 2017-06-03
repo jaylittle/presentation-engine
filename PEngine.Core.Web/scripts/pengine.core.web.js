@@ -1,15 +1,22 @@
-var _ = require('underscore');
-var Vue = require('vue');
+import 'babel-polyfill';
+import Vue from 'vue';
 
-var pengineApp = new Vue.default({
-  el: '#pengine-app',
-  data: function() {
-    var numberData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    var evenOnlyData = _.filter(numberData, function(element){ return element % 2 == 0; });
-    console.log('evenOnlyData', evenOnlyData);
-    return {
-      message: 'Hello Presentation Engine Users!',
-      evenOnlyOutput: evenOnlyData
-    };
+new Promise(
+  (resolve, reject) => {
+    let pengineApp = new Vue({
+      el: '#pengine-app',
+      data: () => {
+        let numberData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        let evenOnlyData = numberData.filter(element => element % 2 == 0);
+        console.log('evenOnlyData', evenOnlyData);
+        return {
+          message: 'Hello Presentation Engine Users!',
+          evenOnlyOutput: evenOnlyData
+        };
+      }
+    });
+    resolve(pengineApp);
   }
+).then(output => {
+  console.log('post-promise', output);
 });

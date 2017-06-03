@@ -1,9 +1,9 @@
-var path = require('path');
-var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-var webpack = require('webpack');
+let path = require('path');
+let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+let webpack = require('webpack');
 
 module.exports = {
-  entry: './scripts/pengine.core.web.js',
+  entry: ['babel-polyfill', './scripts/pengine.core.web.js'],
   devtool: 'source-map',
   output: {
     filename: 'app.bundle.min.js',
@@ -24,5 +24,19 @@ module.exports = {
       compress: { warnings: false },
       sourceMap: true
     })
-  ]
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env']
+          }
+        }
+      }
+    ]
+  }
 };
