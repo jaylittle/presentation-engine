@@ -11,7 +11,7 @@ namespace PEngine.Core.Web.Controllers
   [Route("[controller]")]
   public class HashController : Controller
   {
-    private Regex _md5HashRegex = new Regex(@"(?:[0-9]|[A-F]|[a-f]){16}");
+    private Regex _md5HashRegex = new Regex(@"(?:[0-9]|[A-F]){32}");
     public HashController()
     {
     }
@@ -29,7 +29,7 @@ namespace PEngine.Core.Web.Controllers
           case "map":
             break;
           default:
-            originalPath = String.Join(".", elements.Where((e) => !_md5HashRegex.IsMatch(e)));
+            originalPath = String.Join(".", elements.Where((e) => _md5HashRegex.Matches(e).Count != 1));
             break;
         }
         string originalFullPath = System.IO.Path.Combine(Startup.ContentRootPath, "wwwroot", originalPath);
