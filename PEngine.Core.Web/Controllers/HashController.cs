@@ -4,12 +4,14 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using PEngine.Core.Shared;
+using System.Text.RegularExpressions;
 
 namespace PEngine.Core.Web.Controllers
 {
   [Route("[controller]")]
   public class HashController : Controller
-  {    
+  {
+    private Regex _md5HashRegex = new Regex(@"(?:[0-9]|[A-F]|[a-f]){16}");
     public HashController()
     {
     }
@@ -17,18 +19,17 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("{*hashedPath}")]
     public IActionResult GetHashedFileName(string hashedPath)
     {
-      string[] elements = hashedPath.Split('.');
-      if (elements.Length >= 3)
+      if (!string.IsNullOrWhiteSpace(hashedPath))
       {
-        string originalPath = null;
+        string[] elements = hashedPath.Split('.');
+        string originalPath = hashedPath;
         switch (elements.Last().ToLower())
         {
           //Certain file types are assumed to be exempt from hash mapping, including .map files
           case "map":
-            originalPath = hashedPath;
             break;
           default:
-            originalPath = String.Join(".", elements.Where((e, i) => i != elements.Length - 2));
+            originalPath = String.Join(".", elements.Where((e) => !_md5HashRegex.IsMatch(e)));
             break;
         }
         string originalFullPath = System.IO.Path.Combine(Startup.ContentRootPath, "wwwroot", originalPath);
