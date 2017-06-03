@@ -17,10 +17,21 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("{*hashedPath}")]
     public IActionResult GetHashedFileName(string hashedPath)
     {
+      Console.WriteLine($"Hash File Request: {hashedPath}");
       string[] elements = hashedPath.Split('.');
       if (elements.Length >= 3)
       {
-        string originalPath = String.Join(".", elements.Where((e, i) => i != elements.Length - 2 ));
+        string originalPath = null;
+        switch (elements.Last().ToLower())
+        {
+          //Certain file types are assumed to be exempt from hash mapping, including .map files
+          case "map":
+            originalPath = hashedPath;
+            break;
+          default:
+            originalPath = String.Join(".", elements.Where((e, i) => i != elements.Length - 2));
+            break;
+        }
         string originalFullPath = System.IO.Path.Combine(Startup.ContentRootPath, "wwwroot", originalPath);
         if (System.IO.File.Exists(originalFullPath))
         {
