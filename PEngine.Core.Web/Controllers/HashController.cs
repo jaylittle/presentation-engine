@@ -17,7 +17,6 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("{*hashedPath}")]
     public IActionResult GetHashedFileName(string hashedPath)
     {
-      Console.WriteLine($"Hash File Request: {hashedPath}");
       string[] elements = hashedPath.Split('.');
       if (elements.Length >= 3)
       {
