@@ -53,19 +53,24 @@ namespace PEngine.Core.Shared
 
         if (!checkForExistence || System.IO.File.Exists(hashEntry.FullPath))
         {
-          var md5 = System.Security.Cryptography.MD5.Create();
-          using (var reader = System.IO.File.OpenRead(hashEntry.FullPath))
+          var fileInfo = new System.IO.FileInfo(hashEntry.FullPath);
+          // Make sure target file's full path lives within the location we want to restrict users to
+          if (fileInfo.FullName.IndexOf(System.IO.Path.Combine(contentRootPath, wwwRootFolder), StringComparison.OrdinalIgnoreCase) >= 0)
           {
-            var md5Bytes = md5.ComputeHash(reader);
-            hashEntry.Hash = Security.BytesToHex(md5Bytes);
-          }
-          hashEntry.Modified = System.IO.File.GetLastWriteTimeUtc(hashEntry.FullPath);
+            var md5 = System.Security.Cryptography.MD5.Create();
+            using (var reader = System.IO.File.OpenRead(hashEntry.FullPath))
+            {
+              var md5Bytes = md5.ComputeHash(reader);
+              hashEntry.Hash = Security.BytesToHex(md5Bytes);
+            }
+            hashEntry.Modified = System.IO.File.GetLastWriteTimeUtc(hashEntry.FullPath);
 
-          while (!_hashCache.ContainsKey(webPath) && !_hashCache.TryAdd(webPath, hashEntry));
-        }
-        else
-        {
-          hashEntry = null;
+            while (!_hashCache.ContainsKey(webPath) && !_hashCache.TryAdd(webPath, hashEntry));
+          }
+          else
+          {
+            throw new Exception("Requested File Path exists outside the specified root location!");
+          }
         }
       }
       while (_hashCache.ContainsKey(webPath) && !_hashCache.TryGetValue(webPath, out output));
