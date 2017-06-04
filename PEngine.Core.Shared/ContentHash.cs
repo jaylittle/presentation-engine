@@ -23,6 +23,7 @@ namespace PEngine.Core.Shared
       {
         wwwRootFolder += Path.DirectorySeparatorChar.ToString();
       }
+      var actualFileRoot = System.IO.Path.Combine(contentRootPath, wwwRootFolder);
       ContentHashEntry output = null;
       if (_hashCache.ContainsKey(webPath))
       {
@@ -47,15 +48,14 @@ namespace PEngine.Core.Shared
         var oppDirectorySeperatorChar = Path.DirectorySeparatorChar == '/' ? '\\' : '/';
 
         hashEntry.FullPath = System.IO.Path.Combine(
-          contentRootPath,
-          wwwRootFolder,
+          actualFileRoot,
           webPath).Replace(oppDirectorySeperatorChar, Path.DirectorySeparatorChar);
 
         if (!checkForExistence || System.IO.File.Exists(hashEntry.FullPath))
         {
-          var fileInfo = new System.IO.FileInfo(hashEntry.FullPath);
           // Make sure target file's full path lives within the location we want to restrict users to
-          if (fileInfo.FullName.IndexOf(System.IO.Path.Combine(contentRootPath, wwwRootFolder), StringComparison.OrdinalIgnoreCase) >= 0)
+          var fileInfo = new System.IO.FileInfo(hashEntry.FullPath);
+          if (fileInfo.FullName.StartsWith(actualFileRoot, StringComparison.OrdinalIgnoreCase))
           {
             var md5 = System.Security.Cryptography.MD5.Create();
             using (var reader = System.IO.File.OpenRead(hashEntry.FullPath))
