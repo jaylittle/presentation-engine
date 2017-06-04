@@ -21,7 +21,7 @@ namespace PEngine.Core.Web.Controllers
     public IActionResult GetHashedFileName(string hash, string filePath)
     {
       filePath = System.Net.WebUtility.UrlDecode(filePath);
-      if (_md5HashRegex.Matches(hash).Count == 1 && !string.IsNullOrWhiteSpace(filePath))
+      if (_md5HashRegex.Matches(hash).Count == 1 && !string.IsNullOrWhiteSpace(filePath) && !filePath.Contains(".."))
       {
         var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", filePath, true);
         if (hashEntry != null)
