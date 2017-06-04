@@ -4,6 +4,9 @@
 @model PEngineGenericList<PostModel>
 
 <html>
+  <head>
+    <base href="/">
+  </head>
   <body>
     <div id="pengine-app">
       {{ message }}
@@ -15,7 +18,7 @@
       @foreach (var post in Model.Data)
       {
       <li>
-        <h3>@post.Name</h3>
+        <h3><a href="/post/@post.UniqueName">@post.Name</a></h3>
         <p>@post.Data</p>
       </li>
       }

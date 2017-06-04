@@ -17,7 +17,7 @@ namespace PEngine.Core.Shared
   public static class ContentHash
   {
     private static ConcurrentDictionary<string, ContentHashEntry> _hashCache = new ConcurrentDictionary<string, ContentHashEntry>();
-    public static ContentHashEntry GetContentHashEntryForFile(string contentRootPath, string wwwRootFolder, string webPath)
+    public static ContentHashEntry GetContentHashEntryForFile(string contentRootPath, string wwwRootFolder, string webPath, bool checkForExistence = false)
     {
       if (!string.IsNullOrEmpty(wwwRootFolder) && !wwwRootFolder.EndsWith(Path.DirectorySeparatorChar.ToString()))
       {
@@ -29,7 +29,9 @@ namespace PEngine.Core.Shared
         while (_hashCache.ContainsKey(webPath) && !_hashCache.TryGetValue(webPath, out output));
 
         //If Cache Entry was found - check file last write time to determine whether or not its valid
-        if (output != null && output.Modified != System.IO.File.GetLastWriteTimeUtc(output.FullPath))
+        if (output != null 
+          && (!checkForExistence || System.IO.File.Exists(output.FullPath))
+          && output.Modified != System.IO.File.GetLastWriteTimeUtc(output.FullPath))
         {
           output = null;
           ContentHashEntry removed = null;
@@ -49,15 +51,22 @@ namespace PEngine.Core.Shared
           wwwRootFolder,
           webPath).Replace(oppDirectorySeperatorChar, Path.DirectorySeparatorChar);
 
-        var md5 = System.Security.Cryptography.MD5.Create();
-        using (var reader = System.IO.File.OpenRead(hashEntry.FullPath))
+        if (!checkForExistence || System.IO.File.Exists(hashEntry.FullPath))
         {
-          var md5Bytes = md5.ComputeHash(reader);
-          hashEntry.Hash = Security.BytesToHex(md5Bytes);
-        }
+          var md5 = System.Security.Cryptography.MD5.Create();
+          using (var reader = System.IO.File.OpenRead(hashEntry.FullPath))
+          {
+            var md5Bytes = md5.ComputeHash(reader);
+            hashEntry.Hash = Security.BytesToHex(md5Bytes);
+          }
+          hashEntry.Modified = System.IO.File.GetLastWriteTimeUtc(hashEntry.FullPath);
 
-        hashEntry.Modified = System.IO.File.GetLastWriteTimeUtc(hashEntry.FullPath);
-        while (!_hashCache.ContainsKey(webPath) && !_hashCache.TryAdd(webPath, hashEntry));
+          while (!_hashCache.ContainsKey(webPath) && !_hashCache.TryAdd(webPath, hashEntry));
+        }
+        else
+        {
+          hashEntry = null;
+        }
       }
       while (_hashCache.ContainsKey(webPath) && !_hashCache.TryGetValue(webPath, out output));
       return output;

@@ -13,7 +13,6 @@ using PEngine.Core.Web.Models;
 
 namespace PEngine.Core.Web.Controllers
 {
-  [Route("")]
   public class HomeController : Controller
   {
     private IPostDal _postDal;

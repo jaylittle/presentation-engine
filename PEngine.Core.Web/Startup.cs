@@ -125,7 +125,11 @@ namespace PEngine.Core.Web
         TokenValidationParameters = tokenValidationParameters
       });
 
-      app.UseMvc();
+      app.UseMvc(m => {
+        m.MapRoute(
+          name: "default",
+          template: "{controller=Home}/{action=Index}/{id?}");
+      });
 
       app.UseStaticFiles();
 

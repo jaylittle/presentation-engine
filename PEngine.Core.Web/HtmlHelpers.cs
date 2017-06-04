@@ -16,10 +16,10 @@ namespace PEngine.Core.Web
     public static HtmlString ContentHashFile(this IHtmlHelper htmlHelper, string webPath)
     {
       var urlHelper = new UrlHelper(htmlHelper.ViewContext);
-      var cacheEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath);
+      var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath);
       var hashUrl = System.Net.WebUtility.UrlDecode(urlHelper.Action("GetHashedFileName", "hash", new {
-        hash = cacheEntry.Hash,
-        filePath = cacheEntry.WebPath
+        hash = hashEntry.Hash,
+        filePath = hashEntry.WebPath
       }));
       return new HtmlString(hashUrl);
     }
