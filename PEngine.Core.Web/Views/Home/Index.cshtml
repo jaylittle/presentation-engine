@@ -1,28 +1,20 @@
 @using PEngine.Core.Shared.Models
 @using PEngine.Core.Web.Models
 @using PEngine.Core.Web
-@model PEngineGenericList<PostModel>
+@model PEngineGenericListModel<PostModel>
 
-<html>
-  <head>
-    <base href="/">
-  </head>
-  <body>
-    <div id="pengine-app">
-      {{ message }}
-      <hr>
-      {{ evenOnlyOutput }}
-    </div>
-    <h1>@Model.Settings.DefaultTitle</h1>
-    <ul>
-      @foreach (var post in Model.Data)
-      {
-      <li>
-        <h3><a href="/post/@post.UniqueName">@post.Name</a></h3>
-        <p>@post.Data</p>
-      </li>
-      }
-    </ul>
-    <script src="@Html.ContentHashFile("dist/app.bundle.min.js")"></script>
-  </body>
-</html>
+<div id="pengine-app">
+  {{ message }}
+  <hr>
+  {{ evenOnlyOutput }}
+</div>
+<h1>@Model.Settings.DefaultTitle</h1>
+<ul>
+  @foreach (var post in Model.ListData)
+  {
+  <li>
+    <h3><a href="/post/@post.UniqueName">@post.Name</a></h3>
+    <p>@post.Data</p>
+  </li>
+  }
+</ul>

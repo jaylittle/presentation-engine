@@ -26,11 +26,8 @@ namespace PEngine.Core.Web.Controllers
 
     public IActionResult Index()
     {
-      var model = new PEngineGenericList<PostModel>()
-      {
-        Data = _postService.ListPosts(Request.HttpContext.User.IsInRole("PEngineAdmin")),
-        Settings = Settings.Current
-      };
+      var model = new PEngineGenericListModel<PostModel>(Request);
+      model.ListData = _postService.ListPosts(model.State.HasAdmin);
       return View(model);
     }
   }

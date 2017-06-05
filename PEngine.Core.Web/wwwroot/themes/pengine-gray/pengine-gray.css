@@ -1,0 +1,646 @@
+﻿body
+{
+	margin: .25em .25em .25em .25em;
+	background-color: #201F25;
+	font-family: Arial,sans-serif;
+	font-size: 15px;
+	color: white;
+}
+
+textarea 
+{
+	width:95%;
+}
+
+blockquote
+{
+	border-style: double;
+	border-width: 2px;
+	border-color: gray;
+	background-color: #222126;
+	color: white;
+	font-size: 14px;
+	min-width: 35%;
+	max-width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 2px;
+}
+
+a:link 
+{
+	/* color: white */
+	color: inherit;
+}
+
+a:visited
+{
+	/* color: white */
+	color: inherit;
+}
+
+a:active
+{
+	/* color: white */
+	color: inherit;
+}
+
+b
+{
+	color: white;
+}
+
+/* Modded for PE4 (removed float) */
+.page
+{
+    width: 100%;
+}
+
+.header
+{
+	width: 100%;
+	min-height: 59px;
+	background-color: #131218;
+	background-image: url(./btopmid.png);
+	background-repeat: repeat-x;
+}
+
+.header-left
+{
+	width: 190px;
+	min-height: 59px;
+	background-image: url(./btopleft.png);
+	background-position: left top;
+	background-repeat: no-repeat;
+    float: left;
+}
+
+.header-right
+{
+	width: 190px;
+	min-height: 59px;
+	vertical-align: middle;
+	background-image: url(./btopright.png);
+	background-position: right top;
+	background-repeat: no-repeat;
+    float: right;
+}
+
+.header-middle
+{
+	display: none;
+	text-align: left;
+	margin-left: 190px;
+	margin-right: 190px;
+	font-family: Arial,sans-serif;
+	font-size: 38px;
+	font-weight:bold;
+	color: white;
+	background-color: transparent;
+}
+
+.content-menu
+{
+    background-color: #131218;
+    background-repeat: repeat;
+    padding: 5px 5px 5px 5px;
+}
+
+.menu
+{
+	/* border: dashed 2px purple; */
+	display: block;
+	position: relative;
+	clear: both;
+	padding-top: 5px;
+	padding-left: 0px;
+    /* background-image:url(menubg.png); */
+    background-color: #131218;
+    background-repeat: repeat;
+    width: 100%;
+}
+
+.menu-button
+{
+    background: url(./optmid.png) repeat-x #131218;
+	background-position: top;
+	height: 15px;
+	margin: 0px 5px 5px 5px;
+	vertical-align: middle;
+	text-align: center;
+	display: inline-block;
+	width: auto;
+	min-width: 95px;
+	padding-bottom: 5px;
+    border-radius: 5px;
+    border: 0px solid black;   
+    font-family: Arial,sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+    color: white; 
+}
+
+.menu-button.hover
+{
+   color: red;
+}
+
+.menu-separator
+{
+    height: 22px;
+	width: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	vertical-align: middle;
+	text-align: center;
+    clear: both;
+    display: inline-block;
+}
+
+.content
+{
+	/* border: dashed 2px green; */
+	display: block;
+	position: relative;
+	clear: both;
+	margin-left: 0px;
+	padding-left: 0px;
+	padding-top: 5px;
+	font-family: Arial,sans-serif;
+	font-size: 15px;
+	color: white;	
+	text-align: left;
+	background-color: #131218;
+	width: 100%;
+}
+
+/* Modded for PE4 (removed float) */
+.footer
+{
+	display: block;
+	position: relative;
+	clear: both;
+	width: 100%;
+	height: 1px;
+	background-color: gray;
+}
+
+.footer-left
+{
+}
+
+.footer-mid
+{
+}
+
+.footer-right
+{
+}
+
+.sub-header
+{
+	min-height: 27px;
+	background-image: url(./sheadmid.png);
+	background-position: top;
+	background-repeat: repeat-x;
+	background-color: black;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-family: Arial,sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: white;
+    margin: 0px;
+}
+
+.form-header-text
+{
+	font-family: Arial,sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	/* color: white; */
+	color: inherit;
+	margin-bottom: 5px;
+	display: block;
+} 
+
+.form-subheader-text
+{
+	font-family: Arial,sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	/* color: white; */
+	color: inherit;
+	margin-bottom: 15px;
+	display: block;
+} 
+
+.logo-container
+{
+	text-align: center;
+	width: 100%;
+	display: block;
+	margin-bottom: 10px;
+}
+
+.post-icon
+{
+	float: right;
+	margin: 10px 10px 10px 10px;
+	border: solid 3px black;
+}
+
+.list-container
+{
+	display: block;
+	width: 99%;
+	margin-bottom: 10px;
+}
+
+.display-container
+{
+	text-align: left;
+	width: 100%;
+	display: block;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.form-container
+{
+	text-align: left;
+	width: 100%;
+	display: block;
+	margin-bottom: 10px;
+}
+
+.dialog-container
+{
+    top: 0px;
+    left: 0px;
+	text-align: left;
+	width: 80%;
+    margin-left: 10%;
+    margin-right: auto;
+	display: block;
+	margin-bottom: 10px;
+    background-color: #201F25;
+    position: absolute;
+    z-index: 1000;
+    height: auto;
+    padding: 10px;
+    border: 2px solid #131218;
+    min-width: 600px;
+}
+
+.dialog-container-uploader
+{
+    top: 0px;
+    left: 0px;
+	text-align: left;
+	width: 80%;
+    margin-left: 10%;
+    margin-right: auto;
+	display: block;
+	margin-bottom: 10px;
+    background-color: #201F25;
+    position: absolute;
+    z-index: 1000;
+    max-height: 500px;
+    padding: 10px;
+    border: 2px solid #131218;
+    min-width: 600px;
+}
+
+.list-container-overflow, .form-container-overflow
+{
+    overflow: auto;
+}
+
+
+.dialog-container-login
+{
+    top: 0px;
+    left: 0px;
+	text-align: left;
+	width: 80%;
+    margin-left: 10%;
+    margin-right: auto;
+	display: block;
+	margin-bottom: 10px;
+    background-color: #201F25;
+    position: absolute;
+    z-index: 1000;
+    height: auto;
+    padding: 10px;
+    border: 2px solid #131218;
+    min-width: 600px;
+}
+
+.form-container-center
+{
+	text-align: center;
+	width: 400px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
+}
+
+.list-table
+{
+	font-family: Arial,sans-serif;
+	color: white;
+	font-size: 13px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+}
+
+.list-table thead tr
+{
+	background-color: black;
+	color: white;
+	font-size: 14px;
+}
+
+.list-table tbody tr
+{
+	background-color: #222126;
+	color: white;
+}
+
+.list-table tbody tr.alt
+{
+	background-color: #131218;
+	color: white;
+}
+
+
+.list-table tbody tr.hover, .list-table tbody tr.alt.hover
+{
+	background-color: black;
+	color: red;
+}
+
+.list-table tfoot tr
+{
+	background-color: black;
+	color: white;
+	font-size: 12px;
+}
+
+.list-table tbody tr.selected td, .list-table tbody tr.selected td a
+{
+    background-color: white;
+	color: #131218;
+}
+
+.list-button
+{
+	width: 75px;
+	height: 22px;
+	margin: 0px 5px 0px 0px;
+}
+
+.edit-row
+{
+	margin-bottom: 10px;
+	clear: right;
+}
+
+.edit-label, .edit-label-normal
+{
+	font-size: 12px;
+	font-weight: bold;
+	display: inline-block;
+	clear: none;
+	width: 125px;
+	margin-right: 5px;
+	text-align: right;
+    float: left;
+}
+
+.edit-label-large
+{
+	font-size: 12px;
+	font-weight: bold;
+	display: inline-block;
+	clear: none;
+	width: 200px;
+	margin-right: 5px;
+	text-align: right;
+    float: left;
+}
+
+.edit-field
+{
+    display: block;
+    margin-left: 130px;
+}
+
+.edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
+{
+	font-size: 12px;
+	background-color: white;
+	clear: none;
+}
+
+.edit-control-small
+{
+	width: 75px;	
+}
+
+.edit-control-normal
+{
+	width: 150px;
+}
+
+.edit-control-large
+{
+	width: 250px;
+}
+
+.resume-container
+{
+	display: block;
+	margin-bottom: 10px;
+}
+
+.resume-row
+{
+	display: block;
+	width: 100%;
+}
+
+.resume-label
+{
+	font-size: 14px;
+	font-weight: bold;
+	display: inline-block;
+	clear: none;
+	width: 100px;
+}
+
+.resume-disp-col-1
+{
+	font-size: 14px;
+	display: inline-block;
+	clear: none;
+	width: 30%;
+}
+
+.resume-disp-col-2
+{
+	font-size: 14px;
+	display: inline-block;
+}
+
+.resume-disp
+{
+	font-size: 14px;
+	display: block;
+	width: 100%;
+}
+
+.resume-skill-type
+{
+	font-size: 14px;
+	font-weight: bold;
+	display: inline-block;
+	clear: none;
+}
+
+.resume-skill-container
+{
+	margin-left: 150px;
+	font-size: 14px;
+	display: block;
+}
+
+.quote-control
+{
+	width: 100%;
+	text-align: center;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+.quotelink
+{
+	font-size: 14px;
+}
+
+
+.ui-autocomplete
+{
+    background-color: #131218;
+    color: white;
+    height: 100px !important;
+    overflow-y: auto;
+    max-width: 250px !important;
+    padding-left: 0;
+    border: 1px solid black;
+}
+
+.ui-autocomplete li
+{
+    list-style: none;
+    padding-left: 5px;
+}
+
+.ui-datepicker
+{
+    background-color: #131218;
+    color: white;
+    border: 1px solid black;
+    font-size: 13px;
+}
+
+.ui-datepicker-prev
+{
+    float: left;
+    font-size: 12px;
+}
+
+.ui-datepicker-next
+{
+    float: right;
+    font-size: 12px;
+}
+
+.ui-datepicker-title
+{
+    text-align: center;
+}
+
+.ui-datepicker-title div
+{
+    font-size: 10px;
+}
+
+.panel
+{
+    display: block;
+    width: 100%;
+    min-height: 25px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border: solid 1px #222126;
+}
+
+
+.panel-left
+{
+    display: block;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.panel-right
+{
+    display: block;
+    text-align: right;
+    vertical-align: top;
+}
+
+
+.panel-left-inline
+{
+    display: inline-block;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.panel-right-inline
+{
+    display: inline-block;
+    text-align: right;
+    vertical-align: top;
+}
+
+
+.panel-center
+{
+    display: block;
+    margin-right: 5px;
+    margin-left: 5px;
+    text-align: center;
+}
+
+
+.panel-block
+{
+    display: inline-block;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+
+.panel-block span
+{
+    padding-right: 5px;
+}
