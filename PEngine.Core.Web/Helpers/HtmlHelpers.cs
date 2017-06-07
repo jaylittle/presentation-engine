@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using PEngine.Core.Shared;
 
-namespace PEngine.Core.Web
+namespace PEngine.Core.Web.Helpers
 {
-  public static class HtmlHelpers
+  public static class Html
   {
     public static HtmlString ContentHashFile(this IHtmlHelper htmlHelper, string webPath)
     {

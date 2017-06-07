@@ -26,7 +26,7 @@ namespace PEngine.Core.Web.Controllers
 
     public IActionResult Index()
     {
-      var model = new PEngineGenericListModel<PostModel>(Request);
+      var model = new PEngineGenericListModel<PostModel>(HttpContext, true);
       model.ListData = _postService.ListPosts(model.State.HasAdmin);
       return View(model);
     }

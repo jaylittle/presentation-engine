@@ -1,11 +1,12 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using PEngine.Core.Shared.Interfaces;
 using Newtonsoft.Json;
 
 namespace PEngine.Core.Shared.Models
 {
-  public class ArticleModel : IGuidModel, ITimestampModel, IUniqueNameModel
+  public class ArticleModel : IGuidModel, ITimestampModel, IUniqueNameModel, ISubTitleModel
   {
     public Guid Guid { get; set; }
     public int? LegacyID { get; set; }
@@ -22,5 +23,23 @@ namespace PEngine.Core.Shared.Models
     public DateTime? ModifiedUTC { get; set; }
 
     public List<ArticleSectionModel> Sections { get; set; } = new List<ArticleSectionModel>();
+
+    public string GetSubTitle(bool inList, string currentSection, int? currentPage)
+    {
+      if (!inList)
+      {
+        var subTitle = $"{Name}";
+        if (!string.IsNullOrWhiteSpace(currentSection))
+        {
+          var section = Sections.FirstOrDefault(s => s.UniqueName.Equals(currentSection, StringComparison.OrdinalIgnoreCase));
+          if (section != null)
+          {
+            subTitle += $" - {section.Name}";
+          }
+        }
+        return subTitle;
+      }
+      return $"{Category} Articles";
+    }
   }
 }

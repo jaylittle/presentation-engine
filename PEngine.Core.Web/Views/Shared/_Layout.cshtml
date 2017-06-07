@@ -1,27 +1,29 @@
 @using PEngine.Core.Web.Models
 @using PEngine.Core.Web
+@using PEngine.Core.Web.Helpers
 
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <!-- TODO Add Correct Page Title Below -->
     <title>@Model.State.FullTitle</title>
     <!-- TODO Add RSS Link Here -->
     @RenderSection("head", required: false)
     <!-- TODO Add Meta Properties Summarizing Page Here -->
+    <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile("styles/pengine.core.css")"> 
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile((string)Model.State.ThemePath)"> 
   </head>
   <body>
-    <!-- TODO Add Header Bar Here -->
+    <div class="panel" id="pengine-header-component">
+      {{ message }}
+    </div>
     <div class="page">
       <div class="page-left"></div>
       <div class="header">
         <div class="header-left">
         </div>
         <div class="header-middle">
-          <!-- TODO Add Header Text Here -->
           @Model.Settings.DefaultTitle
         </div>
         <div class="header-right">
@@ -29,7 +31,17 @@
       </div>
       <div class="content-menu">
         <div class="menu">
-          <!-- TODO Add Menu Button Markup Here -->
+          @foreach (var menuButton in Model.State.TopMenuButtons)
+          {
+            @Html.Raw(Rendering.MarkupMenuButton(menuButton.Key, menuButton.Value, Model.State.IsElite))
+          }
+          @if (Model.State.SubMenuButtons.Count > 0)
+          {
+            @foreach (var menuButton in Model.State.SubMenuButtons)
+            {
+              @Html.Raw(Rendering.MarkupMenuButton(menuButton.Key, menuButton.Value, Model.State.IsElite))
+            }
+          }
         </div>
         <div class="content">
           @RenderBody()
@@ -40,7 +52,9 @@
         <div class="footer-middle"></div>
         <div class="footer-right"></div>
       </div>
-      <!-- TODO Add Footer Bar Here -->
+      <div class="panel" id="pengine-footer-component">
+        {{ message }}
+      </div>
       <div class="page-right"></div>
     </div>
     <script src="@Html.ContentHashFile("dist/app.bundle.min.js")"></script>

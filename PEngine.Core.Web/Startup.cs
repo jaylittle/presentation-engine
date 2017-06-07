@@ -18,6 +18,7 @@ using PEngine.Core.Data.Providers;
 using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Shared;
+using PEngine.Core.Web.Middleware;
 
 namespace PEngine.Core.Web
 {
@@ -45,6 +46,7 @@ namespace PEngine.Core.Web
     }
 
     public IConfigurationRoot Configuration { get; }
+    public static IServiceProvider ServiceProvider { get; private set; }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
@@ -69,6 +71,7 @@ namespace PEngine.Core.Web
     public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
     {
       _httpContextAccessor = svp.GetRequiredService<IHttpContextAccessor>();
+      ServiceProvider = svp;
       ContentRootPath = env.ContentRootPath;
       
       loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -92,7 +95,7 @@ namespace PEngine.Core.Web
       // Add Support for JWTs passed in cookies
       var cookieOptions = new TokenCookieOptions
       {
-        CookieName = "access_token"
+        CookieName = Models.PEngineStateModel.COOKIE_ACCESS_TOKEN
       };
       app.UseMiddleware<TokenCookieMiddleware>(Options.Create(cookieOptions));
 

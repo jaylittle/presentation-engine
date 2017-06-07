@@ -3,7 +3,7 @@ using PEngine.Core.Shared.Interfaces;
 
 namespace PEngine.Core.Shared.Models
 {
-  public class ForumThreadPostModel : IGuidModel, ITimestampModel
+  public class ForumThreadPostModel : IGuidModel, ITimestampModel, ISubTitleModel
   {
     public Guid Guid { get; set; }
     public Guid ForumThreadGuid { get; set; }
@@ -19,5 +19,21 @@ namespace PEngine.Core.Shared.Models
     public string IPAddress { get; set; }
     public DateTime? CreatedUTC { get; set; }
     public DateTime? ModifiedUTC { get; set; }
+
+    public string GetSubTitle(bool inList, string currentSection, int? currentPage)
+    {
+      if (!inList)
+      {
+        return $"Forums - {ForumName} - Thread {ForumThreadName} - Post {Guid}";
+      }
+      if (currentPage.HasValue)
+      {
+        return $"Forums - {ForumName} - Thread {ForumThreadName} - Page {currentPage.Value}";
+      }
+      else
+      {
+        return $"Forums - {ForumName} - Thread {ForumThreadName}";
+      }
+    }
   }
 }

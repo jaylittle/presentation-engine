@@ -17,7 +17,7 @@ namespace PEngine.Core.Shared
     // app_default_theme,
     public string DefaultTheme { get; set; } = "default";
     // app_logo_frontpage,
-    public string LogoFrontPage { get; set; } = "penginelogo.png";
+    public string LogoFrontPage { get; set; } = "pengine_logo4.png";
     // app_recpage_news_summary,
     public int PerPagePostArchived { get; set; } = 10;
     // app_recpage_news,

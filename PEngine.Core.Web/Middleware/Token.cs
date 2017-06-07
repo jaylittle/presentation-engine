@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace PEngine.Core.Web
+namespace PEngine.Core.Web.Middleware
 {
   public class TokenProviderOptions
   {
@@ -44,9 +44,9 @@ namespace PEngine.Core.Web
     public async Task Invoke(HttpContext context)
     {
       var cookie = context.Request.Cookies[_options.CookieName];
-      if (!string.IsNullOrWhiteSpace(cookie))
+      if (!string.IsNullOrWhiteSpace(cookie) && !context.Request.Headers.ContainsKey("Authorization"))
       {
-        context.Request.Headers.Append("Authorization", "Bearer " + cookie);
+        context.Request.Headers.Append("Authorization", $"Bearer {cookie}");
       }
 
       await _next.Invoke(context);

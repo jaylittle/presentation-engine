@@ -3,19 +3,26 @@ import Vue from 'vue';
 
 new Promise(
   (resolve, reject) => {
-    let pengineApp = new Vue({
-      el: '#pengine-app',
+    let pengineHeaderComponent = new Vue({
+      el: '#pengine-header-component',
       data: () => {
         let numberData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         let evenOnlyData = numberData.filter(element => element % 2 == 0);
-        console.log('evenOnlyData', evenOnlyData);
         return {
-          message: 'Hello Presentation Engine Users!',
+          message: 'Placeholder header component',
           evenOnlyOutput: evenOnlyData
         };
       }
     });
-    resolve(pengineApp);
+    let pengineFooterComponent = new Vue({
+      el: '#pengine-footer-component',
+      data: () => {
+        return {
+          message: 'Placeholder footer component'
+        };
+      }
+    });
+    resolve([pengineHeaderApp, pengineFooterApp]);
   }
 ).then(output => {
   console.log('post-promise', output);

@@ -6,15 +6,15 @@ using PEngine.Core.Shared.Models;
 
 namespace PEngine.Core.Web.Models
 {
-  public class PEngineGenericRecordModel<T>
+  public class PEngineGenericRecordModel<T> where T: ISubTitleModel
   {
-    public PEngineGenericRecordModel(HttpRequest request, T recordData = default(T), string currentSection = null, int? currentPage = null)
+    public PEngineGenericRecordModel(HttpContext context, bool hideSubTitle = false, bool isForum = false, T recordData = default(T), string currentSection = null, int? currentPage = null)
     {
       Settings = PEngine.Core.Shared.Settings.Current;
-      State = new PEngineState(Settings, request, recordData, currentSection, currentPage);
+      State = new PEngineStateModel(Settings, context, hideSubTitle, isForum, recordData, currentSection, currentPage);
       RecordData = recordData;
     }
-    public PEngineState State { get; set; }
+    public PEngineStateModel State { get; set; }
     public SettingsData Settings { get; set; }
     private T _recordData;
     public T RecordData
