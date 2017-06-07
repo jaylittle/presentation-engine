@@ -191,6 +191,11 @@ namespace PEngine.Core.Web.Models
       {
         _context.Response.Cookies.Delete(COOKIE_ELITE);
       }
+      else
+      {
+        _context.Response.Cookies.Append(COOKIE_ELITE, "1");
+      }
+      IsElite = !IsElite;
     }
 
     public void ThemeChange(string requestedTheme)
