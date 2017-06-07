@@ -187,20 +187,23 @@ namespace PEngine.Core.Web.Models
 
     public void EliteToggle()
     {
-      if (_context.Request != null && _context.Request.Cookies.ContainsKey(COOKIE_ELITE))
+      if (_context.Request != null)
       {
-        _context.Response.Cookies.Delete(COOKIE_ELITE);
+        if (_context.Request.Cookies.ContainsKey(COOKIE_ELITE))
+        {
+          _context.Response.Cookies.Delete(COOKIE_ELITE);
+        }
+        else
+        {
+          _context.Response.Cookies.Append(COOKIE_ELITE, "1");
+        }
+        IsElite = !IsElite;
       }
-      else
-      {
-        _context.Response.Cookies.Append(COOKIE_ELITE, "1");
-      }
-      IsElite = !IsElite;
     }
 
     public void ThemeChange(string requestedTheme)
     {
-      if (_context.Request != null && _context.Request.Cookies.ContainsKey(COOKIE_ELITE))
+      if (_context.Request != null)
       {
         var themeList = Helpers.Rendering.ThemeList;
         if (themeList.Any(t => t.Equals(requestedTheme, StringComparison.OrdinalIgnoreCase)))
