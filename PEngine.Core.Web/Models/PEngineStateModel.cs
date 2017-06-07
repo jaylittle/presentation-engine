@@ -169,7 +169,7 @@ namespace PEngine.Core.Web.Models
             TopMenuButtons.Add(new KeyValuePair<string, string>(categoryElements[0], categoryUrl));
           }
 
-          if (_viewDataRecord is ArticleModel)
+          if (!_viewDataInList && _viewDataRecord is ArticleModel)
           {
             var articleData = (ArticleModel)_viewDataRecord;
             if (string.IsNullOrWhiteSpace(articleData.ContentURL))
