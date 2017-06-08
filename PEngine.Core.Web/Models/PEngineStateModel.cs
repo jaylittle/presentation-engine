@@ -6,23 +6,26 @@ using PEngine.Core.Shared.Models;
 using PEngine.Core.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace PEngine.Core.Web.Models
 {
   public class PEngineStateModel
   {
+    public const string COOKIE_ELITE = "elite";
+    public const string COOKIE_THEME = "theme";
+    public const string COOKIE_ACCESS_TOKEN = "access_token";
+
     private SettingsData _settings;
     private HttpContext _context;
     private ISubTitleModel _viewDataRecord;
     private IEnumerable<ISubTitleModel> _viewDataList;
     private bool _viewDataInList;
+
     public string Url { get; set; }
     public string Title { get; set; }
     public string SubTitle { get; set; }
     public bool HideSubTitle { get; set; }
-    public const string COOKIE_ELITE = "elite";
-    public const string COOKIE_THEME = "theme";
-    public const string COOKIE_ACCESS_TOKEN = "access_token";
     public string FullTitle
     {
       get
@@ -52,6 +55,12 @@ namespace PEngine.Core.Web.Models
         return $"themes/{Theme}/{Theme}.css";
       }
     }
+    public string SummaryTitle { get; set; }
+    public string SummaryDescription { get; set; }
+    public string SummaryUrl { get; set; }
+    public string SummaryImage { get; set; }
+    public string SummarySite { get; set; }
+    public bool HasSummary { get; set; }
 
     public PEngineStateModel(SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
     {
@@ -135,54 +144,77 @@ namespace PEngine.Core.Web.Models
       TopMenuButtons = new List<KeyValuePair<string, string>>();
       SubMenuButtons = new List<KeyValuePair<string, string>>();
 
+      TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelHomeButton, "/"));
+      if (!IsForum && !_settings.DisableResume)
+      {
+        TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelResumeButton, "/resume"));
+      }
+      if (!_settings.DisableForum)
+      {
+        TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelForumButton, "/forum"));
+      }
+
+      if (!IsForum)
+      {
+        var articleDal = Startup.ServiceProvider.GetRequiredService<IArticleDal>();
+        var articleCategories = articleDal.ListArticles(null)
+          .Where(a => a.VisibleFlag || HasAdmin)
+          .Select(a => $"{a.Category}|{a.ContentURL}")
+          .Distinct(StringComparer.OrdinalIgnoreCase)
+          .OrderBy(a => a);
+
+        foreach (var articleCategory in articleCategories)
+        {
+          var categoryElements = articleCategory.Split('|');
+          var categoryUrl = $"/article/category/{articleCategory}";
+          if (categoryElements.Length == 2 || !string.IsNullOrWhiteSpace(categoryElements[1]))
+          {
+            categoryUrl = categoryElements[1];
+          }
+          TopMenuButtons.Add(new KeyValuePair<string, string>(categoryElements[0], categoryUrl));
+        }
+      }
+
+      var requestUri = new Uri(_context.Request.GetDisplayUrl());
+      SummaryTitle = string.Empty;
+      SummaryDescription = string.Empty;
+      SummaryUrl = $"{_settings.ExternalBaseUrl.TrimEnd('/')}{requestUri.PathAndQuery}";
+      SummarySite = _settings.DefaultTitle;
+      SummaryImage = $"{_settings.ExternalBaseUrl.TrimEnd('/')}/images/system/{_settings.LogoFrontPage}";
+
       if (_viewDataRecord != null)
       {
         SubTitle = _viewDataRecord.GetSubTitle(_viewDataInList, CurrentSection, CurrentPage);
-
-        TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelHomeButton, "/"));
-        if (!IsForum && !_settings.DisableResume)
+        
+        if (!_viewDataInList && _viewDataRecord is ArticleModel)
         {
-          TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelResumeButton, "/resume"));
-        }
-        if (!_settings.DisableForum)
-        {
-          TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelForumButton, "/forum"));
-        }
-
-        if (!IsForum)
-        {
-          var articleDal = Startup.ServiceProvider.GetRequiredService<IArticleDal>();
-          var articleCategories = articleDal.ListArticles(null)
-            .Where(a => a.VisibleFlag || HasAdmin)
-            .Select(a => $"{a.Category}|{a.ContentURL}")
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(a => a);
-
-          foreach (var articleCategory in articleCategories)
+          var articleData = (ArticleModel)_viewDataRecord;
+          if (string.IsNullOrWhiteSpace(articleData.ContentURL))
           {
-            var categoryElements = articleCategory.Split('|');
-            var categoryUrl = $"/article/category/{articleCategory}";
-            if (categoryElements.Length == 2 || !string.IsNullOrWhiteSpace(categoryElements[1]))
+            var displayedSection = (CurrentSection ?? articleData.DefaultSection);
+            var currentSectionData = (displayedSection != null) 
+              ? articleData.Sections.FirstOrDefault(s => s.UniqueName.Equals(displayedSection, StringComparison.OrdinalIgnoreCase))
+              : null;
+            currentSectionData = currentSectionData ?? articleData.Sections.First();
+            var articleSections = articleData.Sections.OrderBy(s => s.SortOrder);
+            foreach (var section in articleData.Sections)
             {
-              categoryUrl = categoryElements[1];
+              SubMenuButtons.Add(new KeyValuePair<string, string>(section.Name, $"/article/view/{articleData.UniqueName}/{section.UniqueName}"));
             }
-            TopMenuButtons.Add(new KeyValuePair<string, string>(categoryElements[0], categoryUrl));
+            SummaryTitle = !HideSubTitle ? SubTitle : _settings.DefaultTitle;
+            SummaryDescription = Helpers.Rendering.DataTruncate(currentSectionData?.Data ?? articleData.Description, -1);
           }
+        }
 
-          if (!_viewDataInList && _viewDataRecord is ArticleModel)
-          {
-            var articleData = (ArticleModel)_viewDataRecord;
-            if (string.IsNullOrWhiteSpace(articleData.ContentURL))
-            {
-              var articleSections = articleData.Sections.OrderBy(s => s.SortOrder);
-              foreach (var section in articleData.Sections)
-              {
-                SubMenuButtons.Add(new KeyValuePair<string, string>(section.Name, $"/article/view/{articleData.UniqueName}/{section.UniqueName}"));
-              }
-            }
-          }
+        if (!_viewDataInList && _viewDataRecord is PostModel)
+        {
+          var postData = (PostModel)_viewDataRecord;
+          SummaryTitle = !HideSubTitle ? SubTitle : _settings.DefaultTitle;
+          SummaryDescription = Helpers.Rendering.DataTruncate(postData.Data, -1);
         }
       }
+
+      HasSummary = !String.IsNullOrWhiteSpace(SummaryTitle);
     }
 
     public void EliteToggle()

@@ -22,7 +22,7 @@ new Promise(
         };
       }
     });
-    resolve([pengineHeaderApp, pengineFooterApp]);
+    resolve([pengineHeaderComponent, pengineFooterComponent]);
   }
 ).then(output => {
   console.log('post-promise', output);

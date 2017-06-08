@@ -94,6 +94,7 @@ namespace PEngine.Core.Shared
     public int PerPageForumThreads { get; set; } = 25;
     // app_label_forum_register
     public string LabelForumRegisterButton { get; set; } = "Register";
+    public string ExternalBaseUrl { get; set; } = "http://localhost:5000/";
     public Guid SecretKey { get; set; } = Guid.NewGuid();
   }
 

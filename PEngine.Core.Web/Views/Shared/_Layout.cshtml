@@ -10,7 +10,15 @@
     <title>@Model.State.FullTitle</title>
     <!-- TODO Add RSS Link Here -->
     @RenderSection("head", required: false)
-    <!-- TODO Add Meta Properties Summarizing Page Here -->
+    @if (Model.State.HasSummary)
+    {
+    <meta property="og:title" content="@Model.State.SummaryTitle" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="@Model.State.SummaryUrl" />
+    <meta property="og:image" content="@Model.State.SummaryImage" />
+    <meta property="og:site_name" content="@Model.State.SummarySite" />
+    <meta property="og:description" content="@Model.State.SummaryDescription" />
+    }
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile("styles/pengine.core.css")"> 
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile((string)Model.State.ThemePath)"> 
   </head>
