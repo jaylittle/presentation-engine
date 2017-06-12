@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using System.Linq;
 using PEngine.Core.Shared.Interfaces;
 
 namespace PEngine.Core.Shared
@@ -45,6 +47,12 @@ namespace PEngine.Core.Shared
         }
         record.UniqueName = currentUniqueName;
       }
+    }
+
+    public static string GetChildElementValue(this XElement parentElement, string childElementName, bool convertEmptyToNull = false)
+    {
+      var retvalue = parentElement.Descendants().FirstOrDefault(d => d.Name.LocalName.Equals(childElementName, StringComparison.OrdinalIgnoreCase))?.Value;
+      return (convertEmptyToNull && retvalue != null && retvalue == string.Empty) ? null : retvalue;
     }
   }
 }

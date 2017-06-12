@@ -9,7 +9,7 @@ namespace PEngine.Core.Shared.Models
   public class ArticleModel : IGuidModel, ITimestampModel, IUniqueNameModel, ISubTitleModel
   {
     public Guid Guid { get; set; }
-    public int? LegacyID { get; set; }
+    public Int32? LegacyID { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;

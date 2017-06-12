@@ -6,7 +6,7 @@ namespace PEngine.Core.Shared.Models
   public class ResumePersonalModel : IGuidModel, ITimestampModel
   {
     public Guid Guid { get; set; }
-    public int? LegacyID { get; set; }
+    public Int32? LegacyID { get; set; }
     public string FullName { get; set; } = string.Empty;
     public string Address1 { get; set; } = string.Empty;
     public string Address2 { get; set; } = string.Empty;
