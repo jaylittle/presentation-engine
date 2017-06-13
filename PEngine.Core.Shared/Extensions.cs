@@ -13,7 +13,7 @@ namespace PEngine.Core.Shared
     public static void UpdateTimestamps(this ITimestampModel record, bool newRecord = false)
     {
       var currentTime = DateTime.UtcNow;
-      if (newRecord)
+      if (newRecord && !record.CreatedUTC.HasValue)
       {
         record.CreatedUTC = currentTime;
       }
