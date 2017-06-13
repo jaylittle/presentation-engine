@@ -20,16 +20,23 @@ namespace PEngine.Core.Web.Controllers.Api
     public QuotesController(IQuoteDal quoteDal)
     {
       _quoteDal = quoteDal;
+      _quotes =_quoteDal.ListQuotes().ToList();
     }
 
-    private List<QuoteModel> _quotes;
+    private static List<QuoteModel> _quotes;
     private List<QuoteModel> Quotes
     {
       get
       {
         if (_quotes == null)
         {
-          _quotes =_quoteDal.ListQuotes().ToList();
+          lock (_quotes)
+          {
+            if (_quotes == null)
+            {
+              _quotes =_quoteDal.ListQuotes().ToList();
+            }
+          }
         }
         return _quotes;
       }
