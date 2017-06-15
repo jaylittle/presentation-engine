@@ -67,6 +67,22 @@ namespace PEngine.Core.Logic
       {
         messages.Add("Couldn't find both Resume Personal and Objective exports. Skipping.");
       }
+
+      var forumPath = System.IO.Path.Combine(importFolder, "Forum.xml");
+      var forumUserPath = System.IO.Path.Combine(importFolder, "ForumUser.xml");
+      var forumThreadPath = System.IO.Path.Combine(importFolder, "ForumThread.xml");
+      var forumThreadPostPath = System.IO.Path.Combine(importFolder, "ForumThreadPost.xml");
+      if (System.IO.File.Exists(forumPath))
+      {
+        messages.Add("Found Forum export. Processing...");
+        ImportForums(forumPath, forumUserPath, forumThreadPath
+          , forumThreadPostPath, ref retvalue, ref messages);
+      }
+      else
+      {
+        messages.Add("Couldn't find Forum export. Skipping.");
+      }
+
       return retvalue;
     }
 
@@ -268,6 +284,136 @@ namespace PEngine.Core.Logic
             return errors;
           }
         );
+      }
+    }
+
+    private void ImportForums(string forumPath, string userPath, string threadPath, string threadPostPath, ref bool retvalue, ref List<string> messages)
+    {
+      var service = _serviceProvider.GetRequiredService<IForumService>();
+      XDocument forumDoc = XDocument.Parse(System.IO.File.ReadAllText(forumPath));
+      var forumRecords = forumDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
+      var newForumRecords = new Dictionary<Guid, ForumModel>();
+      if (forumRecords.Any())
+      {
+        newForumRecords = forumRecords.Select(forumRecord => {
+          return new ForumModel()
+          {
+            Guid = Guid.Parse(forumRecord.GetChildElementValue("Guid")),
+            Name = forumRecord.GetChildElementValue("Name"),
+            Description = forumRecord.GetChildElementValue("Description"),
+            VisibleFlag = bool.Parse(forumRecord.GetChildElementValue("VisibleFlag")),
+            UniqueName = forumRecord.GetChildElementValue("UniqueName"),
+            CreatedUTC = ParseNDateTime(forumRecord.GetChildElementValue("CreatedUTC")),
+            ModifiedUTC = ParseNDateTime(forumRecord.GetChildElementValue("ModifiedUTC"))
+          };
+        }).ToDictionary(p => p.Guid, p => p);
+      }
+      if (retvalue)
+      {
+        var dal = _serviceProvider.GetRequiredService<IForumDal>();
+        dal.DeleteAllForums();
+
+        retvalue = retvalue && ProcessUpserts<ForumModel,IForumService>(service, newForumRecords, ref messages, (s, m) => {
+          var errors = new List<string>();
+          s.UpsertForum(m, ref errors, true);
+          return errors;
+        });
+      }
+      if (System.IO.File.Exists(userPath))
+      {
+        XDocument userDoc = XDocument.Parse(System.IO.File.ReadAllText(userPath));
+        var userRecords = userDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
+        var newUserRecords = new Dictionary<Guid, ForumUserModel>();
+        if (userRecords.Any())
+        {
+          newUserRecords = userRecords.Select(userRecord => {
+            return new ForumUserModel()
+            {
+              Guid = Guid.Parse(userRecord.GetChildElementValue("Guid")),
+              UserId = userRecord.GetChildElementValue("UserID"),
+              Password = userRecord.GetChildElementValue("Password"),
+              AdminFlag = bool.Parse(userRecord.GetChildElementValue("AdminFlag")),
+              BanFlag = bool.Parse(userRecord.GetChildElementValue("BanFlag")),
+              Email = userRecord.GetChildElementValue("Email"),
+              Website = userRecord.GetChildElementValue("Website"),
+              Comment = userRecord.GetChildElementValue("Comment"),
+              LastIPAddress = userRecord.GetChildElementValue("LastIPAddress"),
+              LastLogon = ParseNDateTime(userRecord.GetChildElementValue("LastLogon")),
+              CreatedUTC = ParseNDateTime(userRecord.GetChildElementValue("CreatedUTC")),
+              ModifiedUTC = ParseNDateTime(userRecord.GetChildElementValue("ModifiedUTC"))
+            };
+          }).ToDictionary(p => p.Guid, p => p);
+        }
+        if (retvalue)
+        {
+          retvalue = retvalue && ProcessUpserts<ForumUserModel,IForumService>(service, newUserRecords, ref messages, (s, m) => {
+            var errors = new List<string>();
+            s.UpsertForumUser(m, m.Guid, true, ref errors, true);
+            return errors;
+          });
+        }
+      }
+      if (System.IO.File.Exists(threadPath))
+      {
+        XDocument threadDoc = XDocument.Parse(System.IO.File.ReadAllText(threadPath));
+        var threadRecords = threadDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
+        var newThreadRecords = new Dictionary<Guid, ForumThreadModel>();
+        if (threadRecords.Any())
+        {
+          newThreadRecords = threadRecords.Select(threadRecord => {
+            return new ForumThreadModel()
+            {
+              Guid = Guid.Parse(threadRecord.GetChildElementValue("Guid")),
+              ForumGuid = Guid.Parse(threadRecord.GetChildElementValue("ForumGuid")),
+              ForumUserGuid = Guid.Parse(threadRecord.GetChildElementValue("ForumUserGuid")),
+              VisibleFlag = bool.Parse(threadRecord.GetChildElementValue("VisibleFlag")),
+              LockFlag = bool.Parse(threadRecord.GetChildElementValue("LockFlag")),
+              Name = threadRecord.GetChildElementValue("Title"),
+              UniqueName = threadRecord.GetChildElementValue("UniqueName"),
+              CreatedUTC = ParseNDateTime(threadRecord.GetChildElementValue("CreatedUTC")),
+              ModifiedUTC = ParseNDateTime(threadRecord.GetChildElementValue("ModifiedUTC"))
+            };
+          }).ToDictionary(p => p.Guid, p => p);
+        }
+        if (retvalue)
+        {
+          retvalue = retvalue && ProcessUpserts<ForumThreadModel,IForumService>(service, newThreadRecords, ref messages, (s, m) => {
+            var errors = new List<string>();
+            s.UpsertForumThread(m, m.Guid, true, ref errors, true);
+            return errors;
+          });
+          if (System.IO.File.Exists(threadPostPath))
+          {
+            XDocument threadPostDoc = XDocument.Parse(System.IO.File.ReadAllText(threadPostPath));
+            var threadPostRecords = threadPostDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
+            var newThreadPostRecords = new Dictionary<Guid, ForumThreadPostModel>();
+            if (threadPostRecords.Any())
+            {
+              newThreadPostRecords = threadPostRecords.Select(threadPostRecord => {
+                return new ForumThreadPostModel()
+                {
+                  Guid = Guid.Parse(threadPostRecord.GetChildElementValue("Guid")),
+                  ForumThreadGuid = Guid.Parse(threadPostRecord.GetChildElementValue("ForumThreadGuid")),
+                  ForumUserGuid = Guid.Parse(threadPostRecord.GetChildElementValue("ForumUserGuid")),
+                  VisibleFlag = bool.Parse(threadPostRecord.GetChildElementValue("VisibleFlag")),
+                  LockFlag = bool.Parse(threadPostRecord.GetChildElementValue("LockFlag")),
+                  Data = threadPostRecord.GetChildElementValue("Data"),
+                  IPAddress = threadPostRecord.GetChildElementValue("IPAddress"),
+                  CreatedUTC = ParseNDateTime(threadPostRecord.GetChildElementValue("CreatedUTC")),
+                  ModifiedUTC = ParseNDateTime(threadPostRecord.GetChildElementValue("ModifiedUTC"))
+                };
+              }).ToDictionary(p => p.Guid, p => p);
+              if (retvalue)
+              {
+                retvalue = retvalue && ProcessUpserts<ForumThreadPostModel,IForumService>(service, newThreadPostRecords, ref messages, (s, m) => {
+                  var errors = new List<string>();
+                  s.UpsertForumThreadPost(m, m.Guid, true, ref errors, true);
+                  return errors;
+                });
+              }
+            }
+          }
+        }
       }
     }
 
