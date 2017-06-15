@@ -51,7 +51,7 @@ namespace PEngine.Core.Logic
       return retvalue;
     }
 
-    public bool UpsertResume(ResumeModel resume, ref List<string> errors)
+    public bool UpsertResume(ResumeModel resume, ref List<string> errors, bool importFlag = false)
     {
       var startErrorCount = errors.Count;
       ResumeModel existingResume = GetResume();
@@ -66,7 +66,7 @@ namespace PEngine.Core.Logic
         var counter = 1;
         foreach (var personal in resume.Personals)
         {
-          if (personal.Guid != Guid.Empty && !existingResume.Personals.Any(p => p.Guid == personal.Guid))
+          if (!importFlag && personal.Guid != Guid.Empty && !existingResume.Personals.Any(p => p.Guid == personal.Guid))
           {
             errors.Add(string.Format(PERSONAL_ERROR_INVALID_RECORD, counter));
           }
@@ -90,7 +90,7 @@ namespace PEngine.Core.Logic
         var counter = 1;
         foreach(var objective in resume.Objectives)
         {
-          if (objective.Guid != Guid.Empty && !existingResume.Objectives.Any(o => o.Guid == objective.Guid))
+          if (!importFlag && objective.Guid != Guid.Empty && !existingResume.Objectives.Any(o => o.Guid == objective.Guid))
           {
             errors.Add(string.Format(OBJECTIVE_ERROR_INVALID_RECORD, counter));
           }
@@ -114,7 +114,7 @@ namespace PEngine.Core.Logic
           {
             foreach (var skill in skillType.Value)
             {
-              if (skill.Guid != Guid.Empty && !existingResume.Skills.Any(t => t.Value.Any(s => s.Guid == skill.Guid)))
+              if (!importFlag && skill.Guid != Guid.Empty && !existingResume.Skills.Any(t => t.Value.Any(s => s.Guid == skill.Guid)))
               {
                 errors.Add(string.Format(SKILL_ERROR_INVALID_RECORD, counter));
               }
@@ -136,7 +136,7 @@ namespace PEngine.Core.Logic
         var counter = 1;
         foreach (var education in resume.Educations)
         {
-          if (education.Guid != Guid.Empty && !existingResume.Educations.Any(e => e.Guid == education.Guid))
+          if (!importFlag && education.Guid != Guid.Empty && !existingResume.Educations.Any(e => e.Guid == education.Guid))
           {
             errors.Add(string.Format(EDUCATION_ERROR_INVALID_RECORD, counter));
           }
@@ -160,7 +160,7 @@ namespace PEngine.Core.Logic
         var counter = 1;
         foreach (var workHistory in resume.WorkHistories)
         {
-          if (workHistory.Guid != Guid.Empty && !existingResume.WorkHistories.Any(wh => wh.Guid == workHistory.Guid))
+          if (!importFlag && workHistory.Guid != Guid.Empty && !existingResume.WorkHistories.Any(wh => wh.Guid == workHistory.Guid))
           {
             errors.Add(string.Format(WORK_ERROR_INVALID_RECORD, counter));
           }
@@ -200,9 +200,9 @@ namespace PEngine.Core.Logic
           {
             foreach (var personal in resume.Personals)
             {
-              if (personal.Guid == Guid.Empty || !existingPersonalGuids.Contains(personal.Guid))
+              if (importFlag || personal.Guid == Guid.Empty || !existingPersonalGuids.Contains(personal.Guid))
               {
-                _resumeDal.InsertResumePersonal(personal);
+                _resumeDal.InsertResumePersonal(personal, importFlag);
               }
               else
               {
@@ -220,9 +220,9 @@ namespace PEngine.Core.Logic
           {
             foreach (var objective in resume.Objectives)
             {
-              if (objective.Guid == Guid.Empty || !existingObjectiveGuids.Contains(objective.Guid))
+              if (importFlag || objective.Guid == Guid.Empty || !existingObjectiveGuids.Contains(objective.Guid))
               {
-                _resumeDal.InsertResumeObjective(objective);
+                _resumeDal.InsertResumeObjective(objective, importFlag);
               }
               else
               {
@@ -244,9 +244,9 @@ namespace PEngine.Core.Logic
               {
                 foreach (var skill in skillType.Value)
                 {
-                  if (skill.Guid == Guid.Empty || !existingSkillGuids.Contains(skill.Guid))
+                  if (importFlag || skill.Guid == Guid.Empty || !existingSkillGuids.Contains(skill.Guid))
                   {
-                    _resumeDal.InsertResumeSkill(skill);
+                    _resumeDal.InsertResumeSkill(skill, importFlag);
                   }
                   else
                   {
@@ -266,9 +266,9 @@ namespace PEngine.Core.Logic
           {
             foreach (var education in resume.Educations)
             {
-              if (education.Guid == Guid.Empty || !existingEducationGuids.Contains(education.Guid))
+              if (importFlag || education.Guid == Guid.Empty || !existingEducationGuids.Contains(education.Guid))
               {
-                _resumeDal.InsertResumeEducation(education);
+                _resumeDal.InsertResumeEducation(education, importFlag);
               }
               else
               {
@@ -286,9 +286,9 @@ namespace PEngine.Core.Logic
           {
             foreach (var workHistory in resume.WorkHistories)
             {
-              if (workHistory.Guid == Guid.Empty || !existingWorkHistoryGuids.Contains(workHistory.Guid))
+              if (importFlag || workHistory.Guid == Guid.Empty || !existingWorkHistoryGuids.Contains(workHistory.Guid))
               {
-                _resumeDal.InsertResumeWorkHistory(workHistory);
+                _resumeDal.InsertResumeWorkHistory(workHistory, importFlag);
               }
               else
               {

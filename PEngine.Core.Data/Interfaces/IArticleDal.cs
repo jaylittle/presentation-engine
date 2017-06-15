@@ -8,12 +8,13 @@ namespace PEngine.Core.Data.Interfaces
     {
       IEnumerable<ArticleModel> ListArticles(string category);
       ArticleModel GetArticleById(Guid? guid, int? legacyId, string uniqueName);
-      void InsertArticle(ArticleModel article);
+      void InsertArticle(ArticleModel article, bool importFlag = false);
       void UpdateArticle(ArticleModel article);
       void DeleteArticle(Guid guid);
       IEnumerable<ArticleSectionModel> ListArticleSections(Guid? articleGuid);
-      void InsertArticleSection(ArticleSectionModel articleSection);
+      void InsertArticleSection(ArticleSectionModel articleSection, bool importFlag = false);
       void UpdateArticleSection(ArticleSectionModel articleSection);
       void DeleteArticleSection(Guid guid);
+      void DeleteAllArticles();
     }
 }

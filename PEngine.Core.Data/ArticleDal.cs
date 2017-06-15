@@ -44,10 +44,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertArticle(ArticleModel article)
+    public void InsertArticle(ArticleModel article, bool importFlag = false)
     {
       article.UpdateGuid();
-      article.UpdateTimestamps(true);
+      article.UpdateTimestamps(true, importFlag);
 
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
@@ -85,10 +85,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertArticleSection(ArticleSectionModel articleSection)
+    public void InsertArticleSection(ArticleSectionModel articleSection, bool importFlag = false)
     {
       articleSection.UpdateGuid();
-      articleSection.UpdateTimestamps(true);
+      articleSection.UpdateTimestamps(true, importFlag);
 
       using (var ct = GetConnection(DatabaseType.PEngine, true))
       {
@@ -113,6 +113,14 @@ namespace PEngine.Core.Data
         ct.DbConnection.Execute(ReadQuery("DeleteArticleSection", ct.ProviderName), new {
           guid
         }, transaction: ct.DbTransaction);
+      }
+    }
+
+    public void DeleteAllArticles()
+    {
+      using (var ct = GetConnection(DatabaseType.PEngine, true))
+      {
+        ct.DbConnection.Execute(ReadQuery("DeleteAllArticles", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
   }

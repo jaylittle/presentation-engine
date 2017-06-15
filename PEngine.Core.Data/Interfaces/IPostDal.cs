@@ -8,8 +8,9 @@ namespace PEngine.Core.Data.Interfaces
     {
       IEnumerable<PostModel> ListPosts();
       PostModel GetPostById(Guid? guid, int? legacyId, string uniqueName);
-      void InsertPost(PostModel post);
+      void InsertPost(PostModel post, bool importFlag = false);
       void UpdatePost(PostModel post);
       void DeletePost(Guid guid);
+      void DeleteAllPosts();
     }
 }

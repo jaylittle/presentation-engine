@@ -78,38 +78,32 @@ namespace PEngine.Core.Logic
       if (articleRecords.Any())
       {
         newArticleRecords = articleRecords.Select(articleRecord => {
-          return new
+          return new ArticleModel()
           {
-            OldGuid = Guid.Parse(articleRecord.GetChildElementValue("Guid")),
-            Data = new ArticleModel()
-            {
-              Guid = Guid.Empty,
-              LegacyID = ParseNInt(articleRecord.GetChildElementValue("LegacyID")),
-              Name = articleRecord.GetChildElementValue("Name"),
-              Description = articleRecord.GetChildElementValue("Description"),
-              Category = articleRecord.GetChildElementValue("Category"),
-              ContentURL = articleRecord.GetChildElementValue("ContentURL"),
-              DefaultSection = articleRecord.GetChildElementValue("DefaultSection"),
-              VisibleFlag = bool.Parse(articleRecord.GetChildElementValue("VisibleFlag")),
-              UniqueName = articleRecord.GetChildElementValue("UniqueName"),
-              HideButtonsFlag = bool.Parse(articleRecord.GetChildElementValue("HideButtonsFlag")),
-              HideDropDownFlag = bool.Parse(articleRecord.GetChildElementValue("HideDropDownFlag")),
-              CreatedUTC = ParseNDateTime(articleRecord.GetChildElementValue("CreatedUTC")),
-              ModifiedUTC = ParseNDateTime(articleRecord.GetChildElementValue("ModifiedUTC"))
-            }
+            Guid = Guid.Parse(articleRecord.GetChildElementValue("Guid")),
+            LegacyID = ParseNInt(articleRecord.GetChildElementValue("LegacyID")),
+            Name = articleRecord.GetChildElementValue("Name"),
+            Description = articleRecord.GetChildElementValue("Description"),
+            Category = articleRecord.GetChildElementValue("Category"),
+            ContentURL = articleRecord.GetChildElementValue("ContentURL"),
+            DefaultSection = articleRecord.GetChildElementValue("DefaultSection"),
+            VisibleFlag = bool.Parse(articleRecord.GetChildElementValue("VisibleFlag")),
+            UniqueName = articleRecord.GetChildElementValue("UniqueName"),
+            HideButtonsFlag = bool.Parse(articleRecord.GetChildElementValue("HideButtonsFlag")),
+            HideDropDownFlag = bool.Parse(articleRecord.GetChildElementValue("HideDropDownFlag")),
+            CreatedUTC = ParseNDateTime(articleRecord.GetChildElementValue("CreatedUTC")),
+            ModifiedUTC = ParseNDateTime(articleRecord.GetChildElementValue("ModifiedUTC"))
           };
-        }).ToDictionary(a => a.OldGuid, a => a.Data);
+        }).ToDictionary(a => a.Guid, a => a);
 
         XDocument sectionDoc = XDocument.Parse(System.IO.File.ReadAllText(articleSectionPath));
         var sectionRecords = sectionDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
         foreach (var sectionRecord in sectionRecords)
         {
-          var articleGuid = Guid.Parse(sectionRecord.GetChildElementValue("ArticleGuid"));
-          var sectionGuid = Guid.Parse(sectionRecord.GetChildElementValue("Guid"));
           var newSection = new ArticleSectionModel()
           {
-            Guid = Guid.Empty,
-            ArticleGuid = Guid.Empty,
+            Guid = Guid.Parse(sectionRecord.GetChildElementValue("Guid")),
+            ArticleGuid = Guid.Parse(sectionRecord.GetChildElementValue("ArticleGuid")),
             Name = sectionRecord.GetChildElementValue("Name"),
             Data = sectionRecord.GetChildElementValue("Data"),
             SortOrder = int.Parse(sectionRecord.GetChildElementValue("SortOrder")),
@@ -117,23 +111,26 @@ namespace PEngine.Core.Logic
             CreatedUTC = ParseNDateTime(sectionRecord.GetChildElementValue("CreatedUTC")),
             ModifiedUTC = ParseNDateTime(sectionRecord.GetChildElementValue("ModifiedUTC"))
           };
-          if (newArticleRecords.ContainsKey(articleGuid))
+          if (newArticleRecords.ContainsKey(newSection.ArticleGuid))
           {
-            newArticleRecords[articleGuid].Sections.Add(newSection);
+            newArticleRecords[newSection.ArticleGuid].Sections.Add(newSection);
           }
           else
           {
-            messages.Add($"Article Section {sectionGuid} refers to a non-existent article: {articleGuid}");
+            messages.Add($"Article Section {newSection.Guid} refers to a non-existent article: {newSection.ArticleGuid}");
             retvalue = false;
           }
         }
       }
       if (retvalue)
       {
+        var dal = _serviceProvider.GetRequiredService<IArticleDal>();
+        dal.DeleteAllArticles();
+
         var service = _serviceProvider.GetRequiredService<IArticleService>();
         retvalue = retvalue && ProcessUpserts<ArticleModel,IArticleService>(service, newArticleRecords, ref messages, (s, m) => {
           var errors = new List<string>();
-          s.UpsertArticle(m, ref errors);
+          s.UpsertArticle(m, ref errors, true);
           return errors;
         });
       }
@@ -147,30 +144,29 @@ namespace PEngine.Core.Logic
       if (postRecords.Any())
       {
         newPostRecords = postRecords.Select(postRecord => {
-          return new
+          return new PostModel()
           {
-            OldGuid = Guid.Parse(postRecord.GetChildElementValue("Guid")),
-            Data = new PostModel()
-            {
-              Guid = Guid.Empty,
-              LegacyID = ParseNInt(postRecord.GetChildElementValue("LegacyID")),
-              Name = postRecord.GetChildElementValue("Title"),
-              Data = postRecord.GetChildElementValue("Data"),
-              IconFileName = postRecord.GetChildElementValue("IconFileName"),
-              VisibleFlag = bool.Parse(postRecord.GetChildElementValue("VisibleFlag")),
-              UniqueName = postRecord.GetChildElementValue("UniqueName"),
-              CreatedUTC = ParseNDateTime(postRecord.GetChildElementValue("CreatedUTC")),
-              ModifiedUTC = ParseNDateTime(postRecord.GetChildElementValue("ModifiedUTC"))
-            }
+            Guid = Guid.Parse(postRecord.GetChildElementValue("Guid")),
+            LegacyID = ParseNInt(postRecord.GetChildElementValue("LegacyID")),
+            Name = postRecord.GetChildElementValue("Title"),
+            Data = postRecord.GetChildElementValue("Data"),
+            IconFileName = postRecord.GetChildElementValue("IconFileName"),
+            VisibleFlag = bool.Parse(postRecord.GetChildElementValue("VisibleFlag")),
+            UniqueName = postRecord.GetChildElementValue("UniqueName"),
+            CreatedUTC = ParseNDateTime(postRecord.GetChildElementValue("CreatedUTC")),
+            ModifiedUTC = ParseNDateTime(postRecord.GetChildElementValue("ModifiedUTC"))
           };
-        }).ToDictionary(p => p.OldGuid, p => p.Data);
+        }).ToDictionary(p => p.Guid, p => p);
       }
       if (retvalue)
       {
+        var dal = _serviceProvider.GetRequiredService<IPostDal>();
+        dal.DeleteAllPosts();
+
         var service = _serviceProvider.GetRequiredService<IPostService>();
         retvalue = retvalue && ProcessUpserts<PostModel,IPostService>(service, newPostRecords, ref messages, (s, m) => {
           var errors = new List<string>();
-          s.UpsertPost(m, ref errors);
+          s.UpsertPost(m, ref errors, true);
           return errors;
         });
       }
@@ -183,7 +179,7 @@ namespace PEngine.Core.Logic
       XDocument personalDoc = XDocument.Parse(System.IO.File.ReadAllText(personalPath));
       var personalRecords = personalDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
       newResumeRecord.Personals = personalRecords.Select(personalRecord => new ResumePersonalModel(){
-        Guid = Guid.Empty,
+        Guid = Guid.Parse(personalRecord.GetChildElementValue("Guid")),
         LegacyID = ParseNInt(personalRecord.GetChildElementValue("LegacyID")),
         FullName = personalRecord.GetChildElementValue("FullName"),
         Address1 = personalRecord.GetChildElementValue("Address1"),
@@ -202,7 +198,7 @@ namespace PEngine.Core.Logic
       XDocument objectiveDoc = XDocument.Parse(System.IO.File.ReadAllText(objectivePath));
       var objectiveRecords = objectiveDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
       newResumeRecord.Objectives = objectiveRecords.Select(objectiveRecord => new ResumeObjectiveModel(){
-        Guid = Guid.Empty,
+        Guid = Guid.Parse(objectiveRecord.GetChildElementValue("Guid")),
         LegacyID = ParseNInt(objectiveRecord.GetChildElementValue("LegacyID")),
         Data = objectiveRecord.GetChildElementValue("Data"),
         CreatedUTC = ParseNDateTime(objectiveRecord.GetChildElementValue("CreatedUTC")),
@@ -214,7 +210,7 @@ namespace PEngine.Core.Logic
         XDocument skillDoc = XDocument.Parse(System.IO.File.ReadAllText(skillPath));
         var skillRecords = skillDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
         newResumeRecord.Skills = skillRecords.Select(skillRecord => new ResumeSkillModel(){
-          Guid = Guid.Empty,
+          Guid = Guid.Parse(skillRecord.GetChildElementValue("Guid")),
           LegacyID = ParseNInt(skillRecord.GetChildElementValue("LegacyID")),
           Type = skillRecord.GetChildElementValue("Type"),
           Name = skillRecord.GetChildElementValue("Name"),
@@ -229,7 +225,7 @@ namespace PEngine.Core.Logic
         XDocument educationDoc = XDocument.Parse(System.IO.File.ReadAllText(educationPath));
         var educationRecords = educationDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
         newResumeRecord.Educations = educationRecords.Select(educationRecord => new ResumeEducationModel(){
-          Guid = Guid.Empty,
+          Guid = Guid.Parse(educationRecord.GetChildElementValue("Guid")),
           LegacyID = ParseNInt(educationRecord.GetChildElementValue("LegacyID")),
           Institute = educationRecord.GetChildElementValue("Institute"),
           InstituteURL = educationRecord.GetChildElementValue("InstituteURL"),
@@ -246,7 +242,7 @@ namespace PEngine.Core.Logic
         XDocument workHistoryDoc = XDocument.Parse(System.IO.File.ReadAllText(workHistoryPath));
         var workHistoryRecords = workHistoryDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
         newResumeRecord.WorkHistories = workHistoryRecords.Select(workHistoryRecord => new ResumeWorkHistoryModel(){
-          Guid = Guid.Empty,
+          Guid = Guid.Parse(workHistoryRecord.GetChildElementValue("Guid")),
           LegacyID = ParseNInt(workHistoryRecord.GetChildElementValue("LegacyID")),
           Employer = workHistoryRecord.GetChildElementValue("Employer"),
           EmployerURL = workHistoryRecord.GetChildElementValue("EmployerURL"),
@@ -261,11 +257,14 @@ namespace PEngine.Core.Logic
       
       if (retvalue)
       {
+        var dal = _serviceProvider.GetRequiredService<IResumeDal>();
+        dal.DeleteAllResumes();
+
         var service = _serviceProvider.GetRequiredService<IResumeService>();
         retvalue = retvalue && ProcessUpserts<ResumeModel, IResumeService>(service
           , new Dictionary<Guid, ResumeModel> { { Guid.Empty, newResumeRecord } }, ref messages, (s, m)=> {
             var errors = new List<string>();
-            s.UpsertResume(m, ref errors);
+            s.UpsertResume(m, ref errors, true);
             return errors;
           }
         );

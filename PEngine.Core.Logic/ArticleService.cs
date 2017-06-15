@@ -38,7 +38,7 @@ namespace PEngine.Core.Logic
       return (article == null || isAdmin || article.VisibleFlag) ? article : null;
     }
 
-    public bool UpsertArticle(ArticleModel article, ref List<string> errors)
+    public bool UpsertArticle(ArticleModel article, ref List<string> errors, bool importFlag = false)
     {
       var startErrorCount = errors.Count;
       ArticleModel existingArticle = null;
@@ -48,7 +48,7 @@ namespace PEngine.Core.Logic
         errors.Add(ARTICLE_ERROR_DATA_MUST_BE_PROVIDED);
         return false;
       }
-      if (article.Guid != Guid.Empty)
+      if (!importFlag && article.Guid != Guid.Empty)
       {
         existingArticle = _articleDal.GetArticleById(article.Guid, null, null);
         if (existingArticle == null)
@@ -114,9 +114,9 @@ namespace PEngine.Core.Logic
         _articleDal.AddTransaction(DatabaseType.PEngine, Database.OpenTransaction(DatabaseType.PEngine, false));
         try
         {
-          if (article.Guid == Guid.Empty)
+          if (importFlag || article.Guid == Guid.Empty)
           {
-            _articleDal.InsertArticle(article);
+            _articleDal.InsertArticle(article, importFlag);
           }
           else
           {
@@ -127,7 +127,7 @@ namespace PEngine.Core.Logic
             var previousSectionUniqueNames = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
             foreach (var section in article.Sections)
             {
-              if (section.Guid != Guid.Empty && !existingSectionGuids.Contains(section.Guid))
+              if (!importFlag && section.Guid != Guid.Empty && !existingSectionGuids.Contains(section.Guid))
               {
                 section.Guid = Guid.Empty;
               }
@@ -135,9 +135,9 @@ namespace PEngine.Core.Logic
               section.GenerateUniqueName(previousSectionUniqueNames);
               previousSectionUniqueNames.Add(section.UniqueName, true);
 
-              if (section.Guid == Guid.Empty || !existingSectionGuids.Contains(section.Guid))
+              if (importFlag || section.Guid == Guid.Empty || !existingSectionGuids.Contains(section.Guid))
               {
-                _articleDal.InsertArticleSection(section);
+                _articleDal.InsertArticleSection(section, importFlag);
               }
               else
               {

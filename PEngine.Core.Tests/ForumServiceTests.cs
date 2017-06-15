@@ -41,7 +41,7 @@ namespace PEngine.Core.Tests
       mockedSettingsProvider.SetupGet<SettingsData>(sd => sd.Current).Returns(settingsData);
 
       mockedForumDal = new Mock<IForumDal>();
-      mockedForumDal.Setup(fd => fd.InsertForum(forumData));
+      mockedForumDal.Setup(fd => fd.InsertForum(forumData, false));
       mockedForumDal.Setup(fd => fd.UpdateForum(forumData));
       mockedForumDal.Setup(fd => fd.GetForumById(invalidGuid, null)).Returns((ForumModel)null);
       mockedForumDal.Setup(fd => fd.GetForumById(validGuid, null)).Returns(new ForumModel());
@@ -51,7 +51,7 @@ namespace PEngine.Core.Tests
         new ForumModel() { VisibleFlag = true },
         new ForumModel() { VisibleFlag = false }
       });
-      mockedForumDal.Setup(fd => fd.InsertForumThread(forumThreadData));
+      mockedForumDal.Setup(fd => fd.InsertForumThread(forumThreadData, false));
       mockedForumDal.Setup(fd => fd.UpdateForumThread(forumThreadData));
       mockedForumDal.Setup(fd => fd.GetForumThreadById(invalidGuid, null)).Returns((ForumThreadModel)null);
       mockedForumDal.Setup(fd => fd.GetForumThreadById(validGuid, null)).Returns(new ForumThreadModel() { ForumUserGuid = validGuid, VisibleFlag = true, LockFlag = false, CreatedUTC = DateTime.UtcNow.AddMinutes(-1) });
@@ -63,7 +63,7 @@ namespace PEngine.Core.Tests
         new ForumThreadModel() { VisibleFlag = true },
         new ForumThreadModel() { VisibleFlag = false }
       });
-      mockedForumDal.Setup(fd => fd.InsertForumThreadPost(forumThreadPostData));
+      mockedForumDal.Setup(fd => fd.InsertForumThreadPost(forumThreadPostData, false));
       mockedForumDal.Setup(fd => fd.UpdateForumThreadPost(forumThreadPostData));
       mockedForumDal.Setup(fd => fd.GetForumThreadPostById(invalidGuid)).Returns((ForumThreadPostModel)null);
       mockedForumDal.Setup(fd => fd.GetForumThreadPostById(validGuid)).Returns(new ForumThreadPostModel() { ForumUserGuid = validGuid, VisibleFlag = true, LockFlag = false, CreatedUTC = DateTime.UtcNow.AddMinutes(-1) });
@@ -75,7 +75,7 @@ namespace PEngine.Core.Tests
         new ForumThreadPostModel() { VisibleFlag = true },
         new ForumThreadPostModel() { VisibleFlag = false }
       });
-      mockedForumDal.Setup(fd => fd.InsertForumUser(forumUserData));
+      mockedForumDal.Setup(fd => fd.InsertForumUser(forumUserData, false));
       mockedForumDal.Setup(fd => fd.UpdateForumUser(forumUserData));
       mockedForumDal.Setup(fd => fd.GetForumUserById(invalidGuid, null)).Returns((ForumUserModel)null);
       mockedForumDal.Setup(fd => fd.GetForumUserById(validGuid, null)).Returns(new ForumUserModel());

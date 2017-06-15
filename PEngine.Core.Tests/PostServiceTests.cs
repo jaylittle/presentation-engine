@@ -25,7 +25,7 @@ namespace PEngine.Core.Tests
       //Setup
       postData = new PostModel();
       mockedPostDal = new Mock<IPostDal>();
-      mockedPostDal.Setup(pd => pd.InsertPost(postData));
+      mockedPostDal.Setup(pd => pd.InsertPost(postData, false));
       mockedPostDal.Setup(pd => pd.UpdatePost(postData));
       mockedPostDal.Setup(pd => pd.GetPostById(invalidGuid, null, null)).Returns((PostModel)null);
       mockedPostDal.Setup(pd => pd.GetPostById(validGuid, null, null)).Returns(new PostModel());

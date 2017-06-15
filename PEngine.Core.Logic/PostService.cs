@@ -33,7 +33,7 @@ namespace PEngine.Core.Logic
       return (post == null || isAdmin || post.VisibleFlag) ? post : null;
     }
 
-    public bool UpsertPost(PostModel post, ref List<string> errors)
+    public bool UpsertPost(PostModel post, ref List<string> errors, bool importFlag = false)
     {
       var startErrorCount = errors.Count;
       PostModel existingPost = null; 
@@ -42,7 +42,7 @@ namespace PEngine.Core.Logic
         errors.Add(POST_ERROR_DATA_MUST_BE_PROVIDED);
         return false;
       }
-      if (post.Guid != Guid.Empty)
+      if (!importFlag && post.Guid != Guid.Empty)
       {
         existingPost = _postDal.GetPostById(post.Guid, null, null);
         if (existingPost == null)
@@ -74,9 +74,9 @@ namespace PEngine.Core.Logic
           .ToDictionary(p => p.UniqueName, p => true, StringComparer.OrdinalIgnoreCase);
         post.GenerateUniqueName(existingPostUniqueNames);
         
-        if (post.Guid == Guid.Empty)
+        if (importFlag || post.Guid == Guid.Empty)
         {
-          _postDal.InsertPost(post);
+          _postDal.InsertPost(post, importFlag);
         }
         else
         {

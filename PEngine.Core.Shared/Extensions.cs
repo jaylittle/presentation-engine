@@ -10,14 +10,17 @@ namespace PEngine.Core.Shared
 {
   public static class Extensions
   {
-    public static void UpdateTimestamps(this ITimestampModel record, bool newRecord = false)
+    public static void UpdateTimestamps(this ITimestampModel record, bool newRecord = false, bool importFlag = false)
     {
-      var currentTime = DateTime.UtcNow;
-      if (newRecord && !record.CreatedUTC.HasValue)
+      if (!importFlag)
       {
-        record.CreatedUTC = currentTime;
+        var currentTime = DateTime.UtcNow;
+        if (newRecord)
+        {
+          record.CreatedUTC = currentTime;
+        }
+        record.ModifiedUTC = currentTime;
       }
-      record.ModifiedUTC = currentTime;
     }
 
     public static void UpdateGuid(this IGuidModel record)

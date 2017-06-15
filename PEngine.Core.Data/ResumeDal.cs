@@ -18,10 +18,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertResumeObjective(ResumeObjectiveModel objective)
+    public void InsertResumeObjective(ResumeObjectiveModel objective, bool importFlag = false)
     {
       objective.UpdateGuid();
-      objective.UpdateTimestamps(true);
+      objective.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
@@ -57,10 +57,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertResumePersonal(ResumePersonalModel personal)
+    public void InsertResumePersonal(ResumePersonalModel personal, bool importFlag = false)
     {
       personal.UpdateGuid();
-      personal.UpdateTimestamps(true);
+      personal.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
@@ -96,10 +96,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertResumeSkill(ResumeSkillModel skill)
+    public void InsertResumeSkill(ResumeSkillModel skill, bool importFlag = false)
     {
       skill.UpdateGuid();
-      skill.UpdateTimestamps(true);
+      skill.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
@@ -135,10 +135,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertResumeEducation(ResumeEducationModel education)
+    public void InsertResumeEducation(ResumeEducationModel education, bool importFlag = false)
     {
       education.UpdateGuid();
-      education.UpdateTimestamps(true);
+      education.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
@@ -174,10 +174,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertResumeWorkHistory(ResumeWorkHistoryModel workHistory)
+    public void InsertResumeWorkHistory(ResumeWorkHistoryModel workHistory, bool importFlag = false)
     {
       workHistory.UpdateGuid();
-      workHistory.UpdateTimestamps(true);
+      workHistory.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
@@ -202,6 +202,14 @@ namespace PEngine.Core.Data
         ct.DbConnection.Execute(ReadQuery("DeleteResumeWorkHistory", ct.ProviderName), new {
           guid
         }, transaction: ct.DbTransaction);
+      }
+    }
+
+    public void DeleteAllResumes()
+    {
+      using (var ct = GetConnection(DatabaseType.PEngine, true))
+      {
+        ct.DbConnection.Execute(ReadQuery("DeleteAllResumes", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
   }

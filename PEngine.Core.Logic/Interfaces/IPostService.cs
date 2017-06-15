@@ -10,6 +10,6 @@ namespace PEngine.Core.Logic.Interfaces
   {
     IEnumerable<PostModel> ListPosts(bool isAdmin);
     PostModel GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin);
-    bool UpsertPost(PostModel post, ref List<string> errors);
+    bool UpsertPost(PostModel post, ref List<string> errors, bool importFlag = false);
   }
 }

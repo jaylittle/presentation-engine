@@ -28,10 +28,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertPost(PostModel post)
+    public void InsertPost(PostModel post, bool importFlag = false)
     {
       post.UpdateGuid();
-      post.UpdateTimestamps(true);
+      post.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.PEngine, false))
       {
@@ -56,6 +56,14 @@ namespace PEngine.Core.Data
         ct.DbConnection.Execute(ReadQuery("DeletePost", ct.ProviderName), new {
           guid
         }, transaction: ct.DbTransaction);
+      }
+    }
+
+    public void DeleteAllPosts()
+    {
+      using (var ct = GetConnection(DatabaseType.PEngine, true))
+      {
+        ct.DbConnection.Execute(ReadQuery("DeleteAllPosts", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
   }

@@ -25,7 +25,7 @@ namespace PEngine.Core.Tests
       //Setup
       articleData = new ArticleModel();
       mockedArticleDal = new Mock<IArticleDal>();
-      mockedArticleDal.Setup(ad => ad.InsertArticle(articleData));
+      mockedArticleDal.Setup(ad => ad.InsertArticle(articleData, false));
       mockedArticleDal.Setup(ad => ad.UpdateArticle(articleData));
       mockedArticleDal.Setup(ad => ad.GetArticleById(invalidGuid, null, null)).Returns((ArticleModel)null);
       mockedArticleDal.Setup(ad => ad.GetArticleById(validGuid, null, null)).Returns(new ArticleModel());

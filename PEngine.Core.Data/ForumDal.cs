@@ -28,10 +28,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertForum(ForumModel forum)
+    public void InsertForum(ForumModel forum, bool importFlag = false)
     {
       forum.UpdateGuid();
-      forum.UpdateTimestamps(true);
+      forum.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
@@ -69,10 +69,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertForumThread(ForumThreadModel forumThread)
+    public void InsertForumThread(ForumThreadModel forumThread, bool importFlag = false)
     {
       forumThread.UpdateGuid();
-      forumThread.UpdateTimestamps(true);
+      forumThread.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
@@ -110,10 +110,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertForumThreadPost(ForumThreadPostModel forumThreadPost)
+    public void InsertForumThreadPost(ForumThreadPostModel forumThreadPost, bool importFlag = false)
     {
       forumThreadPost.UpdateGuid();
-      forumThreadPost.UpdateTimestamps(true);
+      forumThreadPost.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
@@ -149,10 +149,10 @@ namespace PEngine.Core.Data
       }
     }
 
-    public void InsertForumUser(ForumUserModel forumUser)
+    public void InsertForumUser(ForumUserModel forumUser, bool importFlag = false)
     {
       forumUser.UpdateGuid();
-      forumUser.UpdateTimestamps(true);
+      forumUser.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
@@ -167,6 +167,14 @@ namespace PEngine.Core.Data
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
         ct.DbConnection.Execute(ReadQuery("UpdateForumUser", ct.ProviderName), param: forumUser, transaction: ct.DbTransaction);
+      }
+    }
+
+    public void DeleteAllForums()
+    {
+      using (var ct = GetConnection(DatabaseType.Forum, true))
+      {
+        ct.DbConnection.Execute(ReadQuery("DeleteAllForums", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
   }

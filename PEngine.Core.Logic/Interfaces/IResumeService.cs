@@ -9,6 +9,6 @@ namespace PEngine.Core.Logic.Interfaces
   public interface IResumeService
   {
     ResumeModel GetResume();
-    bool UpsertResume(ResumeModel resume, ref List<string> errors);
+    bool UpsertResume(ResumeModel resume, ref List<string> errors, bool importFlag = false);
   }
 }
