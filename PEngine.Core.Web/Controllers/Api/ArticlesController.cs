@@ -26,54 +26,53 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet]
-    public IEnumerable<ArticleModel> Get()
+    public async Task<IEnumerable<ArticleModel>> Get()
     {
-      return _articleDal.ListArticles(null);
+      return await _articleDal.ListArticles(null);
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet("/category/{category}")]
-    public IEnumerable<ArticleModel> Get(string category)
+    public async Task<IEnumerable<ArticleModel>> Get(string category)
     {
-      return _articleDal.ListArticles(category);
+      return await _articleDal.ListArticles(category);
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet("{guid}")]
-    public IActionResult GetByGuid(Guid guid)
+    public async Task<IActionResult> GetByGuid(Guid guid)
     {
-      var article = _articleDal.GetArticleById(guid, null, null);
+      var article = await _articleDal.GetArticleById(guid, null, null);
       return article != null ? (IActionResult) this.Ok(article) : this.NotFound();
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPost]
-    public IActionResult InsertArticle([FromBody]ArticleModel article)
+    public async Task<IActionResult> InsertArticle([FromBody]ArticleModel article)
     {
-      var errors = new List<string>();
-      if (_articleService.UpsertArticle(article, ref errors))
+      var result = await _articleService.UpsertArticle(article);
+      if (result.Successful)
       {
         return this.Ok(article);
       }
       else
       {
-        return this.StatusCode(400, new { errors });
+        return this.StatusCode(400, result);
       }
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPut]
-    public IActionResult UpdateArticle([FromBody]ArticleModel article)
+    public async Task<IActionResult> UpdateArticle([FromBody]ArticleModel article)
     {
-      return InsertArticle(article);
+      return await InsertArticle(article);
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpDelete("{guid}")]
-    public IActionResult DeleteArticle(Guid guid)
+    public async Task<IActionResult> DeleteArticle(Guid guid)
     {
-      var errors = new List<string>();
-      _articleDal.DeleteArticle(guid);
+      await _articleDal.DeleteArticle(guid);
       return this.Ok();
     }
   }

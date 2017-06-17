@@ -30,23 +30,15 @@ namespace PEngine.Core.Web
         Console.WriteLine("Import Data: Importing from PEV4 exports as Requested");
         Console.WriteLine("-------------------------------------");
         var convertService = new ConvertService(host.Services);
-        var messages = new List<string>();
-        var importSuccessful = convertService.ImportData(Directory.GetCurrentDirectory(), ref messages);
-        launchKestrelFlag = launchKestrelFlag && importSuccessful;
-        if (importSuccessful)
+        var importResults = convertService.ImportData(Directory.GetCurrentDirectory()).Result;
+        launchKestrelFlag = launchKestrelFlag && importResults.Successful;
+        if (importResults.Successful)
         {
           Console.WriteLine("Import Data: Succeeded!");
         }
         else
         {
           Console.WriteLine("Import Data: Failed!");
-        }
-        if (messages.Any())
-        {
-          foreach (var message in messages)
-          {
-            Console.WriteLine($"Import Data Message: {message}");
-          }
         }
         Console.WriteLine("-------------------------------------");
       }

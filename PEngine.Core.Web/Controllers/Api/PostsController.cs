@@ -26,47 +26,46 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet]
-    public IEnumerable<PostModel> Get()
+    public async Task<IEnumerable<PostModel>> Get()
     {
-      return _postDal.ListPosts();
+      return await _postDal.ListPosts();
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet("{guid}")]
-    public IActionResult GetByGuid(Guid guid)
+    public async Task<IActionResult> GetByGuid(Guid guid)
     {
-      var post = _postDal.GetPostById(guid, null, null);
+      var post = await _postDal.GetPostById(guid, null, null);
       return post != null ? (IActionResult) this.Ok(post) : this.NotFound();
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPost]
-    public IActionResult InsertPost([FromBody]PostModel post)
+    public async Task<IActionResult> InsertPost([FromBody]PostModel post)
     {
-      var errors = new List<string>();
-      if (_postService.UpsertPost(post, ref errors))
+      var result = await _postService.UpsertPost(post);
+      if (result.Successful)
       {
         return this.Ok(post);
       }
       else
       {
-        return this.StatusCode(400, new { errors });
+        return this.StatusCode(400, result);
       }
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPut]
-    public IActionResult UpdatePost([FromBody]PostModel post)
+    public async Task<IActionResult> UpdatePost([FromBody]PostModel post)
     {
-      return InsertPost(post);
+      return await InsertPost(post);
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpDelete("{guid}")]
-    public IActionResult DeletePost(Guid guid)
+    public async Task<IActionResult> DeletePost(Guid guid)
     {
-      var errors = new List<string>();
-      _postDal.DeletePost(guid);
+      await _postDal.DeletePost(guid);
       return this.Ok();
     }
   }

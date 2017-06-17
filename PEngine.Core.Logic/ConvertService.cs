@@ -34,7 +34,7 @@ namespace PEngine.Core.Logic
       if (System.IO.File.Exists(articlePath) && (System.IO.File.Exists(articleSectionPath)))
       {
         retvalue.LogInfo("Found both Article and Article Section exports. Processing...");
-        retvalue.Inhale(ImportArticles(articlePath, articleSectionPath));
+        retvalue.Inhale(await ImportArticles(articlePath, articleSectionPath));
       }
       else
       {
@@ -45,7 +45,7 @@ namespace PEngine.Core.Logic
       if (System.IO.File.Exists(articlePath) && (System.IO.File.Exists(articleSectionPath)))
       {
         retvalue.LogInfo("Found Post exports. Processing...");
-        retvalue.Inhale(ImportPosts(postPath));
+        retvalue.Inhale(await ImportPosts(postPath));
       }
       else
       {
@@ -60,7 +60,7 @@ namespace PEngine.Core.Logic
       if (System.IO.File.Exists(resumePersonalPath) && System.IO.File.Exists(resumeObjectivePath))
       {
         retvalue.LogInfo("Found both Resume Personal and Objective exports. Processing...");
-        retvalue.Inhale(ImportResume(resumePersonalPath, resumeObjectivePath
+        retvalue.Inhale(await ImportResume(resumePersonalPath, resumeObjectivePath
           , resumeSkillPath, resumeEducationPath, resumeWorkHistoryPath));
       }
       else
@@ -75,7 +75,7 @@ namespace PEngine.Core.Logic
       if (System.IO.File.Exists(forumPath))
       {
         retvalue.LogInfo("Found Forum export. Processing...");
-        retvalue.Inhale(ImportForums(forumPath, forumUserPath, forumThreadPath, forumThreadPostPath));
+        retvalue.Inhale(await ImportForums(forumPath, forumUserPath, forumThreadPath, forumThreadPostPath));
       }
       else
       {
@@ -85,15 +85,16 @@ namespace PEngine.Core.Logic
       return retvalue;
     }
 
-    private void ImportArticles(string articlePath, string articleSectionPath, ref bool retvalue, ref List<string> messages)
+    private async Task<OpResult> ImportArticles(string articlePath, string articleSectionPath)
     {
+      var retvalue = new OpResult();
       XDocument articleDoc = XDocument.Parse(System.IO.File.ReadAllText(articlePath));
       var articleRecords = articleDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
       var newArticleRecords = new Dictionary<Guid, ArticleModel>();
       if (articleRecords.Any())
       {
-        newArticleRecords = articleRecords.Select(articleRecord => {
-          return new ArticleModel()
+        newArticleRecords = articleRecords.Select(articleRecord =>
+          new ArticleModel()
           {
             Guid = Guid.Parse(articleRecord.GetChildElementValue("Guid")),
             LegacyID = ParseNInt(articleRecord.GetChildElementValue("LegacyID")),
@@ -108,8 +109,8 @@ namespace PEngine.Core.Logic
             HideDropDownFlag = bool.Parse(articleRecord.GetChildElementValue("HideDropDownFlag")),
             CreatedUTC = ParseNDateTime(articleRecord.GetChildElementValue("CreatedUTC")),
             ModifiedUTC = ParseNDateTime(articleRecord.GetChildElementValue("ModifiedUTC"))
-          };
-        }).ToDictionary(a => a.Guid, a => a);
+          })
+          .ToDictionary(a => a.Guid, a => a);
 
         XDocument sectionDoc = XDocument.Parse(System.IO.File.ReadAllText(articleSectionPath));
         var sectionRecords = sectionDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
@@ -132,34 +133,33 @@ namespace PEngine.Core.Logic
           }
           else
           {
-            messages.Add($"Article Section {newSection.Guid} refers to a non-existent article: {newSection.ArticleGuid}");
-            retvalue = false;
+            retvalue.LogError($"Article Section {newSection.Guid} refers to a non-existent article: {newSection.ArticleGuid}");
           }
         }
       }
-      if (retvalue)
+      if (retvalue.Successful)
       {
         var dal = _serviceProvider.GetRequiredService<IArticleDal>();
-        dal.DeleteAllArticles();
+        await dal.DeleteAllArticles();
 
         var service = _serviceProvider.GetRequiredService<IArticleService>();
-        retvalue = retvalue && ProcessUpserts<ArticleModel,IArticleService>(service, newArticleRecords, ref messages, (s, m) => {
-          var errors = new List<string>();
-          s.UpsertArticle(m, ref errors, true);
-          return errors;
-        });
+        retvalue.Inhale(await ProcessUpserts<ArticleModel,IArticleService>(service, newArticleRecords, (s, m) =>
+          s.UpsertArticle(m, true).Result
+        ));
       }
+      return retvalue;
     }
 
-    private void ImportPosts(string postPath, ref bool retvalue, ref List<string> messages)
+    private async Task<OpResult> ImportPosts(string postPath)
     {
+      var retvalue = new OpResult();
       XDocument postDoc = XDocument.Parse(System.IO.File.ReadAllText(postPath));
       var postRecords = postDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
       var newPostRecords = new Dictionary<Guid, PostModel>();
       if (postRecords.Any())
       {
-        newPostRecords = postRecords.Select(postRecord => {
-          return new PostModel()
+        newPostRecords = postRecords.Select(postRecord =>
+          new PostModel()
           {
             Guid = Guid.Parse(postRecord.GetChildElementValue("Guid")),
             LegacyID = ParseNInt(postRecord.GetChildElementValue("LegacyID")),
@@ -170,25 +170,25 @@ namespace PEngine.Core.Logic
             UniqueName = postRecord.GetChildElementValue("UniqueName"),
             CreatedUTC = ParseNDateTime(postRecord.GetChildElementValue("CreatedUTC")),
             ModifiedUTC = ParseNDateTime(postRecord.GetChildElementValue("ModifiedUTC"))
-          };
-        }).ToDictionary(p => p.Guid, p => p);
+          })
+          .ToDictionary(p => p.Guid, p => p);
       }
-      if (retvalue)
+      if (retvalue.Successful)
       {
         var dal = _serviceProvider.GetRequiredService<IPostDal>();
-        dal.DeleteAllPosts();
+        await dal.DeleteAllPosts();
 
         var service = _serviceProvider.GetRequiredService<IPostService>();
-        retvalue = retvalue && ProcessUpserts<PostModel,IPostService>(service, newPostRecords, ref messages, (s, m) => {
-          var errors = new List<string>();
-          s.UpsertPost(m, ref errors, true);
-          return errors;
-        });
+        retvalue.Inhale(await ProcessUpserts<PostModel,IPostService>(service, newPostRecords, (s, m) =>
+          s.UpsertPost(m, true).Result
+        ));
       }
+      return retvalue;
     }
 
-    private void ImportResume(string personalPath, string objectivePath, string skillPath, string educationPath, string workHistoryPath, ref bool retvalue, ref List<string> messages)
+    private async Task<OpResult> ImportResume(string personalPath, string objectivePath, string skillPath, string educationPath, string workHistoryPath)
     {
+      var retvalue = new OpResult();
       var newResumeRecord = new ResumeModel();
       
       XDocument personalDoc = XDocument.Parse(System.IO.File.ReadAllText(personalPath));
@@ -270,32 +270,32 @@ namespace PEngine.Core.Logic
         }).ToList();
       }
       
-      if (retvalue)
+      if (retvalue.Successful)
       {
         var dal = _serviceProvider.GetRequiredService<IResumeDal>();
-        dal.DeleteAllResumes();
+        await dal.DeleteAllResumes();
 
         var service = _serviceProvider.GetRequiredService<IResumeService>();
-        retvalue = retvalue && ProcessUpserts<ResumeModel, IResumeService>(service
-          , new Dictionary<Guid, ResumeModel> { { Guid.Empty, newResumeRecord } }, ref messages, (s, m)=> {
-            var errors = new List<string>();
-            s.UpsertResume(m, ref errors, true);
-            return errors;
-          }
-        );
+        retvalue.Inhale(await ProcessUpserts<ResumeModel, IResumeService>(service
+          , new Dictionary<Guid, ResumeModel> { { Guid.Empty, newResumeRecord } }, (s, m)=>
+            s.UpsertResume(m, true).Result
+        ));
       }
+      return retvalue;
     }
 
-    private void ImportForums(string forumPath, string userPath, string threadPath, string threadPostPath, ref bool retvalue, ref List<string> messages)
+    private async Task<OpResult> ImportForums(string forumPath, string userPath, string threadPath, string threadPostPath)
     {
+      var retvalue = new OpResult();
       var service = _serviceProvider.GetRequiredService<IForumService>();
+      
       XDocument forumDoc = XDocument.Parse(System.IO.File.ReadAllText(forumPath));
       var forumRecords = forumDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
       var newForumRecords = new Dictionary<Guid, ForumModel>();
       if (forumRecords.Any())
       {
-        newForumRecords = forumRecords.Select(forumRecord => {
-          return new ForumModel()
+        newForumRecords = forumRecords.Select(forumRecord =>
+          new ForumModel()
           {
             Guid = Guid.Parse(forumRecord.GetChildElementValue("Guid")),
             Name = forumRecord.GetChildElementValue("Name"),
@@ -304,19 +304,17 @@ namespace PEngine.Core.Logic
             UniqueName = forumRecord.GetChildElementValue("UniqueName"),
             CreatedUTC = ParseNDateTime(forumRecord.GetChildElementValue("CreatedUTC")),
             ModifiedUTC = ParseNDateTime(forumRecord.GetChildElementValue("ModifiedUTC"))
-          };
-        }).ToDictionary(p => p.Guid, p => p);
+          })
+          .ToDictionary(p => p.Guid, p => p);
       }
-      if (retvalue)
+      if (retvalue.Successful)
       {
         var dal = _serviceProvider.GetRequiredService<IForumDal>();
-        dal.DeleteAllForums();
+        await dal.DeleteAllForums();
 
-        retvalue = retvalue && ProcessUpserts<ForumModel,IForumService>(service, newForumRecords, ref messages, (s, m) => {
-          var errors = new List<string>();
-          s.UpsertForum(m, ref errors, true);
-          return errors;
-        });
+        retvalue.Inhale(await ProcessUpserts<ForumModel,IForumService>(service, newForumRecords, (s, m) =>
+          s.UpsertForum(m, true).Result
+        ));
       }
       if (System.IO.File.Exists(userPath))
       {
@@ -325,8 +323,8 @@ namespace PEngine.Core.Logic
         var newUserRecords = new Dictionary<Guid, ForumUserModel>();
         if (userRecords.Any())
         {
-          newUserRecords = userRecords.Select(userRecord => {
-            return new ForumUserModel()
+          newUserRecords = userRecords.Select(userRecord =>
+            new ForumUserModel()
             {
               Guid = Guid.Parse(userRecord.GetChildElementValue("Guid")),
               UserId = userRecord.GetChildElementValue("UserID"),
@@ -340,16 +338,14 @@ namespace PEngine.Core.Logic
               LastLogon = ParseNDateTime(userRecord.GetChildElementValue("LastLogon")),
               CreatedUTC = ParseNDateTime(userRecord.GetChildElementValue("CreatedUTC")),
               ModifiedUTC = ParseNDateTime(userRecord.GetChildElementValue("ModifiedUTC"))
-            };
-          }).ToDictionary(p => p.Guid, p => p);
+            })
+            .ToDictionary(p => p.Guid, p => p);
         }
-        if (retvalue)
+        if (retvalue.Successful)
         {
-          retvalue = retvalue && ProcessUpserts<ForumUserModel,IForumService>(service, newUserRecords, ref messages, (s, m) => {
-            var errors = new List<string>();
-            s.UpsertForumUser(m, m.Guid, true, ref errors, true);
-            return errors;
-          });
+          retvalue .Inhale(await ProcessUpserts<ForumUserModel,IForumService>(service, newUserRecords, (s, m) =>
+            s.UpsertForumUser(m, m.Guid, true, true).Result
+          ));
         }
       }
       if (System.IO.File.Exists(threadPath))
@@ -359,8 +355,8 @@ namespace PEngine.Core.Logic
         var newThreadRecords = new Dictionary<Guid, ForumThreadModel>();
         if (threadRecords.Any())
         {
-          newThreadRecords = threadRecords.Select(threadRecord => {
-            return new ForumThreadModel()
+          newThreadRecords = threadRecords.Select(threadRecord =>
+            new ForumThreadModel()
             {
               Guid = Guid.Parse(threadRecord.GetChildElementValue("Guid")),
               ForumGuid = Guid.Parse(threadRecord.GetChildElementValue("ForumGuid")),
@@ -371,16 +367,14 @@ namespace PEngine.Core.Logic
               UniqueName = threadRecord.GetChildElementValue("UniqueName"),
               CreatedUTC = ParseNDateTime(threadRecord.GetChildElementValue("CreatedUTC")),
               ModifiedUTC = ParseNDateTime(threadRecord.GetChildElementValue("ModifiedUTC"))
-            };
-          }).ToDictionary(p => p.Guid, p => p);
+            })
+            .ToDictionary(p => p.Guid, p => p);
         }
-        if (retvalue)
+        if (retvalue.Successful)
         {
-          retvalue = retvalue && ProcessUpserts<ForumThreadModel,IForumService>(service, newThreadRecords, ref messages, (s, m) => {
-            var errors = new List<string>();
-            s.UpsertForumThread(m, m.Guid, true, ref errors, true);
-            return errors;
-          });
+          retvalue.Inhale(await ProcessUpserts<ForumThreadModel,IForumService>(service, newThreadRecords, (s, m) =>
+            s.UpsertForumThread(m, m.Guid, true, true).Result
+          ));
           if (System.IO.File.Exists(threadPostPath))
           {
             XDocument threadPostDoc = XDocument.Parse(System.IO.File.ReadAllText(threadPostPath));
@@ -388,8 +382,8 @@ namespace PEngine.Core.Logic
             var newThreadPostRecords = new Dictionary<Guid, ForumThreadPostModel>();
             if (threadPostRecords.Any())
             {
-              newThreadPostRecords = threadPostRecords.Select(threadPostRecord => {
-                return new ForumThreadPostModel()
+              newThreadPostRecords = threadPostRecords.Select(threadPostRecord =>
+                new ForumThreadPostModel()
                 {
                   Guid = Guid.Parse(threadPostRecord.GetChildElementValue("Guid")),
                   ForumThreadGuid = Guid.Parse(threadPostRecord.GetChildElementValue("ForumThreadGuid")),
@@ -400,48 +394,43 @@ namespace PEngine.Core.Logic
                   IPAddress = threadPostRecord.GetChildElementValue("IPAddress"),
                   CreatedUTC = ParseNDateTime(threadPostRecord.GetChildElementValue("CreatedUTC")),
                   ModifiedUTC = ParseNDateTime(threadPostRecord.GetChildElementValue("ModifiedUTC"))
-                };
-              }).ToDictionary(p => p.Guid, p => p);
-              if (retvalue)
+                })
+                .ToDictionary(p => p.Guid, p => p);
+              
+              if (retvalue.Successful)
               {
-                retvalue = retvalue && ProcessUpserts<ForumThreadPostModel,IForumService>(service, newThreadPostRecords, ref messages, (s, m) => {
-                  var errors = new List<string>();
-                  s.UpsertForumThreadPost(m, m.Guid, true, ref errors, true);
-                  return errors;
-                });
+                retvalue.Inhale(await ProcessUpserts<ForumThreadPostModel,IForumService>(service, newThreadPostRecords, (s, m) => 
+                  s.UpsertForumThreadPost(m, m.Guid, true, true).Result
+                ));
               }
             }
           }
         }
       }
+      return retvalue;
     }
 
-    private bool ProcessUpserts<TModel,TService>(TService service, Dictionary<Guid, TModel> records, ref List<string> messages, Func<TService, TModel, List<string>> upsert)
+    private async Task<OpResult> ProcessUpserts<TModel,TService>(TService service, Dictionary<Guid, TModel> records, Func<TService, TModel, OpResult> upsert)
     {
-      bool retvalue = true;
+      var retvalue = new OpResult();
       var succeededCounter = 0;
       var failedCounter = 0;
       foreach (var record in records)
       {
-        var errors = upsert(service, record.Value);
-        var myResult = !errors.Any();
-        retvalue = retvalue && myResult;
-        if (myResult)
+        var myResult = upsert(service, record.Value);
+        if (myResult.Successful)
         {
-          messages.Add($"{typeof(TModel).Name} Upsert Succeeded for {record.Key}");
+          retvalue.LogInfo($"{typeof(TModel).Name} Upsert Succeeded for {record.Key}");
           succeededCounter++;
         }
         else
         {
-          messages.Add($"{typeof(TModel).Name} Upsert Failed for {record.Key}");
+          retvalue.LogError($"{typeof(TModel).Name} Upsert Failed for {record.Key}");
           failedCounter++;
         }
-        foreach (var error in errors)
-        {
-          messages.Add($"{typeof(TModel).Name} Upsert Error for {record.Key}: {error}");
-        }
+        retvalue.Inhale(myResult);
       }
-      messages.Add($"{typeof(TModel).Name} Import completed with {succeededCounter} successes, {failedCounter} failures.");
+      retvalue.LogInfo($"{typeof(TModel).Name} Import completed with {succeededCounter} successes, {failedCounter} failures.");
       return retvalue;
     }
 

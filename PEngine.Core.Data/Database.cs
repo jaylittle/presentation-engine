@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Threading.Tasks;
 using Dapper;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data.Interfaces;
@@ -22,7 +23,7 @@ namespace PEngine.Core.Data
     private static Dictionary<DatabaseType, ConcurrentQueue<int?>> _singleWriteQueue = new Dictionary<DatabaseType, ConcurrentQueue<int?>>();
     private static Dictionary<DatabaseType, int?> _singleWriteQueueCurrentThreadId = new Dictionary<DatabaseType, int?>();
 
-    public static void Startup(string contentRootPath, IDataProvider dataProvider)
+    public static async Task Startup(string contentRootPath, IDataProvider dataProvider)
     {
       ContentRootPath = contentRootPath;
       var databaseTypes = Enum.GetValues(typeof(DatabaseType));
@@ -33,16 +34,16 @@ namespace PEngine.Core.Data
       }
       _dataProvider = dataProvider;
       dataProvider.Init(dataProvider.RequiresFolder ? DatabaseFolderPath : null);
-      Update();
+      await Update();
     }
 
-    public static void Update()
+    public static async Task Update()
     {
       var databases = Enum.GetValues(typeof(DatabaseType));
       foreach (var database in databases)
       {
         var databaseType = (DatabaseType)database;
-        var currentVersion = new VersionDal().GetCurrentVersion(databaseType);
+        var currentVersion = await new VersionDal().GetCurrentVersion(databaseType);
         var updates = DatabaseUpdateFiles(databaseType)
           .OrderBy(f => f, StringComparer.OrdinalIgnoreCase);
 
@@ -71,7 +72,7 @@ namespace PEngine.Core.Data
                   ct.DbConnection.Execute(updateCommand);
                 }
                 lastUpdateCommand = "Standard_InsertVersion";
-                versionDal.InsertVersion(databaseType, updateVersion);
+                await versionDal.InsertVersion(databaseType, updateVersion);
                 lastUpdateCommand = "Standard_CommitTransaction";
                 ct.CommitTransaction();
               }

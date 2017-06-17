@@ -24,31 +24,31 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet]
-    public ResumeModel Get()
+    public async Task<ResumeModel> Get()
     {
-      return _resumeService.GetResume();
+      return await _resumeService.GetResume();
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPost]
-    public IActionResult InsertResume([FromBody]ResumeModel resume)
+    public async Task<IActionResult> InsertResume([FromBody]ResumeModel resume)
     {
-      var errors = new List<string>();
-      if (_resumeService.UpsertResume(resume, ref errors))
+      var result = await _resumeService.UpsertResume(resume);
+      if (result.Successful)
       {
         return this.Ok(resume);
       }
       else
       {
-        return this.StatusCode(400, new { errors });
+        return this.StatusCode(400, result);
       }
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPut]
-    public IActionResult UpdateResume([FromBody]ResumeModel resume)
+    public async Task<IActionResult> UpdateResume([FromBody]ResumeModel resume)
     {
-      return InsertResume(resume);
+      return await InsertResume(resume);
     }
   }
 }

@@ -157,7 +157,7 @@ namespace PEngine.Core.Web.Models
       if (!IsForum)
       {
         var articleDal = Startup.ServiceProvider.GetRequiredService<IArticleDal>();
-        var articleCategories = articleDal.ListArticles(null)
+        var articleCategories = articleDal.ListArticles(null).Result
           .Where(a => a.VisibleFlag || HasAdmin)
           .Select(a => $"{a.Category}|{a.ContentURL}")
           .Distinct(StringComparer.OrdinalIgnoreCase)

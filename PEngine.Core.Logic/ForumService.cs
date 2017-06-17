@@ -188,7 +188,7 @@ namespace PEngine.Core.Logic
           if (forumThread.InitialPost != null)
           {
             forumThread.InitialPost.ForumThreadGuid = forumThread.Guid;
-            retvalue.Inhale(UpsertForumThreadPost(forumThread.InitialPost, forumUserGuid, isForumAdmin, importFlag));
+            retvalue.Inhale(await UpsertForumThreadPost(forumThread.InitialPost, forumUserGuid, isForumAdmin, importFlag));
           }
           _forumDal.CommitTransaction(DatabaseType.Forum);
         }

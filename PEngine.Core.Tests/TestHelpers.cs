@@ -1,14 +1,15 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using PEngine.Core.Shared.Models;
 
 namespace PEngine.Core.Tests
 {
   public class TestHelpers
   {
-    public static bool CallProducedError(Func<List<string>, List<string>> func, string errorMessage)
+    public static bool CallProducedError(Func<OpResult> func, string errorMessage)
     {
-      return func(new List<string>()).Contains(errorMessage, StringComparer.OrdinalIgnoreCase);
+      return func().LogMessages.Any(e => string.Equals(errorMessage, e.Text, StringComparison.OrdinalIgnoreCase));
     }
   }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PEngine.Core.Shared;
@@ -24,10 +25,10 @@ namespace PEngine.Core.Web.Controllers
       _postService = postService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
       var model = new PEngineGenericListModel<PostModel>(HttpContext, true);
-      model.ListData = _postService.ListPosts(model.State.HasAdmin);
+      model.ListData = await _postService.ListPosts(model.State.HasAdmin);
       return View(model);
     }
   }

@@ -20,39 +20,31 @@ namespace PEngine.Core.Web.Controllers.Api
     public QuotesController(IQuoteDal quoteDal)
     {
       _quoteDal = quoteDal;
-      _quotes =_quoteDal.ListQuotes().ToList();
+      _quotes = _quoteDal.ListQuotes().Result.ToList();
     }
 
     private static List<QuoteModel> _quotes;
-    private List<QuoteModel> Quotes
+    private async Task<List<QuoteModel>> GetQuotes()
     {
-      get
+      if (_quotes == null)
       {
-        if (_quotes == null)
-        {
-          lock (_quotes)
-          {
-            if (_quotes == null)
-            {
-              _quotes =_quoteDal.ListQuotes().ToList();
-            }
-          }
-        }
-        return _quotes;
+        _quotes = (await _quoteDal.ListQuotes()).ToList();
       }
+      return _quotes;
     }
 
     [HttpGet]
-    public IEnumerable<QuoteModel> Get()
+    public async Task<IEnumerable<QuoteModel>> Get()
     {
-      return Quotes;
+      return await GetQuotes();
     }
 
     [HttpGet("random")]
-    public string GetRandom()
+    public async Task<string> GetRandom()
     {
       var rnd = new Random();
-      return Quotes[rnd.Next(0, Quotes.Count - 1)].Data;
+      var quotes= await GetQuotes();
+      return quotes[rnd.Next(0, quotes.Count - 1)].Data;
     }
   }
 }
