@@ -15,17 +15,47 @@ namespace PEngine.Core.Shared.Models
     
     public void LogError(string text)
     {
-      LogMessages.Add(new OpResultMessage(text, OpResultMessageType.Error));
+      LogGeneric(text, OpResultMessageType.Error);
     }
 
     public void LogInfo(string text)
     {
-      LogMessages.Add(new OpResultMessage(text, OpResultMessageType.Info));
+      LogGeneric(text, OpResultMessageType.Info);
+    }
+
+    public void LogGeneric(string text, OpResultMessageType type)
+    {
+      var logMessage = new OpResultMessage(text, type);
+      LogMessages.Add(logMessage);
+      
+      if (OutputToConsole)
+      {
+        Console.WriteLine(logMessage); 
+      }
     }
 
     public void Inhale(OpResult subResults)
     {
       LogMessages.AddRange((subResults.LogMessages));
+      if (OutputToConsole && !subResults.OutputToConsole)
+      {
+        foreach (var logMessage in subResults.LogMessages)
+        {
+          Console.WriteLine(logMessage);
+        }
+      }
+    }
+
+    public bool OutputToConsole { get; set; }
+
+    public OpResult()
+    {
+      
+    }
+
+    public OpResult(bool outputToConsole)
+    {
+      OutputToConsole = outputToConsole;
     }
   }
 
@@ -42,7 +72,12 @@ namespace PEngine.Core.Shared.Models
     {
       Text = text;
       Type = type;
-    }    
+    }
+
+    public override string ToString()
+    {
+      return $"{Type}: {Text}";
+    }
   }
 
   public enum OpResultMessageType

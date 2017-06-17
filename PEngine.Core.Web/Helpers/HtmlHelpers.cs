@@ -16,7 +16,7 @@ namespace PEngine.Core.Web.Helpers
     public static HtmlString ContentHashFile(this IHtmlHelper htmlHelper, string webPath)
     {
       var urlHelper = new UrlHelper(htmlHelper.ViewContext);
-      var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath);
+      var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath).Result;
       var hashUrl = System.Net.WebUtility.UrlDecode(urlHelper.Action("GetHashedFileName", "hash", new {
         hash = hashEntry.Hash,
         filePath = hashEntry.WebPath

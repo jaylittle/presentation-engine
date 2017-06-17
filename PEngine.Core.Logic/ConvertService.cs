@@ -22,7 +22,7 @@ namespace PEngine.Core.Logic
 
     public async Task<OpResult> ImportData(string contentRootPath)
     {
-      var retvalue = new OpResult();
+      var retvalue = new OpResult(true);
       string importFolder = System.IO.Path.Combine(contentRootPath, $"data{System.IO.Path.DirectorySeparatorChar}import");
       if (!System.IO.Directory.Exists(importFolder))
       {
@@ -412,26 +412,29 @@ namespace PEngine.Core.Logic
 
     private async Task<OpResult> ProcessUpserts<TModel,TService>(TService service, Dictionary<Guid, TModel> records, Func<TService, TModel, OpResult> upsert)
     {
-      var retvalue = new OpResult();
-      var succeededCounter = 0;
-      var failedCounter = 0;
-      foreach (var record in records)
+      return await Task.Run<OpResult>(() =>
       {
-        var myResult = upsert(service, record.Value);
-        if (myResult.Successful)
+        var retvalue = new OpResult();
+        var succeededCounter = 0;
+        var failedCounter = 0;
+        foreach (var record in records)
         {
-          retvalue.LogInfo($"{typeof(TModel).Name} Upsert Succeeded for {record.Key}");
-          succeededCounter++;
+          var myResult = upsert(service, record.Value);
+          if (myResult.Successful)
+          {
+            retvalue.LogInfo($"{typeof(TModel).Name} Upsert Succeeded for {record.Key}");
+            succeededCounter++;
+          }
+          else
+          {
+            retvalue.LogError($"{typeof(TModel).Name} Upsert Failed for {record.Key}");
+            failedCounter++;
+          }
+          retvalue.Inhale(myResult);
         }
-        else
-        {
-          retvalue.LogError($"{typeof(TModel).Name} Upsert Failed for {record.Key}");
-          failedCounter++;
-        }
-        retvalue.Inhale(myResult);
-      }
-      retvalue.LogInfo($"{typeof(TModel).Name} Import completed with {succeededCounter} successes, {failedCounter} failures.");
-      return retvalue;
+        retvalue.LogInfo($"{typeof(TModel).Name} Import completed with {succeededCounter} successes, {failedCounter} failures.");
+        return retvalue;
+      });
     }
 
     private long? ParseNInt(string val)

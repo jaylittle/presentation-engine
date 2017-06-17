@@ -1,18 +1,24 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Moq" Version="4.7.10"/>
-    <PackageReference Include="dotnet-xunit" Version="2.3.0-beta2-build3683"/>
-    <PackageReference Include="xunit" Version="2.3.0-beta2-build3683"/>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.2"/>
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta2-build3683"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk">
+      <Version>15.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Moq" Version="4.7.10" />
+    <PackageReference Include="dotnet-xunit" Version="2.3.0-beta2-build3683" />
+    <PackageReference Include="xunit" Version="2.3.0-beta2-build3683" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta2-build3683" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <Version>2.3.0-beta2-build1317</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj"/>
-    <ProjectReference Include="..\PEngine.Core.Data\PEngine.Core.Data.csproj"/>
-    <ProjectReference Include="..\PEngine.Core.Logic\PEngine.Core.Logic.csproj"/>
+    <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj" />
+    <ProjectReference Include="..\PEngine.Core.Data\PEngine.Core.Data.csproj" />
+    <ProjectReference Include="..\PEngine.Core.Logic\PEngine.Core.Logic.csproj" />
   </ItemGroup>
 </Project>
