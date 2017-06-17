@@ -9,6 +9,7 @@ using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
+using PEngine.Core.Shared;
 using PEngine.Core.Web.Constraints;
 
 namespace PEngine.Core.Web.Controllers.Api
@@ -34,9 +35,10 @@ namespace PEngine.Core.Web.Controllers.Api
     }
 
     [HttpGet]
-    public async Task<IEnumerable<QuoteModel>> Get()
+    public async Task<IEnumerable<QuoteModel>> Get([FromQuery]PagingModel paging = null)
     {
-      return await GetQuotes();
+      var quotes = await GetQuotes();
+      return PagingUtils.Paginate(paging, quotes);
     }
 
     [HttpGet("random")]

@@ -9,6 +9,7 @@ using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
+using PEngine.Core.Shared;
 using PEngine.Core.Web.Constraints;
 
 namespace PEngine.Core.Web.Controllers.Api
@@ -26,16 +27,18 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet]
-    public async Task<IEnumerable<ArticleModel>> Get()
+    public async Task<IEnumerable<ArticleModel>> Get([FromQuery]PagingModel paging = null)
     {
-      return await _articleDal.ListArticles(null);
+      var articles = await _articleDal.ListArticles(null);
+      return PagingUtils.Paginate(paging, articles);
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet("/category/{category}")]
-    public async Task<IEnumerable<ArticleModel>> Get(string category)
+    public async Task<IEnumerable<ArticleModel>> Get(string category, [FromQuery]PagingModel paging = null)
     {
-      return await _articleDal.ListArticles(category);
+      var articles = await _articleDal.ListArticles(category);
+      return PagingUtils.Paginate(paging, articles);
     }
 
     [Authorize(Roles = "PEngineAdmin")]

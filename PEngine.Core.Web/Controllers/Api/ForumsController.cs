@@ -10,6 +10,7 @@ using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
+using PEngine.Core.Shared;
 using PEngine.Core.Web.Constraints;
 
 namespace PEngine.Core.Web.Controllers.Api
@@ -28,9 +29,10 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "ForumAdmin")]
     [HttpGet]
-    public async Task<IEnumerable<ForumModel>> GetForums()
+    public async Task<IEnumerable<ForumModel>> GetForums([FromQuery]PagingModel paging = null)
     {
-      return await _forumService.ListForums(HttpContext.User.IsInRole("ForumAdmin"));
+      var forums = await _forumService.ListForums(HttpContext.User.IsInRole("ForumAdmin"));
+      return PagingUtils.Paginate(paging, forums);
     }
 
     [Authorize(Roles = "ForumAdmin")]
@@ -65,9 +67,10 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "ForumAdmin")]
     [HttpGet("{forumGuid}/threads/")]
-    public async Task<IEnumerable<ForumThreadModel>> GetForumThreads(Guid forumGuid)
+    public async Task<IEnumerable<ForumThreadModel>> GetForumThreads(Guid forumGuid, [FromQuery]PagingModel paging = null)
     {
-      return await _forumService.ListForumThreads(forumGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
+      var forumThreads = await _forumService.ListForumThreads(forumGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
+      return PagingUtils.Paginate(paging, forumThreads);
     }
 
     [Authorize(Roles = "ForumUser")]
@@ -103,9 +106,10 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "ForumAdmin")]
     [HttpGet("thread/{forumThreadGuid}/posts")]
-    public async Task<IEnumerable<ForumThreadPostModel>> GetForumThreadPosts(Guid forumThreadGuid)
+    public async Task<IEnumerable<ForumThreadPostModel>> GetForumThreadPosts(Guid forumThreadGuid, [FromQuery]PagingModel paging = null)
     {
-      return await _forumService.ListForumThreadPosts(null, null, forumThreadGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
+      var threadPosts = await _forumService.ListForumThreadPosts(null, null, forumThreadGuid, null, HttpContext.User.IsInRole("ForumAdmin"));
+      return PagingUtils.Paginate(paging, threadPosts);
     }
 
     [Authorize(Roles = "ForumUser")]
@@ -140,9 +144,10 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "ForumAdmin")]
     [HttpGet("users")]
-    public async Task<IEnumerable<ForumUserModel>> GetForumUsers()
+    public async Task<IEnumerable<ForumUserModel>> GetForumUsers([FromQuery]PagingModel paging = null)
     {
-      return await _forumDal.ListForumUsers();
+      var forumUsers = await _forumDal.ListForumUsers();
+      return PagingUtils.Paginate(paging, forumUsers);
     }
 
     [Authorize(Roles = "ForumUser")]
