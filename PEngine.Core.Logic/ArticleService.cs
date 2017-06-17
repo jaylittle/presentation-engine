@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
@@ -27,33 +28,33 @@ namespace PEngine.Core.Logic
       _articleDal = articleDal;
     }
 
-    public IEnumerable<ArticleModel> ListArticles(string category, bool isAdmin)
+    public async Task<IEnumerable<ArticleModel>> ListArticles(string category, bool isAdmin)
     {
-      return _articleDal.ListArticles(category).Where(a => isAdmin || a.VisibleFlag);
+      return (await _articleDal.ListArticles(category)).Where(a => isAdmin || a.VisibleFlag);
     }
 
-    public ArticleModel GetArticleById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
+    public async Task<ArticleModel> GetArticleById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
     {
-      var article = _articleDal.GetArticleById(guid, legacyId, uniqueName);
+      var article = await _articleDal.GetArticleById(guid, legacyId, uniqueName);
       return (article == null || isAdmin || article.VisibleFlag) ? article : null;
     }
 
-    public bool UpsertArticle(ArticleModel article, ref List<string> errors, bool importFlag = false)
+    public async Task<OpResult> UpsertArticle(ArticleModel article, bool importFlag = false)
     {
-      var startErrorCount = errors.Count;
+      var retvalue = new OpResult();
       ArticleModel existingArticle = null;
 
       if (article == null)
       {
-        errors.Add(ARTICLE_ERROR_DATA_MUST_BE_PROVIDED);
-        return false;
+        retvalue.LogError(ARTICLE_ERROR_DATA_MUST_BE_PROVIDED);
+        return retvalue;
       }
       if (!importFlag && article.Guid != Guid.Empty)
       {
-        existingArticle = _articleDal.GetArticleById(article.Guid, null, null);
+        existingArticle = await _articleDal.GetArticleById(article.Guid, null, null);
         if (existingArticle == null)
         {
-          errors.Add(ARTICLE_ERROR_INVALID_RECORD);
+          retvalue.LogError(ARTICLE_ERROR_INVALID_RECORD);
         }
         else
         {
@@ -64,20 +65,20 @@ namespace PEngine.Core.Logic
       }
       if (string.IsNullOrWhiteSpace(article.Name))
       {
-        errors.Add(ARTICLE_ERROR_TITLE_IS_REQUIRED);
+        retvalue.LogError(ARTICLE_ERROR_TITLE_IS_REQUIRED);
       }
       if (string.IsNullOrEmpty(article.Description))
       {
-        errors.Add(ARTICLE_ERROR_DESCRIPTION_IS_REQUIRED);
+        retvalue.LogError(ARTICLE_ERROR_DESCRIPTION_IS_REQUIRED);
       }
       if (string.IsNullOrEmpty(article.Category))
       {
-        errors.Add(ARTICLE_ERROR_CATEGORY_IS_REQUIRED);
+        retvalue.LogError(ARTICLE_ERROR_CATEGORY_IS_REQUIRED);
       }
       if (!string.IsNullOrEmpty(article.DefaultSection) && article.Sections != null 
         && !article.Sections.Any(s => s.Name != null && s.Name.Equals(article.DefaultSection, StringComparison.OrdinalIgnoreCase)))
       {
-        errors.Add(ARTICLE_ERROR_DEFAULT_SECTION_INVALID);
+        retvalue.LogError(ARTICLE_ERROR_DEFAULT_SECTION_INVALID);
       }
       if (article.Sections != null)
       {
@@ -87,22 +88,21 @@ namespace PEngine.Core.Logic
           counter++;
           if (string.IsNullOrEmpty(section.Name))
           {
-            errors.Add(string.Format(SECTION_ERROR_NAME_IS_REQUIRED, counter));
+            retvalue.LogError(string.Format(SECTION_ERROR_NAME_IS_REQUIRED, counter));
           }
           if (string.IsNullOrEmpty(section.Data))
           {
-            errors.Add(string.Format(SECTION_ERROR_CONTENT_IS_REQUIRED, counter));
+            retvalue.LogError(string.Format(SECTION_ERROR_CONTENT_IS_REQUIRED, counter));
           }
         }
       }
       if ((article.Sections == null || article.Sections.Count <= 0) && string.IsNullOrEmpty(article.ContentURL))
       {
-        errors.Add(ARTICLE_ERROR_EITHER_URL_OR_SECTION_REQUIRED);
+        retvalue.LogError(ARTICLE_ERROR_EITHER_URL_OR_SECTION_REQUIRED);
       }
-      var retvalue = (errors == null || errors.Count == startErrorCount);
-      if (retvalue)
+      if (retvalue.Successful)
       {
-        Dictionary<string, bool> existingUniqueNames = _articleDal.ListArticles(null)
+        Dictionary<string, bool> existingUniqueNames = (await _articleDal.ListArticles(null))
           .ToDictionary(a => a.UniqueName, a => true, StringComparer.OrdinalIgnoreCase);
         article.GenerateUniqueName(existingUniqueNames);
 
@@ -116,11 +116,11 @@ namespace PEngine.Core.Logic
         {
           if (importFlag || article.Guid == Guid.Empty)
           {
-            _articleDal.InsertArticle(article, importFlag);
+            await _articleDal.InsertArticle(article, importFlag);
           }
           else
           {
-            _articleDal.UpdateArticle(article);
+            await _articleDal.UpdateArticle(article);
           }
           if (article.Sections != null)
           {
@@ -137,18 +137,18 @@ namespace PEngine.Core.Logic
 
               if (importFlag || section.Guid == Guid.Empty || !existingSectionGuids.Contains(section.Guid))
               {
-                _articleDal.InsertArticleSection(section, importFlag);
+                await _articleDal.InsertArticleSection(section, importFlag);
               }
               else
               {
-                _articleDal.UpdateArticleSection(section);
+                await _articleDal.UpdateArticleSection(section);
               }
               existingSectionGuids.Remove(section.Guid);
             }
           }
           foreach (var sectionGuidToDelete in existingSectionGuids)
           {
-            _articleDal.DeleteArticleSection(sectionGuidToDelete);
+            await _articleDal.DeleteArticleSection(sectionGuidToDelete);
           }
           _articleDal.CommitTransaction(DatabaseType.PEngine);
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
 using Dapper;
 using PEngine.Core.Shared;
@@ -11,21 +12,21 @@ namespace PEngine.Core.Data
 {
   public class VersionDal : BaseDal<VersionDal>, IVersionDal
   {
-    public IEnumerable<VersionModel> ListVersions(DatabaseType type)
+    public async Task<IEnumerable<VersionModel>> ListVersions(DatabaseType type)
     {
       using (var ct = GetConnection(type, true))
       {
-        return ct.DbConnection.Query<VersionModel>(ReadQuery("ListVersions", ct.ProviderName), transaction: ct.DbTransaction);
+        return await ct.DbConnection.QueryAsync<VersionModel>(ReadQuery("ListVersions", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
 
-    public VersionModel GetCurrentVersion(DatabaseType type)
+    public async Task<VersionModel> GetCurrentVersion(DatabaseType type)
     {
       IEnumerable<VersionModel> versions = null;
       var defaultVersionModel = new VersionModel();
       try
       {
-        versions = ListVersions(type);
+        versions = await ListVersions(type);
         Console.WriteLine($"Database {type}: Has {versions.Count()} version records");
       }
       catch
@@ -40,14 +41,14 @@ namespace PEngine.Core.Data
       return defaultVersionModel;
     }
 
-    public void InsertVersion(DatabaseType type, VersionModel version)
+    public async Task InsertVersion(DatabaseType type, VersionModel version)
     {
       version.UpdateGuid();
       version.UpdateTimestamps(true);
 
       using (var ct = GetConnection(type, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertVersion", ct.ProviderName), version, transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("InsertVersion", ct.ProviderName), version, transaction: ct.DbTransaction);
       }
     }
   }

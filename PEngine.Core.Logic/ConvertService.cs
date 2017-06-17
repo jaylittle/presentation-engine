@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Data.Interfaces;
@@ -19,37 +20,36 @@ namespace PEngine.Core.Logic
       _serviceProvider = serviceProvider;
     }
 
-    public bool ImportData(string contentRootPath, ref List<string> messages)
+    public async Task<OpResult> ImportData(string contentRootPath)
     {
-      bool retvalue = true;
+      var retvalue = new OpResult();
       string importFolder = System.IO.Path.Combine(contentRootPath, $"data{System.IO.Path.DirectorySeparatorChar}import");
       if (!System.IO.Directory.Exists(importFolder))
       {
-        messages.Add($"Expected import diretory does not exist: {importFolder}");
-        retvalue = false;
+        retvalue.LogError($"Expected import diretory does not exist: {importFolder}");
       }
 
       var articlePath = System.IO.Path.Combine(importFolder, "Article.xml");
       var articleSectionPath = System.IO.Path.Combine(importFolder, "ArticleSection.xml");
       if (System.IO.File.Exists(articlePath) && (System.IO.File.Exists(articleSectionPath)))
       {
-        messages.Add("Found both Article and Article Section exports. Processing...");
-        ImportArticles(articlePath, articleSectionPath, ref retvalue, ref messages);
+        retvalue.LogInfo("Found both Article and Article Section exports. Processing...");
+        retvalue.Inhale(ImportArticles(articlePath, articleSectionPath));
       }
       else
       {
-        messages.Add("Couldn't find both Article and Article Section exports. Skipping.");
+        retvalue.LogInfo("Couldn't find both Article and Article Section exports. Skipping.");
       }
 
       var postPath = System.IO.Path.Combine(importFolder, "Post.xml");
       if (System.IO.File.Exists(articlePath) && (System.IO.File.Exists(articleSectionPath)))
       {
-        messages.Add("Found Post exports. Processing...");
-        ImportPosts(postPath, ref retvalue, ref messages);
+        retvalue.LogInfo("Found Post exports. Processing...");
+        retvalue.Inhale(ImportPosts(postPath));
       }
       else
       {
-        messages.Add("Couldn't find Post exports. Skipping.");
+        retvalue.LogInfo("Couldn't find Post exports. Skipping.");
       }
 
       var resumePersonalPath = System.IO.Path.Combine(importFolder, "ResumePersonal.xml");
@@ -59,13 +59,13 @@ namespace PEngine.Core.Logic
       var resumeWorkHistoryPath = System.IO.Path.Combine(importFolder, "ResumeWorkHistory.xml");
       if (System.IO.File.Exists(resumePersonalPath) && System.IO.File.Exists(resumeObjectivePath))
       {
-        messages.Add("Found both Resume Personal and Objective exports. Processing...");
-        ImportResume(resumePersonalPath, resumeObjectivePath, resumeSkillPath
-          , resumeEducationPath, resumeWorkHistoryPath, ref retvalue, ref messages);
+        retvalue.LogInfo("Found both Resume Personal and Objective exports. Processing...");
+        retvalue.Inhale(ImportResume(resumePersonalPath, resumeObjectivePath
+          , resumeSkillPath, resumeEducationPath, resumeWorkHistoryPath));
       }
       else
       {
-        messages.Add("Couldn't find both Resume Personal and Objective exports. Skipping.");
+        retvalue.LogInfo("Couldn't find both Resume Personal and Objective exports. Skipping.");
       }
 
       var forumPath = System.IO.Path.Combine(importFolder, "Forum.xml");
@@ -74,13 +74,12 @@ namespace PEngine.Core.Logic
       var forumThreadPostPath = System.IO.Path.Combine(importFolder, "ForumThreadPost.xml");
       if (System.IO.File.Exists(forumPath))
       {
-        messages.Add("Found Forum export. Processing...");
-        ImportForums(forumPath, forumUserPath, forumThreadPath
-          , forumThreadPostPath, ref retvalue, ref messages);
+        retvalue.LogInfo("Found Forum export. Processing...");
+        retvalue.Inhale(ImportForums(forumPath, forumUserPath, forumThreadPath, forumThreadPostPath));
       }
       else
       {
-        messages.Add("Couldn't find Forum export. Skipping.");
+        retvalue.LogInfo("Couldn't find Forum export. Skipping.");
       }
 
       return retvalue;

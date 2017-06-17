@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
@@ -43,32 +44,32 @@ namespace PEngine.Core.Logic
       _settingsProvider = settingsProvider;
     }
 
-    public IEnumerable<ForumModel> ListForums(bool isForumAdmin)
+    public async Task<IEnumerable<ForumModel>> ListForums(bool isForumAdmin)
     {
-      return _forumDal.ListForums().Where(f => isForumAdmin || f.VisibleFlag);
+      return (await _forumDal.ListForums()).Where(f => isForumAdmin || f.VisibleFlag);
     }
 
-    public ForumModel GetForumById(Guid? guid, string uniqueName, bool isForumAdmin)
+    public async Task<ForumModel> GetForumById(Guid? guid, string uniqueName, bool isForumAdmin)
     {
-      var forum = _forumDal.GetForumById(guid, uniqueName);
+      var forum = await _forumDal.GetForumById(guid, uniqueName);
       return (forum == null || isForumAdmin || forum.VisibleFlag) ? forum : null;
     }
 
-    public bool UpsertForum(ForumModel forum, ref List<string> errors, bool importFlag = false)
+    public async Task<OpResult> UpsertForum(ForumModel forum, bool importFlag = false)
     {
-      var startErrorCount = errors.Count;
+      var retvalue = new OpResult();
       ForumModel existingForum = null;
       if (forum == null)
       {
-        errors.Add(FORUM_ERROR_DATA_MUST_BE_PROVIDED);
-        return false;
+        retvalue.LogError(FORUM_ERROR_DATA_MUST_BE_PROVIDED);
+        return retvalue;
       }
       if (!importFlag && forum.Guid != Guid.Empty)
       {
-        existingForum = _forumDal.GetForumById(forum.Guid, null);
+        existingForum = await _forumDal.GetForumById(forum.Guid, null);
         if (existingForum == null)
         {
-          errors.Add(FORUM_ERROR_INVALID_RECORD);
+          retvalue.LogError(FORUM_ERROR_INVALID_RECORD);
         }
         else
         {
@@ -79,56 +80,55 @@ namespace PEngine.Core.Logic
       }
       if (string.IsNullOrWhiteSpace(forum.Name))
       {
-        errors.Add(FORUM_ERROR_TITLE_IS_REQUIRED);
+        retvalue.LogError(FORUM_ERROR_TITLE_IS_REQUIRED);
       }
       if (string.IsNullOrWhiteSpace(forum.Description))
       {
-        errors.Add(FORUM_ERROR_DESCRIPTION_IS_REQUIRED);
+        retvalue.LogError(FORUM_ERROR_DESCRIPTION_IS_REQUIRED);
       }
-      var retvalue = (errors == null || errors.Count == startErrorCount);
-      if (retvalue)
+      if (retvalue.Successful)
       {
-        var existingForumUniqueNames = _forumDal.ListForums().ToDictionary(f => f.UniqueName, f => true, StringComparer.OrdinalIgnoreCase);
+        var existingForumUniqueNames = (await _forumDal.ListForums()).ToDictionary(f => f.UniqueName, f => true, StringComparer.OrdinalIgnoreCase);
         forum.GenerateUniqueName(existingForumUniqueNames);
         
         if (importFlag || forum.Guid == Guid.Empty)
         {
-          _forumDal.InsertForum(forum, importFlag);
+          await _forumDal.InsertForum(forum, importFlag);
         }
         else
         {
-          _forumDal.UpdateForum(forum);
+          await _forumDal.UpdateForum(forum);
         }
       }
       return retvalue;
     }
 
-    public IEnumerable<ForumThreadModel> ListForumThreads(Guid? forumGuid, string forumUniqueName, bool isForumAdmin)
+    public async Task<IEnumerable<ForumThreadModel>> ListForumThreads(Guid? forumGuid, string forumUniqueName, bool isForumAdmin)
     {
-      return _forumDal.ListForumThreads(forumGuid, forumUniqueName).Where(ft => isForumAdmin || ft.VisibleFlag);
+      return (await _forumDal.ListForumThreads(forumGuid, forumUniqueName)).Where(ft => isForumAdmin || ft.VisibleFlag);
     }
 
-    public ForumThreadModel GetForumThreadById(Guid? guid, string uniqueName, Guid forumUserGuid, bool isForumAdmin)
+    public async Task<ForumThreadModel> GetForumThreadById(Guid? guid, string uniqueName, Guid forumUserGuid, bool isForumAdmin)
     {
-      var forumThread = _forumDal.GetForumThreadById(guid, uniqueName);
+      var forumThread = await _forumDal.GetForumThreadById(guid, uniqueName);
       return (forumThread == null || isForumAdmin || forumThread.VisibleFlag) ? forumThread : null;
     }
     
-    public bool UpsertForumThread(ForumThreadModel forumThread, Guid forumUserGuid, bool isForumAdmin, ref List<string> errors, bool importFlag = false)
+    public async Task<OpResult> UpsertForumThread(ForumThreadModel forumThread, Guid forumUserGuid, bool isForumAdmin, bool importFlag = false)
     {
-      var startErrorCount = errors.Count;
+      var retvalue = new OpResult();
       ForumThreadModel existingForumThread = null;
       if (forumThread == null)
       {
-        errors.Add(THREAD_ERROR_DATA_MUST_BE_PROVIDED);
-        return false;
+        retvalue.LogError(THREAD_ERROR_DATA_MUST_BE_PROVIDED);
+        return retvalue;
       }
       if (!importFlag && forumThread.Guid != Guid.Empty)
       {
-        existingForumThread = _forumDal.GetForumThreadById(forumThread.Guid, null);
+        existingForumThread = await _forumDal.GetForumThreadById(forumThread.Guid, null);
         if (existingForumThread == null)
         {
-          errors.Add(THREAD_ERROR_INVALID_RECORD);
+          retvalue.LogError(THREAD_ERROR_INVALID_RECORD);
         }
         else
         {
@@ -143,12 +143,12 @@ namespace PEngine.Core.Logic
             forumThread.VisibleFlag = existingForumThread.VisibleFlag; 
             if (forumThread.ForumUserGuid != forumUserGuid || !forumThread.VisibleFlag || forumThread.LockFlag)
             {
-              errors.Add(THREAD_ERROR_NOT_AUTHORIZED);
+              retvalue.LogError(THREAD_ERROR_NOT_AUTHORIZED);
             }
             if (forumThread.CreatedUTC.HasValue
               && (DateTime.UtcNow - forumThread.CreatedUTC.Value).TotalMinutes > _settingsProvider.Current.TimeLimitForumPostEdit)
             {
-              errors.Add(THREAD_ERROR_TOO_LATE_TO_UPDATE);
+              retvalue.LogError(THREAD_ERROR_TOO_LATE_TO_UPDATE);
             }
           }
         }
@@ -159,19 +159,18 @@ namespace PEngine.Core.Logic
       }
       if (string.IsNullOrWhiteSpace(forumThread.Name))
       {
-        errors.Add(THREAD_ERROR_TITLE_IS_REQUIRED);
+        retvalue.LogError(THREAD_ERROR_TITLE_IS_REQUIRED);
       }
       if (forumThread.Guid == Guid.Empty)
       {
         if (forumThread.InitialPost == null)
         {
-          errors.Add(THREAD_ERROR_INITIAL_POST_IS_REQUIRED);
+          retvalue.LogError(THREAD_ERROR_INITIAL_POST_IS_REQUIRED);
         }
       }
-      var retvalue = (errors == null || errors.Count == startErrorCount);
-      if (retvalue)
+      if (retvalue.Successful)
       {
-        var existingForumThreadUniqueNames = _forumDal.ListForumThreads(forumThread.ForumGuid, null)
+        var existingForumThreadUniqueNames = (await _forumDal.ListForumThreads(forumThread.ForumGuid, null))
           .ToDictionary(ft => ft.UniqueName, ft => true, StringComparer.OrdinalIgnoreCase);
         forumThread.GenerateUniqueName(existingForumThreadUniqueNames);
 
@@ -180,16 +179,16 @@ namespace PEngine.Core.Logic
         {
           if (importFlag || forumThread.Guid == Guid.Empty)
           {
-            _forumDal.InsertForumThread(forumThread, importFlag);
+            await _forumDal.InsertForumThread(forumThread, importFlag);
           }
           else
           {
-            _forumDal.UpdateForumThread(forumThread);
+            await _forumDal.UpdateForumThread(forumThread);
           }
           if (forumThread.InitialPost != null)
           {
             forumThread.InitialPost.ForumThreadGuid = forumThread.Guid;
-            UpsertForumThreadPost(forumThread.InitialPost, forumUserGuid, isForumAdmin, ref errors, importFlag);
+            retvalue.Inhale(UpsertForumThreadPost(forumThread.InitialPost, forumUserGuid, isForumAdmin, importFlag));
           }
           _forumDal.CommitTransaction(DatabaseType.Forum);
         }
@@ -202,33 +201,33 @@ namespace PEngine.Core.Logic
       return retvalue;
     }
 
-    public IEnumerable<ForumThreadPostModel> ListForumThreadPosts(Guid? forumGuid, string forumUniqueName, Guid? forumThreadGuid, string forumThreadUniqueName, bool isForumAdmin)
+    public async Task<IEnumerable<ForumThreadPostModel>> ListForumThreadPosts(Guid? forumGuid, string forumUniqueName, Guid? forumThreadGuid, string forumThreadUniqueName, bool isForumAdmin)
     {
-      return _forumDal.ListForumThreadPosts(forumGuid, forumUniqueName, forumThreadGuid, forumThreadUniqueName)
+      return (await _forumDal.ListForumThreadPosts(forumGuid, forumUniqueName, forumThreadGuid, forumThreadUniqueName))
         .Where(ftp => isForumAdmin || ftp.VisibleFlag);
     }
 
-    public ForumThreadPostModel GetForumThreadPostById(Guid guid, Guid forumUserGuid, bool isForumAdmin)
+    public async Task<ForumThreadPostModel> GetForumThreadPostById(Guid guid, Guid forumUserGuid, bool isForumAdmin)
     {
-      var forumThreadPost = _forumDal.GetForumThreadPostById(guid);
+      var forumThreadPost = await _forumDal.GetForumThreadPostById(guid);
       return (forumThreadPost == null || isForumAdmin || forumThreadPost.VisibleFlag) ? forumThreadPost : null;
     }
 
-    public bool UpsertForumThreadPost(ForumThreadPostModel forumThreadPost, Guid forumUserGuid, bool isForumAdmin, ref List<string> errors, bool importFlag = false)
+    public async Task<OpResult> UpsertForumThreadPost(ForumThreadPostModel forumThreadPost, Guid forumUserGuid, bool isForumAdmin, bool importFlag = false)
     {
-      var startErrorCount = errors.Count;
+      var retvalue = new OpResult();
       ForumThreadPostModel existingForumThreadPost = null;
       if (forumThreadPost == null)
       {
-        errors.Add(POST_ERROR_DATA_MUST_BE_PROVIDED);
-        return false;
+        retvalue.LogError(POST_ERROR_DATA_MUST_BE_PROVIDED);
+        return retvalue;
       }
       if (!importFlag && forumThreadPost.Guid != Guid.Empty)
       {
-        existingForumThreadPost = _forumDal.GetForumThreadPostById(forumThreadPost.Guid);
+        existingForumThreadPost = await _forumDal.GetForumThreadPostById(forumThreadPost.Guid);
         if (existingForumThreadPost == null)
         {
-          errors.Add(POST_ERROR_INVALID_RECORD);
+          retvalue.LogError(POST_ERROR_INVALID_RECORD);
         }
         else
         {
@@ -242,12 +241,12 @@ namespace PEngine.Core.Logic
             forumThreadPost.VisibleFlag = existingForumThreadPost.VisibleFlag;
             if (forumThreadPost.ForumUserGuid != forumUserGuid || !forumThreadPost.VisibleFlag || forumThreadPost.LockFlag)
             {
-              errors.Add(POST_ERROR_NOT_AUTHORIZED);
+              retvalue.LogError(POST_ERROR_NOT_AUTHORIZED);
             }
             if (forumThreadPost.CreatedUTC.HasValue
               && (DateTime.UtcNow - forumThreadPost.CreatedUTC.Value).TotalMinutes > _settingsProvider.Current.TimeLimitForumPostEdit)
             {
-              errors.Add(POST_ERROR_TOO_LATE_TO_UPDATE);
+              retvalue.LogError(POST_ERROR_TOO_LATE_TO_UPDATE);
             }
           }
         }
@@ -258,44 +257,43 @@ namespace PEngine.Core.Logic
       }
       if (string.IsNullOrWhiteSpace(forumThreadPost.Data))
       {
-        errors.Add(POST_ERROR_CONTENT_IS_REQUIRED);
+        retvalue.LogError(POST_ERROR_CONTENT_IS_REQUIRED);
       }
-      var retvalue = (errors == null || errors.Count == startErrorCount);
-      if (retvalue)
+      if (retvalue.Successful)
       { 
         if (importFlag || forumThreadPost.Guid == Guid.Empty)
         {
-          _forumDal.InsertForumThreadPost(forumThreadPost, importFlag);
+          await _forumDal.InsertForumThreadPost(forumThreadPost, importFlag);
         }
         else
         {
-          _forumDal.UpdateForumThreadPost(forumThreadPost);
+          await _forumDal.UpdateForumThreadPost(forumThreadPost);
         }
       }
       return retvalue;
     }
 
-    public ForumUserModel GetForumUserById(Guid? guid, string userId, Guid forumUserGuid, bool isForumAdmin)
+    public async Task<ForumUserModel> GetForumUserById(Guid? guid, string userId, Guid forumUserGuid, bool isForumAdmin)
     {
-      var forumUser = _forumDal.GetForumUserById(guid, userId);
+      var forumUser = await _forumDal.GetForumUserById(guid, userId);
       return (forumUser == null || isForumAdmin || forumUser.Guid == forumUserGuid) ? forumUser : null;
     }
 
-    public bool UpsertForumUser(ForumUserModel forumUser, Guid forumUserGuid, bool isForumAdmin, ref List<string> errors, bool importFlag = false)
+    public async Task<OpResult> UpsertForumUser(ForumUserModel forumUser, Guid forumUserGuid, bool isForumAdmin, bool importFlag = false)
     {
-      var startErrorCount = errors.Count;
+      var retvalue = new OpResult();
       ForumUserModel existingForumUser = null;
       if (forumUser == null)
       {
-        errors.Add(USER_ERROR_DATA_MUST_BE_PROVIDED);
-        return false;
+        retvalue.LogError(USER_ERROR_DATA_MUST_BE_PROVIDED);
+        return retvalue;
       }
       if (!importFlag && forumUser.Guid != Guid.Empty)
       {
-        existingForumUser = _forumDal.GetForumUserById(forumUser.Guid, null);
+        existingForumUser = await _forumDal.GetForumUserById(forumUser.Guid, null);
         if (existingForumUser == null)
         {
-          errors.Add(USER_ERROR_INVALID_RECORD);
+          retvalue.LogError(USER_ERROR_INVALID_RECORD);
         }
         else
         {
@@ -310,29 +308,28 @@ namespace PEngine.Core.Logic
             forumUser.UserId = existingForumUser.UserId;
             if (forumUser.Guid != forumUserGuid)
             {
-              errors.Add(USER_ERROR_NOT_AUTHORIZED);
+              retvalue.LogError(USER_ERROR_NOT_AUTHORIZED);
             }
           }
         }
       }
       if (string.IsNullOrWhiteSpace(forumUser.UserId))
       {
-        errors.Add(USER_ERROR_USER_ID_IS_REQUIRED);
+        retvalue.LogError(USER_ERROR_USER_ID_IS_REQUIRED);
       }
       if (string.IsNullOrWhiteSpace(forumUser.Email))
       {
-        errors.Add(USER_ERROR_EMAIL_IS_REQUIRED);
+        retvalue.LogError(USER_ERROR_EMAIL_IS_REQUIRED);
       }
       if (forumUser.Guid == Guid.Empty && string.IsNullOrWhiteSpace(forumUser.NewPassword.Value))
       {
-        errors.Add(USER_ERROR_PASSWORD_IS_REQUIRED_FOR_NEW_USERS);
+        retvalue.LogError(USER_ERROR_PASSWORD_IS_REQUIRED_FOR_NEW_USERS);
       }
       if (string.IsNullOrEmpty(forumUser.Comment))
       {
-        errors.Add(USER_ERROR_COMMENT_IS_REQUIRED);
+        retvalue.LogError(USER_ERROR_COMMENT_IS_REQUIRED);
       }
-      var retvalue = (errors == null || errors.Count == startErrorCount);
-      if (retvalue)
+      if (retvalue.Successful)
       { 
         if (importFlag || forumUser.Guid == Guid.Empty)
         {
@@ -340,7 +337,7 @@ namespace PEngine.Core.Logic
           {
             forumUser.Password = Security.Encrypt(forumUser.NewPassword.Value);
           }
-          _forumDal.InsertForumUser(forumUser, importFlag);
+          await _forumDal.InsertForumUser(forumUser, importFlag);
         }
         else
         {
@@ -356,7 +353,7 @@ namespace PEngine.Core.Logic
           {
             forumUser.Password = existingForumUser?.Password ?? string.Empty;
           }
-          _forumDal.UpdateForumUser(forumUser);
+          await _forumDal.UpdateForumUser(forumUser);
         }
       }
       return retvalue;

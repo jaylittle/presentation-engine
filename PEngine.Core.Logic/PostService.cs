@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Logic.Interfaces;
@@ -22,32 +23,32 @@ namespace PEngine.Core.Logic
       _postDal = postDal;
     }
 
-    public IEnumerable<PostModel> ListPosts(bool isAdmin)
+    public async Task<IEnumerable<PostModel>> ListPosts(bool isAdmin)
     {
-      return _postDal.ListPosts().Where(p => isAdmin || p.VisibleFlag);
+      return (await _postDal.ListPosts()).Where(p => isAdmin || p.VisibleFlag);
     }
 
-    public PostModel GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
+    public async Task<PostModel> GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
     {
-      var post = _postDal.GetPostById(guid, legacyId, uniqueName);
+      var post = await _postDal.GetPostById(guid, legacyId, uniqueName);
       return (post == null || isAdmin || post.VisibleFlag) ? post : null;
     }
 
-    public bool UpsertPost(PostModel post, ref List<string> errors, bool importFlag = false)
+    public async Task<OpResult> UpsertPost(PostModel post, bool importFlag = false)
     {
-      var startErrorCount = errors.Count;
+      var retvalue = new OpResult();
       PostModel existingPost = null; 
       if (post == null)
       {
-        errors.Add(POST_ERROR_DATA_MUST_BE_PROVIDED);
-        return false;
+        retvalue.LogError(POST_ERROR_DATA_MUST_BE_PROVIDED);
+        return retvalue;
       }
       if (!importFlag && post.Guid != Guid.Empty)
       {
-        existingPost = _postDal.GetPostById(post.Guid, null, null);
+        existingPost = await _postDal.GetPostById(post.Guid, null, null);
         if (existingPost == null)
         {
-          errors.Add(POST_ERROR_INVALID_RECORD);
+          retvalue.LogError(POST_ERROR_INVALID_RECORD);
         }
         else
         {
@@ -58,29 +59,28 @@ namespace PEngine.Core.Logic
       }
       if (string.IsNullOrWhiteSpace(post.Name))
       {
-        errors.Add(POST_ERROR_TITLE_IS_REQUIRED);
+        retvalue.LogError(POST_ERROR_TITLE_IS_REQUIRED);
       }
       if (string.IsNullOrEmpty(post.Data))
       {
-        errors.Add(POST_ERROR_CONTENT_IS_REQUIRED);
+        retvalue.LogError(POST_ERROR_CONTENT_IS_REQUIRED);
       }
-      var retvalue = (errors == null || errors.Count == startErrorCount);
-      if (retvalue)
+      if (retvalue.Successful)
       {
         var createMonth = post.CreatedUTC.HasValue ? post.CreatedUTC.Value.Month : DateTime.UtcNow.Month;
         var createYear = post.CreatedUTC.HasValue ? post.CreatedUTC.Value.Year : DateTime.UtcNow.Year;
-        var existingPostUniqueNames = _postDal.ListPosts()
+        var existingPostUniqueNames = (await _postDal.ListPosts())
           .Where(p => p.CreatedUTC.HasValue && p.CreatedUTC.Value.Month == createMonth && p.CreatedUTC.Value.Year == createYear)
           .ToDictionary(p => p.UniqueName, p => true, StringComparer.OrdinalIgnoreCase);
         post.GenerateUniqueName(existingPostUniqueNames);
         
         if (importFlag || post.Guid == Guid.Empty)
         {
-          _postDal.InsertPost(post, importFlag);
+          await _postDal.InsertPost(post, importFlag);
         }
         else
         {
-          _postDal.UpdatePost(post);
+          await _postDal.UpdatePost(post);
         }
       }
       return retvalue;

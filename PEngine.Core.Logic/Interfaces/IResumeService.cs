@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data.Interfaces;
 
@@ -8,7 +9,7 @@ namespace PEngine.Core.Logic.Interfaces
 {
   public interface IResumeService
   {
-    ResumeModel GetResume();
-    bool UpsertResume(ResumeModel resume, ref List<string> errors, bool importFlag = false);
+    Task<ResumeModel> GetResume();
+    Task<OpResult> UpsertResume(ResumeModel resume, bool importFlag = false);
   }
 }

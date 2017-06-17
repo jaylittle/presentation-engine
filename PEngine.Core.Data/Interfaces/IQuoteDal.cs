@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PEngine.Core.Shared.Models;
 
 namespace PEngine.Core.Data.Interfaces
 {
     public interface IQuoteDal : IBaseDal
     {
-      IEnumerable<QuoteModel> ListQuotes();
+      Task<IEnumerable<QuoteModel>> ListQuotes();
     }
 }

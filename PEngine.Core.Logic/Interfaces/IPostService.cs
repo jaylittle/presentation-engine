@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data.Interfaces;
 
@@ -8,8 +9,8 @@ namespace PEngine.Core.Logic.Interfaces
 {
   public interface IPostService
   {
-    IEnumerable<PostModel> ListPosts(bool isAdmin);
-    PostModel GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin);
-    bool UpsertPost(PostModel post, ref List<string> errors, bool importFlag = false);
+    Task<IEnumerable<PostModel>> ListPosts(bool isAdmin);
+    Task<PostModel> GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin);
+    Task<OpResult> UpsertPost(PostModel post, bool importFlag = false);
   }
 }

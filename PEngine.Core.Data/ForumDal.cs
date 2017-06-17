@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
 using Dapper;
 using PEngine.Core.Shared;
@@ -10,171 +11,171 @@ namespace PEngine.Core.Data
 {
   public class ForumDal : BaseDal<ForumDal>, IForumDal
   {
-    public IEnumerable<ForumModel> ListForums()
+    public async Task<IEnumerable<ForumModel>> ListForums()
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
-        return ct.DbConnection.Query<ForumModel>(ReadQuery("ListForums", ct.ProviderName), transaction: ct.DbTransaction);
+        return await ct.DbConnection.QueryAsync<ForumModel>(ReadQuery("ListForums", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
 
-    public ForumModel GetForumById(Guid? guid, string uniqueName)
+    public async Task<ForumModel> GetForumById(Guid? guid, string uniqueName)
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
-        return ct.DbConnection.QueryFirstOrDefault<ForumModel>(ReadQuery("GetForumById", ct.ProviderName), new {
+        return await ct.DbConnection.QueryFirstOrDefaultAsync<ForumModel>(ReadQuery("GetForumById", ct.ProviderName), new {
           guid, uniqueName
         }, transaction: ct.DbTransaction);
       }
     }
 
-    public void InsertForum(ForumModel forum, bool importFlag = false)
+    public async Task InsertForum(ForumModel forum, bool importFlag = false)
     {
       forum.UpdateGuid();
       forum.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertForum", ct.ProviderName), forum, transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("InsertForum", ct.ProviderName), forum, transaction: ct.DbTransaction);
       }
     }
 
-    public void UpdateForum(ForumModel forum)
+    public async Task UpdateForum(ForumModel forum)
     {
       forum.UpdateTimestamps(false);
 
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateForum", ct.ProviderName), forum, transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("UpdateForum", ct.ProviderName), forum, transaction: ct.DbTransaction);
       }
     }
 
-    public IEnumerable<ForumThreadModel> ListForumThreads(Guid? forumGuid, string forumUniqueName)
+    public async Task<IEnumerable<ForumThreadModel>> ListForumThreads(Guid? forumGuid, string forumUniqueName)
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
-        return ct.DbConnection.Query<ForumThreadModel>(ReadQuery("ListForumThreads", ct.ProviderName), new {
+        return await ct.DbConnection.QueryAsync<ForumThreadModel>(ReadQuery("ListForumThreads", ct.ProviderName), new {
             forumGuid, forumUniqueName
         }, transaction: ct.DbTransaction);
       }
     }
 
-    public ForumThreadModel GetForumThreadById(Guid? guid, string uniqueName)
+    public async Task<ForumThreadModel> GetForumThreadById(Guid? guid, string uniqueName)
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
-        return ct.DbConnection.QueryFirstOrDefault<ForumThreadModel>(ReadQuery("GetForumThreadById", ct.ProviderName), new {
+        return await ct.DbConnection.QueryFirstOrDefaultAsync<ForumThreadModel>(ReadQuery("GetForumThreadById", ct.ProviderName), new {
           guid, uniqueName
         }, transaction: ct.DbTransaction);
       }
     }
 
-    public void InsertForumThread(ForumThreadModel forumThread, bool importFlag = false)
+    public async Task InsertForumThread(ForumThreadModel forumThread, bool importFlag = false)
     {
       forumThread.UpdateGuid();
       forumThread.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertForumThread", ct.ProviderName), forumThread, transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("InsertForumThread", ct.ProviderName), forumThread, transaction: ct.DbTransaction);
       }
     }
 
-    public void UpdateForumThread(ForumThreadModel forumThread)
+    public async Task UpdateForumThread(ForumThreadModel forumThread)
     {
       forumThread.UpdateTimestamps(false);
 
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateForumThread", ct.ProviderName), forumThread, transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("UpdateForumThread", ct.ProviderName), forumThread, transaction: ct.DbTransaction);
       }
     }
 
-    public IEnumerable<ForumThreadPostModel> ListForumThreadPosts(Guid? forumGuid, string forumUniqueName, Guid? forumThreadGuid, string forumThreadUniqueName)
+    public async Task<IEnumerable<ForumThreadPostModel>> ListForumThreadPosts(Guid? forumGuid, string forumUniqueName, Guid? forumThreadGuid, string forumThreadUniqueName)
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
-        return ct.DbConnection.Query<ForumThreadPostModel>(ReadQuery("ListForumThreadPosts", ct.ProviderName), new {
+        return await ct.DbConnection.QueryAsync<ForumThreadPostModel>(ReadQuery("ListForumThreadPosts", ct.ProviderName), new {
             forumGuid, forumUniqueName, forumThreadGuid, forumThreadUniqueName
         }, transaction: ct.DbTransaction);
       }
     }
 
-    public ForumThreadPostModel GetForumThreadPostById(Guid guid)
+    public async Task<ForumThreadPostModel> GetForumThreadPostById(Guid guid)
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
-        return ct.DbConnection.QueryFirstOrDefault<ForumThreadPostModel>(ReadQuery("GetForumThreadPostById", ct.ProviderName), new {
+        return await ct.DbConnection.QueryFirstOrDefaultAsync<ForumThreadPostModel>(ReadQuery("GetForumThreadPostById", ct.ProviderName), new {
           guid
         }, transaction: ct.DbTransaction);
       }
     }
 
-    public void InsertForumThreadPost(ForumThreadPostModel forumThreadPost, bool importFlag = false)
+    public async Task InsertForumThreadPost(ForumThreadPostModel forumThreadPost, bool importFlag = false)
     {
       forumThreadPost.UpdateGuid();
       forumThreadPost.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertForumThreadPost", ct.ProviderName), forumThreadPost, transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("InsertForumThreadPost", ct.ProviderName), forumThreadPost, transaction: ct.DbTransaction);
       }
     }
 
-    public void UpdateForumThreadPost(ForumThreadPostModel forumThreadPost)
+    public async Task UpdateForumThreadPost(ForumThreadPostModel forumThreadPost)
     {
       forumThreadPost.UpdateTimestamps(false);
 
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateForumThreadPost", ct.ProviderName), forumThreadPost, transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("UpdateForumThreadPost", ct.ProviderName), forumThreadPost, transaction: ct.DbTransaction);
       }
     }
 
-    public IEnumerable<ForumUserModel> ListForumUsers()
+    public async Task<IEnumerable<ForumUserModel>> ListForumUsers()
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
-        return ct.DbConnection.Query<ForumUserModel>(ReadQuery("ListForumUsers", ct.ProviderName), transaction: ct.DbTransaction);
+        return await ct.DbConnection.QueryAsync<ForumUserModel>(ReadQuery("ListForumUsers", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
 
-    public ForumUserModel GetForumUserById(Guid? guid, string userId)
+    public async Task<ForumUserModel> GetForumUserById(Guid? guid, string userId)
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
-        return ct.DbConnection.QueryFirstOrDefault<ForumUserModel>(ReadQuery("GetForumUserById", ct.ProviderName), new {
+        return await ct.DbConnection.QueryFirstOrDefaultAsync<ForumUserModel>(ReadQuery("GetForumUserById", ct.ProviderName), new {
           guid, userId
         }, transaction: ct.DbTransaction);
       }
     }
 
-    public void InsertForumUser(ForumUserModel forumUser, bool importFlag = false)
+    public async Task InsertForumUser(ForumUserModel forumUser, bool importFlag = false)
     {
       forumUser.UpdateGuid();
       forumUser.UpdateTimestamps(true, importFlag);
       
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("InsertForumUser", ct.ProviderName), param: forumUser, transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("InsertForumUser", ct.ProviderName), param: forumUser, transaction: ct.DbTransaction);
       }
     }
 
-    public void UpdateForumUser(ForumUserModel forumUser)
+    public async Task UpdateForumUser(ForumUserModel forumUser)
     {
       forumUser.UpdateTimestamps(false);
 
       using (var ct = GetConnection(DatabaseType.Forum, false))
       {
-        ct.DbConnection.Execute(ReadQuery("UpdateForumUser", ct.ProviderName), param: forumUser, transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("UpdateForumUser", ct.ProviderName), param: forumUser, transaction: ct.DbTransaction);
       }
     }
 
-    public void DeleteAllForums()
+    public async Task DeleteAllForums()
     {
       using (var ct = GetConnection(DatabaseType.Forum, true))
       {
-        ct.DbConnection.Execute(ReadQuery("DeleteAllForums", ct.ProviderName), transaction: ct.DbTransaction);
+        await ct.DbConnection.ExecuteAsync(ReadQuery("DeleteAllForums", ct.ProviderName), transaction: ct.DbTransaction);
       }
     }
   }
