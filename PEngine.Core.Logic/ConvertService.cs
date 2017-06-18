@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Data.Interfaces;
@@ -121,7 +122,7 @@ namespace PEngine.Core.Logic
             Guid = Guid.Parse(sectionRecord.GetChildElementValue("Guid")),
             ArticleGuid = Guid.Parse(sectionRecord.GetChildElementValue("ArticleGuid")),
             Name = sectionRecord.GetChildElementValue("Name"),
-            Data = sectionRecord.GetChildElementValue("Data"),
+            Data = ConvertDataToMarkDown(sectionRecord.GetChildElementValue("Data"), false),
             SortOrder = int.Parse(sectionRecord.GetChildElementValue("SortOrder")),
             UniqueName = sectionRecord.GetChildElementValue("UniqueName"),
             CreatedUTC = ParseNDateTime(sectionRecord.GetChildElementValue("CreatedUTC")),
@@ -164,7 +165,7 @@ namespace PEngine.Core.Logic
             Guid = Guid.Parse(postRecord.GetChildElementValue("Guid")),
             LegacyID = ParseNInt(postRecord.GetChildElementValue("LegacyID")),
             Name = postRecord.GetChildElementValue("Title"),
-            Data = postRecord.GetChildElementValue("Data"),
+            Data = ConvertDataToMarkDown(postRecord.GetChildElementValue("Data"), false),
             IconFileName = postRecord.GetChildElementValue("IconFileName"),
             VisibleFlag = bool.Parse(postRecord.GetChildElementValue("VisibleFlag")),
             UniqueName = postRecord.GetChildElementValue("UniqueName"),
@@ -390,7 +391,7 @@ namespace PEngine.Core.Logic
                   ForumUserGuid = Guid.Parse(threadPostRecord.GetChildElementValue("ForumUserGuid")),
                   VisibleFlag = bool.Parse(threadPostRecord.GetChildElementValue("VisibleFlag")),
                   LockFlag = bool.Parse(threadPostRecord.GetChildElementValue("LockFlag")),
-                  Data = threadPostRecord.GetChildElementValue("Data"),
+                  Data = ConvertDataToMarkDown(threadPostRecord.GetChildElementValue("Data"), true),
                   IPAddress = threadPostRecord.GetChildElementValue("IPAddress"),
                   CreatedUTC = ParseNDateTime(threadPostRecord.GetChildElementValue("CreatedUTC")),
                   ModifiedUTC = ParseNDateTime(threadPostRecord.GetChildElementValue("ModifiedUTC"))
@@ -447,6 +448,184 @@ namespace PEngine.Core.Logic
     {
       DateTime i;
       return DateTime.TryParse (val, out i) ? (DateTime?) i : null;
+    }
+
+    public static string ConvertDataToMarkDown(string secdata, bool forum)
+    {
+      int lpos = 0;
+      string tag = string.Empty;
+      string tagname = string.Empty;
+      string tagdata = string.Empty;
+      int tagspace = 0;
+      string[] tagelements = { };
+      bool rawhtmlflag = false;
+      int rawhtmlstart = 0;
+      int rawhtmlend = 0;
+      string outdata = string.Empty;
+      string[] resforumtags = {"SCRIPT", "/SCRIPT", "IFRAME", "/IFRAME", "EMBED", "BLINK"
+      , "TR", "TD", "TABLE", "/TR", "/TD", "/TABLE", "FRAMESET", "/FRAMESET"};
+      bool restagflag = false;
+      StringBuilder outputhtml = new StringBuilder();
+      //Filter for obfusacated tags if forum flag is true
+      //Remove HTML Content if Forum Flag is true
+      if (forum)
+      {
+        while (secdata.IndexOf("[" + Environment.NewLine) >= 0)
+        {
+          secdata.Replace("[" + Environment.NewLine, "[ ");
+        }
+        while (secdata.IndexOf("<" + Environment.NewLine) >= 0)
+        {
+          secdata.Replace("<" + Environment.NewLine, "< ");
+        }
+        while (secdata.IndexOf("[ ") >= 0)
+        {
+          secdata.Replace("[ ", "[");
+        }
+        while (secdata.IndexOf("< ") >= 0)
+        {
+          secdata.Replace("< ", "<");
+        }
+        for (int cpos = secdata.IndexOf("<"); cpos >= 0; cpos = secdata.IndexOf("<", cpos + 1))
+        {
+          lpos = secdata.IndexOf(">", cpos + 1);
+          if (lpos >= 0)
+          {
+            secdata = secdata.Substring(0, cpos) + secdata.Substring(lpos, secdata.Length - lpos);
+          }
+        }
+      }
+      lpos = -1;
+      for (int cpos = secdata.IndexOf("["); cpos >= 0; cpos = secdata.IndexOf("[", lpos + 1))
+      {
+        if (!rawhtmlflag)
+        {
+          outdata = secdata.Substring(lpos + 1, cpos - (lpos + 1));
+          for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
+          {
+            if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
+            {
+              outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
+              eptr = Environment.NewLine.Length;
+            }
+          }
+          outputhtml.Append(outdata);
+        }
+        lpos = secdata.IndexOf("]", cpos + 1);
+        if (lpos > cpos)
+        {
+          tag = secdata.Substring(cpos + 1, lpos - (cpos + 1));
+          tagspace = tag.IndexOf(" ");
+          if (tagspace >= 0)
+          {
+            tagname = tag.Substring(0, tagspace).ToUpper();
+            tagdata = tag.Substring(tagspace + 1, tag.Length - (tagspace + 1));
+          }
+          else
+          {
+            tagname = tag.ToUpper();
+          }
+          if ((!rawhtmlflag) || (tagname == "/RAWHTML"))
+          {
+            switch (tagname)
+            {
+              case "CENTER":
+                outputhtml.Append("<p style=\"text-align: center\">");
+                break;
+              case "/CENTER":
+                outputhtml.Append("</p>");
+                break;
+              case "IMAGE":
+                if ((tagdata.ToUpper().IndexOf("HTTP") >= 0)
+                  || (tagdata.Substring(0, 2) == "./") || (tagdata.Substring(0, 1) == "/"))
+                {
+                  outputhtml.Append($"![Image]({tagdata}){{alt=\"outside image\"}}");
+                }
+                else
+                {
+                  outputhtml.Append($"![Image](/images/articles/{tagdata}){{alt=\"article image\"}}");
+                }
+                break;
+              case "SUBHEADER":
+                if (!forum)
+                {
+                  outputhtml.Append($"    ::::sub-header{Environment.NewLine}");
+                  outputhtml.Append($"    {tagdata}{Environment.NewLine}");
+                  outputhtml.Append($"    ::::");
+                }
+                break;
+              case "LINK":
+                var url = tagdata.Split(' ').First();
+                outputhtml.Append($"[{string.Join(" ", tagelements.Skip(1))}]({url})");
+                break;
+              case "ICON":
+                outputhtml.Append($"![Image](images/icons/{tagdata}){{.post-icon alt=\"Post Icon\"}}");
+                break;
+              case "SYSTEMIMAGE":
+                outputhtml.Append($"![Image](/images/system/{tagdata}){{alt=\"system image\"}}");
+                break;
+              case "RAWHTML":
+                rawhtmlflag = true;
+                rawhtmlstart = cpos + 9;
+                rawhtmlend = rawhtmlstart;
+                break;
+              case "/RAWHTML":
+                rawhtmlflag = false;
+                rawhtmlend = cpos;
+                outputhtml.Append(secdata.Substring(rawhtmlstart, rawhtmlend - rawhtmlstart));
+                break;
+              case "QUOTE":
+                outputhtml.Append("<blockquote>");
+                break;
+              case "/QUOTE":
+                outputhtml.Append("</blockquote>");
+                break;
+              default:
+                restagflag = false;
+                if (forum)
+                {
+                  for (int fptr = 0; fptr < resforumtags.Length; fptr++)
+                  {
+                    if (resforumtags[fptr].ToUpper() == tagname)
+                    {
+                      restagflag = true;
+                    }
+                  }
+                }
+                if (!restagflag)
+                {
+                  outputhtml.Append($"<{tag}>");
+                }
+                break;
+            }
+          }
+        }
+      }
+      if (lpos >= -1)
+      {
+        outdata = secdata.Substring(lpos + 1, secdata.Length - (lpos + 1));
+        if (!rawhtmlflag)
+        {
+          for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
+          {
+            if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
+            {
+              outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
+              eptr = Environment.NewLine.Length;
+            }
+          }
+          outputhtml.Append(outdata);
+        }
+        else
+        {
+          outputhtml.Append(outdata);
+        }
+      }
+      if (outputhtml.Length <= 0)
+      {
+        outputhtml.Append("There was no data to convert.");
+      }
+      return outputhtml.ToString();
     }
   }
 }

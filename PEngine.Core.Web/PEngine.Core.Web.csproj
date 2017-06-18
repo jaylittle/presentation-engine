@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.2"/>
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2"/>
     <PackageReference Include="CommandLine.Options" Version="0.0.2"/>
+    <PackageReference Include="Markdig" Version="0.12.2"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj"/>

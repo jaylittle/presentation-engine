@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using PEngine.Core.Shared;
+using Markdig;
 
 namespace PEngine.Core.Web.Helpers
 {
@@ -89,204 +90,14 @@ namespace PEngine.Core.Web.Helpers
       }
     }
 
-    public static string MarkupArticle(string secdata, bool forum, bool eliteFlag)
+    public static string MarkupArticle(string secdata, bool forum)
     {
-      return MarkupArticle(secdata, forum, 0, eliteFlag);
-    }
-
-    public static string MarkupArticle(string secdata, bool forum, int articleid, bool eliteFlag)
-    {
-      int lpos = 0;
-      string tag = string.Empty;
-      string tagname = string.Empty;
-      string tagdata = string.Empty;
-      int tagspace = 0;
-      string[] tagelements = { };
-      bool rawhtmlflag = false;
-      int rawhtmlstart = 0;
-      int rawhtmlend = 0;
-      string outdata = string.Empty;
-      string[] resforumtags = {"SCRIPT", "/SCRIPT", "IFRAME", "/IFRAME", "EMBED", "BLINK"
-      , "TR", "TD", "TABLE", "/TR", "/TD", "/TABLE", "FRAMESET", "/FRAMESET"};
-      bool restagflag = false;
-      StringBuilder outputhtml = new StringBuilder();
-      //Filter for obfusacated tags if forum flag is true
-      //Remove HTML Content if Forum Flag is true
+      var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions();
       if (forum)
       {
-        while (secdata.IndexOf("[" + Environment.NewLine) >= 0)
-        {
-          secdata.Replace("[" + Environment.NewLine, "[ ");
-        }
-        while (secdata.IndexOf("<" + Environment.NewLine) >= 0)
-        {
-          secdata.Replace("<" + Environment.NewLine, "< ");
-        }
-        while (secdata.IndexOf("[ ") >= 0)
-        {
-          secdata.Replace("[ ", "[");
-        }
-        while (secdata.IndexOf("< ") >= 0)
-        {
-          secdata.Replace("< ", "<");
-        }
-        for (int cpos = secdata.IndexOf("<"); cpos >= 0; cpos = secdata.IndexOf("<", cpos + 1))
-        {
-          lpos = secdata.IndexOf(">", cpos + 1);
-          if (lpos >= 0)
-          {
-            secdata = secdata.Substring(0, cpos) + secdata.Substring(lpos, secdata.Length - lpos);
-          }
-        }
+        pipeline.DisableHtml();
       }
-      lpos = -1;
-      for (int cpos = secdata.IndexOf("["); cpos >= 0; cpos = secdata.IndexOf("[", lpos + 1))
-      {
-        if (!rawhtmlflag)
-        {
-          outdata = secdata.Substring(lpos + 1, cpos - (lpos + 1));
-          outdata = EliteConvert(outdata, eliteFlag);
-          for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
-          {
-            if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
-            {
-              outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
-              eptr = Environment.NewLine.Length;
-            }
-          }
-          outputhtml.Append(outdata);
-        }
-        lpos = secdata.IndexOf("]", cpos + 1);
-        if (lpos > cpos)
-        {
-          tag = secdata.Substring(cpos + 1, lpos - (cpos + 1));
-          tagspace = tag.IndexOf(" ");
-          if (tagspace >= 0)
-          {
-            tagname = tag.Substring(0, tagspace).ToUpper();
-            tagdata = tag.Substring(tagspace + 1, tag.Length - (tagspace + 1));
-          }
-          else
-          {
-            tagname = tag.ToUpper();
-          }
-          if ((!rawhtmlflag) || (tagname == "/RAWHTML"))
-          {
-            switch (tagname)
-            {
-              case "CENTER":
-                outputhtml.Append("<p style=\"text-align: center\">");
-                break;
-              case "/CENTER":
-                outputhtml.Append("</p>");
-                break;
-              case "IMAGE":
-                if ((tagdata.ToUpper().IndexOf("HTTP") >= 0)
-                  || (tagdata.Substring(0, 2) == "./") || (tagdata.Substring(0, 1) == "/"))
-                {
-                  outputhtml.Append($"<img src=\"{tagdata}\" alt=\"outside image\" />");
-                }
-                else
-                {
-                  outputhtml.Append($"<img src=\"images/articles/{tagdata}\" alt=\"article image\" />");
-                }
-                break;
-              case "SUBHEADER":
-                if (!forum)
-                {
-                  outputhtml.Append(MarkupSubheader(tagdata, eliteFlag));
-                }
-                break;
-              case "LINK":
-                tagelements = tagdata.Split(' ');
-                string url = tagelements[0];
-                outputhtml.Append($"<a href=\"{url}\">");
-                if (tagelements.Length > 1)
-                {
-                  for (int teptr = 1; teptr < tagelements.Length; teptr++)
-                  {
-                    if (teptr > 1)
-                    {
-                      outputhtml.Append(" ");
-                    }
-                    outputhtml.Append(tagelements[teptr]);
-                  }
-                }
-                else
-                {
-                  outputhtml.Append(tagelements[0]);
-                }
-                outputhtml.Append("</a>");
-                break;
-              case "ICON":
-                outputhtml.Append(MarkupIcon($"images/icons/{tagdata}", eliteFlag));
-                break;
-              case "SYSTEMIMAGE":
-                outputhtml.Append($"<img src=\"images/system/{tagdata}\" alt=\"system image\" />");
-                break;
-              case "RAWHTML":
-                rawhtmlflag = true;
-                rawhtmlstart = cpos + 9;
-                rawhtmlend = rawhtmlstart;
-                break;
-              case "/RAWHTML":
-                rawhtmlflag = false;
-                rawhtmlend = cpos;
-                outputhtml.Append(secdata.Substring(rawhtmlstart, rawhtmlend - rawhtmlstart));
-                break;
-              case "QUOTE":
-                outputhtml.Append("<blockquote>");
-                break;
-              case "/QUOTE":
-                outputhtml.Append("</blockquote>");
-                break;
-              default:
-                restagflag = false;
-                if (forum)
-                {
-                  for (int fptr = 0; fptr < resforumtags.Length; fptr++)
-                  {
-                    if (resforumtags[fptr].ToUpper() == tagname)
-                    {
-                      restagflag = true;
-                    }
-                  }
-                }
-                if (!restagflag)
-                {
-                  outputhtml.Append($"<{tag}>");
-                }
-                break;
-            }
-          }
-        }
-      }
-      if (lpos >= -1)
-      {
-        outdata = secdata.Substring(lpos + 1, secdata.Length - (lpos + 1));
-        if (!rawhtmlflag)
-        {
-          outdata = EliteConvert(outdata, eliteFlag);
-          for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
-          {
-            if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
-            {
-              outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
-              eptr = Environment.NewLine.Length;
-            }
-          }
-          outputhtml.Append(outdata);
-        }
-        else
-        {
-          outputhtml.Append(outdata);
-        }
-      }
-      if (outputhtml.Length <= 0)
-      {
-        outputhtml.Append("There was no data to convert.");
-      }
-      return outputhtml.ToString();
+      return Markdown.ToHtml(secdata, pipeline.Build());
     }
 
     public static string EliteConvert(string origText, bool eliteFlag)
