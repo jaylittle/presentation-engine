@@ -154,7 +154,15 @@ namespace PEngine.Core.Data
 
     public static IEnumerable<string> DatabaseUpdateFiles(DatabaseType type)
     {
-      return System.IO.Directory.EnumerateFiles(DatabaseUpdatePath(type), "*.sql");
+      var updatePath = DatabaseUpdatePath(type);
+      if (System.IO.Directory.Exists(updatePath))
+      {
+        return System.IO.Directory.EnumerateFiles(DatabaseUpdatePath(type), "*.sql");
+      }
+      else
+      {
+        return new List<string>();
+      }
     }
 
     private static string DatabaseUpdatePath(DatabaseType type)

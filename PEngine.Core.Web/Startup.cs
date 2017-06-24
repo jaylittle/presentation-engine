@@ -136,7 +136,7 @@ namespace PEngine.Core.Web
 
       app.UseStaticFiles();
 
-      PEngine.Core.Data.Database.Startup(env.ContentRootPath, new SQLiteDataProvider());
+      PEngine.Core.Data.Database.Startup(env.ContentRootPath, new SQLiteDataProvider()).Wait();
     }
   }
 }
