@@ -1,0 +1,48 @@
+@using PEngine.Core.Shared.Models
+@using PEngine.Core.Web.Models
+@using PEngine.Core.Web
+@using PEngine.Core.Web.Helpers
+@model PEngineGenericRecordModel<PostModel>
+
+@{
+  var post = Model.RecordData;
+}
+<div class="display-container">
+  @if (Rendering.LogoEnabled)
+  {
+    <div class="logo-container">
+        <img src="@Rendering.LogoPath" alt="logo" />
+    </div>
+  }
+  @if (!Model.Settings.DisableQuotes)
+  {
+    <div class="quote-control">
+        <!-- TODO Add Quote Text Here -->
+    </div>
+  }
+</div>
+@Html.Raw(Rendering.MarkupSubheader(post.Name, Model.State.IsElite))
+@if (Model.State.HasAdmin)
+{
+  <div class="panel">
+    <div class="panel-right">
+      <a href="#" class="list-button post_view_button_edit" data-guid="@post.Guid">@Rendering.EliteConvert("[Edit]", Model.State.IsElite)</a>
+    </div>
+  </div>
+}
+<div class="list-container">
+  @if (!string.IsNullOrEmpty(post.IconFileName))
+  {
+    @Html.Raw(Rendering.MarkupIcon(post.IconFileName, Model.State.IsElite))
+  }
+  <span class="datetime-display">
+    @post.CreatedUTC
+  </span>
+  <br />
+  @Html.Raw(Rendering.MarkupArticle(post.Data, false))
+</div>
+<div class="panel">
+  <div class="panel-right">
+    @Html.ActionLink("[Archived Posts]", "list")
+  </div>
+</div>

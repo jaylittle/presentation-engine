@@ -41,3 +41,8 @@
     @Html.Raw(Rendering.MarkupArticle(post.Data, false))
   </div>
 }
+<div class="panel">
+  <div class="panel-right">
+    @Html.ActionLink("[Archived Posts]", "list", "post")
+  </div>
+</div>

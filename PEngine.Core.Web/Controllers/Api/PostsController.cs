@@ -30,7 +30,7 @@ namespace PEngine.Core.Web.Controllers.Api
     public async Task<IEnumerable<PostModel>> Get([FromQuery]PagingModel paging = null)
     {
       var posts = await _postDal.ListPosts();
-      return PagingUtils.Paginate(paging, posts);
+      return PagingUtils.Paginate(ref paging, posts);
     }
 
     [Authorize(Roles = "PEngineAdmin")]

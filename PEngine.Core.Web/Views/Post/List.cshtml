@@ -1,0 +1,54 @@
+@using PEngine.Core.Shared.Models
+@using PEngine.Core.Web.Models
+@using PEngine.Core.Web
+@using PEngine.Core.Web.Helpers
+@model PEngineGenericListModel<PostModel>
+
+@{
+    int i = 0;
+}
+
+<div class="list-container">
+  <span class="form-header-text">Archived News</span>
+  <table class="list-table" cellspacing="0" border="1">
+    <thead>
+      <tr>
+        <th>
+          @Html.PEPagerLink("Title", "list", 1, Model.Paging.Count, new { sortField = "Name", sortAscending = Model.Paging.SortField == "Name" ? !Model.Paging.SortAscending : true })
+          @(Model.Paging.SortField == "Name" ? Model.Paging.SortAscending ? "[A]" : "[D]" : string.Empty)
+        </th>
+        <th>
+          @Html.PEPagerLink("When", "list", 1, Model.Paging.Count, new { sortField = "CreatedUTC", sortAscending = Model.Paging.SortField == "CreatedUTC" ? !Model.Paging.SortAscending: true })
+          @(Model.Paging.SortField == "CreatedUTC" ? Model.Paging.SortAscending ? "[A]" : "[D]" : string.Empty)
+        </th>
+        <th>What</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.ListData)
+    {
+      <tr class='@((i++)%2!=0 ? "alt" : string.Empty)'>
+        <td>@item.Name</td>
+        <td nowrap="1" class="datetime-display">@Rendering.FormatDate(item.CreatedUTC)</td>
+        <td>@Rendering.DataTruncate(item.Data)</td>
+        <td nowrap="1">
+          @Html.RouteLink("[View]", new { controller = "post", action = "view", year = item.CreatedUTC.Value.Year, month = item.CreatedUTC.Value.Month, uniqueName = item.UniqueName }, new { @class = "list-button" })
+          @if (Model.State.HasAdmin)
+          {
+            @Html.Raw("&nbsp;|&nbsp;")
+            <a href="#" class="list-button post_view_button_edit" data-guid="@item.Guid">[Edit]</a>
+          }
+        </td>
+      </tr>
+    }
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4">
+          @Html.PEPager(Model.Paging.Start, Model.Paging.Count, Model.Paging.Total, new { sortField = Model.Paging.SortField, sortAscending = Model.Paging.SortAscending }, new { @class = "list-button" })
+        </td>
+      </tr>
+    </tfoot>
+  </table>    
+</div>

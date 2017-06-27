@@ -55,6 +55,39 @@ namespace PEngine.Core.Web.Helpers
       { "x", "x:&gt;&lt;" }
     };
 
+    public static string FormatDate(object dateobj)
+    {
+      return FormatDate(dateobj, false);
+    }
+
+    public static string FormatDate(object dateobj, bool skipPresent)
+    {
+      DateTime tempobj = DateTime.MinValue;
+      if (dateobj is DateTime)
+      {
+        tempobj = (DateTime)dateobj;
+      }
+      else if (dateobj is string)
+      {
+        tempobj = DateTime.Parse((string)dateobj);
+      }
+      if (tempobj != DateTime.MinValue)
+      {
+        if (tempobj <= DateTime.UtcNow || skipPresent)
+        {
+          return tempobj.ToString("MM/dd/yyyy") + (tempobj.TimeOfDay.TotalSeconds > 0 ? " " + tempobj.ToString("HH:mm:ss") : string.Empty);
+        }
+        else
+        {
+          return "Present";
+        }
+      }
+      else
+      {
+        return string.Empty;
+      }
+    }
+
     public static string MarkupSubheader(string text, bool eliteFlag)
     {
       return MarkupSubheader(text, true, eliteFlag);
@@ -140,17 +173,17 @@ namespace PEngine.Core.Web.Helpers
         }
         for (int charptr = 0; charptr < cword.Length; charptr++)
         {
-            string curchar = cword[charptr].ToString();
-            if (_eliteChars.ContainsKey(curchar))
-            {
-              string[] tchar = _eliteChars[curchar].Split(':');
-              curchar = tchar[Randomizer.Next(0, tchar.Length - 1)];
-            }
-            if (Randomizer.Next(0, 1) == 1)
-            {
-              curchar = curchar.ToUpper();
-            }
-            newword += curchar;
+          string curchar = cword[charptr].ToString();
+          if (_eliteChars.ContainsKey(curchar))
+          {
+            string[] tchar = _eliteChars[curchar].Split(':');
+            curchar = tchar[Randomizer.Next(0, tchar.Length - 1)];
+          }
+          if (Randomizer.Next(0, 1) == 1)
+          {
+            curchar = curchar.ToUpper();
+          }
+          newword += curchar;
         }
         retvalue.Append(newword + " ");
       }
@@ -169,7 +202,7 @@ namespace PEngine.Core.Web.Helpers
     {
       get
       {
-        return !string.IsNullOrWhiteSpace(Settings.Current.LogoFrontPage);      
+        return !string.IsNullOrWhiteSpace(Settings.Current.LogoFrontPage);
       }
     }
 

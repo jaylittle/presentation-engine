@@ -38,7 +38,7 @@ namespace PEngine.Core.Web.Controllers.Api
     public async Task<IEnumerable<QuoteModel>> Get([FromQuery]PagingModel paging = null)
     {
       var quotes = await GetQuotes();
-      return PagingUtils.Paginate(paging, quotes);
+      return PagingUtils.Paginate(ref paging, quotes);
     }
 
     [HttpGet("random")]

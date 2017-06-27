@@ -30,7 +30,7 @@ namespace PEngine.Core.Web.Controllers.Api
     public async Task<IEnumerable<ArticleModel>> Get([FromQuery]PagingModel paging = null)
     {
       var articles = await _articleDal.ListArticles(null);
-      return PagingUtils.Paginate(paging, articles);
+      return PagingUtils.Paginate(ref paging, articles);
     }
 
     [Authorize(Roles = "PEngineAdmin")]
@@ -38,7 +38,7 @@ namespace PEngine.Core.Web.Controllers.Api
     public async Task<IEnumerable<ArticleModel>> Get(string category, [FromQuery]PagingModel paging = null)
     {
       var articles = await _articleDal.ListArticles(category);
-      return PagingUtils.Paginate(paging, articles);
+      return PagingUtils.Paginate(ref paging, articles);
     }
 
     [Authorize(Roles = "PEngineAdmin")]

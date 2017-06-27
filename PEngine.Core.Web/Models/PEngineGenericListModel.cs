@@ -31,5 +31,6 @@ namespace PEngine.Core.Web.Models
         State.UpdateData((IEnumerable<ISubTitleModel>)_listData);
       }
     }
+    public PagingModel Paging { get; set; }
   }
 }

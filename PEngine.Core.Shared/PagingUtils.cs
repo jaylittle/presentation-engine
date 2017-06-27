@@ -9,8 +9,9 @@ namespace PEngine.Core.Shared
 {
   public class PagingUtils
   {
-    public static IEnumerable<T> Paginate<T>(PagingModel paging, IEnumerable<T> data)
+    public static IEnumerable<T> Paginate<T>(ref PagingModel paging, IEnumerable<T> data)
     {
+      paging.Total = data.Count();
       return (paging != null) ? Paginate(paging.Start, paging.Count, paging.SortField, paging.SortAscending, data) : data;
     }
 
