@@ -501,14 +501,6 @@ namespace PEngine.Core.Logic
         if (!rawhtmlflag)
         {
           outdata = secdata.Substring(lpos + 1, cpos - (lpos + 1));
-          // for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
-          // {
-          //   if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
-          //   {
-          //     outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
-          //     eptr = Environment.NewLine.Length;
-          //   }
-          // }
           outputhtml.Append(outdata);
         }
         lpos = secdata.IndexOf("]", cpos + 1);
@@ -612,14 +604,6 @@ namespace PEngine.Core.Logic
         outdata = secdata.Substring(lpos + 1, secdata.Length - (lpos + 1));
         if (!rawhtmlflag)
         {
-          // for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
-          // {
-          //   if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
-          //   {
-          //     outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
-          //     eptr = Environment.NewLine.Length;
-          //   }
-          // }
           outputhtml.Append(outdata);
           outputhtml.Append("\n");
         }
