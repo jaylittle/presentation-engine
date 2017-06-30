@@ -125,7 +125,9 @@ namespace PEngine.Core.Web.Helpers
 
     public static string MarkupArticle(string secdata, bool forum)
     {
-      var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions();
+      var pipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions();
+
       if (forum)
       {
         pipeline.DisableHtml();

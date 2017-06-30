@@ -1,0 +1,66 @@
+@using PEngine.Core.Shared.Models
+@using PEngine.Core.Web.Models
+@using PEngine.Core.Web
+@using PEngine.Core.Web.Helpers
+@model PEngineGenericRecordModel<ArticleModel>
+
+@{
+  var article = Model.RecordData;
+  var section = Model.RecordData.Sections.First(s => s.UniqueName.Equals(Model.State.CurrentSection, StringComparison.OrdinalIgnoreCase));
+}
+
+<span class="form-header-text">
+  @Model.State.FullTitle
+</span>
+<div class="panel">
+  <div class="panel-right">
+    @if (Model.State.HasAdmin)
+    {
+      <a href="#" class="list-button article_view_button_edit" data-guid="@article.Guid">[Edit]</a>
+    }
+    @if (!article.HideDropDownFlag && article.Sections.Count > 1)
+    {
+      @Html.Raw("&nbsp;")
+      <a href="#" class="list-button article_view_button_prev">[Prev]</a>
+      @Html.Raw("&nbsp;")
+      <select class="post_view_dropdown_section">
+      @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
+      {
+        <option value="@articleSection.UniqueName"@(articleSection.Guid == section.Guid ? Html.Raw(" selected") : null)>@articleSection.Name</option>
+      }
+      </select>
+      @Html.Raw("&nbsp;")
+      <a href="#" class="list-button article_view_button_next">[Next]</a>
+      @Html.Raw("&nbsp;")
+    }
+  </div>
+</div>
+@Html.Raw("<!--")
+  @Html.Raw(section.Data)
+@Html.Raw("-->")
+<div class="display-container">
+  @Html.Raw(Rendering.MarkupArticle(section.Data, false))
+</div>
+<div class="panel">
+  <div class="panel-right">
+    @if (Model.State.HasAdmin)
+    {
+      <a href="#" class="list-button article_view_button_edit" data-guid="@article.Guid">[Edit]</a>
+    }
+    @if (!article.HideDropDownFlag && article.Sections.Count > 1)
+    {
+      @Html.Raw("&nbsp;")
+      <a href="#" class="list-button article_view_button_prev">[Prev]</a>
+      @Html.Raw("&nbsp;")
+      <select class="post_view_dropdown_section">
+      @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
+      {
+        <option value="@articleSection.UniqueName"@(articleSection.Guid == section.Guid ? Html.Raw(" selected") : null)>@articleSection.Name</option>
+      }
+      </select>
+      @Html.Raw("&nbsp;")
+      <a href="#" class="list-button article_view_button_next">[Next]</a>
+      @Html.Raw("&nbsp;")
+    }
+  </div>
+</div>

@@ -11,6 +11,7 @@ using PEngine.Core.Shared;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Routing;
+using PEngine.Core.Shared.Models;
 
 namespace PEngine.Core.Web.Helpers
 {
@@ -28,12 +29,15 @@ namespace PEngine.Core.Web.Helpers
       return new HtmlString(hashUrl);
     }
 
-    public static IHtmlContent PEPager(this IHtmlHelper htmlHelper, int start, int count, int total, object routeValues, object htmlAttributes)
+    public static IHtmlContent PEPager(this IHtmlHelper htmlHelper, PagingModel paging, object htmlAttributes, string action)
     {
-      return PEPager(htmlHelper, start, count, total, routeValues, htmlAttributes, "List");
+      return htmlHelper.PEPager(paging.Start, paging.Count, paging.Total, new {
+        sortField = paging.SortField,
+        sortAscending = paging.SortAscending
+      }, htmlAttributes, action);
     }
 
-    public static IHtmlContent PEPager(this IHtmlHelper htmlHelper, int start, int count, int total, object routeValues, object htmlAttributes, string action)
+    private static IHtmlContent PEPager(this IHtmlHelper htmlHelper, int start, int count, int total, object routeValues, object htmlAttributes, string action)
     {
       HtmlContentBuilder retvalue = new HtmlContentBuilder();
       if (start > 1)
@@ -71,7 +75,7 @@ namespace PEngine.Core.Web.Helpers
         linkRd.Add("count", count);
         retvalue.AppendHtml(htmlHelper.ActionLink("[Next]", action, linkRd, new RouteValueDictionary(htmlAttributes)));
         retvalue.AppendHtml("&nbsp;");
-        linkRd = new RouteValueDictionary();
+        linkRd = new RouteValueDictionary(routeValues);
         linkRd.Add("start", (total - (total % count)) + 1);
         linkRd.Add("count", count);
         retvalue.AppendHtml(htmlHelper.ActionLink("[End]", action, linkRd, new RouteValueDictionary(htmlAttributes)));
@@ -86,56 +90,15 @@ namespace PEngine.Core.Web.Helpers
       return retvalue;
     }
 
-    public static IHtmlContent PEPagerByRoute(this IHtmlHelper htmlHelper, int start, int count, int total, object routeValues, object htmlAttributes, string route)
+    public static IHtmlContent PEPagerLinkWithText(this IHtmlHelper htmlHelper, string linkText, string actionName, string fieldName, PagingModel paging)
     {
-      HtmlContentBuilder retvalue = new HtmlContentBuilder();
-      if (start > 1)
+      var retvalue = new HtmlContentBuilder();
+      retvalue.AppendHtml(htmlHelper.PEPagerLink(linkText, actionName, 1, paging.Count, new
       {
-        RouteValueDictionary linkRd = new RouteValueDictionary(routeValues);
-        linkRd.Add("start", 1);
-        linkRd.Add("count", count);
-        retvalue.AppendHtml(htmlHelper.RouteLink("[Start]", route, linkRd, new RouteValueDictionary(htmlAttributes)));
-        retvalue.AppendHtml("&nbsp;");
-        linkRd = new RouteValueDictionary(routeValues);
-        linkRd.Add("start", start - count);
-        linkRd.Add("count", count);
-        retvalue.AppendHtml(htmlHelper.RouteLink("[Prev]", route, linkRd, new RouteValueDictionary(htmlAttributes)));
-      }
-      else
-      {
-        if (total > count)
-        {
-          retvalue.AppendHtml("[Start]&nbsp;[Prev]");
-        }
-      }
-      if (total > count)
-      {
-        retvalue.AppendHtml(string.Format("&nbsp;<span>{0} to {1} of {2}</span>&nbsp;", start, total < start + count ? total : start + count - 1, total));
-      }
-      else
-      {
-        retvalue.AppendHtml(string.Format("&nbsp;<span>{0} of {0}&nbsp;", total));
-      }
+        sortField = fieldName, sortAscending = paging.SortField == fieldName ? !paging.SortAscending : true
+      }));
 
-      if (total > (start + count) - 1)
-      {
-        RouteValueDictionary linkRd = new RouteValueDictionary(routeValues);
-        linkRd.Add("start", start + count);
-        linkRd.Add("count", count);
-        retvalue.AppendHtml(htmlHelper.RouteLink("[Next]", route, linkRd, new RouteValueDictionary(htmlAttributes)));
-        retvalue.AppendHtml("&nbsp;");
-        linkRd = new RouteValueDictionary();
-        linkRd.Add("start", (total - (total % count)) + 1);
-        linkRd.Add("count", count);
-        retvalue.AppendHtml(htmlHelper.RouteLink("[End]", route, linkRd, new RouteValueDictionary(htmlAttributes)));
-      }
-      else
-      {
-        if (total > count)
-        {
-          retvalue.AppendHtml("[Next]&nbsp;[End]");
-        }
-      }
+      retvalue.AppendHtml(paging.SortField == fieldName ? paging.SortAscending ? "[A]" : "[D]" : string.Empty);
       return retvalue;
     }
 
@@ -145,14 +108,6 @@ namespace PEngine.Core.Web.Helpers
       linkRd.Add("start", start);
       linkRd.Add("count", count);
       return htmlHelper.ActionLink(linkText, actionName, linkRd);
-    }
-
-    public static IHtmlContent PEPagerLinkByRoute(this IHtmlHelper htmlHelper, string linkText, string routeName, int start, int count, object routeValues)
-    {
-      RouteValueDictionary linkRd = new RouteValueDictionary(routeValues);
-      linkRd.Add("start", start);
-      linkRd.Add("count", count);
-      return htmlHelper.RouteLink(linkText, routeName, linkRd);
     }
   }
 }

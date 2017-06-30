@@ -166,11 +166,12 @@ namespace PEngine.Core.Web.Models
         foreach (var articleCategory in articleCategories)
         {
           var categoryElements = articleCategory.Split('|');
-          var categoryUrl = $"/article/category/{articleCategory}";
-          if (categoryElements.Length == 2 || !string.IsNullOrWhiteSpace(categoryElements[1]))
+          var categoryUrl = $"/article/category/{categoryElements[0]}";
+          if (!string.IsNullOrWhiteSpace(categoryElements[1]))
           {
             categoryUrl = categoryElements[1];
           }
+          Console.WriteLine($"Adding Top Button for {categoryElements[0]} to {categoryUrl}");
           TopMenuButtons.Add(new KeyValuePair<string, string>(categoryElements[0], categoryUrl));
         }
       }
@@ -195,8 +196,9 @@ namespace PEngine.Core.Web.Models
             var currentSectionData = (displayedSection != null) 
               ? articleData.Sections.FirstOrDefault(s => s.UniqueName.Equals(displayedSection, StringComparison.OrdinalIgnoreCase))
               : null;
-            currentSectionData = currentSectionData ?? articleData.Sections.First();
             var articleSections = articleData.Sections.OrderBy(s => s.SortOrder);
+            currentSectionData = currentSectionData ?? articleSections.First();
+            CurrentSection = currentSectionData.UniqueName;
             foreach (var section in articleData.Sections)
             {
               SubMenuButtons.Add(new KeyValuePair<string, string>(section.Name, $"/article/view/{articleData.UniqueName}/{section.UniqueName}"));

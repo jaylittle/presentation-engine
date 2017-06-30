@@ -501,14 +501,14 @@ namespace PEngine.Core.Logic
         if (!rawhtmlflag)
         {
           outdata = secdata.Substring(lpos + 1, cpos - (lpos + 1));
-          for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
-          {
-            if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
-            {
-              outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
-              eptr = Environment.NewLine.Length;
-            }
-          }
+          // for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
+          // {
+          //   if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
+          //   {
+          //     outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
+          //     eptr = Environment.NewLine.Length;
+          //   }
+          // }
           outputhtml.Append(outdata);
         }
         lpos = secdata.IndexOf("]", cpos + 1);
@@ -530,39 +530,40 @@ namespace PEngine.Core.Logic
             switch (tagname)
             {
               case "CENTER":
-                outputhtml.Append("<p style=\"text-align: center\">");
+                outputhtml.Append("\n::::centered-text\n");
                 break;
               case "/CENTER":
-                outputhtml.Append("</p>");
+                outputhtml.Append("\n::::\n");
                 break;
               case "IMAGE":
                 if ((tagdata.ToUpper().IndexOf("HTTP") >= 0)
                   || (tagdata.Substring(0, 2) == "./") || (tagdata.Substring(0, 1) == "/"))
                 {
-                  outputhtml.Append($"![Image]({tagdata}){{alt=\"outside image\"}}");
+                  outputhtml.Append($"\n![Image]({tagdata}){{.outside-image}}\n");
                 }
                 else
                 {
-                  outputhtml.Append($"![Image](/images/articles/{tagdata}){{alt=\"article image\"}}");
+                  outputhtml.Append($"\n![Image](/images/articles/{tagdata}){{.article-image}}\n");
                 }
                 break;
               case "SUBHEADER":
                 if (!forum)
                 {
-                  outputhtml.Append($"    ::::sub-header{Environment.NewLine}");
-                  outputhtml.Append($"    {tagdata}{Environment.NewLine}");
-                  outputhtml.Append($"    ::::");
+                  outputhtml.Append($"\n::::sub-header\n");
+                  outputhtml.Append($"{tagdata}\n");
+                  outputhtml.Append($"::::\n");
                 }
                 break;
               case "LINK":
-                var url = tagdata.Split(' ').First();
-                outputhtml.Append($"[{string.Join(" ", tagelements.Skip(1))}]({url})");
+                var linkData = tagdata.Split(' ');
+                var url = linkData.First();
+                outputhtml.Append($"\n[{string.Join(" ", linkData.Skip(1))}]({url})\n");
                 break;
               case "ICON":
-                outputhtml.Append($"![Image](images/icons/{tagdata}){{.post-icon alt=\"Post Icon\"}}");
+                outputhtml.Append($"\n![Image](images/icons/{tagdata}){{.post-icon}}\n");
                 break;
               case "SYSTEMIMAGE":
-                outputhtml.Append($"![Image](/images/system/{tagdata}){{alt=\"system image\"}}");
+                outputhtml.Append($"\n![Image](/images/system/{tagdata}){{.system-image}}\n");
                 break;
               case "RAWHTML":
                 rawhtmlflag = true;
@@ -574,11 +575,16 @@ namespace PEngine.Core.Logic
                 rawhtmlend = cpos;
                 outputhtml.Append(secdata.Substring(rawhtmlstart, rawhtmlend - rawhtmlstart));
                 break;
+              case "BLOCKQUOTE":
               case "QUOTE":
-                outputhtml.Append("<blockquote>");
+                outputhtml.Append("\n::::quoted-text\n");
                 break;
+              case "/BLOCKQUOTE":
               case "/QUOTE":
-                outputhtml.Append("</blockquote>");
+                outputhtml.Append("\n::::\n");
+                break;
+              case "SECTION":
+              case "/SECTION":
                 break;
               default:
                 restagflag = false;
@@ -606,15 +612,16 @@ namespace PEngine.Core.Logic
         outdata = secdata.Substring(lpos + 1, secdata.Length - (lpos + 1));
         if (!rawhtmlflag)
         {
-          for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
-          {
-            if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
-            {
-              outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
-              eptr = Environment.NewLine.Length;
-            }
-          }
+          // for (int eptr = 0; eptr < Environment.NewLine.Length; eptr++)
+          // {
+          //   if (outdata.IndexOf(Environment.NewLine[eptr]) >= 0)
+          //   {
+          //     outdata = outdata.Replace(Environment.NewLine[eptr].ToString(), "<br/>" + Environment.NewLine);
+          //     eptr = Environment.NewLine.Length;
+          //   }
+          // }
           outputhtml.Append(outdata);
+          outputhtml.Append("\n");
         }
         else
         {
