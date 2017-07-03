@@ -1,0 +1,141 @@
+@using PEngine.Core.Shared.Models
+@using PEngine.Core.Web.Models
+@using PEngine.Core.Web
+@using PEngine.Core.Web.Helpers
+@model PEngineGenericRecordModel<ResumeModel>
+
+@if (Model.State.HasAdmin)
+{
+<div class="panel">
+    <div class="panel-right">
+        <a href="#" class="list-button resume_view_button_edit">[Edit]</a>
+    </div>
+</div>
+}
+<div class="resume-container">
+  @foreach (var personal in Model.RecordData.Personals)
+  {
+  <div class="resume-container">
+    <span class="form-header-text">@personal.FullName</span>
+    <div class="resume-row">
+      <div class="resume-label">Email:</div>
+      <div class="resume-disp-col-1"><a href='mailto:@personal.Email'>@personal.Email</a></div>
+      <div class="resume-label">Web:</div>
+      <div class="resume-disp-col-2"><a href='@personal.WebsiteURL'>@personal.WebsiteURL</a></div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-label">Phone:</div>
+      <div class="resume-disp-col-1">@personal.Phone</div>
+      <div class="resume-label">Fax:</div>
+      <div class="resume-disp-col-2">@personal.Fax</div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-label">Address:</div>
+      <div class="resume-disp-col-1">@personal.Address1</div>
+      <div class="resume-label">City:</div>
+      <div class="resume-disp-col-2">@personal.City</div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-label">State:</div>
+      <div class="resume-disp-col-1">@personal.State</div>
+      <div class="resume-label">Zip:</div>
+      <div class="resume-disp-col-2">@personal.Zip</div>
+    </div>
+  </div>
+  }
+</div>
+@if (Model.RecordData.Objectives != null && Model.RecordData.Objectives.Count > 0)
+{
+<div class="resume-container">
+  @Html.Raw(Rendering.MarkupSubheader("Objective"))
+  @foreach (var objective in Model.RecordData.Objectives)
+  {
+  <div class="resume-container">
+    <div class="resume-row">
+      <div class="resume-disp">@objective.Data</div>
+    </div>
+  </div>
+  }
+</div>
+}
+@if (Model.RecordData.Skills != null && Model.RecordData.Skills.Count > 0)
+{
+<div class="resume-container">
+  @Html.Raw(Rendering.MarkupSubheader("Skills"))
+  @foreach (var skillType in Model.RecordData.Skills)
+  {
+  <div>
+    <div class="resume-row">
+      <div class="resume-skill-type">
+          @skillType.Key
+      </div>
+      <div class="resumecolb">&nbsp;</div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-skill-container">
+        @(string.Join(", ", skillType.Value.Select(s => s.Name)))
+      </div>
+    </div>
+  </div>
+  }
+</div>
+}
+@if (Model.RecordData.Educations != null && Model.RecordData.Educations.Count > 0)
+{
+<div class="resume-container">
+  @Html.Raw(Rendering.MarkupSubheader("Education"))
+  @foreach (var education in Model.RecordData.Educations)
+  {
+  <div class="resume-container">
+    <div class="resume-row">
+      <div class="resume-disp"><a href='@education.InstituteURL'>@education.Institute</a></div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-label resume-disp">
+        @education.Program
+      </div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-disp">
+        @Rendering.FormatDate(education.Started)
+        <span>&nbsp;-&nbsp;</span>
+        @Rendering.FormatDate(education.Completed)
+      </div>
+    </div>
+  </div>
+  }
+</div>
+}
+@if (Model.RecordData.WorkHistories != null && Model.RecordData.WorkHistories.Count > 0)
+{
+<div class="resume-container">
+  @Html.Raw(Rendering.MarkupSubheader("Work History"))
+  @foreach (var workHistory in Model.RecordData.WorkHistories)
+  {
+  <div class="resume-container">
+    <div class="resume-row">
+      <div class="resume-disp">
+        <a href='@workHistory.EmployerURL'>@workHistory.Employer</a>
+      </div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-label resume-disp">
+        @workHistory.JobTitle
+      </div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-disp">
+        @Rendering.FormatDate(workHistory.Started)
+        <span>&nbsp;-&nbsp;</span>
+        @Rendering.FormatDate(workHistory.Completed)
+      </div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-disp">
+        @workHistory.JobDescription
+      </div>
+    </div>
+  </div>
+  }
+</div>
+}

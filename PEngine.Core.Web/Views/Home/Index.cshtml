@@ -20,19 +20,19 @@
 </div>
 @foreach (var post in Model.ListData)
 {
-  @Html.Raw(Rendering.MarkupSubheader(post.Name, Model.State.IsElite))
+  @Html.Raw(Rendering.MarkupSubheader(post.Name))
   @if (Model.State.HasAdmin)
   {
     <div class="panel">
       <div class="panel-right">
-        <a href="#" class="list-button post_view_button_edit" data-guid="@post.Guid">@Rendering.EliteConvert("[Edit]", Model.State.IsElite)</a>
+        <a href="#" class="list-button post_view_button_edit" data-guid="@post.Guid">[Edit]</a>
       </div>
     </div>
   }
   <div class="list-container">
     @if (!string.IsNullOrEmpty(post.IconFileName))
     {
-      @Html.Raw(Rendering.MarkupIcon(post.IconFileName, Model.State.IsElite))
+      @Html.Raw(Rendering.MarkupIcon(post.IconFileName))
     }
     <span class="datetime-display">
       @post.CreatedUTC

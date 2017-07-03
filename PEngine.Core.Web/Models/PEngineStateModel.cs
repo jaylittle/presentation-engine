@@ -171,7 +171,6 @@ namespace PEngine.Core.Web.Models
           {
             categoryUrl = categoryElements[1];
           }
-          Console.WriteLine($"Adding Top Button for {categoryElements[0]} to {categoryUrl}");
           TopMenuButtons.Add(new KeyValuePair<string, string>(categoryElements[0], categoryUrl));
         }
       }

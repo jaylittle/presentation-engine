@@ -17,44 +17,6 @@ namespace PEngine.Core.Web.Helpers
   {
     private static readonly char[] _bannedChars = { '/', '\\', '?', '!', ';', ':', '\"', '\'', '(', ')', '&', '$', '%', '#', '@', '*', '|', ',', '-' };
 
-    private static readonly Dictionary<string, string> _eliteWords = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-    {
-      { "cool", "k3wl" },
-      { "dude", "d00d" },
-      { "dudes", "d00dz" },
-      { "hacker", "hax0r" },
-      { "hacked", "hax0red" },
-      { "mp3s", "mp3z" },
-      { "rock", "r0x0r" },
-      { "rocks", "r0x0rez" },
-      { "you", "j00" },
-      { "elite", "l33t|31337" },
-      { "the", "teh|the" },
-      { "own", "pwn|0wnzor" },
-      { "porn", "porn|pr0n" }
-    };
-
-    private static readonly Dictionary<string, string> _eliteChars = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-    {
-      { "a", "@:4" },
-      { "b", "b:8" },
-      { "d", "d:|)" },
-      { "e", "e:3" },
-      { "f", "f:ph" },
-      { "g", "g:9" },
-      { "h", "h:|-|" },
-      { "i", "i:1" },
-      { "k", "k:|&lt;" },
-      { "m", "m:|\\\\\\/|" },
-      { "n", "n:|\\\\|" },
-      { "o", "o:0" },
-      { "s", "$:5" },
-      { "t", "t:+" },
-      { "v", "v:\\\\\\/" },
-      { "w", "w:\\\\\\/\\\\\\/" },
-      { "x", "x:&gt;&lt;" }
-    };
-
     public static string FormatDate(object dateobj)
     {
       return FormatDate(dateobj, false);
@@ -88,34 +50,34 @@ namespace PEngine.Core.Web.Helpers
       }
     }
 
-    public static string MarkupSubheader(string text, bool eliteFlag)
+    public static string MarkupSubheader(string text)
     {
-      return MarkupSubheader(text, true, eliteFlag);
+      return MarkupSubheader(text, true);
     }
 
-    public static string MarkupSubheader(string text, bool anchorFlag, bool eliteFlag)
+    public static string MarkupSubheader(string text, bool anchorFlag)
     {
-      return MarkupSubheader(text, anchorFlag, anchorFlag ? text.Replace(" ", string.Empty) : string.Empty, eliteFlag);
+      return MarkupSubheader(text, anchorFlag, anchorFlag ? text.Replace(" ", string.Empty) : string.Empty);
     }
 
-    public static string MarkupSubheader(string text, bool anchorFlag, string anchorName, bool eliteFlag)
+    public static string MarkupSubheader(string text, bool anchorFlag, string anchorName)
     {
       return (anchorFlag ? $"<a name=\"{anchorName}\"></a>" : string.Empty)
-        + $"<div class=\"sub-header\">{EliteConvert(text, eliteFlag)}</div>";
+        + $"<div class=\"sub-header\">{text}</div>";
     }
 
-    public static string MarkupIcon(string url, bool eliteFlag)
+    public static string MarkupIcon(string url)
     {
       return !string.IsNullOrEmpty(url)
         ? string.Format($"<img src=\"images/icons/{url}\" class=\"post-icon\" alt=\"Post Icon\" />")
         : string.Empty;
     }
 
-    public static string MarkupMenuButton(string text, string url, bool eliteFlag)
+    public static string MarkupMenuButton(string text, string url)
     {
       if (!string.IsNullOrWhiteSpace(text) && !string.IsNullOrWhiteSpace(url))
       {
-        return $"<a class=\"menu-button\" href=\"{url}\">{EliteConvert(text, eliteFlag)}</a>";
+        return $"<a class=\"menu-button\" href=\"{url}\">{text}</a>";
       }
       else
       {
@@ -133,63 +95,6 @@ namespace PEngine.Core.Web.Helpers
         pipeline.DisableHtml();
       }
       return Markdown.ToHtml(secdata, pipeline.Build());
-    }
-
-    public static string EliteConvert(string origText, bool eliteFlag)
-    {
-      if (!eliteFlag)
-      {
-        return origText;
-      }
-
-      StringBuilder retvalue = new StringBuilder();
-      System.Random Randomizer = new Random(DateTime.Now.Millisecond);
-      string[] words = origText.ToLower().Split(' ');
-      for (int wordptr = 0; wordptr < words.Length; wordptr++)
-      {
-        string cword = words[wordptr];
-        string newword = string.Empty;
-        switch (cword)
-        {
-          case "am":
-            if ((wordptr < words.Length - 1) && (words[wordptr + 1] == "good"))
-            {
-              cword = "ownz0r";
-              wordptr++;
-            }
-            break;
-          case "is":
-            if ((wordptr < words.Length - 1) && (words[wordptr + 1] == "good"))
-            {
-              cword = "ownz0rz";
-              wordptr++;
-            }
-            break;
-          default:
-            if (_eliteWords.ContainsKey(words[wordptr]))
-            {
-              string[] tword = _eliteWords[words[wordptr]].Split('|');
-              cword = tword[Randomizer.Next(0, tword.Length - 1)];
-            }
-            break;
-        }
-        for (int charptr = 0; charptr < cword.Length; charptr++)
-        {
-          string curchar = cword[charptr].ToString();
-          if (_eliteChars.ContainsKey(curchar))
-          {
-            string[] tchar = _eliteChars[curchar].Split(':');
-            curchar = tchar[Randomizer.Next(0, tchar.Length - 1)];
-          }
-          if (Randomizer.Next(0, 1) == 1)
-          {
-            curchar = curchar.ToUpper();
-          }
-          newword += curchar;
-        }
-        retvalue.Append(newword + " ");
-      }
-      return retvalue.ToString();
     }
 
     public static string LogoPath

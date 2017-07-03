@@ -39,14 +39,21 @@ namespace PEngine.Core.Web.Controllers
           paging.SortAscending = false;
         }
       }
-      var articles = await _articleService.ListArticles(category, model.State.HasAdmin);
+      var articles = (await _articleService.ListArticles(category, model.State.HasAdmin)).ToList();
       if (!articles.Any())
       {
         return this.NotFound();
       }
-      model.ListData = PagingUtils.Paginate<ArticleModel>(ref paging, articles);
-      model.Paging = paging;
-      return View("List", model);
+      if (articles.Count > 1 || model.State.HasAdmin)
+      {
+        model.ListData = PagingUtils.Paginate<ArticleModel>(ref paging, articles);
+        model.Paging = paging;
+        return View("List", model);
+      }
+      else
+      {
+        return Redirect($"/article/view/{articles.First().UniqueName}");
+      }
     }
 
     [HttpGet("view/{uniqueName}")]
