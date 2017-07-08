@@ -8,6 +8,7 @@ namespace PEngine.Core.Data.Interfaces
     public interface IArticleDal : IBaseDal
     {
       Task<IEnumerable<ArticleModel>> ListArticles(string category);
+      Task<IEnumerable<ArticleModel>> ListArticlesWithSections(string category);
       Task<ArticleModel> GetArticleById(Guid? guid, int? legacyId, string uniqueName);
       Task InsertArticle(ArticleModel article, bool importFlag = false);
       Task UpdateArticle(ArticleModel article);

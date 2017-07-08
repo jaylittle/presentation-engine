@@ -33,6 +33,28 @@ namespace PEngine.Core.Logic
       return (await _articleDal.ListArticles(category)).Where(a => isAdmin || a.VisibleFlag);
     }
 
+    public async Task<IEnumerable<ArticleModel>> ListArticlesWithSections(string category, bool isAdmin)
+    {
+      return (await _articleDal.ListArticlesWithSections(category)).Where(a => isAdmin || a.VisibleFlag);
+    }
+
+    public async Task<IEnumerable<ArticleModel>> SearchArticles(string[] searchTerms, bool isAdmin)
+    {
+      var matchingArticles = await _articleDal.ListArticlesWithSections(null);
+      return matchingArticles
+        .Where(a => isAdmin || a.VisibleFlag)
+        .Where(a => searchTerms.All(st => 
+          a.Category?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          a.Name?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          a.Description?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          a.ContentURL?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >=0 ||
+          a.Sections.Any(s =>
+            s.Data.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
+            s.Name.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0
+          )
+        ));
+    }
+
     public async Task<ArticleModel> GetArticleById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
     {
       var article = await _articleDal.GetArticleById(guid, legacyId, uniqueName);

@@ -123,39 +123,42 @@ namespace PEngine.Core.Logic
         retvalue.LogError(THREAD_ERROR_DATA_MUST_BE_PROVIDED);
         return retvalue;
       }
-      if (!importFlag && forumThread.Guid != Guid.Empty)
+      if (!importFlag)
       {
-        existingForumThread = await _forumDal.GetForumThreadById(forumThread.Guid, null);
-        if (existingForumThread == null)
+        if (forumThread.Guid != Guid.Empty)
         {
-          retvalue.LogError(THREAD_ERROR_INVALID_RECORD);
-        }
-        else
-        {
-          forumThread.UniqueName = existingForumThread.UniqueName;
-          forumThread.CreatedUTC = existingForumThread.CreatedUTC;
-          forumThread.ModifiedUTC = existingForumThread.ModifiedUTC;
-          forumThread.ForumUserGuid = existingForumThread.ForumUserGuid;
-          if (!isForumAdmin)
+          existingForumThread = await _forumDal.GetForumThreadById(forumThread.Guid, null);
+          if (existingForumThread == null)
           {
-            forumThread.ForumGuid = existingForumThread.ForumGuid;
-            forumThread.LockFlag = existingForumThread.LockFlag;
-            forumThread.VisibleFlag = existingForumThread.VisibleFlag; 
-            if (forumThread.ForumUserGuid != forumUserGuid || !forumThread.VisibleFlag || forumThread.LockFlag)
+            retvalue.LogError(THREAD_ERROR_INVALID_RECORD);
+          }
+          else
+          {
+            forumThread.UniqueName = existingForumThread.UniqueName;
+            forumThread.CreatedUTC = existingForumThread.CreatedUTC;
+            forumThread.ModifiedUTC = existingForumThread.ModifiedUTC;
+            forumThread.ForumUserGuid = existingForumThread.ForumUserGuid;
+            if (!isForumAdmin)
             {
-              retvalue.LogError(THREAD_ERROR_NOT_AUTHORIZED);
-            }
-            if (forumThread.CreatedUTC.HasValue
-              && (DateTime.UtcNow - forumThread.CreatedUTC.Value).TotalMinutes > _settingsProvider.Current.TimeLimitForumPostEdit)
-            {
-              retvalue.LogError(THREAD_ERROR_TOO_LATE_TO_UPDATE);
+              forumThread.ForumGuid = existingForumThread.ForumGuid;
+              forumThread.LockFlag = existingForumThread.LockFlag;
+              forumThread.VisibleFlag = existingForumThread.VisibleFlag; 
+              if (forumThread.ForumUserGuid != forumUserGuid || !forumThread.VisibleFlag || forumThread.LockFlag)
+              {
+                retvalue.LogError(THREAD_ERROR_NOT_AUTHORIZED);
+              }
+              if (forumThread.CreatedUTC.HasValue
+                && (DateTime.UtcNow - forumThread.CreatedUTC.Value).TotalMinutes > _settingsProvider.Current.TimeLimitForumPostEdit)
+              {
+                retvalue.LogError(THREAD_ERROR_TOO_LATE_TO_UPDATE);
+              }
             }
           }
         }
-      }
-      else
-      {
-        forumThread.ForumUserGuid = forumUserGuid;
+        else
+        {
+          forumThread.ForumUserGuid = forumUserGuid;
+        }
       }
       if (string.IsNullOrWhiteSpace(forumThread.Name))
       {
@@ -207,6 +210,17 @@ namespace PEngine.Core.Logic
         .Where(ftp => isForumAdmin || ftp.VisibleFlag);
     }
 
+    public async Task<IEnumerable<ForumThreadPostModel>> SearchForumThreadPosts(string[] searchTerms, bool isForumAdmin)
+    {
+      var matchingForumThreadPosts = await _forumDal.ListForumThreadPosts(null, null, null, null);
+      return matchingForumThreadPosts
+        .Where(ftp => isForumAdmin || ftp.VisibleFlag)
+        .Where(ftp => searchTerms.All(st =>
+          ftp.ForumThreadName?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          ftp.Data?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0
+        ));
+    }
+
     public async Task<ForumThreadPostModel> GetForumThreadPostById(Guid guid, Guid forumUserGuid, bool isForumAdmin)
     {
       var forumThreadPost = await _forumDal.GetForumThreadPostById(guid);
@@ -222,38 +236,41 @@ namespace PEngine.Core.Logic
         retvalue.LogError(POST_ERROR_DATA_MUST_BE_PROVIDED);
         return retvalue;
       }
-      if (!importFlag && forumThreadPost.Guid != Guid.Empty)
+      if (!importFlag)
       {
-        existingForumThreadPost = await _forumDal.GetForumThreadPostById(forumThreadPost.Guid);
-        if (existingForumThreadPost == null)
+        if (forumThreadPost.Guid != Guid.Empty)
         {
-          retvalue.LogError(POST_ERROR_INVALID_RECORD);
-        }
-        else
-        {
-          forumThreadPost.CreatedUTC = existingForumThreadPost.CreatedUTC;
-          forumThreadPost.ModifiedUTC = existingForumThreadPost.ModifiedUTC;
-          forumThreadPost.ForumUserGuid = existingForumThreadPost.ForumUserGuid;
-          if (!isForumAdmin)
+          existingForumThreadPost = await _forumDal.GetForumThreadPostById(forumThreadPost.Guid);
+          if (existingForumThreadPost == null)
           {
-            forumThreadPost.ForumThreadGuid = existingForumThreadPost.ForumThreadGuid;
-            forumThreadPost.LockFlag = existingForumThreadPost.LockFlag;
-            forumThreadPost.VisibleFlag = existingForumThreadPost.VisibleFlag;
-            if (forumThreadPost.ForumUserGuid != forumUserGuid || !forumThreadPost.VisibleFlag || forumThreadPost.LockFlag)
+            retvalue.LogError(POST_ERROR_INVALID_RECORD);
+          }
+          else
+          {
+            forumThreadPost.CreatedUTC = existingForumThreadPost.CreatedUTC;
+            forumThreadPost.ModifiedUTC = existingForumThreadPost.ModifiedUTC;
+            forumThreadPost.ForumUserGuid = existingForumThreadPost.ForumUserGuid;
+            if (!isForumAdmin)
             {
-              retvalue.LogError(POST_ERROR_NOT_AUTHORIZED);
-            }
-            if (forumThreadPost.CreatedUTC.HasValue
-              && (DateTime.UtcNow - forumThreadPost.CreatedUTC.Value).TotalMinutes > _settingsProvider.Current.TimeLimitForumPostEdit)
-            {
-              retvalue.LogError(POST_ERROR_TOO_LATE_TO_UPDATE);
+              forumThreadPost.ForumThreadGuid = existingForumThreadPost.ForumThreadGuid;
+              forumThreadPost.LockFlag = existingForumThreadPost.LockFlag;
+              forumThreadPost.VisibleFlag = existingForumThreadPost.VisibleFlag;
+              if (forumThreadPost.ForumUserGuid != forumUserGuid || !forumThreadPost.VisibleFlag || forumThreadPost.LockFlag)
+              {
+                retvalue.LogError(POST_ERROR_NOT_AUTHORIZED);
+              }
+              if (forumThreadPost.CreatedUTC.HasValue
+                && (DateTime.UtcNow - forumThreadPost.CreatedUTC.Value).TotalMinutes > _settingsProvider.Current.TimeLimitForumPostEdit)
+              {
+                retvalue.LogError(POST_ERROR_TOO_LATE_TO_UPDATE);
+              }
             }
           }
         }
-      }
-      else
-      {
-        forumThreadPost.ForumUserGuid = forumUserGuid;
+        else
+        {
+          forumThreadPost.ForumUserGuid = forumUserGuid;
+        }
       }
       if (string.IsNullOrWhiteSpace(forumThreadPost.Data))
       {

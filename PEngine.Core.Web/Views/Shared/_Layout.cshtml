@@ -62,8 +62,27 @@
         <div class="footer-middle"></div>
         <div class="footer-right"></div>
       </div>
-      <div class="panel" id="pengine-footer-component">
-        {{ message }}
+      <div class="panel">
+        <div class="panel-center">
+          @if (!Model.Settings.DisableSearch)
+          {
+          <form method="get" action="/search">
+            <span class="buttonrowlabel">Search:</span>
+            <input type="text" class="pengine-search-query edit-control-large" name="query" />
+            <button type="submit" class="pengine-button-search">Find</button>
+          </form>
+          }
+          @if (!Model.Settings.DisableRSS)
+          {
+          @Html.Raw("&nbsp;")
+          <a href="/rss" class="list-button">Rss</a>
+          }
+          @if (!string.IsNullOrWhiteSpace(Model.Settings.OwnerEmail))
+          {
+          @Html.Raw("&nbsp;")
+          <a href="@Model.Settings.OwnerEmail" class="list-button">[Email]</a>
+          }
+        </div>
       </div>
       <div class="page-right"></div>
     </div>

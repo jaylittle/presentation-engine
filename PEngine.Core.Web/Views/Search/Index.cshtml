@@ -1,0 +1,57 @@
+@using PEngine.Core.Shared.Models
+@using PEngine.Core.Web.Models
+@using PEngine.Core.Web
+@using PEngine.Core.Web.Helpers
+@model PEngineGenericListModel<PEngineSearchResultModel>
+
+@{
+    int i = 0;
+}
+
+<div class="list-container">
+  <span class="form-header-text">@Model.State.SubTitle</span>
+  <table class="list-table" cellspacing="0" border="1">
+    <thead>
+      <tr>
+        <th>
+          @Html.PEPagerLinkWithText("Type", "index", "Type", Model.Paging, new { query = Model.State.CurrentSection })
+        </th>
+        <th>
+          @Html.PEPagerLinkWithText("Title", "index", "Title", Model.Paging, new { query = Model.State.CurrentSection })
+        </th>
+        <th>
+          @Html.PEPagerLinkWithText("Content", "index", "Content", Model.Paging, new { query = Model.State.CurrentSection })
+        </th>
+        <th>
+          @Html.PEPagerLinkWithText("When", "index", "CreatedUTC", Model.Paging, new { query = Model.State.CurrentSection })
+        </th>
+        <th>
+          @Html.PEPagerLinkWithText("Creator", "index", "Creator", Model.Paging, new { query = Model.State.CurrentSection })
+        </th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.ListData)
+    {
+      <tr class='@((i++)%2!=0 ? "alt" : string.Empty)'>
+        <td>@item.Type</td>
+        <td>@item.Title</td>
+        <td>@Rendering.DataTruncate(item.Content)</td>
+        <td nowrap="1" class="datetime-display">@Rendering.FormatDate(item.CreatedUTC)</td>
+        <td>@item.Creator</td>
+        <td nowrap="1">
+          <a href="@item.Link" class="list-button">[View]</a>
+        </td>
+      </tr>
+    }
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="6">
+          @Html.PEPager(Model.Paging, new { @class = "list-button" }, "index", new { query = Model.State.CurrentSection })
+        </td>
+      </tr>
+    </tfoot>
+  </table>    
+</div>

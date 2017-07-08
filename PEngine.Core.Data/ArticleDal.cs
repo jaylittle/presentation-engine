@@ -20,6 +20,29 @@ namespace PEngine.Core.Data
       }
     }
 
+    public async Task<IEnumerable<ArticleModel>> ListArticlesWithSections(string category)
+    {
+      using (var ct = GetConnection(DatabaseType.PEngine, true))
+      {
+        var output = new ConcurrentDictionary<Guid, ArticleModel>();
+        await ct.DbConnection.QueryAsync<ArticleModel, ArticleSectionModel, ArticleModel>(ReadQuery("ListArticlesWithSections", ct.ProviderName), (article, section) => {
+          if (!output.ContainsKey(article.Guid))
+          {
+            while (!output.ContainsKey(article.Guid) && !output.TryAdd(article.Guid, article));
+          }
+          output[article.Guid].Sections.Add(section);
+          return article;
+        }, new {
+          category
+        }, splitOn: "Guid", transaction: ct.DbTransaction);
+        foreach (var kv in output)
+        {
+          kv.Value.Sections = kv.Value.Sections.OrderBy(s => s.SortOrder).ToList();
+        }
+        return output.Select(kv => kv.Value);
+      }
+    }
+
     public async Task<ArticleModel> GetArticleById(Guid? guid, int? legacyId, string uniqueName)
     {
       using (var ct = GetConnection(DatabaseType.PEngine, true))

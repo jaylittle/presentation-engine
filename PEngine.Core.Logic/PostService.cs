@@ -28,6 +28,18 @@ namespace PEngine.Core.Logic
       return (await _postDal.ListPosts()).Where(p => isAdmin || p.VisibleFlag);
     }
 
+    public async Task<IEnumerable<PostModel>> SearchPosts(string[] searchTerms, bool isAdmin)
+    {
+      var matchingPosts = await _postDal.ListPosts();
+      return matchingPosts
+        .Where(p => isAdmin || p.VisibleFlag)
+        .Where(p => searchTerms.All(st =>
+          p.Name?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          p.Data?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          p.IconFileName?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0
+        ));
+    }
+
     public async Task<PostModel> GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
     {
       var post = await _postDal.GetPostById(guid, legacyId, uniqueName);

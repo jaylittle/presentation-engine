@@ -344,7 +344,7 @@ namespace PEngine.Core.Logic
         }
         if (retvalue.Successful)
         {
-          retvalue .Inhale(await ProcessUpserts<ForumUserModel,IForumService>(service, newUserRecords, (s, m) =>
+          retvalue.Inhale(await ProcessUpserts<ForumUserModel,IForumService>(service, newUserRecords, (s, m) =>
             s.UpsertForumUser(m, m.Guid, true, true).Result
           ));
         }
