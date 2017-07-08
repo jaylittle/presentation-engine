@@ -4,6 +4,7 @@
 # PEngine specific files
 data/
 pengine.settings.json
+rss.xml
 
 # JetBrains IDE files
 .idea/

@@ -42,8 +42,11 @@ namespace PEngine.Core.Web.Controllers
       results.AddRange((await _postService.SearchPosts(searchTerms, model.State.HasAdmin))
         .Select(p => new PEngineSearchResultModel(p)));
       
-      results.AddRange((await _forumService.SearchForumThreadPosts(searchTerms, model.State.HasForumAdmin))
-        .Select(ftp => new PEngineSearchResultModel(ftp)));
+      if (!Settings.Current.DisableForum)
+      {
+        results.AddRange((await _forumService.SearchForumThreadPosts(searchTerms, model.State.HasForumAdmin))
+          .Select(ftp => new PEngineSearchResultModel(ftp)));
+      }
 
       if (paging != null)
       {

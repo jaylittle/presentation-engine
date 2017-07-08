@@ -57,5 +57,38 @@ namespace PEngine.Core.Shared
       var retvalue = parentElement.Descendants().FirstOrDefault(d => d.Name.LocalName.Equals(childElementName, StringComparison.OrdinalIgnoreCase))?.Value;
       return (convertEmptyToNull && retvalue != null && retvalue == string.Empty) ? null : retvalue;
     }
+
+    public static string DataTruncate(this string data, int length = 75)
+    {
+      data = data
+        .Replace("[", string.Empty)
+        .Replace("]", string.Empty)
+        .Replace("<", string.Empty)
+        .Replace(">", string.Empty);
+
+      if (length > 0)
+      {
+        if (data.Length > length)
+        {
+          return data.Substring(0, length) + "...";
+        }
+      }
+      else
+      {
+        string[] delimiters = { Environment.NewLine, "\n", "<br>", "[br]" };
+        int strptr = -1;
+        int dptr = 0;
+        while (strptr < 0 && dptr < delimiters.Length)
+        {
+          strptr = data.IndexOf(delimiters[dptr]);
+          dptr++;
+        }
+        if (strptr >= 0)
+        {
+          return data.Substring(0, strptr);
+        }
+      }
+      return data;
+    }
   }
 }
