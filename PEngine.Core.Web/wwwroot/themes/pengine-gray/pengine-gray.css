@@ -45,6 +45,11 @@ a:active
   color: inherit;
 }
 
+form
+{
+  display: inline-block;
+}
+
 b
 {
   color: white;
