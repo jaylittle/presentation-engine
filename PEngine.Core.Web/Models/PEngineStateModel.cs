@@ -201,6 +201,7 @@ namespace PEngine.Core.Web.Models
             var articleSections = articleData.Sections.OrderBy(s => s.SortOrder).ThenBy(s => s.Name).ToList();
             currentSectionData = currentSectionData ?? articleSections.First();
             CurrentSection = currentSectionData.UniqueName;
+            SubTitle = _viewDataRecord.GetSubTitle(_viewDataInList, CurrentSection, CurrentPage);
             for (var sectionPtr = 0; sectionPtr < articleSections.Count; sectionPtr++)
             {
               var section = articleSections[sectionPtr];
