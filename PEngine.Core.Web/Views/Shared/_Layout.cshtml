@@ -25,7 +25,7 @@
   </head>
   <body>
     <div class="panel" id="pengine-header-component">
-      {{ message }}
+      <!-- {{ message }} -->
     </div>
     <div class="page">
       <div class="page-left"></div>
@@ -86,6 +86,10 @@
       </div>
       <div class="page-right"></div>
     </div>
+    @if(!string.IsNullOrEmpty(Model.State.PEngineUserName))
+    {
     <script src="@Html.ContentHashFile("dist/app.bundle.min.js")"></script>
+    }
+    @RenderSection("scripts", required: false)
   </body>
 </html>

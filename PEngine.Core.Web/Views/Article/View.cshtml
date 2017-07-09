@@ -21,16 +21,29 @@
     @if (!article.HideDropDownFlag && article.Sections.Count > 1)
     {
       @Html.Raw("&nbsp;")
-      <a href="#" class="list-button article_view_button_prev">[Prev]</a>
-      @Html.Raw("&nbsp;")
-      <select class="post_view_dropdown_section">
-      @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
+      @if (Model.State.Links.ContainsKey("Previous"))
       {
-        <option value="@articleSection.UniqueName"@(articleSection.Guid == section.Guid ? Html.Raw(" selected") : null)>@articleSection.Name</option>
+        <a href="@Model.State.Links["Previous"]" class="list-button article_view_button_prev">[Prev]</a>
+        @Html.Raw("&nbsp;")
       }
-      </select>
+      <form method="POST">
+        <select name="newSectionUniqueName" class="post_view_dropdown_section" onchange="this.form.submit()">
+        @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
+        {
+          <option value="@articleSection.UniqueName"@(articleSection.Guid == section.Guid ? Html.Raw(" selected") : null)>@articleSection.Name</option>
+        }
+        </select>
+        <input type="submit" id="sectionSubmitTop">
+      </form>
       @Html.Raw("&nbsp;")
-      <a href="#" class="list-button article_view_button_next">[Next]</a>
+      @if (Model.State.Links.ContainsKey("Next"))
+      {
+        <a href="@Model.State.Links["Next"]" class="list-button article_view_button_next">[Next]</a>
+      }
+      else
+      {
+        <a href="#" class="list-button article_view_button_next" style="visibility: hidden">[Next]</a>
+      }
       @Html.Raw("&nbsp;")
     }
   </div>
@@ -50,17 +63,38 @@
     @if (!article.HideDropDownFlag && article.Sections.Count > 1)
     {
       @Html.Raw("&nbsp;")
-      <a href="#" class="list-button article_view_button_prev">[Prev]</a>
-      @Html.Raw("&nbsp;")
-      <select class="post_view_dropdown_section">
-      @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
+      @if (Model.State.Links.ContainsKey("Previous"))
       {
-        <option value="@articleSection.UniqueName"@(articleSection.Guid == section.Guid ? Html.Raw(" selected") : null)>@articleSection.Name</option>
+        <a href="@Model.State.Links["Previous"]" class="list-button article_view_button_prev">[Prev]</a>
+        @Html.Raw("&nbsp;")
       }
-      </select>
+      <form method="POST" onload="javascript:alert('test1')">
+        <select name="newSectionUniqueName" class="post_view_dropdown_section" onchange="this.form.submit()">
+        @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
+        {
+          <option value="@articleSection.UniqueName"@(articleSection.Guid == section.Guid ? Html.Raw(" selected") : null)>@articleSection.Name</option>
+        }
+        </select>
+        <input type="submit" id="sectionSubmitBottom" />
+      </form>
       @Html.Raw("&nbsp;")
-      <a href="#" class="list-button article_view_button_next">[Next]</a>
+      @if (Model.State.Links.ContainsKey("Next"))
+      {
+        <a href="@Model.State.Links["Next"]" class="list-button article_view_button_next">[Next]</a>
+      }
+      else
+      {
+        <a href="#" class="list-button article_view_button_next" style="visibility: hidden">[Next]</a>
+      }
       @Html.Raw("&nbsp;")
     }
   </div>
-</div>
+
+  @section scripts {
+  <script type="text/javascript">
+    (function() {
+      document.getElementById('sectionSubmitTop').style.display = 'none';
+      document.getElementById('sectionSubmitBottom').style.display = 'none';
+    })();
+  </script>
+  }

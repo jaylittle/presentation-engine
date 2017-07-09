@@ -37,7 +37,7 @@ namespace PEngine.Core.Data
         }, splitOn: "Guid", transaction: ct.DbTransaction);
         foreach (var kv in output)
         {
-          kv.Value.Sections = kv.Value.Sections.OrderBy(s => s.SortOrder).ToList();
+          kv.Value.Sections = kv.Value.Sections.OrderBy(s => s.SortOrder).ThenBy(s => s.Name).ToList();
         }
         return output.Select(kv => kv.Value);
       }
@@ -62,7 +62,7 @@ namespace PEngine.Core.Data
         }, splitOn: "Guid", transaction: ct.DbTransaction);
         foreach (var kv in output)
         {
-          kv.Value.Sections = kv.Value.Sections.OrderBy(s => s.SortOrder).ToList();
+          kv.Value.Sections = kv.Value.Sections.OrderBy(s => s.SortOrder).ThenBy(s => s.Name).ToList();
         }
         return output.Select(kv => kv.Value).FirstOrDefault();
       }

@@ -80,5 +80,17 @@ namespace PEngine.Core.Web.Controllers
       
       return View("View", model);
     }
+
+    [HttpPost("view/{uniqueName}")]
+    public IActionResult SwitchArticleSection(string uniqueName, [FromForm] string newSectionUniqueName)
+    {
+      return Redirect($"/article/view/{uniqueName}/{newSectionUniqueName}");
+    }
+
+    [HttpPost("view/{uniqueName}/{sectionUniqueName}")]
+    public IActionResult SwitchArticleSection(string uniqueName, string sectionUniqueName, [FromForm] string newSectionUniqueName)
+    {
+      return Redirect($"/article/view/{uniqueName}/{newSectionUniqueName}");
+    }
   }
 }
