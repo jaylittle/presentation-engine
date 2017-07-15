@@ -14,14 +14,6 @@ new Promise(
         };
       }
     });
-    let pengineFooterComponent = new Vue({
-      el: '#pengine-footer-component',
-      data: () => {
-        return {
-          message: 'Placeholder footer component'
-        };
-      }
-    });
     resolve([pengineHeaderComponent, pengineFooterComponent]);
   }
 ).then(output => {
