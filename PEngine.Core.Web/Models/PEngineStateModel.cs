@@ -64,6 +64,30 @@ namespace PEngine.Core.Web.Models
     public string SummarySite { get; set; }
     public bool HasSummary { get; set; }
 
+    public string LoginUrl
+    {
+      get
+      {
+        if (PEngineUserType.Equals("Anonymous", StringComparison.OrdinalIgnoreCase))
+        {
+          return (IsForum ? "/log/in/forum" : "/log/in/pengine");
+        }
+        return "/log/out";
+      }
+    }
+
+    public string LoginText
+    {
+      get
+      {
+        if (PEngineUserType.Equals("Anonymous", StringComparison.OrdinalIgnoreCase))
+        {
+          return (IsForum ? "Forum Login" : "Login");
+        }
+        return "Logout";
+      }
+    }
+
     public PEngineStateModel(SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;

@@ -96,6 +96,7 @@ namespace PEngine.Core.Shared
     public string LabelForumRegisterButton { get; set; } = "Register";
     public string ExternalBaseUrl { get; set; } = "http://localhost:5000/";
     public Guid SecretKey { get; set; } = Guid.NewGuid();
+    public string UserNameAdmin { get; set; } = "PEngineAdmin";
   }
 
   public class SettingsProvider : ISettingsProvider

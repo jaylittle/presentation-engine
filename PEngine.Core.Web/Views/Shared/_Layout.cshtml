@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@Model.State.FullTitle</title>
-    <!-- TODO Add RSS Link Here -->
+    <link rel="alternate" type="application/rss+xml" title="Posts" href="/feed/rss" />
     @RenderSection("head", required: false)
     @if (Model.State.HasSummary)
     {
@@ -25,7 +25,11 @@
   </head>
   <body>
     <div class="panel" id="pengine-header-component">
-      <!-- {{ message }} -->
+      <div class="panel-right">
+        <form method="get" action="@Model.State.LoginUrl">
+          <button type="submit" class="pengine-button-search">@Model.State.LoginText</button>
+        </form>
+      </div>
     </div>
     <div class="page">
       <div class="page-left"></div>

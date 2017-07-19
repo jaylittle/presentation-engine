@@ -14,7 +14,7 @@ new Promise(
         };
       }
     });
-    resolve([pengineHeaderComponent, pengineFooterComponent]);
+    resolve([pengineHeaderComponent]);
   }
 ).then(output => {
   console.log('post-promise', output);

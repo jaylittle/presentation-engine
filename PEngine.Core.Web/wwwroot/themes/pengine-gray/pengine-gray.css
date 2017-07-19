@@ -50,6 +50,11 @@ form
   display: inline-block;
 }
 
+.form-container form
+{
+  display: block;
+}
+
 b
 {
   color: white;

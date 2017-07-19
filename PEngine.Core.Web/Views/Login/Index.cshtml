@@ -1,0 +1,37 @@
+@using PEngine.Core.Shared.Models
+@using PEngine.Core.Web.Models
+@using PEngine.Core.Web
+@using PEngine.Core.Web.Helpers
+@model PEngineGenericRecordModel<PEngineLoginModel>
+
+<div class="display-container">
+  @if (Rendering.LogoEnabled)
+  {
+    <div class="logo-container">
+      <img src="@Rendering.LogoPath" alt="logo" />
+    </div>
+  }
+</div>
+<div class="form-container">
+  <form id="login" method="POST" action="@Model.RecordData.ActionUrl">
+    <input type="hidden" name="redirectUrl" value="@Model.RecordData.RedirectUrl" />
+    <div class="form-container-center">
+      <div class="edit-row">
+        <div class="edit-label">User Name:</div>
+        <div class="edit-field"><input type="text" id="login_id" name="userName" class="editnorm"/>
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label">Password:</div>
+        <div class="edit-field"><input type="password" id="login_password" name="password" class="editnorm"/>
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label">&nbsp;</div>
+        <div class="edit-field">
+          <button type="submit" id="login_button_login">Login</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

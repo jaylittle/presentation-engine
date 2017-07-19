@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
 
 namespace PEngine.Core.Web.Middleware
@@ -93,13 +94,16 @@ namespace PEngine.Core.Web.Middleware
 
     private async Task ValidatePEngineUser(HttpContext context)
     {
+      var userName = (string)context.Request.Form["username"] ?? string.Empty;
       var password = (string)context.Request.Form["password"] ?? string.Empty;
+      var redirectUrl = context.Request.Form.ContainsKey("redirectUrl") ? (string)context.Request.Form["redirectUrl"] : (string)null;
       var userId = string.Empty;
       var roleClaims = new List<string>();
-      if (Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin))
+      if (Settings.Current.UserNameAdmin.Equals(userName, StringComparison.OrdinalIgnoreCase) 
+        && Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin))
       {
         roleClaims.Add("PEngineAdmin");
-        userId = "PEngineAdmin";
+        userId = Settings.Current.UserNameAdmin;
       }
 
       ClaimsIdentity identity = null;
@@ -107,13 +111,14 @@ namespace PEngine.Core.Web.Middleware
       {
         identity = await GetIdentity(userId, userId, "PEngine", roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, userId, Settings.Current.TimeLimitAdminToken);
+      await GenerateToken(context, identity, userId, Settings.Current.TimeLimitAdminToken, redirectUrl);
     }
 
     private async Task ValidateForumUser(HttpContext context)
     {
       var userName = (string)context.Request.Form["username"] ?? string.Empty;
       var password = (string)context.Request.Form["password"] ?? string.Empty;
+      var redirectUrl = context.Request.Form.ContainsKey("redirectUrl") ? (string)context.Request.Form["redirectUrl"] : (string)null;
       var roleClaims = new List<string>();
 
       ClaimsIdentity identity = null;
@@ -134,10 +139,10 @@ namespace PEngine.Core.Web.Middleware
         }
         identity = await GetIdentity(forumUser.Guid.ToString(), userName, "Forum", roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, forumUser?.Guid.ToString(), Settings.Current.TimeLimitForumToken);
+      await GenerateToken(context, identity, forumUser?.Guid.ToString(), Settings.Current.TimeLimitForumToken, redirectUrl);
     }
 
-    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string userId, int expirationMinutes)
+    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string userId, int expirationMinutes, string redirectUrl = null)
     {
       if (identity == null)
       {
@@ -167,16 +172,27 @@ namespace PEngine.Core.Web.Middleware
         signingCredentials: _options.SigningCredentials);
 
       var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-    
-      var response = new
+
+      if (string.IsNullOrWhiteSpace(redirectUrl))
       {
-        acessToken = encodedJwt,
-        expiresIn = (int)expirationMinutes * 60
-      };
+        var response = new
+        {
+          acessToken = encodedJwt,
+          expiresIn = (int)expirationMinutes * 60
+        };
   
-      // Serialize and return the response
-      context.Response.ContentType = "application/json";
-      await context.Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
+        // Serialize and return the response
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented })); 
+      }
+      else
+      {
+        context.Response.Cookies.Append(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, encodedJwt, new CookieOptions()
+        {
+          Expires = DateTimeOffset.Now.AddMinutes(expirationMinutes)
+        });
+        context.Response.Redirect(redirectUrl);
+      }
     }
 
     private Task<ClaimsIdentity> GetIdentity(string userId, string userName, string userType, string[] roleClaims)
