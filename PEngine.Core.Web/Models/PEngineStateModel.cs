@@ -7,6 +7,8 @@ using PEngine.Core.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace PEngine.Core.Web.Models
 {
@@ -25,6 +27,7 @@ namespace PEngine.Core.Web.Models
     public string Url { get; set; }
     public string Title { get; set; }
     public string SubTitle { get; set; }
+    [JsonIgnore]
     public bool HideSubTitle { get; set; }
     public string FullTitle
     {
@@ -37,8 +40,11 @@ namespace PEngine.Core.Web.Models
         return Title;
       }
     }
+    [JsonIgnore]
     public List<KeyValuePair<string, string>> TopMenuButtons { get; set; }
+    [JsonIgnore]
     public List<KeyValuePair<string, string>> SubMenuButtons { get; set; }
+    [JsonIgnore]
     public Dictionary<string, string> Links { get; set; }
 
     public bool HasAdmin { get; set; }
@@ -47,7 +53,6 @@ namespace PEngine.Core.Web.Models
     public string PEngineUserType { get; set; }
     public string CurrentSection { get; set; }
     public int? CurrentPage { get; set; }
-    public bool IsElite { get; set; }
     public bool IsForum { get; set; }
     public string Theme { get; set; }
     public string ThemePath
@@ -57,11 +62,17 @@ namespace PEngine.Core.Web.Models
         return $"themes/{Theme}/{Theme}.css";
       }
     }
+    [JsonIgnore]
     public string SummaryTitle { get; set; }
+    [JsonIgnore]
     public string SummaryDescription { get; set; }
+    [JsonIgnore]
     public string SummaryUrl { get; set; }
+    [JsonIgnore]
     public string SummaryImage { get; set; }
+    [JsonIgnore]
     public string SummarySite { get; set; }
+    [JsonIgnore]
     public bool HasSummary { get; set; }
 
     public string LoginUrl
@@ -153,7 +164,6 @@ namespace PEngine.Core.Web.Models
         {
           Theme = requestedTheme;
         }
-        IsElite = _context.Request.Cookies.ContainsKey(COOKIE_ELITE);
       }
 
       //Process Authentication
@@ -259,22 +269,6 @@ namespace PEngine.Core.Web.Models
       HasSummary = !String.IsNullOrWhiteSpace(SummaryTitle);
     }
 
-    public void EliteToggle()
-    {
-      if (_context.Request != null)
-      {
-        if (_context.Request.Cookies.ContainsKey(COOKIE_ELITE))
-        {
-          _context.Response.Cookies.Delete(COOKIE_ELITE);
-        }
-        else
-        {
-          _context.Response.Cookies.Append(COOKIE_ELITE, "1");
-        }
-        IsElite = !IsElite;
-      }
-    }
-
     public void ThemeChange(string requestedTheme)
     {
       if (_context.Request != null)
@@ -288,9 +282,12 @@ namespace PEngine.Core.Web.Models
       }
     }
 
-    public void LogOut()
+    public string Json()
     {
-
+      return JsonConvert.SerializeObject(this, new JsonSerializerSettings 
+      { 
+        ContractResolver = new CamelCasePropertyNamesContractResolver() 
+      });
     }
   }
 }

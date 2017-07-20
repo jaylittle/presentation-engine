@@ -93,8 +93,14 @@
   @section scripts {
   <script type="text/javascript">
     (function() {
-      document.getElementById('sectionSubmitTop').style.display = 'none';
-      document.getElementById('sectionSubmitBottom').style.display = 'none';
+      if (document.getElementById('sectionSubmitTop'))
+      {
+        document.getElementById('sectionSubmitTop').style.display = 'none';
+      }
+      if (document.getElementById('sectionSubmitBottom'))
+      {
+        document.getElementById('sectionSubmitBottom').style.display = 'none';
+      }
     })();
   </script>
   }

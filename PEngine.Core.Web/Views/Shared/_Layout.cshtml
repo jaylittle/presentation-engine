@@ -24,13 +24,23 @@
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile((string)Model.State.ThemePath)"> 
   </head>
   <body>
-    <div class="panel" id="pengine-header-component">
+    @if (!string.IsNullOrEmpty(Model.State.PEngineUserName))
+    {
+    <div class="panel" id="pengine-component">
+      <header-component></header-component>
+      <editor-component></editor-component>
+    </div>
+    }
+    else
+    {
+    <div class="panel">
       <div class="panel-right">
         <form method="get" action="@Model.State.LoginUrl">
           <button type="submit" class="pengine-button-search">@Model.State.LoginText</button>
         </form>
       </div>
     </div>
+    }
     <div class="page">
       <div class="page-left"></div>
       <div class="header">
@@ -92,6 +102,9 @@
     </div>
     @if(!string.IsNullOrEmpty(Model.State.PEngineUserName))
     {
+    <script type="text/javascript">
+      window.pengineState = @Html.Raw(Model.State.Json());
+    </script>
     <script src="@Html.ContentHashFile("dist/app.bundle.min.js")"></script>
     }
     @RenderSection("scripts", required: false)
