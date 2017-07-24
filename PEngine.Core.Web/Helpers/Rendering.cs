@@ -127,7 +127,8 @@ namespace PEngine.Core.Web.Helpers
         {
           return new DirectoryInfo(themePath).GetDirectories()
             .Where(d => System.IO.File.Exists($"{d.FullName}{Path.DirectorySeparatorChar}{d.Name}.css"))
-            .Select(d => d.Name);
+            .Select(d => d.Name)
+            .OrderBy(d => d);
         }
         return new List<string>();
       }
@@ -141,7 +142,8 @@ namespace PEngine.Core.Web.Helpers
         if (System.IO.Directory.Exists(iconPath))
         {
           return new DirectoryInfo(iconPath).GetFiles()
-            .Select(f => f.Name);
+            .Select(f => f.Name)
+            .OrderBy(f => f);
         }
         return new List<string>();
       }

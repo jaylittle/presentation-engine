@@ -587,6 +587,23 @@ b
     padding-right: 5px;
 }
 
+#modal-overlay
+{
+  opacity: 0.75;
+  top: 0px;
+  left: 0px;
+  position: absolute;
+  z-index: 999;
+  background-color: black;
+  height: 100%;
+  width: 100%;
+}
+
+[v-cloak]
+{
+  display:none;
+}
+
 @media print
 {
 	.header

@@ -26,9 +26,15 @@
   <body>
     @if (!string.IsNullOrEmpty(Model.State.PEngineUserName))
     {
-    <div class="panel" id="pengine-component">
-      <header-component></header-component>
-      <editor-component></editor-component>
+    <div class="panel" id="pengine-header" v-cloak>
+      <div class="panel-right">
+        <form method="get" v-bind:action="fixedLoginUrl">
+          <button type="submit" class="pengine-button-search">{{state.loginText}}</button>
+        </form>
+      </div>
+    </div>
+    <div id="pengine-editor" v-cloak>
+      @Html.Partial("_EditorComponent")
     </div>
     }
     else
@@ -105,7 +111,8 @@
     <script type="text/javascript">
       window.pengineState = @Html.Raw(Model.State.Json());
     </script>
-    <script src="@Html.ContentHashFile("dist/app.bundle.min.js")"></script>
+    <script src="@Html.ContentHashFile("dist/pengine.core.web.3rdparty.min.js")"></script>
+    <script src="@Html.ContentHashFile("dist/pengine.core.web.main.min.js")"></script>
     }
     @RenderSection("scripts", required: false)
   </body>

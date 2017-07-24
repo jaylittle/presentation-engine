@@ -3,10 +3,13 @@ let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 let webpack = require('webpack');
 
 module.exports = {
-  entry: ['babel-polyfill', './scripts/pengine.core.web.js'],
+  entry: {
+    'pengine.core.web.3rdparty': './scripts/pengine.core.web.3rdparty.js',
+    'pengine.core.web.main': './scripts/pengine.core.web.main.js'
+  },
   devtool: 'source-map',
   output: {
-    filename: 'app.bundle.min.js',
+    filename: '[name].min.js',
     path: path.resolve(__dirname, 'wwwroot/dist')
   },
   resolve: {

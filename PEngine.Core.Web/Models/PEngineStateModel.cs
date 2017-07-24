@@ -99,6 +99,22 @@ namespace PEngine.Core.Web.Models
       }
     }
 
+    public IEnumerable<string> ThemeList
+    {
+      get
+      {
+        return Helpers.Rendering.ThemeList;
+      }
+    }
+
+    public IEnumerable<string> IconList
+    {
+      get
+      {
+        return Helpers.Rendering.IconList;
+      }
+    }
+
     public PEngineStateModel(SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
