@@ -8,17 +8,22 @@ let editorInstance = peEditor.create();
 let headerInstance = peHeader.create();
 
 /* Bind Events to the DOM */
-jQuery(".post_view_button_edit").on("click", (e) => {
-  editorInstance.$events.fire("edit", { type: "post", guid: jQuery(e.currentTarget).data("guid")})
+jQuery(".post_view_button_edit, .pengine-button-newpost").on("click", (e) => {
+  editorInstance.$events.fire("edit", { type: "post", guid: jQuery(e.currentTarget).data("guid")});
   e.preventDefault();
 });
 
-jQuery(".article_view_button_edit").on("click", (e) => {
-  editorInstance.methods.fire("edit", { type: "article", guid: jQuery(e.currentTarget).data("guid")})
+jQuery(".article_view_button_edit, .pengine-button-newarticle").on("click", (e) => {
+  editorInstance.$events.fire("edit", { type: "article", guid: jQuery(e.currentTarget).data("guid")});
   e.preventDefault();
 });
 
 jQuery(".resume_view_button_edit").on("click", (e) => {
-  editorInstance.methods.fire("edit", { type: "resume"})
+  editorInstance.$events.fire("edit", { type: "resume"});
+  e.preventDefault();
+});
+
+jQuery(".pengine-button-setting").on("click", (e) => {
+  editorInstance.$events.fire("edit", { type: "settings"});
   e.preventDefault();
 });

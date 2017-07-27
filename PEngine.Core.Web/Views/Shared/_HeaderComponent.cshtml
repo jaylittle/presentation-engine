@@ -1,0 +1,12 @@
+<div class="panel-right">
+  <div class="panel-block">
+    <button type="button" class="pengine-button-newpost">New Post</button>
+    <button type="button" class="pengine-button-newarticle">New Article</button>
+    <button type="button" class="pengine-button-setting">Settings</button>
+  </div>
+  <div class="panel-block">
+    <form method="get" v-bind:action="fixedLoginUrl">
+      <button type="submit" class="pengine-button-search">{{state.loginText}}</button>
+    </form>
+  </div>
+</div>

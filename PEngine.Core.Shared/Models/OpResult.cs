@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace PEngine.Core.Shared.Models
 {
@@ -46,6 +48,7 @@ namespace PEngine.Core.Shared.Models
       }
     }
 
+    [JsonIgnore]
     public bool OutputToConsole { get; set; }
 
     public OpResult()
@@ -61,6 +64,7 @@ namespace PEngine.Core.Shared.Models
 
   public class OpResultMessage
   {
+    [JsonConverter(typeof(StringEnumConverter))]
     public OpResultMessageType Type { get; set; }
     public string Text { get; set; }
 

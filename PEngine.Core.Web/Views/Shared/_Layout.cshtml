@@ -27,11 +27,7 @@
     @if (!string.IsNullOrEmpty(Model.State.PEngineUserName))
     {
     <div class="panel" id="pengine-header" v-cloak>
-      <div class="panel-right">
-        <form method="get" v-bind:action="fixedLoginUrl">
-          <button type="submit" class="pengine-button-search">{{state.loginText}}</button>
-        </form>
-      </div>
+      @Html.Partial("_HeaderComponent")
     </div>
     <div id="pengine-editor" v-cloak>
       @Html.Partial("_EditorComponent")

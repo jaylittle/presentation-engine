@@ -1,151 +1,151 @@
 body
 {
-	margin: .25em .25em .25em .25em;
-	background-color: white;
-	font-family: Tahoma;
-	font-size: 15px;
-	color: black;
+  margin: .25em .25em .25em .25em;
+  background-color: white;
+  font-family: Tahoma;
+  font-size: 15px;
+  color: black;
 }
 
 textarea 
 {
-	width:95%;
+  width:95%;
 }
 
 a:link 
 {
-	color: #2b4873
+  color: #2b4873
 }
 
 a:visited
 {
-	color: #2b4873
+  color: #2b4873
 }
 
 a:active
 {
-	color: #2b4873
+  color: #2b4873
 }
 
 b
 {
-	color: black
+  color: black
 }
 
 .page
 {
-    width: 100%;
+  width: 100%;
 }
 
 .header
 {
-	width: 100%;
-	min-height: 59px;
-	background-color: #4985cc;
-	background-repeat: repeat-x;
+  width: 100%;
+  min-height: 59px;
+  background-color: #4985cc;
+  background-repeat: repeat-x;
 }
 
 .header-left
 {
-	width: 100%;
-	min-height: 59px;
-	background-position: left top;
-	background-repeat: no-repeat;
+  width: 100%;
+  min-height: 59px;
+  background-position: left top;
+  background-repeat: no-repeat;
 }
 
 .header-right
 {
-	width: 100%;
-	min-height: 59px;
-	vertical-align: middle;
-	background-position: right top;
-	background-repeat: no-repeat;
+  width: 100%;
+  min-height: 59px;
+  vertical-align: middle;
+  background-position: right top;
+  background-repeat: no-repeat;
 }
 
 .header-middle
 {
-	display: none;
-	text-align: left;
-	margin-left: 190px;
-	margin-right: 190px;
-	font-family: Tahoma;
-	font-size: 20px;
-	font-weight:bold;
-	color: white;
-	background-color: transparent;
+  display: none;
+  text-align: left;
+  margin-left: 190px;
+  margin-right: 190px;
+  font-family: Tahoma;
+  font-size: 20px;
+  font-weight:bold;
+  color: white;
+  background-color: transparent;
 }
 
 .content-menu
 {
-	/* border: dashed 2px blue; */
-	display: block;
-	position: relative;
-    background-color: #0b35a6;
-    background-repeat: repeat;
+  /* border: dashed 2px blue; */
+  display: block;
+  position: relative;
+  background-color: #0b35a6;
+  background-repeat: repeat;
 }
 
 .menu
 {
-	/* border: dashed 2px purple; */
-	display: inline-block;
-	position: static;
-    width: 170px;
-	padding-left: 20px;
-    background-color: #0b35a6;
-    background-repeat: repeat;
+  /* border: dashed 2px purple; */
+  display: inline-block;
+  position: static;
+  width: 170px;
+  padding-left: 20px;
+  background-color: #0b35a6;
+  background-repeat: repeat;
 }
 
 .menu-button
 {
-    background-repeat: repeat-x;
-	background-position: top;
-	height: 24px;
-	width: 150px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	vertical-align: middle;
-	text-align: center;
-    font-family: Tahoma;
-    font-size: 15px;
-    font-weight: bold;
-    font-style: normal;
-	color: white;
+  background-repeat: repeat-x;
+  background-position: top;
+  height: 24px;
+  width: 150px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  vertical-align: middle;
+  text-align: center;
+  font-family: Tahoma;
+  font-size: 15px;
+  font-weight: bold;
+  font-style: normal;
+  color: white;
 }
 
 .menu-separator
 {
-    height: 24px;
-	width: 150px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	vertical-align: middle;
-	text-align: center;
+  height: 24px;
+  width: 150px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  vertical-align: middle;
+  text-align: center;
 }
 
 .content
 {
-	/* border: dashed 2px green; */
-	display: block;
-	position: static;
-	margin-left: 190px;
-	padding-left: 10px;
-	padding-top: 10px;
-	font-family: Tahoma;
-	font-size: 15px;
-	color: black;	
-	text-align: left;
-	background-color: white;
-	width: auto;
+  /* border: dashed 2px green; */
+  display: block;
+  position: static;
+  margin-left: 190px;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-family: Tahoma;
+  font-size: 15px;
+  color: black;  
+  text-align: left;
+  background-color: white;
+  width: auto;
 }
 
 .footer
 {
-	display: block;
-	position: relative;
-	clear: both;
-	width: 100%;
-	height: 1px;
-	background-color: gray;
+  display: block;
+  position: relative;
+  clear: both;
+  width: 100%;
+  height: 1px;
+  background-color: gray;
 }
 
 .footer-left
@@ -162,429 +162,429 @@ b
 
 .sub-header
 {
-	min-height: 30px;
-	background-position: top;
-	background-repeat: repeat-x;
-	background-color: #5a96ef;
-    padding-left: 25px;
-	padding-right: 25px;
-	font-family: Tahoma;
-	font-size: 16px;
-	font-weight: bold;
-	color: white;
+  min-height: 30px;
+  background-position: top;
+  background-repeat: repeat-x;
+  background-color: #5a96ef;
+  padding-left: 25px;
+  padding-right: 25px;
+  font-family: Tahoma;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
 }
 
 .form-header-text
 {
-	font-family: Tahoma;
-	font-size: 18px;
-	font-weight: bold;
-	color: black;
-	margin-bottom: 5px;
-	display: block;
+  font-family: Tahoma;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 5px;
+  display: block;
 } 
 
 .form-subheader-text
 {
-	font-family: Tahoma;
-	font-size: 14px;
-	font-weight: bold;
-	color: black;
-	margin-bottom: 15px;
-	display: block;
+  font-family: Tahoma;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  margin-bottom: 15px;
+  display: block;
 } 
 
 .logo-container
 {
-	text-align: center;
-	width: 100%;
-	display: block;
-	margin-bottom: 10px;
+  text-align: center;
+  width: 100%;
+  display: block;
+  margin-bottom: 10px;
 }
 
 .post-icon
 {
-	float: right;
-	margin: 10px 10px 10px 10px;
+  float: right;
+  margin: 10px 10px 10px 10px;
 }
 
 .list-container
 {
-	display: block;
-	width: 100%;
-	margin-bottom: 10px;
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 .display-container
 {
-	text-align: left;
-	width: 100%;
-	display: block;
-	margin-bottom: 10px;
-	margin-top: 10px;
+  text-align: left;
+  width: 100%;
+  display: block;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .form-container
 {
-	text-align: left;
-	width: 100%;
-	display: block;
-	margin-bottom: 10px;
+  text-align: left;
+  width: 100%;
+  display: block;
+  margin-bottom: 10px;
 }
 
 .dialog-container
 {
-    top: 0px;
-    left: 0px;
-	text-align: left;
-	width: 80%;
-    margin-left: 10%;
-    margin-right: auto;
-	display: block;
-	margin-bottom: 10px;
-    background-color: white;
-    position: absolute;
-    z-index: 1000;
-    height: auto;
-    padding: 5px;
-    border: 2px solid #4985cc;
-    min-width: 600px;
+  top: 0px;
+  left: 0px;
+  text-align: left;
+  width: 80%;
+  margin-left: 10%;
+  margin-right: auto;
+  display: block;
+  margin-bottom: 10px;
+  background-color: white;
+  position: absolute;
+  z-index: 1000;
+  height: auto;
+  padding: 5px;
+  border: 2px solid #4985cc;
+  min-width: 600px;
 }
 
 .dialog-container-uploader
 {
-    top: 0px;
-    left: 0px;
-	text-align: left;
-	width: 80%;
-    margin-left: 10%;
-    margin-right: auto;
-	display: block;
-	margin-bottom: 10px;
-    background-color: white;
-    position: absolute;
-    z-index: 1000;
-    max-height: 500px;
-    padding: 5px;
-    border: 2px solid #4985cc;
-    min-width: 600px;
+  top: 0px;
+  left: 0px;
+  text-align: left;
+  width: 80%;
+  margin-left: 10%;
+  margin-right: auto;
+  display: block;
+  margin-bottom: 10px;
+  background-color: white;
+  position: absolute;
+  z-index: 1000;
+  max-height: 500px;
+  padding: 5px;
+  border: 2px solid #4985cc;
+  min-width: 600px;
 }
 
 .list-container-overflow, .form-container-overflow
 {
-    overflow: auto;
+  overflow: auto;
 }
 
 
 .dialog-container-login
 {
-    top: 0px;
-    left: 0px;
-	text-align: left;
-	width: 80%;
-    margin-left: 10%;
-    margin-right: auto;
-	display: block;
-	margin-bottom: 10px;
-    background-color: white;
-    position: absolute;
-    z-index: 1000;
-    height: auto;
-    padding: 5px;
-    border: 2px solid #4985cc;
-    min-width: 600px;
+  top: 0px;
+  left: 0px;
+  text-align: left;
+  width: 80%;
+  margin-left: 10%;
+  margin-right: auto;
+  display: block;
+  margin-bottom: 10px;
+  background-color: white;
+  position: absolute;
+  z-index: 1000;
+  height: auto;
+  padding: 5px;
+  border: 2px solid #4985cc;
+  min-width: 600px;
 }
 
 .form-container-center
 {
-	text-align: left;
-	width: 50%;
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 10px;
+  text-align: left;
+  width: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
 }
 
 .list-table
 {
-	font-family: Tahoma;
-	color: white;
-	font-size: 13px;
-	margin-left: auto;
-	margin-right: auto;
-	width: 100%;
+  font-family: Tahoma;
+  color: white;
+  font-size: 13px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
 }
 
 .list-table thead tr
 {
-	background-color: white;
-	color: black;
-	font-size: 15px;
+  background-color: white;
+  color: black;
+  font-size: 15px;
 }
 
 .list-table tbody tr
 {
-	background-color: #2b4873;
-	color: white;
+  background-color: #2b4873;
+  color: white;
 }
 
 .list-table tbody tr.alt
 {
-	background-color: #447bbd;
-	color: #adc7e7;
+  background-color: #447bbd;
+  color: #adc7e7;
 }
 
 .list-table tbody tr.hover, .list-table tbody tr.alt.hover
 {
-	background-color: black;
-	color: red;
+  background-color: black;
+  color: red;
 }
 
 .list-table tfoot tr
 {
-	background-color: white;
-	color: black;
-	font-size: 12px;
+  background-color: white;
+  color: black;
+  font-size: 12px;
 }
 
 .list-table tbody tr.selected td, .list-table tbody tr.selected td a
 {
-    background-color: white;
-	color: #2b4873;
+  background-color: white;
+  color: #2b4873;
 }
 
 .list-button
 {
-	width: 75px;
-	height: 22px;
-	margin: 0px 5px 0px 0px;
+  width: 75px;
+  height: 22px;
+  margin: 0px 5px 0px 0px;
 }
 
 .edit-row
 {
-	margin-bottom: 10px;
-	clear: right;
+  margin-bottom: 10px;
+  clear: right;
 }
 
 .edit-label, .edit-label-normal
 {
-	font-size: 12px;
-	font-weight: bold;
-	display: inline-block;
-	clear: none;
-	width: 125px;
-	margin-right: 5px;
-	text-align: right;
-    float: left;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+  clear: none;
+  width: 125px;
+  margin-right: 5px;
+  text-align: right;
+  float: left;
 }
 
 .edit-label-large
 {
-	font-size: 12px;
-	font-weight: bold;
-	display: inline-block;
-	clear: none;
-	width: 200px;
-	margin-right: 5px;
-	text-align: right;
-    float: left;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+  clear: none;
+  width: 200px;
+  margin-right: 5px;
+  text-align: right;
+  float: left;
 }
 
 .edit-field
 {
-    display: block;
-    margin-left: 130px;
+  display: block;
+  margin-left: 130px;
 }
 
 .edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
 {
-	font-size: 12px;
-	background-color: #c4c4c4;
-	clear: none;
+  font-size: 12px;
+  background-color: #c4c4c4;
+  clear: none;
 }
 
 .edit-control-small
 {
-	width: 75px;	
+  width: 75px;  
 }
 
 .edit-control-normal
 {
-	width: 150px;
+  width: 150px;
 }
 
 .edit-control-large
 {
-	width: 250px;
+  width: 250px;
 }
 
 .resume-container
 {
-	display: block;
-	margin-bottom: 10px;
+  display: block;
+  margin-bottom: 10px;
 }
 
 .resume-row
 {
-	display: block;
-	width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .resume-label
 {
-	font-size: 14px;
-	font-weight: bold;
-	display: inline-block;
-	clear: none;
-	width: 100px;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
+  clear: none;
+  width: 100px;
 }
 
 .resume-disp-col-1
 {
-	font-size: 14px;
-	display: inline-block;
-	clear: none;
-	width: 30%;
+  font-size: 14px;
+  display: inline-block;
+  clear: none;
+  width: 30%;
 }
 
 .resume-disp-col-2
 {
-	font-size: 14px;
-	display: block;
+  font-size: 14px;
+  display: block;
 }
 
 .resume-disp
 {
-	font-size: 14px;
-	display: block;
-	width: 100%;
+  font-size: 14px;
+  display: block;
+  width: 100%;
 }
 
 .resume-skill-type
 {
-	font-size: 14px;
-	font-weight: bold;
-	display: inline-block;
-	clear: none;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
+  clear: none;
 }
 
 .resume-skill-container
 {
-	margin-left: 150px;
-	font-size: 14px;
-	display: block;
+  margin-left: 150px;
+  font-size: 14px;
+  display: block;
 }
 
 .quote-control
 {
-	width: 100%;
-	text-align: center;
-	margin-bottom: 10px;
-	margin-top: 10px;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .ui-autocomplete
 {
-    background-color: #4985cc;
-    color: white;
-    height: 100px !important;
-    overflow-y: auto;
-    max-width: 250px !important;
-    padding-left: 0;
-    border: 1px solid black;
+  background-color: #4985cc;
+  color: white;
+  height: 100px !important;
+  overflow-y: auto;
+  max-width: 250px !important;
+  padding-left: 0;
+  border: 1px solid black;
 }
 
 .ui-autocomplete li
 {
-    list-style: none;
-    padding-left: 5px;
+  list-style: none;
+  padding-left: 5px;
 }
 
 .ui-datepicker
 {
-    background-color: #4985cc;
-    color: white;
-    border: 1px solid black;
-    font-size: 13px;
+  background-color: #4985cc;
+  color: white;
+  border: 1px solid black;
+  font-size: 13px;
 }
 
 .ui-datepicker-prev
 {
-    float: left;
-    font-size: 12px;
+  float: left;
+  font-size: 12px;
 }
 
 .ui-datepicker-next
 {
-    float: right;
-    font-size: 12px;
+  float: right;
+  font-size: 12px;
 }
 
 .ui-datepicker-title
 {
-    text-align: center;
+  text-align: center;
 }
 
 .ui-datepicker-title div
 {
-    font-size: 10px;
+  font-size: 10px;
 }
 
 .panel
 {
-    display: block;
-    width: 100%;
-    min-height: 25px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+  display: block;
+  width: 100%;
+  min-height: 25px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .panel-left
 {
-    display: block;
-    text-align: left;
-    vertical-align: top;
+  display: block;
+  text-align: left;
+  vertical-align: top;
 }
 
 .panel-right
 {
-    display: block;
-    text-align: right;
-    vertical-align: top;
+  display: block;
+  text-align: right;
+  vertical-align: top;
 }
 
 .panel-left-inline
 {
-    display: inline-block;
-    text-align: left;
-    vertical-align: top;
+  display: inline-block;
+  text-align: left;
+  vertical-align: top;
 }
 
 .panel-right-inline
 {
-    display: inline-block;
-    text-align: right;
-    vertical-align: top;
+  display: inline-block;
+  text-align: right;
+  vertical-align: top;
 }
 
 .panel-center
 {
-    display: block;
-    margin-right: 5px;
-    margin-left: 5px;
-    text-align: center;
+  display: block;
+  margin-right: 5px;
+  margin-left: 5px;
+  text-align: center;
 }
 
 .panel-block
 {
-    display: inline-block;
-    margin-right: 5px;
-    margin-left: 5px;
+  display: inline-block;
+  margin-right: 5px;
+  margin-left: 5px;
 }
 
 .panel-block span
 {
-    padding-right: 5px;
+  padding-right: 5px;
 }
 
 #modal-overlay
@@ -604,34 +604,43 @@ b
   display:none;
 }
 
+.form-messages
+{
+  padding-left: 130px;
+  list-style: none;
+  font-size: 12px;
+  color: red;
+}
+
 @media print
 {
-	.header
-	{
-		display: none !important;
-	}
+  .header
+  {
+    display: none !important;
+  }
 
-	.footer
-	{
-		display: none !important;
-	}
+  .footer
+  {
+    display: none !important;
+  }
 
-	.menu
-	{
-		display: none !important;
-	}
+  .menu
+  {
+    display: none !important;
+  }
 
-	body > div.panel, div.page > div.panel, div.content > div.panel, div.display-container > div.panel
-	{
-		display: none !important;
-	}
+  body > div.panel, div.page > div.panel, div.content > div.panel, div.display-container > div.panel
+  {
+    display: none !important;
+  }
 
-    div.quote-control
-    {
-        display: none !important;
-    }
+  div.quote-control
+  {
+    display: none !important;
+  }
 
-    #noty_top_layout_container {
-        display: none !important;
-    }
+  #noty_top_layout_container
+  {
+    display: none !important;
+  }
 }
