@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace PEngine.Core.Shared
+namespace PEngine.Core.Shared.Models
 {
   public class NewPasswordModel
   {

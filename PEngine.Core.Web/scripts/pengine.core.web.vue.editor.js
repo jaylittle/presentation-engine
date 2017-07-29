@@ -2,7 +2,7 @@ import pengineHelpers from "./pengine.core.web.helpers";
 
 export default {
   create() {
-    return new Vue({
+    let component = new Vue({
       el: "#pengine-editor",
       mounted() {
         this.$events.listen("edit", eventData => {
@@ -11,6 +11,13 @@ export default {
       },
       methods: {
         editRecord(type, guid, data) {
+          let myHash = `#edit/${type}`;
+          if (guid) {
+            myHash += `/${guid}`;
+          }
+          window.location.hash = myHash;
+          document.body.style.overflow = 'hidden';
+
           console.log("edit1", type, guid, data);
           let newRecord = this.initRecord(type, guid, data);
           if (this.isRecordGetable(newRecord) && newRecord.url)
@@ -118,6 +125,8 @@ export default {
             title: null,
             errors: []
           };
+          window.location.hash = '';
+          document.body.style.overflow = 'initial';
         },
         confirmDeleteRecord() {
           let confirmMessage = `Are you sure you want to delete this ${this.record.type} record?`;
@@ -145,9 +154,7 @@ export default {
             console.log('saving data', this.record.data);
             this.$http.put(this.record.url, this.record.data).then(response => {
               console.log('saved data', response);
-              this.record.data = response.body;
-              this.record.errors = [];
-              this.titleRecord(this.record);
+              window.location.reload();
             }, response => {
               console.log('save failed data', response);
               this.record.errors = response.body.logMessages ? response.body.logMessages : [ { type: "Error", text: "An HTTP error prevented the record from updating." } ];
@@ -168,5 +175,10 @@ export default {
         };
       }
     });
+    if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
+      var elements = window.location.hash.split('/');
+      component.$events.fire("edit", { type: elements[1], guid: (elements.length > 2 ? elements[2] : null) });
+    }
+    return component;
   }
 };

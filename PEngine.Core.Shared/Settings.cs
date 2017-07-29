@@ -83,7 +83,7 @@ namespace PEngine.Core.Shared
     // app_label_clippy_button,
     public string LabelClippyButton { get; set; } = "Help!";
     // app_pass_admin,
-    public string PasswordAdmin { get; set; } = string.Empty;
+    public virtual string PasswordAdmin { get; set; } = string.Empty;
     // app_label_forum,
     public string LabelForumButton { get; set; } = "Forums";
     // app_label_forum_login,
@@ -95,7 +95,7 @@ namespace PEngine.Core.Shared
     // app_label_forum_register
     public string LabelForumRegisterButton { get; set; } = "Register";
     public string ExternalBaseUrl { get; set; } = "http://localhost:5000/";
-    public Guid SecretKey { get; set; } = Guid.NewGuid();
+    public virtual Guid SecretKey { get; set; } = Guid.NewGuid();
     public string UserNameAdmin { get; set; } = "PEngineAdmin";
   }
 

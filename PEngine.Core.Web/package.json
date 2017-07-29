@@ -14,7 +14,6 @@
     "babel-loader": "^7.0.0",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.5.1",
-    "jquery": "^3.2.1",
     "uglifyjs": "^2.4.11",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "vue-events": "^3.0.1",
