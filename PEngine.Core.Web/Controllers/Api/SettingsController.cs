@@ -26,7 +26,7 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet]
-    public async Task<SettingsData> Get()
+    public SettingsData Get()
     {
       return new PEngineSettingsModel(_settingsProvider.Current);
     }

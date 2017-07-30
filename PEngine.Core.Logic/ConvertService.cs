@@ -547,9 +547,16 @@ namespace PEngine.Core.Logic
                 }
                 break;
               case "LINK":
-                var linkData = tagdata.Split(' ');
+                var linkData = tagdata.Split(' ').Where(ld => !string.IsNullOrEmpty(ld)).ToArray();
                 var url = linkData.First();
-                outputhtml.Append($"\n[{string.Join(" ", linkData.Skip(1))}]({url})\n");
+                if (linkData.Length > 1)
+                {
+                  outputhtml.Append($"\n[{string.Join(" ", linkData.Skip(1))}]({url})\n");
+                }
+                else
+                {
+                  outputhtml.Append($"\n{url}\n");
+                }
                 break;
               case "ICON":
                 outputhtml.Append($"\n![Image](images/icons/{tagdata}){{.post-icon}}\n");
