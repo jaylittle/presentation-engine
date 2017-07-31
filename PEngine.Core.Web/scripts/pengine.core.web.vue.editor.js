@@ -17,6 +17,7 @@ export default {
           }
           window.location.hash = myHash;
           document.body.style.overflow = 'hidden';
+          window.scrollTo(0, 0);
 
           console.log("edit1", type, guid, data);
           let newRecord = this.initRecord(type, guid, data);
@@ -52,7 +53,10 @@ export default {
             url: this.getRecordUrl(type),
             data: data ? data : {},
             title: null,
-            errors: errors
+            errors: errors,
+            state: {
+              editTarget: ""
+            }
           };
           this.titleRecord(newRecord);
           if (!data) {
@@ -123,7 +127,10 @@ export default {
             url: null,
             data: null,
             title: null,
-            errors: []
+            errors: [],
+            state: {
+              editTarget: ""
+            }
           };
           window.location.hash = '';
           document.body.style.overflow = 'initial';
@@ -143,6 +150,7 @@ export default {
             this.$http.delete(`${this.record.url}${this.record.guid}`).then(response => {
               console.log('deleted data', response);
               this.cancelRecord();
+              window.location.reload();
             }, response => {
               console.log('delete failed data', response);
               this.record.errors = response.body.logMessages ? response.body.logMessages : [ { type: "Error", text: "An HTTP error prevented the record from deleting." } ];
@@ -154,11 +162,61 @@ export default {
             console.log('saving data', this.record.data);
             this.$http.put(this.record.url, this.record.data).then(response => {
               console.log('saved data', response);
+              let newHash = `#edit/${this.record.type}`;
+              if (response.body.guid) {
+                newHash += `/${response.body.guid}`;
+              }
+              window.location.hash = newHash;
               window.location.reload();
             }, response => {
               console.log('save failed data', response);
               this.record.errors = response.body.logMessages ? response.body.logMessages : [ { type: "Error", text: "An HTTP error prevented the record from updating." } ];
             });
+          }
+        },
+        addTarget(type) {
+          var newTarget = {};
+          if (!this.record.data[type]) {
+            this.record.data[type] = [];
+          }
+          switch (type) {
+            case 'sections':
+              newTarget['name'] = 'New Section';
+              newTarget['data'] = 'New Section Data';
+              break;
+          }
+          this.record.data[type].push(newTarget);
+          this.record.state.editTarget = `${type}:${this.record.data[type].length - 1}`;
+        },
+        removeCurrentTarget() {
+          var info = this.currentEditTargetInfo;
+          if (info.set) {
+            if (!info.numeric) {
+              delete this.record.data[info.property][info.index]
+            }
+            else {
+              this.record.data[info.property].splice(info.index, 1);
+            }
+            this.record.state.editTarget = "";
+          }
+        },
+        moveCurrentTarget(offset) {
+          var info = this.currentEditTargetInfo;
+          if (info.set) {
+            if (info.numeric) {
+              var currentTarget = this.currentEditTarget;
+              var newIndex = info.index + offset;
+              //Remove item from existing position
+              this.record.data[info.property].splice(info.index, 1);
+              //Add item at new position
+              this.record.data[info.property].splice(newIndex, 0, currentTarget);
+              //Update sort order properties on sub items
+              for (var currentIndex in this.record.data[info.property]) {
+                this.record.data[info.property][currentIndex].sortOrder = currentIndex;
+              }
+
+              this.record.state.editTarget = `${info.property}:${newIndex}`;
+            }
           }
         }
       },
@@ -169,10 +227,65 @@ export default {
             guid: null,
             data: null,
             title: null,
-            errors: []
+            errors: [],
+            state: {
+              editTarget: ""
+            }
           },
           state: window.pengineState
         };
+      },
+      computed: {
+        currentEditTargetInfo() {
+          let info = { property: null, index: null, numeric: false, set: false };
+          if (typeof(this.record.state.editTarget) !== "undefined" && this.record.state.editTarget !== "") {
+            var targetElements = this.record.state.editTarget.split(":");
+            if (targetElements.length > 1) {
+              info.property = targetElements[0];
+              info.index = parseInt(targetElements[1]);
+              if (isNaN(info.index)) {
+                info.index = targetElements[1];
+              }
+              else {
+                info.numeric = true;
+              }
+              info.set = true;
+            }
+          }
+          return info;
+        },
+        currentEditTarget() {
+          var info = this.currentEditTargetInfo;
+          if (info.set && this.record.data[info.property] && this.record.data[info.property][info.index])
+          {
+            return this.record.data[info.property][info.index];
+          }
+          return {};
+        },
+        currentEditTargetPosition() {
+          var info = this.currentEditTargetInfo;
+          if (info.set) {
+            if (info.numeric && this.record.data[info.property] && this.record.data[info.property].length) {
+              if (info.index === 0) {
+                return "First";
+              }
+              else if (info.index === this.record.data[info.property].length - 1) {
+                return "Last";
+              }
+              else {
+                return "Between";
+              }
+            }
+            else {
+              return "Named";
+            }
+          }
+          return "NA";
+        },
+        currentEditTargetProperty() {
+          var info = this.currentEditTargetInfo;
+          return info.set ? info.property : "";
+        }
       }
     });
     if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
