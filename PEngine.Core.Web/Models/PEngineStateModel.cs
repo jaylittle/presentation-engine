@@ -167,9 +167,16 @@ namespace PEngine.Core.Web.Models
       PEngineUserType = "Anonymous";
       Theme = string.Empty;
       var themeList = Helpers.Rendering.ThemeList;
-      if (themeList.Any() && !themeList.Any(t => t.Equals(_settings.DefaultTheme, StringComparison.OrdinalIgnoreCase)))
+      if (themeList.Any())
       {
-        Theme = themeList.First();
+        if (!themeList.Any(t => t.Equals(_settings.DefaultTheme, StringComparison.OrdinalIgnoreCase)))
+        {
+          Theme = themeList.First();
+        }
+        else
+        {
+          Theme = _settings.DefaultTheme;
+        }
       }
       
       //Process Cookies

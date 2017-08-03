@@ -12,6 +12,18 @@ textarea
   width:95%;
 }
 
+.form-errors
+{
+  padding-left: 0;
+  list-style: none;
+}
+
+.form-errors li
+{
+  color: red;
+  font-weight: bold;
+}
+
 a:link 
 {
   color: #2b4873

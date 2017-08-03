@@ -96,7 +96,8 @@ namespace PEngine.Core.Web.Middleware
     {
       var userName = (string)context.Request.Form["username"] ?? string.Empty;
       var password = (string)context.Request.Form["password"] ?? string.Empty;
-      var redirectUrl = context.Request.Form.ContainsKey("redirectUrl") ? (string)context.Request.Form["redirectUrl"] : (string)null;
+      var successUrl = context.Request.Form.ContainsKey("successUrl") ? (string)context.Request.Form["successUrl"] : (string)null;
+      var failUrl = context.Request.Form.ContainsKey("failUrl") ? (string)context.Request.Form["failUrl"] : (string)null;
       var userId = string.Empty;
       var roleClaims = new List<string>();
       if (Settings.Current.UserNameAdmin.Equals(userName, StringComparison.OrdinalIgnoreCase) 
@@ -111,14 +112,15 @@ namespace PEngine.Core.Web.Middleware
       {
         identity = await GetIdentity(userId, userId, "PEngine", roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, userId, Settings.Current.TimeLimitAdminToken, redirectUrl);
+      await GenerateToken(context, identity, userId, Settings.Current.TimeLimitAdminToken, successUrl, failUrl);
     }
 
     private async Task ValidateForumUser(HttpContext context)
     {
       var userName = (string)context.Request.Form["username"] ?? string.Empty;
       var password = (string)context.Request.Form["password"] ?? string.Empty;
-      var redirectUrl = context.Request.Form.ContainsKey("redirectUrl") ? (string)context.Request.Form["redirectUrl"] : (string)null;
+      var successUrl = context.Request.Form.ContainsKey("successUrl") ? (string)context.Request.Form["successUrl"] : (string)null;
+      var failUrl = context.Request.Form.ContainsKey("failUrl") ? (string)context.Request.Form["failUrl"] : (string)null;
       var roleClaims = new List<string>();
 
       ClaimsIdentity identity = null;
@@ -139,16 +141,24 @@ namespace PEngine.Core.Web.Middleware
         }
         identity = await GetIdentity(forumUser.Guid.ToString(), userName, "Forum", roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, forumUser?.Guid.ToString(), Settings.Current.TimeLimitForumToken, redirectUrl);
+      await GenerateToken(context, identity, forumUser?.Guid.ToString(), Settings.Current.TimeLimitForumToken, successUrl, failUrl);
     }
 
-    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string userId, int expirationMinutes, string redirectUrl = null)
+    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string userId, int expirationMinutes, string successUrl = null, string failUrl = null)
     {
       if (identity == null)
       {
-        context.Response.StatusCode = 401;
-        await context.Response.WriteAsync("Invalid username or password.");
-        return;
+        if (string.IsNullOrWhiteSpace(failUrl))
+        {
+          context.Response.StatusCode = 401;
+          await context.Response.WriteAsync("Invalid username or password.");
+          return;
+        }
+        else
+        {
+          context.Response.Redirect($"{failUrl}?authFailed=true");
+          return;
+        }
       }
     
       var now = DateTime.UtcNow;
@@ -173,7 +183,7 @@ namespace PEngine.Core.Web.Middleware
 
       var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-      if (string.IsNullOrWhiteSpace(redirectUrl))
+      if (string.IsNullOrWhiteSpace(successUrl))
       {
         var response = new
         {
@@ -191,7 +201,7 @@ namespace PEngine.Core.Web.Middleware
         {
           Expires = DateTimeOffset.Now.AddMinutes(expirationMinutes)
         });
-        context.Response.Redirect(redirectUrl);
+        context.Response.Redirect(successUrl);
       }
     }
 

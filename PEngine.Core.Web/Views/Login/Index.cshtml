@@ -14,8 +14,15 @@
 </div>
 <div class="form-container">
   <form id="login" method="POST" action="@Model.RecordData.ActionUrl">
-    <input type="hidden" name="redirectUrl" value="@Model.RecordData.RedirectUrl" />
+    <input type="hidden" name="successUrl" value="@Model.RecordData.SuccessUrl" />
+    <input type="hidden" name="failUrl" value="@Model.RecordData.FailUrl" />
     <div class="form-container-center">
+      @if (Model.RecordData.AuthFailed)
+      {
+      <ul class="form-errors">
+        <li>Authentication Failed!</li>
+      </ul>
+      }
       <div class="edit-row">
         <div class="edit-label">User Name:</div>
         <div class="edit-field"><input type="text" id="login_id" name="userName" class="editnorm"/>

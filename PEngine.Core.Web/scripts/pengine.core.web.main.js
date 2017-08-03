@@ -13,4 +13,4 @@ pengineHelpers.assignEditorClickEvent(editorInstance, "pengine-button-newpost", 
 pengineHelpers.assignEditorClickEvent(editorInstance, "article_view_button_edit", "article");
 pengineHelpers.assignEditorClickEvent(editorInstance, "pengine-button-newarticle", "article");
 pengineHelpers.assignEditorClickEvent(editorInstance, "resume_view_button_edit", "resume");
-pengineHelpers.assignEditorClickEvent(editorInstance, "setting_view_button_edit", "settings");
+pengineHelpers.assignEditorClickEvent(editorInstance, "pengine-button-setting", "settings");

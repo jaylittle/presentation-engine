@@ -2,6 +2,112 @@ import pengineHelpers from "./pengine.core.web.helpers";
 
 export default {
   create() {
+    let editorHelpers = {
+      processLocationHash() {
+        if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
+          let elements = window.location.hash.split('/');
+          component.$events.fire("edit", { type: elements[1], guid: (elements.length > 2 ? elements[2] : null) });
+        }
+      },
+      updateLocationHash(type, guid) {
+        let myHash = '';
+        if (type) {
+          myHash = `#edit/${type}`;
+          if (guid) {
+            myHash += `/${guid}`;
+          }
+        }
+        window.location.hash = myHash;
+      },
+      getRecordDefaultData() {
+        return {
+          type: 'none',
+          guid: null,
+          data: null,
+          title: null,
+          errors: [],
+          state: {
+            editTarget: "",
+            newIndex: ""
+          }
+        };
+      },
+      getRecordUrl(type) {
+        switch (type)
+        {
+          case 'post':
+            return pengineHelpers.fixUrl('/api/posts/');
+            break;
+          case 'article':
+            return pengineHelpers.fixUrl('/api/articles/');
+            break;
+          case 'resume':
+            return pengineHelpers.fixUrl('/api/resume/');
+            break;
+          case 'settings':
+            return pengineHelpers.fixUrl('/api/settings/');
+            break;
+        }
+        return null;
+      },
+      getRecordTitle(newRecord) {
+        switch (newRecord.type)
+        {
+          case 'post':
+            if (newRecord.data && newRecord.guid) {
+              newRecord.title = `Editing Post "${newRecord.data.name}"`;
+            }
+            else {
+              newRecord.title = 'Adding New Post';
+            }
+            break;
+          case 'article':
+            if (newRecord.data && newRecord.guid) {
+              newRecord.title = `Editing Article "${newRecord.data.name}"`;
+            }
+            else {
+              newRecord.title = 'Adding New Article';
+            }
+            break;
+          case 'resume':
+            newRecord.title = 'Editing Resume';
+            break;
+          case 'settings':
+            newRecord.title = 'Editing Settings';
+            break;
+        }
+      },
+      initRecord(type, guid, data, errors) {
+        let newRecord = editorHelpers.getRecordDefaultData();
+        newRecord.type = type;
+        newRecord.guid = guid ? guid : null;
+        newRecord.url = editorHelpers.getRecordUrl(type);
+        newRecord.data = data ? data : {};
+        newRecord.errors = errors;
+        editorHelpers.getRecordTitle(newRecord);
+        if (!data) {
+          switch (newRecord.type)
+          {
+            case 'post':
+              newRecord.data.name = 'New Post';
+              break;
+            case 'article':
+              newRecord.data.name = 'New Article';
+              break;
+          }
+        }
+        switch (newRecord.type) {
+          case 'resume':
+            newRecord.state.editTarget = 'personals:0';
+            break;
+        }
+        return newRecord;
+      },
+      isRecordGetable(newRecord) {
+        return newRecord.guid || newRecord.type === 'resume' || newRecord.type === 'settings';
+      }
+    };
+
     let component = new Vue({
       el: "#pengine-editor",
       mounted() {
@@ -11,17 +117,12 @@ export default {
       },
       methods: {
         editRecord(type, guid, data) {
-          let myHash = `#edit/${type}`;
-          if (guid) {
-            myHash += `/${guid}`;
-          }
-          window.location.hash = myHash;
+          editorHelpers.updateLocationHash(type, guid);
           document.body.style.overflow = 'hidden';
           window.scrollTo(0, 0);
 
-          console.log("edit1", type, guid, data);
-          let newRecord = this.initRecord(type, guid, data);
-          if (this.isRecordGetable(newRecord) && newRecord.url)
+          let newRecord = editorHelpers.initRecord(type, guid, data);
+          if (editorHelpers.isRecordGetable(newRecord) && newRecord.url)
           {
             new Promise(
               (resolve, reject) => {  
@@ -38,7 +139,7 @@ export default {
                 });
               }
             ).then(() => {
-              this.titleRecord(newRecord);
+              editorHelpers.getRecordTitle(newRecord);
               this.record = newRecord;
             });
           }
@@ -46,98 +147,9 @@ export default {
             this.record = newRecord;
           }
         },
-        initRecord(type, guid, data, errors) {
-          let newRecord = {
-            type: type,
-            guid: guid ? guid : null,
-            url: this.getRecordUrl(type),
-            data: data ? data : {},
-            title: null,
-            errors: errors,
-            state: {
-              editTarget: "",
-              newIndex: ""
-            }
-          };
-          this.titleRecord(newRecord);
-          if (!data) {
-            switch (newRecord.type)
-            {
-              case 'post':
-                newRecord.data.name = 'New Post';
-                break;
-              case 'article':
-                newRecord.data.name = 'New Article';
-                break;
-            }
-          }
-          if (newRecord.type === 'resume') {
-            newRecord.state.editTarget = 'personals:0';
-          }
-          return newRecord;
-        },
-        titleRecord(newRecord) {
-          switch (newRecord.type)
-          {
-            case 'post':
-              if (newRecord.data && newRecord.guid) {
-                newRecord.title = `Editing Post "${newRecord.data.name}"`;
-              }
-              else {
-                newRecord.title = 'Adding New Post';
-              }
-              break;
-            case 'article':
-              if (newRecord.data && newRecord.guid) {
-                newRecord.title = `Editing Article "${newRecord.data.name}"`;
-              }
-              else {
-                newRecord.title = 'Adding New Article';
-              }
-              break;
-            case 'resume':
-              newRecord.title = 'Editing Resume';
-              break;
-            case 'settings':
-              newRecord.title = 'Editing Settings';
-              break;
-          }
-        },
-        getRecordUrl(type) {
-          switch (type)
-          {
-            case 'post':
-              return pengineHelpers.fixUrl('/api/posts/');
-              break;
-            case 'article':
-              return pengineHelpers.fixUrl('/api/articles/');
-              break;
-            case 'resume':
-              return pengineHelpers.fixUrl('/api/resume/');
-              break;
-            case 'settings':
-              return pengineHelpers.fixUrl('/api/settings/');
-              break;
-          }
-          return null;
-        },
-        isRecordGetable(newRecord) {
-          return newRecord.guid || newRecord.type === 'resume' || newRecord.type === 'settings';
-        },
         cancelRecord() {
-          this.record = {
-            type: 'none',
-            guid: null,
-            url: null,
-            data: null,
-            title: null,
-            errors: [],
-            state: {
-              editTarget: "",
-              newIndex: ""
-            }
-          };
-          window.location.hash = '';
+          this.record = editorHelpers.getRecordDefaultData();
+          editorHelpers.updateLocationHash();
           document.body.style.overflow = 'initial';
         },
         confirmDeleteRecord() {
@@ -151,37 +163,27 @@ export default {
         },
         deleteRecord() {
           if (this.record.url && this.record.guid) {
-            console.log('deleting data', this.record.data);
             this.$http.delete(`${this.record.url}${this.record.guid}`).then(response => {
-              console.log('deleted data', response);
               this.cancelRecord();
               window.location.reload();
             }, response => {
-              console.log('delete failed data', response);
               this.record.errors = response.body.logMessages ? response.body.logMessages : [ { type: "Error", text: "An HTTP error prevented the record from deleting." } ];
             });
           }
         },
         saveRecord() {
           if (this.record.url) {
-            console.log('saving data', this.record.data);
             this.$http.put(this.record.url, this.record.data).then(response => {
-              console.log('saved data', response);
-              let newHash = `#edit/${this.record.type}`;
-              if (response.body.guid) {
-                newHash += `/${response.body.guid}`;
-              }
-              window.location.hash = newHash;
+              editorHelpers.updateLocationHash(this.record.type, response.body.guid);
               window.location.reload();
             }, response => {
-              console.log('save failed data', response);
               this.record.errors = response.body.logMessages ? response.body.logMessages : [ { type: "Error", text: "An HTTP error prevented the record from updating." } ];
             });
           }
         },
         addTarget(type, property) {
           if (!property) {
-            var newTarget = {};
+            let newTarget = {};
             if (!this.record.data[type]) {
               this.record.data[type] = [];
             }
@@ -189,8 +191,6 @@ export default {
               case 'sections':
                 newTarget['name'] = 'New Section';
                 newTarget['data'] = 'New Section Data';
-                break;
-              case 'skills':
                 break;
             }
             this.record.data[type].push(newTarget);
@@ -206,7 +206,7 @@ export default {
           }
         },
         removeCurrentTarget() {
-          var info = this.currentEditTargetInfo;
+          let info = this.currentEditTargetInfo;
           if (info.set) {
             if (!info.numeric) {
               delete this.record.data[info.property][info.index]
@@ -219,17 +219,17 @@ export default {
           }
         },
         moveCurrentTarget(offset) {
-          var info = this.currentEditTargetInfo;
+          let info = this.currentEditTargetInfo;
           if (info.set) {
             if (info.numeric) {
-              var currentTarget = this.currentEditTarget;
-              var newIndex = info.index + offset;
+              let currentTarget = this.currentEditTarget;
+              let newIndex = info.index + offset;
               //Remove item from existing position
               this.record.data[info.property].splice(info.index, 1);
               //Add item at new position
               this.record.data[info.property].splice(newIndex, 0, currentTarget);
               //Update sort order properties on sub items
-              for (var currentIndex in this.record.data[info.property]) {
+              for (let currentIndex in this.record.data[info.property]) {
                 this.record.data[info.property][currentIndex].sortOrder = currentIndex;
               }
 
@@ -238,12 +238,12 @@ export default {
           }
         },
         renameIndex(subPropertyName) {
-          var info = this.currentEditTargetInfo;
+          let info = this.currentEditTargetInfo;
           if (!info.numeric && info.index != this.record.state.newIndex) {
             this.record.data[info.property][this.record.state.newIndex] = this.record.data[info.property][info.index];
             delete this.record.data[info.property][info.index];
             if (subPropertyName) {
-              for (var subRecord in this.record.data[info.property][this.record.state.newIndex]) {
+              for (let subRecord in this.record.data[info.property][this.record.state.newIndex]) {
                 this.record.data[info.property][this.record.state.newIndex][subRecord][subPropertyName] = this.record.state.newIndex;
               }
             }
@@ -252,9 +252,9 @@ export default {
           }
         },
         addIndexSubRecord() {
-          var info = this.currentEditTargetInfo;
+          let info = this.currentEditTargetInfo;
           if (this.record.data[info.property][info.index]) {
-            var newSubRecord = {};
+            let newSubRecord = {};
             switch (info.property) {
               case 'skills':
                 newSubRecord['type'] = info.index;
@@ -264,7 +264,7 @@ export default {
           }
         },
         removeIndexSubRecord(subRecordIndex) {
-          var info = this.currentEditTargetInfo;
+          let info = this.currentEditTargetInfo;
           if (this.record.data[info.property][info.index] && this.record.data[info.property][info.index].length && this.record.data[info.property][info.index].length > subRecordIndex) {
             this.record.data[info.property][info.index].splice(subRecordIndex, 1);
           }
@@ -272,17 +272,7 @@ export default {
       },
       data() {
         return {
-          record: {
-            type: 'none',
-            guid: null,
-            data: null,
-            title: null,
-            errors: [],
-            state: {
-              editTarget: "",
-              newIndex: ""
-            }
-          },
+          record: editorHelpers.getRecordDefaultData(),
           state: window.pengineState
         };
       },
@@ -290,7 +280,7 @@ export default {
         currentEditTargetInfo() {
           let info = { property: null, index: null, numeric: false, set: false };
           if (typeof(this.record.state.editTarget) !== "undefined" && this.record.state.editTarget !== "") {
-            var targetElements = this.record.state.editTarget.split(":");
+            let targetElements = this.record.state.editTarget.split(":");
             if (targetElements.length > 1) {
               info.property = targetElements[0];
               info.index = parseInt(targetElements[1]);
@@ -307,7 +297,7 @@ export default {
           return info;
         },
         currentEditTarget() {
-          var info = this.currentEditTargetInfo;
+          let info = this.currentEditTargetInfo;
           if (info.set && this.record.data[info.property])
           {
             let data = this.record.data[info.property][info.index];
@@ -325,7 +315,7 @@ export default {
           return {};
         },
         currentEditTargetPosition() {
-          var info = this.currentEditTargetInfo;
+          let info = this.currentEditTargetInfo;
           if (info.set) {
             if (info.numeric && this.record.data[info.property] && this.record.data[info.property].length) {
               if (info.index === 0) {
@@ -345,15 +335,11 @@ export default {
           return "NA";
         },
         currentEditTargetProperty() {
-          var info = this.currentEditTargetInfo;
-          return info.set ? info.property : "";
+          return this.currentEditTargetInfo.set ? this.currentEditTargetInfo.property : "";
         }
       }
     });
-    if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
-      var elements = window.location.hash.split('/');
-      component.$events.fire("edit", { type: elements[1], guid: (elements.length > 2 ? elements[2] : null) });
-    }
+    editorHelpers.processLocationHash();
     return component;
   }
 };

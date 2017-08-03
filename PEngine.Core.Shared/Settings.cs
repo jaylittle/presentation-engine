@@ -61,7 +61,7 @@ namespace PEngine.Core.Shared
     // app_clippy_shortcut_keycode,
     public int ClippyShortcutKeyCode { get; set; } = 190;
     // app_clippy_shortcut_keycount,
-    public int ClippyShortcutKeyCont { get; set; } = 3;
+    public int ClippyShortcutKeyCount { get; set; } = 3;
     // app_label_home,
     public string LabelHomeButton { get; set; } = "Home";
     // app_label_theme,
@@ -89,7 +89,7 @@ namespace PEngine.Core.Shared
     // app_label_forum_login,
     public string LabelForumLoginButton { get; set; } = "Sign In";
     // app_label_forum_logout,
-    public string LabelForumLogoutButton { get; set; } = "Sign Out";
+    public string LabelForumLogoffButton { get; set; } = "Sign Out";
     // app_recpage_forum_threads,
     public int PerPageForumThreads { get; set; } = 25;
     // app_label_forum_register

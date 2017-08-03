@@ -25,25 +25,28 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("in")]
-    public IActionResult Index()
+    public IActionResult Index([FromQuery]bool authFailed)
     {
-      return Index("PEngine");
+      return Index("PEngine", authFailed);
     }
 
     [HttpGet("in/{userType}")]
-    public IActionResult Index(string userType)
+    public IActionResult Index(string userType, [FromQuery]bool authFailed)
     {
       var model = new PEngineGenericRecordModel<PEngineLoginModel>(HttpContext, true);
       model.RecordData = new PEngineLoginModel();
+      model.RecordData.AuthFailed = authFailed;
       switch (userType.ToLower().Trim())
       {
         case "pengine":
           model.RecordData.ActionUrl = "/token/pengine";
-          model.RecordData.RedirectUrl = "/";
+          model.RecordData.SuccessUrl = "/";
+          model.RecordData.FailUrl = "/log/in/pengine";
           break;
         case "forum":
           model.RecordData.ActionUrl = "/token/forum";
-          model.RecordData.RedirectUrl = "/forum";
+          model.RecordData.SuccessUrl = "/forum";
+          model.RecordData.FailUrl = "/log/in/forum";
           break;
       }
       return View(model);

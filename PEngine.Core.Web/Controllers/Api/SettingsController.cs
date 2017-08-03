@@ -32,6 +32,7 @@ namespace PEngine.Core.Web.Controllers.Api
     }
 
     [Authorize(Roles = "PEngineAdmin")]
+    [HttpPut]
     [HttpPost]
     public IActionResult UpdateSettings([FromBody]PEngineSettingsModel settings)
     {

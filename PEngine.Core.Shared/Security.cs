@@ -18,7 +18,7 @@ namespace PEngine.Core.Shared
 
     public static bool EncryptAndCompare(string plainText, string targetHash)
     {
-      if (!string.IsNullOrEmpty(targetHash) && !string.IsNullOrEmpty(plainText))
+      if (!string.IsNullOrEmpty(targetHash) || !string.IsNullOrEmpty(plainText))
       {
         var sha256 = System.Security.Cryptography.SHA256.Create();
         var computedHash = BytesToHex(sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(plainText)));

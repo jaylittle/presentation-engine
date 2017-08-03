@@ -52,7 +52,7 @@
       </div>
     </div>
     <div class="form-container-overflow">
-      <div class="article_edit_page article_edit_article_data" v-if="currentEditTargetProperty === ''">
+      <div v-if="currentEditTargetProperty === ''">
         <input type="hidden" id="article_edit_guid" name="Guid" value="{{guid}}" />
         <div class="edit-row">
           <div class="edit-label">Title:</div>
@@ -92,26 +92,24 @@
           <input type="checkbox" v-model="record.data.hideDropDownFlag" />
         </div>
       </div>
-      <div id="article_edit_section_container" v-if="currentEditTargetProperty === 'sections'">
-        <div class="article_edit_page article_edit_section_data">
-          <div class="edit-row">
-            <div class="edit-label">Name:</div>
-            <div class="edit-field">
-              <input type="text" class="edit-control-large" v-model="currentEditTarget.name"  />
-            </div>
+      <div v-if="currentEditTargetProperty === 'sections'">
+        <div class="edit-row">
+          <div class="edit-label">Name:</div>
+          <div class="edit-field">
+            <input type="text" class="edit-control-large" v-model="currentEditTarget.name"  />
           </div>
-          <div class="edit-row">
-            <div class="edit-label">Order:</div>
-            <div class="edit-field">
-              <button type="button" v-if="currentEditTargetPosition !== 'First'" v-on:click="moveCurrentTarget(-1)">Up</button>
-              <span v-if="currentEditTargetPosition === 'Between'">&nbsp;</span>
-              <button type="button" v-if="currentEditTargetPosition !== 'Last'" v-on:click="moveCurrentTarget(1)">Down</button>
-            </div>
+        </div>
+        <div class="edit-row">
+          <div class="edit-label">Order:</div>
+          <div class="edit-field">
+            <button type="button" v-if="currentEditTargetPosition !== 'First'" v-on:click="moveCurrentTarget(-1)">Up</button>
+            <span v-if="currentEditTargetPosition === 'Between'">&nbsp;</span>
+            <button type="button" v-if="currentEditTargetPosition !== 'Last'" v-on:click="moveCurrentTarget(1)">Down</button>
           </div>
-          <div class="edit-row">
-            <div class="edit-label">Content:</div>
-            <div class="edit-field"><textarea rows="20" class="edit-control" v-model="currentEditTarget.data"></textarea></div>
-          </div>
+        </div>
+        <div class="edit-row">
+          <div class="edit-label">Content:</div>
+          <div class="edit-field"><textarea rows="20" class="edit-control" v-model="currentEditTarget.data"></textarea></div>
         </div>
       </div>
     </div>
@@ -128,21 +126,21 @@
           <option v-for="(workHistory, index) in record.data.workHistories" v-bind:value="'workHistories:' + index">[Work History] {{workHistory.employer}} - {{workHistory.jobTitle}}</option>
         </select>
         &nbsp;
-        <button type="button" id="section_edit_button_delete" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'skills'">Delete Skill Type</button>
+        <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'skills'">Delete Skill Type</button>
         <span v-if="currentEditTargetProperty === 'skills'">&nbsp;</span>
-        <button type="button" id="section_edit_button_delete" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'educations'">Delete Education</button>
+        <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'educations'">Delete Education</button>
         <span v-if="currentEditTargetProperty === 'educations'">&nbsp;</span>
-        <button type="button" id="section_edit_button_delete" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'workHistories'">Delete Work History</button>
+        <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'workHistories'">Delete Work History</button>
         <span v-if="currentEditTargetProperty === 'workHistories'">&nbsp;</span>
-        <button type="button" id="section_edit_button_add" v-on:click="addTarget('skills', 'New Skill Type')">Add Skill Type</button>
+        <button type="button" v-on:click="addTarget('skills', 'New Skill Type')">Add Skill Type</button>
         &nbsp;
-        <button type="button" id="section_edit_button_add" v-on:click="addTarget('educations')">Add Education</button>
+        <button type="button" v-on:click="addTarget('educations')">Add Education</button>
         &nbsp;
-        <button type="button" id="section_edit_button_add" v-on:click="addTarget('workHistories')">Add Work History</button>
+        <button type="button" v-on:click="addTarget('workHistories')">Add Work History</button>
       </div>
     </div>
     <div class="form-container-overflow">
-      <div class="resume_edit_page resume_edit_personal_data" v-if="currentEditTargetProperty === 'personals'">
+      <div v-if="currentEditTargetProperty === 'personals'">
         <div class="edit-row">
           <div class="edit-label">Full Name:</div>
           <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.fullName" /></div>
@@ -184,17 +182,17 @@
           <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.zip" /></div>
         </div>
       </div>
-      <div class="resume_edit_page resume_edit_objective_data" v-if="currentEditTargetProperty === 'objectives'">
+      <div v-if="currentEditTargetProperty === 'objectives'">
         <div class="edit-row">
           <div class="edit-label">Content:</div>
           <div class="edit-field"><textarea class="edit-control" rows="10" v-model="currentEditTarget.data"></textarea></div>
         </div>
       </div>
-      <div class="resume_edit_page resume_edit_skilltype_data" v-if="currentEditTargetProperty === 'skills'">
+      <div v-if="currentEditTargetProperty === 'skills'">
         <div class="edit-row">
           <div class="edit-label">Type:</div>
           <div class="edit-field">
-            <input type="text" class="edit-control-large sectionidfield" v-model="record.state.newIndex" />
+            <input type="text" class="edit-control-large" v-model="record.state.newIndex" />
             &nbsp;
             <button type="button" v-on:click="renameIndex('type')">Rename Type</button>
             &nbsp;
@@ -210,7 +208,7 @@
           </div>
         </div>
       </div>
-      <div class="resume_edit_page resume_edit_education_data" v-if="currentEditTargetProperty === 'educations'">
+      <div v-if="currentEditTargetProperty === 'educations'">
         <div class="edit-row">
           <div class="edit-label">Institute:</div>
           <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.institute" /></div>
@@ -221,7 +219,7 @@
         </div>
         <div class="edit-row">
           <div class="edit-label">Program:</div>
-          <div class="edit-field"><input type="text" class="edit-control-large sectionidfield" v-model="currentEditTarget.program" /></div>
+          <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.program" /></div>
         </div>
         <div class="edit-row">
           <div class="edit-label">Started:</div>
@@ -232,7 +230,7 @@
           <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.completed" /></div>
         </div>
       </div>
-      <div class="resume_edit_page resume_edit_workhistory_data" v-if="currentEditTargetProperty === 'workHistories'">
+      <div v-if="currentEditTargetProperty === 'workHistories'">
         <div class="edit-row">
           <div class="edit-label">Employer:</div>
           <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.employer" /></div>
@@ -260,12 +258,173 @@
       </div>
     </div>
   </div>
+  <div v-if="record.type && record.type == 'settings'">
+    <div class="form-container-overflow">
+      <div class="edit-row">
+        <div class="edit-label-large">Owner Name / Email:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-large" v-model="record.data.ownerName" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Owner Email:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-large" v-model="record.data.ownerEmail" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Default Title / Theme:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.defaultTitle" />
+          <select class="editctl" v-model="record.data.defaultTheme">
+            <option v-for="theme in state.themeList" v-bind:value="theme">{{theme}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Front Page Logo:</div>
+        <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.logoFrontPage" /></div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Admin Login / Logoff Labels:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.labelAdminLoginButton" />
+          <input type="text" class="edit-control-normal" v-model="record.data.labelAdminLogoffButton" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Home / Theme Labels:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.labelHomeButton" />
+          <input type="text" class="edit-control-normal" v-model="record.data.labelThemeButton" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Quote / Clippy Button Labels:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.labelQuoteButton" />
+          <input type="text" class="edit-control-normal" v-model="record.data.labelClippyButton" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Resume Label:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.labelResumeButton" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Forum / Registration Label:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.labelForumButton" />
+          <input type="text" class="edit-control-normal" v-model="record.data.labelForumRegisterButton" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Forum Login / Logoff Labels:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.labelForumLoginButton" />
+          <input type="text" class="edit-control-normal" v-model="record.data.labelForumLogoffButton" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Clippy Shortcut KeyCode:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.clippyShortcutKeyCode" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Clippy Shortcut Key Count:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.clippyShortcutKeyCount" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Clippy Quotes Mode:</div>
+        <div class="edit-field">
+          <span><input type="checkbox" v-model="record.data.disableClippySmartAss" /></span>
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Clippy Random Chance (0 - 100)</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.clippyRandomChance" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Arc. Posts Per Page:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.perPagePostArchived" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Front Page Posts:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.perPagePostFront" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">RSS Post Count</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.perPageRSS" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Search Results Per Page</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.perPageSearchResults" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Forum Threads / Posts Per Page:</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.perPageForumThreads" />
+          <input type="text" class="edit-control-normal" v-model="record.data.perPageForumPosts" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Forum Login / Edit Timeout</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.timeLimitForumToken" />
+          <input type="text" class="edit-control-normal" v-model="record.data.timeLimitForumPostEdit" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Admin Session Timeout</div>
+        <div class="edit-field">
+          <input type="text" class="edit-control-normal" v-model="record.data.timeLimitAdminToken" />
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Disabled Features</div>
+        <div class="edit-field">
+          <span><input type="checkbox" v-model="record.data.disableQuotes" /> Quote</span>
+          <span><input type="checkbox" v-model="record.data.disableRSS" /> Rss</span>
+          <span><input type="checkbox" v-model="record.data.disableResume" /> Resume</span>
+          <span><input type="checkbox" v-model="record.data.disableThemeSelection" /> Theme</span>
+          <span><input type="checkbox" v-model="record.data.disableSearch" /> Search</span>
+          <span><input type="checkbox" v-model="record.data.disableClippyButton" /> Clippy Button</span>
+          <span><input type="checkbox" v-model="record.data.disableClippyShortcut" /> Clippy Shortcut</span>
+          <span><input type="checkbox" v-model="record.data.disableForum" /> Forum</span>
+        </div>
+      </div>
+      <div class="edit-row">
+        <div class="edit-label-large">Admin Pass</div>
+        <div class="edit-field">
+          <span>
+            <input type="password" class="edit-control-normal" v-model="record.data.newPasswordAdmin.value" />
+            <input type="checkbox" v-model="record.data.newPasswordAdmin.reset" />
+            Blank
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="edit-row">
     <div class="edit-label">&nbsp;</div>
     <div class="edit-field">
-      <button type="button" id="post_edit_button_save" v-on:click="saveRecord">Save</button>
-      <button type="button" id="post_edit_button_delete" v-on:click="confirmDeleteRecord" v-if="record.data && record.data.guid">Delete</button>
-      <button type="button" id="post_edit_button_close" v-on:click="cancelRecord">Cancel</button>
+      <button type="button" v-on:click="saveRecord">Save</button>
+      <button type="button" v-on:click="confirmDeleteRecord" v-if="record.data && record.data.guid">Delete</button>
+      <button type="button" v-on:click="cancelRecord">Cancel</button>
     </div>
   </div>
 </div>
