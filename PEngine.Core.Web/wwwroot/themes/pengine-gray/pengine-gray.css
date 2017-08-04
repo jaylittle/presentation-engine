@@ -333,65 +333,16 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .dialog-container
 {
-  top: 0px;
-  left: 0px;
-  text-align: left;
-  width: 80%;
-  margin-left: 10%;
-  margin-right: auto;
-  display: block;
-  margin-bottom: 10px;
+  width: 100%;
+  height: 100%;
   background-color: #201F25;
-  position: absolute;
-  z-index: 1000;
-  height: auto;
   padding: 5px;
   border: 2px solid #131218;
-  min-width: 600px;
-}
-
-.dialog-container-uploader
-{
-  top: 0px;
-  left: 0px;
-  text-align: left;
-  width: 80%;
-  margin-left: 10%;
-  margin-right: auto;
-  display: block;
-  margin-bottom: 10px;
-  background-color: #201F25;
-  position: absolute;
-  z-index: 1000;
-  max-height: 500px;
-  padding: 5px;
-  border: 2px solid #131218;
-  min-width: 600px;
 }
 
 .list-container-overflow, .form-container-overflow
 {
   overflow: auto;
-}
-
-
-.dialog-container-login
-{
-  top: 0px;
-  left: 0px;
-  text-align: left;
-  width: 80%;
-  margin-left: 10%;
-  margin-right: auto;
-  display: block;
-  margin-bottom: 10px;
-  background-color: #201F25;
-  position: absolute;
-  z-index: 1000;
-  height: auto;
-  padding: 5px;
-  border: 2px solid #131218;
-  min-width: 600px;
 }
 
 .form-container-center
@@ -707,6 +658,32 @@ body > div.panel
   padding-right: 5px;
 }
 
+@media (min-width: 750px)
+{
+  .dialog-container
+  {
+    width: 80%;
+    margin-left: 10%;
+    margin-right: auto;
+    margin-bottom: 10px;
+    height: auto;
+    min-width: 600px;
+  }
+
+  #modal-overlay
+  {
+    display: block;
+  }
+}
+
+@media (min-height: 500px)
+{
+  .form-container-overflow
+  {
+    max-height: 425px;
+  }
+}
+
 @media screen and (min-width: 1200px)
 {
   .menu
@@ -800,25 +777,6 @@ body > div.panel
   }
 
   .dialog-container
-  {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    border: none;
-    min-width: 0px;
-  }
-
-  .dialog-container-uploader
-  {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    border: none;
-    min-width: 0px;
-    /* max-height: 500px; */
-  }
-
-  .dialog-container-login
   {
     width: 100%;
     margin: 0;
@@ -932,25 +890,6 @@ body > div.panel
   }
 
   .dialog-container
-  {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    border: none;
-    min-width: 0px;
-  }
-
-  .dialog-container-uploader
-  {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    border: none;
-    min-width: 0px;
-    /* max-height: 500px; */
-  }
-
-  .dialog-container-login
   {
     width: 100%;
     margin: 0;
