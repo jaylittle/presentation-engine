@@ -584,6 +584,22 @@ b
   color: red;
 }
 
+@media (min-height: 500px) and (min-width: 750px)
+{
+  .form-container-overflow
+  {
+    max-height: 425px;
+  }
+}
+
+@media (min-height: 700px) and (min-width: 750px)
+{
+  .form-container-overflow
+  {
+    max-height: 75vh;
+  }
+}
+
 @media (min-width: 750px)
 {
   .dialog-container
@@ -595,18 +611,10 @@ b
     height: auto;
     min-width: 600px;
   }
-  
+
   #modal-overlay
   {
     display: block;
-  }
-}  
-
-@media (min-height: 500px)
-{
-  .form-container-overflow
-  {
-    max-height: 425px;
   }
 }
 
