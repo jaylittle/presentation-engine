@@ -1,3 +1,10 @@
+<div class="panel-left">
+  <form id="theme" method="GET" action="/ui/theme">
+    <select name="selection" onchange="this.form.submit()" v-model="state.theme">
+      <option v-for="theme in state.themeList" v-bind:value="theme">{{theme}}</option>
+    </select>
+  </form>
+</div>
 <div class="panel-right">
   <div class="panel-block">
     <button type="button" class="pengine-button-newpost">New Post</button>

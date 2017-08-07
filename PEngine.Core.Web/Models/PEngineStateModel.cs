@@ -115,6 +115,20 @@ namespace PEngine.Core.Web.Models
       }
     }
 
+    public string QuoteText { get; set; }
+
+    public PEngineStateModel(SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false)
+    {
+      _settings = settings;
+      _context = context;
+      HideSubTitle = hideSubTitle;
+      IsForum = isForum;
+      CurrentSection = null;
+      CurrentPage = null;
+
+      Init();
+    }
+
     public PEngineStateModel(SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;

@@ -16,19 +16,20 @@ namespace PEngine.Core.Web.Controllers
 {
   public class HomeController : Controller
   {
-    private IPostDal _postDal;
     private IPostService _postService;
+    private IQuoteService _quoteService;
 
-    public HomeController(IPostDal postDal, IPostService postService)
+    public HomeController(IPostService postService, IQuoteService quoteService)
     {
-      _postDal = postDal;
       _postService = postService;
+      _quoteService = quoteService;
     }
 
     public async Task<IActionResult> Index()
     {
       var model = new PEngineGenericListModel<PostModel>(HttpContext, true);
       model.ListData = PagingUtils.Paginate(1, model.Settings.PerPagePostFront, "CreatedUTC", false, await _postService.ListPosts(model.State.HasAdmin));
+      model.State.QuoteText = (await _quoteService.GetRandom()).Data;
       return View(model);
     }
   }

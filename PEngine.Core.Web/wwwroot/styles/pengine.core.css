@@ -512,30 +512,30 @@ b
 
 .panel-left
 {
-  display: block;
   text-align: left;
   vertical-align: top;
 }
 
 .panel-right
 {
-  display: block;
   text-align: right;
   vertical-align: top;
 }
 
-.panel-left-inline
+body > .panel > .panel-left, body > .panel > .panel-right
 {
   display: inline-block;
-  text-align: left;
-  vertical-align: top;
+  width: calc(50vw - 1.25em);
 }
 
-.panel-right-inline
+body > .panel > .panel-left
 {
-  display: inline-block;
-  text-align: right;
-  vertical-align: top;
+  margin-left: .25em;
+}
+
+body > .panel > .panel-right
+{
+  margin-right: .25em;
 }
 
 .panel-center
@@ -568,6 +568,11 @@ b
   background-color: black;
   height: 100%;
   width: 100%;
+  display: none;
+}
+
+#quote-text
+{
   display: none;
 }
 

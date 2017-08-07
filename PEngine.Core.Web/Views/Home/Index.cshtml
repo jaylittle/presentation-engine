@@ -14,7 +14,10 @@
   @if (!Model.Settings.DisableQuotes)
   {
     <div class="quote-control">
-        <!-- TODO Add Quote Text Here -->
+        <a id="pengine-button-quote-show" href="#" onclick="showQuote()">@Model.Settings.LabelQuoteButton</a>
+        <span id="quote-text">
+          @Model.State.QuoteText
+        </span>
     </div>
   }
 </div>
@@ -46,3 +49,11 @@
     @Html.ActionLink("[Archived Posts]", "list", "post")
   </div>
 </div>
+@section scripts {
+<script type="text/javascript">
+  function showQuote() {
+    document.getElementById('pengine-button-quote-show').style.display = 'none';
+    document.getElementById('quote-text').style.display = 'inline';
+  }
+</script>
+}

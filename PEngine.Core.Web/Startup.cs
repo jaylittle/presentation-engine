@@ -64,6 +64,7 @@ namespace PEngine.Core.Web
       services.AddScoped<IArticleService, ArticleService>();
       services.AddScoped<IResumeService, ResumeService>();
       services.AddScoped<IForumService, ForumService>();
+      services.AddScoped<IQuoteService, QuoteService>();
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 

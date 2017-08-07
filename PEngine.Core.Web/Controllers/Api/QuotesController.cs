@@ -17,36 +17,23 @@ namespace PEngine.Core.Web.Controllers.Api
   [Route("api/[controller]")]
   public class QuotesController : Controller
   {
-    private IQuoteDal _quoteDal;
-    public QuotesController(IQuoteDal quoteDal)
+    private IQuoteService _quoteService;
+    public QuotesController(IQuoteService quoteService)
     {
-      _quoteDal = quoteDal;
-      _quotes = _quoteDal.ListQuotes().Result.ToList();
-    }
-
-    private static List<QuoteModel> _quotes;
-    private async Task<List<QuoteModel>> GetQuotes()
-    {
-      if (_quotes == null)
-      {
-        _quotes = (await _quoteDal.ListQuotes()).ToList();
-      }
-      return _quotes;
+      _quoteService = quoteService;
     }
 
     [HttpGet]
     public async Task<IEnumerable<QuoteModel>> Get([FromQuery]PagingModel paging = null)
     {
-      var quotes = await GetQuotes();
+      var quotes = await _quoteService.Get();
       return PagingUtils.Paginate(ref paging, quotes);
     }
 
     [HttpGet("random")]
     public async Task<string> GetRandom()
     {
-      var rnd = new Random();
-      var quotes= await GetQuotes();
-      return quotes[rnd.Next(0, quotes.Count - 1)].Data;
+      return (await _quoteService.GetRandom()).Data;
     }
   }
 }
