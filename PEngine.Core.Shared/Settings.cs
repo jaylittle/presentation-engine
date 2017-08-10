@@ -95,6 +95,7 @@ namespace PEngine.Core.Shared
     // app_label_forum_register
     public string LabelForumRegisterButton { get; set; } = "Register";
     public string ExternalBaseUrl { get; set; } = "http://localhost:5000/";
+    public string TwitterCardSite { get; set; } = string.Empty;
     public virtual Guid SecretKey { get; set; } = Guid.NewGuid();
     public string UserNameAdmin { get; set; } = "PEngineAdmin";
   }

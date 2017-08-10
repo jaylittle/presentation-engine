@@ -16,7 +16,7 @@
     <div class="quote-control">
         <a id="pengine-button-quote-show" href="#" onclick="showQuote()">@Model.Settings.LabelQuoteButton</a>
         <span id="quote-text">
-          @Model.State.QuoteText
+          @Html.Raw(Model.State.QuoteText)
         </span>
     </div>
   }

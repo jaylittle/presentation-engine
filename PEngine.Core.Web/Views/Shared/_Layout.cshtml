@@ -19,6 +19,14 @@
     <meta property="og:image" content="@Model.State.SummaryImage" />
     <meta property="og:site_name" content="@Model.State.SummarySite" />
     <meta property="og:description" content="@Model.State.SummaryDescription" />
+      if (!string.IsNullOrWhiteSpace(Model.Settings.TwitterCardSite))
+      {
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@Model.Settings.TwitterCardSite" />
+    <meta name="twitter:title" content="@Model.State.SummaryTitle" />
+    <meta name="twitter:description" content="@Model.State.SummaryDescription" />
+    <meta name="twitter:image" content="@Model.State.SummaryImage" />
+      }
     }
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile("styles/pengine.core.css")"> 
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile((string)Model.State.ThemePath)"> 
