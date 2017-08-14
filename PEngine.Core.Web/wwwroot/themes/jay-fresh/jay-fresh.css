@@ -14,17 +14,16 @@ textarea
 
 blockquote, div.quoted-text
 {
-  border-style: double;
-  border-width: 2px;
-  border-color: #edede7;
-  background-color: #222126;
-  color: #201f25;
-  font-size: 14px;
-  min-width: 35%;
-  max-width: 70%;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 2px;
+  border-style: none;
+	background-color: #edede7;
+	color: #201f25;
+	font-size: 14px;
+	min-width: 35%;
+	max-width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 5px;
+	border-radius: 3px;
 }
 
 a:link 
@@ -75,7 +74,7 @@ b
   width: 100%;
   min-width: 810px;
   min-height: 59px;
-  background-color: #131218;
+  background-color: white;
   background-image: url(./btopmid.png);
   background-repeat: repeat-x;
 }

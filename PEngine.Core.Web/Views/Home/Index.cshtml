@@ -15,9 +15,9 @@
   {
     <div class="quote-control">
         <a id="pengine-button-quote-show" href="#" onclick="showQuote()">@Model.Settings.LabelQuoteButton</a>
-        <span id="quote-text">
+        <div id="quote-text" class="quoted-text">
           @Html.Raw(Model.State.QuoteText)
-        </span>
+        </div>
     </div>
   }
 </div>
@@ -53,7 +53,7 @@
 <script type="text/javascript">
   function showQuote() {
     document.getElementById('pengine-button-quote-show').style.display = 'none';
-    document.getElementById('quote-text').style.display = 'inline';
+    document.getElementById('quote-text').style.display = 'block';
   }
 </script>
 }

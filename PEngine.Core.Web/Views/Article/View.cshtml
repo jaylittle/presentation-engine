@@ -14,18 +14,17 @@
 </span>
 <div class="panel">
   <div class="panel-right">
-    @if (Model.State.HasAdmin)
-    {
-      <a href="#" class="list-button article_view_button_edit" data-guid="@article.Guid">[Edit]</a>
-    }
     @if (!article.HideDropDownFlag && article.Sections.Count > 1)
     {
-      @Html.Raw("&nbsp;")
       @if (Model.State.Links.ContainsKey("Previous"))
       {
         <a href="@Model.State.Links["Previous"]" class="list-button article_view_button_prev">[Prev]</a>
-        @Html.Raw("&nbsp;")
       }
+      else
+      {
+        <a href="#" class="list-button article_view_button_prev" style="visibility: hidden">[Prev]</a>
+      }
+      @Html.Raw("&nbsp;")
       <form method="POST">
         <select name="newSectionUniqueName" class="post_view_dropdown_section" onchange="this.form.submit()">
         @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
@@ -45,6 +44,10 @@
         <a href="#" class="list-button article_view_button_next" style="visibility: hidden">[Next]</a>
       }
       @Html.Raw("&nbsp;")
+      @if (Model.State.HasAdmin)
+      {
+        <a href="#" class="list-button article_view_button_edit" data-guid="@article.Guid">[Edit]</a>
+      }
     }
   </div>
 </div>

@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Data.Providers;
@@ -19,6 +18,8 @@ using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Shared;
 using PEngine.Core.Web.Middleware;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace PEngine.Core.Web
 {
@@ -66,41 +67,10 @@ namespace PEngine.Core.Web
       services.AddScoped<IForumService, ForumService>();
       services.AddScoped<IQuoteService, QuoteService>();
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-    }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
-    {
-      _httpContextAccessor = svp.GetRequiredService<IHttpContextAccessor>();
-      ServiceProvider = svp;
-      ContentRootPath = env.ContentRootPath;
-      
-      loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-      loggerFactory.AddDebug();
-
-      PEngine.Core.Shared.Settings.Startup(env.ContentRootPath);
-
-      //TODO Generate secret key on first run of app and store in PEngine settings
-      var secretKey = PEngine.Core.Shared.Settings.Current.SecretKey.ToString();
-      var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-
-      // Add JWT generation
-      var providerOptions = new TokenProviderOptions
-      {
-        Audience = PEngine.Core.Shared.Settings.Current.DefaultTitle,
-        Issuer = PEngine.Core.Shared.Settings.Current.DefaultTitle,
-        SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
-      };
-      app.UseMiddleware<TokenProviderMiddleware>(Options.Create(providerOptions));
-
-      // Add Support for JWTs passed in cookies
-      var cookieOptions = new TokenCookieOptions
-      {
-        CookieName = Models.PEngineStateModel.COOKIE_ACCESS_TOKEN
-      };
-      app.UseMiddleware<TokenCookieMiddleware>(Options.Create(cookieOptions));
 
       // Add JWT authorization
+      var secretKey = PEngine.Core.Shared.Settings.Current.SecretKey.ToString();
+      var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
       var tokenValidationParameters = new TokenValidationParameters
       {
         // The signing key must match!
@@ -122,12 +92,43 @@ namespace PEngine.Core.Web
         ClockSkew = TimeSpan.Zero
       };
 
-      app.UseJwtBearerAuthentication(new JwtBearerOptions
+      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(o => {
+          o.TokenValidationParameters = tokenValidationParameters;
+        });
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+    {
+      _httpContextAccessor = svp.GetRequiredService<IHttpContextAccessor>();
+      ServiceProvider = svp;
+      ContentRootPath = env.ContentRootPath;
+      
+      loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+      loggerFactory.AddDebug();
+
+      PEngine.Core.Shared.Settings.Startup(env.ContentRootPath);
+
+      // Add JWT generation
+      var secretKey = PEngine.Core.Shared.Settings.Current.SecretKey.ToString();
+      var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+      var providerOptions = new TokenProviderOptions
       {
-        AutomaticAuthenticate = true,
-        AutomaticChallenge = true,
-        TokenValidationParameters = tokenValidationParameters
-      });
+        Audience = PEngine.Core.Shared.Settings.Current.DefaultTitle,
+        Issuer = PEngine.Core.Shared.Settings.Current.DefaultTitle,
+        SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
+      };
+      app.UseMiddleware<TokenProviderMiddleware>(Options.Create(providerOptions));
+
+      // Add Support for JWTs passed in cookies
+      var cookieOptions = new TokenCookieOptions
+      {
+        CookieName = Models.PEngineStateModel.COOKIE_ACCESS_TOKEN
+      };
+      app.UseMiddleware<TokenCookieMiddleware>(Options.Create(cookieOptions));
+
+      app.UseAuthentication();
 
       app.UseMvc(m => {
         m.MapRoute(
