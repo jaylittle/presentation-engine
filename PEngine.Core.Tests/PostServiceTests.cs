@@ -43,10 +43,10 @@ namespace PEngine.Core.Tests
     public void PostService_List_NonVisibleRecordsAreFiltered()
     {
       //Verify that non-admin users only get visible records
-      Assert.Equal(1, postService.ListPosts(false).Result.Count());
+      Assert.Single(postService.ListPosts(false).Result);
 
       //Verify that dmin users get all the records
-      Assert.Equal(2, postService.ListPosts(true).Result.Count());
+      Assert.True(postService.ListPosts(true).Result.Count() == 2);
     }
 
     [Fact]
