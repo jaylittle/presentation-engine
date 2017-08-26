@@ -263,12 +263,21 @@ namespace PEngine.Core.Web.Middleware
 
     private void AddJwtCookie(HttpContext context, string encodedJwt, int expirationMinutes)
     {
-      context.Response.Cookies.Append(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, encodedJwt, new CookieOptions()
+      var cookieOptions = new CookieOptions()
       {
         Expires = DateTimeOffset.Now.AddMinutes(expirationMinutes),
         HttpOnly = true,
         Secure = context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase)
-      });
+      };
+      if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
+      {
+        cookieOptions.Domain = Settings.Current.CookieDomain;
+      }
+      if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
+      {
+        cookieOptions.Path = Settings.Current.CookiePath;
+      }
+      context.Response.Cookies.Append(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, encodedJwt, cookieOptions);
     }
 
     private Task<ClaimsIdentity> GetIdentity(string userId, string userName, string userType, string[] roleClaims)

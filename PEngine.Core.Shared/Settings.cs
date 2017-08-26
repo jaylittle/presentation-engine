@@ -98,6 +98,8 @@ namespace PEngine.Core.Shared
     public string TwitterCardSite { get; set; } = string.Empty;
     public virtual Guid SecretKey { get; set; } = Guid.NewGuid();
     public string UserNameAdmin { get; set; } = "PEngineAdmin";
+    public string CookieDomain { get; set; } = string.Empty;
+    public string CookiePath { get; set; } = string.Empty;
   }
 
   public class SettingsProvider : ISettingsProvider

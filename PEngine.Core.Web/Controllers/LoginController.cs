@@ -14,6 +14,7 @@ using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Web.Constraints;
 using PEngine.Core.Web.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace PEngine.Core.Web.Controllers
 {
@@ -55,7 +56,16 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("out")]
     public void Logout()
     {
-      this.Response.Cookies.Delete(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN);
+      var cookieOptions = new CookieOptions();
+      if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
+      {
+        cookieOptions.Domain = Settings.Current.CookieDomain;
+      }
+      if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
+      {
+        cookieOptions.Path = Settings.Current.CookiePath;
+      }
+      this.Response.Cookies.Delete(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, cookieOptions);
       this.Response.Redirect("/");
     }
   }
