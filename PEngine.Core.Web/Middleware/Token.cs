@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -52,6 +53,26 @@ namespace PEngine.Core.Web.Middleware
       }
 
       await _next.Invoke(context);
+    }
+  }
+
+  public class TokenReplayCache : ITokenReplayCache
+  {
+    public static TokenReplayCache Instance = new TokenReplayCache();
+    private ConcurrentDictionary<string, DateTime> _tokens = new ConcurrentDictionary<string, DateTime>();
+    public bool TryAdd(string securityToken, DateTime expiresOn)
+    {
+      return true;
+    }
+
+    public bool TryFind(string securityToken)
+    {
+      return _tokens.ContainsKey(securityToken);
+    }
+
+    public void Expire(string securityToken)
+    {
+      while (!_tokens.ContainsKey(securityToken) && !_tokens.TryAdd(securityToken, DateTime.UtcNow.AddMinutes(-1))) { }
     }
   }
 
@@ -110,31 +131,36 @@ namespace PEngine.Core.Web.Middleware
 
     private async Task RefreshToken(HttpContext context)
     {
+      bool isTokenValid = false;
       if (context.Request?.HttpContext?.User != null && context.Request.HttpContext.User.Identity.IsAuthenticated)
       {
         string userName = context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserName"))?.Value;
         string userType = context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserType"))?.Value;;
-        if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(userType))
+        string token = context.Request.Headers.FirstOrDefault(h => h.Key.Equals("Authorization"))
+          .Value.FirstOrDefault()?.Replace("Bearer ", string.Empty);
+
+        if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(userType) 
+          && !string.IsNullOrWhiteSpace(token))
         {
+          TokenReplayCache.Instance.Expire(token);
+
           switch (userType)
           {
             case "PEngine":
+              isTokenValid = true;
               await ValidatePEngineUser(context, userName, null, null, null, true);
               break;
             case "Forum":
+              isTokenValid = true;
               await ValidateForumUser(context, userName, null, null, null, true);
-              break;
-            default:
-              context.Response.StatusCode = 401;
-              await context.Response.WriteAsync("Invalid token - unable to refresh");
               break;
           }
         }
-        else
-        {
-          context.Response.StatusCode = 401;
-          await context.Response.WriteAsync("Invalid token - unable to refresh");
-        }
+      }
+      if (!isTokenValid)
+      {
+        context.Response.StatusCode = 401;
+        await context.Response.WriteAsync("Invalid token - unable to refresh");
       }
     }
 

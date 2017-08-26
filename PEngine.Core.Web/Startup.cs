@@ -89,7 +89,10 @@ namespace PEngine.Core.Web
         ValidateLifetime = true,
     
         // If you want to allow a certain amount of clock drift, set that here:
-        ClockSkew = TimeSpan.Zero
+        ClockSkew = TimeSpan.Zero,
+
+        // Attempt to prevent token replay attacks
+        TokenReplayCache = TokenReplayCache.Instance
       };
 
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
