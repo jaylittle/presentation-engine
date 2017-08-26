@@ -14,3 +14,27 @@ pengineHelpers.assignEditorClickEvent(editorInstance, "article_view_button_edit"
 pengineHelpers.assignEditorClickEvent(editorInstance, "pengine-button-newarticle", "article");
 pengineHelpers.assignEditorClickEvent(editorInstance, "resume_view_button_edit", "resume");
 pengineHelpers.assignEditorClickEvent(editorInstance, "pengine-button-setting", "settings");
+
+/* Setup Automatic Token Refresh */
+setupAutoTokenRefresh();
+
+function setupAutoTokenRefresh()
+{
+  if (window.pengineState.tokenExpiresMilliseconds > 90000)
+  {
+    setTimeout(refreshToken, window.pengineState.tokenExpiresMilliseconds - 90000);
+  }
+  else
+  {
+    refreshToken();
+  }
+}
+
+function refreshToken()
+{
+  Vue.http.get(pengineHelpers.fixUrl('/token/refresh')).then(response => {
+    window.pengineState.tokenExpires = response.body.expires;
+    window.pengineState.tokenExpiresMilliseconds = response.body.expiresInMilliseconds;
+    setupAutoTokenRefresh();
+  });
+}

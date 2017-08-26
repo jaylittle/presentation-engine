@@ -38,9 +38,9 @@ namespace PEngine.Core.Web.Models
 
     public PEngineFolderModel(string webFolderPath, bool populateChildren = true)
     {
-      var relativePath = webFolderPath.Replace('/', Path.DirectorySeparatorChar).TrimStart('/');
+      var relativePath = webFolderPath.TrimStart('.').TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
       var fullFolderPath = $"{Startup.ContentRootPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}wwwroot{Path.DirectorySeparatorChar}{relativePath}";
-      if (System.IO.File.Exists(fullFolderPath))
+      if (System.IO.Directory.Exists(fullFolderPath))
       {
         Init(new DirectoryInfo(fullFolderPath), populateChildren);
       }

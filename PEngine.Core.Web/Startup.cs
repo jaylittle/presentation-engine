@@ -110,6 +110,15 @@ namespace PEngine.Core.Web
 
       PEngine.Core.Shared.Settings.Startup(env.ContentRootPath);
 
+      // Add Support for JWTs passed in cookies
+      var cookieOptions = new TokenCookieOptions
+      {
+        CookieName = Models.PEngineStateModel.COOKIE_ACCESS_TOKEN
+      };
+      app.UseMiddleware<TokenCookieMiddleware>(Options.Create(cookieOptions));
+
+      app.UseAuthentication();
+
       // Add JWT generation
       var secretKey = PEngine.Core.Shared.Settings.Current.SecretKey.ToString();
       var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
@@ -120,15 +129,6 @@ namespace PEngine.Core.Web
         SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
       };
       app.UseMiddleware<TokenProviderMiddleware>(Options.Create(providerOptions));
-
-      // Add Support for JWTs passed in cookies
-      var cookieOptions = new TokenCookieOptions
-      {
-        CookieName = Models.PEngineStateModel.COOKIE_ACCESS_TOKEN
-      };
-      app.UseMiddleware<TokenCookieMiddleware>(Options.Create(cookieOptions));
-
-      app.UseAuthentication();
 
       app.UseMvc(m => {
         m.MapRoute(

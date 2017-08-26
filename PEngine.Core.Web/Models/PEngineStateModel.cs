@@ -51,6 +51,8 @@ namespace PEngine.Core.Web.Models
     public bool HasForumAdmin { get; set; }
     public string PEngineUserName { get; set; }
     public string PEngineUserType { get; set; }
+    public DateTime? TokenExpires { get; set; }
+    public long? TokenExpiresMilliseconds { get; set; }
     public string CurrentSection { get; set; }
     public int? CurrentPage { get; set; }
     public bool IsForum { get; set; }
@@ -210,6 +212,9 @@ namespace PEngine.Core.Web.Models
         HasForumAdmin = _context.Request.HttpContext.User.IsInRole("ForumAdmin");
         PEngineUserName = _context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserName"))?.Value;
         PEngineUserType = _context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserType"))?.Value;
+        var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        TokenExpires = epoch.AddSeconds(double.Parse(_context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("exp"))?.Value));
+        TokenExpiresMilliseconds = (long)TokenExpires.Value.Subtract(DateTime.UtcNow).TotalMilliseconds;
       }
 
       //Process Record

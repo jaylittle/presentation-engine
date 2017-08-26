@@ -21,6 +21,7 @@ namespace PEngine.Core.Web.Middleware
   {
     public string PEnginePath { get; set; } = "/token/pengine";
     public string ForumPath { get; set; } = "/token/forum";
+    public string RefreshPath { get; set; } = "/token/refresh";
     public string Issuer { get; set; }
     public string Audience { get; set; }
     public SigningCredentials SigningCredentials { get; set; }
@@ -71,7 +72,8 @@ namespace PEngine.Core.Web.Middleware
     {
       // If the request path doesn't match, skip
       if (!context.Request.Path.Equals(_options.PEnginePath, StringComparison.OrdinalIgnoreCase)
-        && !context.Request.Path.Equals(_options.ForumPath, StringComparison.OrdinalIgnoreCase))
+        && !context.Request.Path.Equals(_options.ForumPath, StringComparison.OrdinalIgnoreCase)
+        && !context.Request.Path.Equals(_options.RefreshPath, StringComparison.OrdinalIgnoreCase))
       {
         return _next(context);
       }
@@ -87,6 +89,11 @@ namespace PEngine.Core.Web.Middleware
           return ValidateForumUser(context);
         }
       }
+      if (context.Request.Method.Equals("GET") 
+        && context.Request.Path.Equals(_options.RefreshPath, StringComparison.OrdinalIgnoreCase))
+      {
+        return RefreshToken(context);
+      }
       
       context.Response.StatusCode = 400;
       return context.Response.WriteAsync("Bad request.");
@@ -98,10 +105,45 @@ namespace PEngine.Core.Web.Middleware
       var password = (string)context.Request.Form["password"] ?? string.Empty;
       var successUrl = context.Request.Form.ContainsKey("successUrl") ? (string)context.Request.Form["successUrl"] : (string)null;
       var failUrl = context.Request.Form.ContainsKey("failUrl") ? (string)context.Request.Form["failUrl"] : (string)null;
+      await ValidatePEngineUser(context, userName, password, successUrl, failUrl, false);
+    }
+
+    private async Task RefreshToken(HttpContext context)
+    {
+      if (context.Request?.HttpContext?.User != null && context.Request.HttpContext.User.Identity.IsAuthenticated)
+      {
+        string userName = context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserName"))?.Value;
+        string userType = context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserType"))?.Value;;
+        if (!string.IsNullOrWhiteSpace(userName) && !string.IsNullOrWhiteSpace(userType))
+        {
+          switch (userType)
+          {
+            case "PEngine":
+              await ValidatePEngineUser(context, userName, null, null, null, true);
+              break;
+            case "Forum":
+              await ValidateForumUser(context, userName, null, null, null, true);
+              break;
+            default:
+              context.Response.StatusCode = 401;
+              await context.Response.WriteAsync("Invalid token - unable to refresh");
+              break;
+          }
+        }
+        else
+        {
+          context.Response.StatusCode = 401;
+          await context.Response.WriteAsync("Invalid token - unable to refresh");
+        }
+      }
+    }
+
+    private async Task ValidatePEngineUser(HttpContext context, string userName, string password, string successUrl, string failUrl, bool refreshFlag)
+    {
       var userId = string.Empty;
       var roleClaims = new List<string>();
       if (Settings.Current.UserNameAdmin.Equals(userName, StringComparison.OrdinalIgnoreCase) 
-        && Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin))
+        && (refreshFlag || Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin)))
       {
         roleClaims.Add("PEngineAdmin");
         userId = Settings.Current.UserNameAdmin;
@@ -112,7 +154,7 @@ namespace PEngine.Core.Web.Middleware
       {
         identity = await GetIdentity(userId, userId, "PEngine", roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, userId, Settings.Current.TimeLimitAdminToken, successUrl, failUrl);
+      await GenerateToken(context, identity, userId, Settings.Current.TimeLimitAdminToken, successUrl, failUrl, refreshFlag);
     }
 
     private async Task ValidateForumUser(HttpContext context)
@@ -121,11 +163,15 @@ namespace PEngine.Core.Web.Middleware
       var password = (string)context.Request.Form["password"] ?? string.Empty;
       var successUrl = context.Request.Form.ContainsKey("successUrl") ? (string)context.Request.Form["successUrl"] : (string)null;
       var failUrl = context.Request.Form.ContainsKey("failUrl") ? (string)context.Request.Form["failUrl"] : (string)null;
-      var roleClaims = new List<string>();
+      await ValidateForumUser(context, userName, password, successUrl, failUrl, false);
+    }
 
+    private async Task ValidateForumUser(HttpContext context, string userName, string password, string successUrl, string failUrl, bool refreshFlag)
+    {
+      var roleClaims = new List<string>();
       ClaimsIdentity identity = null;
       var forumUser = await _forumDal.GetForumUserById(null, userName);
-      if (forumUser != null && Security.EncryptAndCompare(password, forumUser.Password))
+      if (forumUser != null && (refreshFlag || Security.EncryptAndCompare(password, forumUser.Password)))
       {
         if (!forumUser.BanFlag)
         {
@@ -141,10 +187,10 @@ namespace PEngine.Core.Web.Middleware
         }
         identity = await GetIdentity(forumUser.Guid.ToString(), userName, "Forum", roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, forumUser?.Guid.ToString(), Settings.Current.TimeLimitForumToken, successUrl, failUrl);
+      await GenerateToken(context, identity, forumUser?.Guid.ToString(), Settings.Current.TimeLimitForumToken, successUrl, failUrl, refreshFlag);
     }
 
-    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string userId, int expirationMinutes, string successUrl = null, string failUrl = null)
+    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string userId, int expirationMinutes, string successUrl = null, string failUrl = null, bool refreshFlag = false)
     {
       if (identity == null)
       {
@@ -162,6 +208,7 @@ namespace PEngine.Core.Web.Middleware
       }
     
       var now = DateTime.UtcNow;
+      var expires = DateTime.UtcNow.AddMinutes(expirationMinutes);
   
       // Specifically add the jti (random nonce), iat (issued timestamp), and sub (subject/user) claims.
       // You can add other claims here, if you want:
@@ -178,17 +225,24 @@ namespace PEngine.Core.Web.Middleware
         audience: _options.Audience,
         claims: claims.Union(identity.Claims),
         notBefore: now,
-        expires: now.AddMinutes(expirationMinutes),
+        expires: expires,
         signingCredentials: _options.SigningCredentials);
 
       var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
       if (string.IsNullOrWhiteSpace(successUrl))
       {
+        if (HasJwtCookie(context))
+        {
+          AddJwtCookie(context, encodedJwt, expirationMinutes);
+        }
+
         var response = new
         {
           acessToken = encodedJwt,
-          expiresIn = (int)expirationMinutes * 60
+          expires = (DateTime)expires,
+          expiresIn = (int)expirationMinutes * 60,
+          expiresInMilliseconds = (long)expirationMinutes * 60 * 1000
         };
   
         // Serialize and return the response
@@ -197,12 +251,24 @@ namespace PEngine.Core.Web.Middleware
       }
       else
       {
-        context.Response.Cookies.Append(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, encodedJwt, new CookieOptions()
-        {
-          Expires = DateTimeOffset.Now.AddMinutes(expirationMinutes)
-        });
+        AddJwtCookie(context, encodedJwt, expirationMinutes);
         context.Response.Redirect(successUrl);
       }
+    }
+
+    private bool HasJwtCookie(HttpContext context)
+    {
+      return context.Request.Cookies.Any(c => c.Key.Equals(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private void AddJwtCookie(HttpContext context, string encodedJwt, int expirationMinutes)
+    {
+      context.Response.Cookies.Append(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, encodedJwt, new CookieOptions()
+      {
+        Expires = DateTimeOffset.Now.AddMinutes(expirationMinutes),
+        HttpOnly = true,
+        Secure = context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase)
+      });
     }
 
     private Task<ClaimsIdentity> GetIdentity(string userId, string userName, string userType, string[] roleClaims)

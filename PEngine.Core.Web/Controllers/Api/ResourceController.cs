@@ -149,9 +149,111 @@ namespace PEngine.Core.Web.Controllers.Api
       return this.BadRequest();
     }
 
+    [Authorize(Roles = "PEngineAdmin")]
+    [HttpPost("copyTo/{*folderPath}")]
+    public IActionResult CopyToFolder(string folderPath, [FromBody]PEngineResourceSelectionModel selections)
+    {
+      return CopyMoveResource(folderPath, selections, false);
+    }
+
+    [Authorize(Roles = "PEngineAdmin")]
+    [HttpPost("moveTo/{*folderPath}")]
+    public IActionResult MoveToFolder(string folderPath, [FromBody]PEngineResourceSelectionModel selections)
+    {
+      return CopyMoveResource(folderPath, selections, true);
+    }
+
+    private IActionResult CopyMoveResource(string targetFolderPath, PEngineResourceSelectionModel selections, bool moveFlag)
+    {
+      if (!IsRestrictedPath(targetFolderPath))
+      {
+        var targetFolder = new PEngineFolderModel(targetFolderPath);
+        if (targetFolder.Valid && selections != null)
+        {
+          bool valid = false;
+          if (selections.FilePaths != null && selections.FilePaths.Any())
+          {
+            foreach (var filePath in selections.FilePaths)
+            {
+              if (!IsRestrictedPath(filePath))
+              {
+                var file = new PEngineFileModel(filePath);
+                var targetFullPath = $"{targetFolder.FullPath}{System.IO.Path.DirectorySeparatorChar}{file.Name}";
+                if (file.Valid && !moveFlag)
+                {
+                  System.IO.File.Copy(file.FullPath, targetFullPath);
+                  valid = true;
+                }
+                if (file.Valid && moveFlag)
+                {
+                  System.IO.File.Move(file.FullPath, targetFullPath);
+                  valid = true;
+                }
+              }
+            }
+          }
+          if (selections.FolderPaths != null && selections.FolderPaths.Any())
+          {
+            foreach (var folderPath in selections.FolderPaths)
+            {
+              if (!IsRestrictedPath(folderPath))
+              {
+                var folder = new PEngineFolderModel(folderPath);
+                var targetFullPath = $"{targetFolder.FullPath}{System.IO.Path.DirectorySeparatorChar}{folder.Name}";
+                if (folder.Valid && !moveFlag)
+                {
+                  CopyFolder(folder.FullPath, targetFullPath);
+                  valid = true;
+                }
+                if (folder.Valid && moveFlag)
+                {
+                  System.IO.Directory.Move(folder.FullPath, targetFullPath);
+                  valid = true;
+                }
+              }
+            }
+          }
+          if (valid)
+          {
+            return Get(targetFolderPath);
+          }
+        }
+      }
+      return this.BadRequest();
+    }
+
+    static public void CopyFolder(string sourceFolder, string destFolder)
+    {
+      if (!Directory.Exists(destFolder))
+      {
+        Directory.CreateDirectory(destFolder);
+      }
+
+      string[] files = Directory.GetFiles(sourceFolder);
+      foreach (string file in files)
+      {
+        string name = Path.GetFileName(file);
+        string dest = Path.Combine(destFolder, name);
+        System.IO.File.Copy(file, dest);
+      }
+
+      string[] folders = Directory.GetDirectories(sourceFolder);
+      foreach (string folder in folders)
+      {
+        string name = Path.GetFileName(folder);
+        string dest = Path.Combine(destFolder, name);
+        CopyFolder(folder, dest);
+      }
+    }
+
     private bool IsRestrictedPath(string path)
     {
-      return path.Contains("..") || RESTRICTED_PATHS.Any(rp => path.StartsWith($"{rp}{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase));
+      if (path != string.Empty)
+      {
+        path = path.TrimStart('.').TrimStart('/');
+        return path.Contains("..") || RESTRICTED_PATHS.Any(rp => path.StartsWith($"{rp}{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase));
+      }
+      return false;
     }
   }
 }
