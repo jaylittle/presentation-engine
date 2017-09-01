@@ -38,6 +38,7 @@ namespace PEngine.Core.Web.Controllers.Api
         var folder = new PEngineFolderModel(folderPath);
         if (folder.Valid)
         {
+          folder.Folders = folder.Folders.Where(f => !IsRestrictedPath(f.RelativePath)).ToList();
           return this.Ok(folder);
         }
       }
@@ -251,7 +252,7 @@ namespace PEngine.Core.Web.Controllers.Api
       if (path != string.Empty)
       {
         path = path.TrimStart('.').TrimStart('/');
-        return path.Contains("..") || RESTRICTED_PATHS.Any(rp => path.StartsWith($"{rp}{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase));
+        return path.Contains("..") || RESTRICTED_PATHS.Any(rp => path.StartsWith($"{rp}", StringComparison.OrdinalIgnoreCase));
       }
       return false;
     }

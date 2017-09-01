@@ -3,17 +3,20 @@ Vue.use(VueResource);
 Vue.use(VueEvents);
 import peHeader from "./pengine.core.web.vue.header";
 import peEditor from "./pengine.core.web.vue.editor";
+import peUploader from "./pengine.core.web.vue.uploader";
 
 let editorInstance = peEditor.create();
 let headerInstance = peHeader.create();
+let uploaderInstance = peUploader.create();
 
 /* Bind Events to the DOM */
-pengineHelpers.assignEditorClickEvent(editorInstance, "post_view_button_edit", "post");
-pengineHelpers.assignEditorClickEvent(editorInstance, "pengine-button-newpost", "post");
-pengineHelpers.assignEditorClickEvent(editorInstance, "article_view_button_edit", "article");
-pengineHelpers.assignEditorClickEvent(editorInstance, "pengine-button-newarticle", "article");
-pengineHelpers.assignEditorClickEvent(editorInstance, "resume_view_button_edit", "resume");
-pengineHelpers.assignEditorClickEvent(editorInstance, "pengine-button-setting", "settings");
+pengineHelpers.assignComponentClickEvent(editorInstance, "post_view_button_edit", "post");
+pengineHelpers.assignComponentClickEvent(editorInstance, "pengine-button-newpost", "post");
+pengineHelpers.assignComponentClickEvent(editorInstance, "article_view_button_edit", "article");
+pengineHelpers.assignComponentClickEvent(editorInstance, "pengine-button-newarticle", "article");
+pengineHelpers.assignComponentClickEvent(editorInstance, "resume_view_button_edit", "resume");
+pengineHelpers.assignComponentClickEvent(editorInstance, "pengine-button-setting", "settings");
+pengineHelpers.assignComponentClickEvent(uploaderInstance, "pengine-button-uploader", "settings", "show");
 
 /* Setup Automatic Token Refresh */
 setupAutoTokenRefresh();

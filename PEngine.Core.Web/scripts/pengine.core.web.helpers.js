@@ -9,11 +9,12 @@ module.exports = {
     }
     return currentUrl;
   },
-  assignEditorClickEvent(editorInstance, className, typeName) {
+  assignComponentClickEvent(editorInstance, className, typeName, eventName) {
+    eventName = eventName || "edit";
     var targets = document.getElementsByClassName(className);
     for (var idx = 0; idx < targets.length; idx++) {
       targets[idx].addEventListener("click", (e) => {
-        editorInstance.$events.fire("edit", { type: typeName, guid: e.target.getAttribute("data-guid") });
+        editorInstance.$events.fire(eventName, { type: typeName, guid: e.target.getAttribute("data-guid") });
         e.preventDefault();
       });
     }

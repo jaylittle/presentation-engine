@@ -1,0 +1,67 @@
+<div class="dialog-container" v-if="visible">
+  <span class="form-header-text">
+    <span>Uploader</span>
+    <span v-for="breadcrumb in breadcrumbs">
+      &nbsp;:&nbsp;
+      <a href="#" v-on:click="navigate(breadcrumb)">{{ breadcrumb.title }}</a>
+    </span>
+  </span>
+  <ul class="form-errors" v-if="errors">
+    <li v-for="error in errors">{{ error.text }}</li>
+  </ul>
+  <div>
+    <div class="list-container-overflow">
+      <table class="list-table" cellspacing="0" border="1">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Count/Size</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="folder in current.folders" v-bind:class="{ selected: folder.selected }" v-on:dblclick="select(folder, selectedFolderPaths)">
+            <td>folder</td>
+            <td>{{ folder.name }}</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>
+              <a href="#" class="file-edit-button-view listbutton" v-on:click="get(folder.relativePath)">View</a>
+            </td>
+          </tr>
+          <tr v-for="file in current.files" v-bind:class="{ selected: file.selected }" v-on:dblclick="select(file, selectedFilePaths)">
+            <td>file</td>
+            <td>{{ file.name }}</td>
+            <td>{{ file.modified }}</td>
+            <td>{{ file.size }}</td>
+            <td>
+              <a v-bind:href="file.relativePath" class="file-edit-button-view listbutton" target="_blank">View</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-right">
+        <form method="post" enctype="multipart/form-data" target="uploadOutput" v-bind:action="uploadPath"  v-if="breadcrumbs.length > 1">
+            Upload a File: <input type="file" id="file-edit-browse" name="uploadFile">
+            &nbsp;
+            <button type="button">Upload</button>
+            &nbsp;
+        </form>
+        <button type="button" v-if="breadcrumbs.length > 1">Delete</button>
+        &nbsp;
+        <button type="button" v-if="breadcrumbs.length > 1">Select</button>
+        &nbsp;
+        <button type="button" v-if="breadcrumbs.length > 1">Move to</button>
+        &nbsp;
+        <button type="button" v-if="breadcrumbs.length > 1">Copy to</button>
+        &nbsp;
+        <button type="button" v-on:click="hide">Close</button>
+    </div>
+  </div>
+</div>
+<div id="modal-overlay" v-if="visible"></div>
