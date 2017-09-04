@@ -2,17 +2,13 @@
 
 This repo marks the start of my quest to port my existing Presentation Engine code base to ASP.NET Core.
 
-### 0. Progress has slowed, whats up?
-
-.NET Standard 2.0, .NET Core 2.0 and ASP.NET Core 2.0 got released. While the codebase has been ported and works based on my testing, a lot of my tooling is broken (Omnisharp and parts of Rider). Until these issues get resolved, progress will be minimal.
-
 ### 1. What is the timeline for this?
 
-In the near future. Progress has slowed due to upgrade issues, but most of the planned feature set has already been coded.
+In the near future. Functionality required for the MVP has been completed. There is some testing and tweaking still to be done however.
 
 ### 2. Okay but seriously, when?
 
-To be more specific: Before George RR Martin finishes "A Song of Fire and Ice". Update: Way before.
+To be more specific: Soon. Very Soon.
 
 ### 3. What the hell is this project anyway?
 
@@ -28,4 +24,4 @@ Yeah this port is being developed 100% on Linux.  The goal is for it to be able 
 
 ### 6. What tools?
 
-VS Code is what I'm using at the moment though it does leave a bit to be desired.  Even though Rider has hit RTM and I have a JetBrains All Products subscription, I find I'm still using VS Code as what it lacks in features it makes up for with speed.
+VS Code is what I'm using at the moment.  Though I've got a JetBrains production subscription, Rider (despite its extensive feature set) always seems to be a day late and a dollar short.  I've been able to work productively without it though, so that's a great testament to the state of the open source dot net community.  Beyond that I've continued to use Gimp for the graphical work and I have made extensive use of DataGrip for working with sqlite databases.
