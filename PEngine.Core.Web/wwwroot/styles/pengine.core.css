@@ -578,7 +578,7 @@ body > .panel > .panel-right
 
 [v-cloak]
 {
-  display:none;
+  display: none !important;
 }
 
 .form-messages

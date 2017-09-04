@@ -1,17 +1,68 @@
 <div class="dialog-container" v-if="visible">
   <span class="form-header-text">
     <span>Uploader</span>
-    <span v-for="breadcrumb in breadcrumbs">
+    <span v-for="breadcrumb in breadcrumbs" v-if="mode === 'browser'">
       &nbsp;:&nbsp;
       <a href="#" v-on:click="navigate(breadcrumb)">{{ breadcrumb.title }}</a>
+    </span>
+    <span v-if="mode === 'selections'">
+      File &amp; Folder Selections
+    </span>
+    <span v-if="mode === 'multiupload'">
+      &nbsp;:&nbsp;
+      Upload Files to {{ current.relativePath }}
+    </span>
+    <span v-if="mode === 'naming'">
+      {{ naming.title }}
     </span>
   </span>
   <ul class="form-errors" v-if="errors">
     <li v-for="error in errors">{{ error.text }}</li>
   </ul>
   <div>
-    <div class="list-container-overflow">
-      <table class="list-table" cellspacing="0" border="1">
+    <div class="form-container-overflow" v-if="mode === 'multiupload'">
+      <div class="edit-row" v-for="n in maxFiles">
+        <div class="edit-label">File #{{n}}:</div>
+        <div class="edit-field">
+          <input type="file" v-bind:id="'uploaderFile' + n">
+        </div>
+      </div>
+    </div>
+    <div class="form-container-overflow" v-if="mode === 'naming'">
+      <div class="edit-row">
+        <div class="edit-label">New Name:</div>
+        <div class="edit-field">
+          <input type="text" v-model="naming.new">
+        </div>
+      </div>
+    </div>
+    <div class="list-container-overflow" v-if="mode !== 'multiupload' && mode !== 'naming'">
+      <table class="list-table" cellspacing="0" border="1" v-if="mode === 'selections'">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Path</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="selectedFolderPath in selectedFolderPaths">
+            <td>Folder</td>
+            <td>{{ selectedFolderPath }}</td>
+            <td>
+              <a href="#" class="file-edit-button-view listbutton" v-on:click="removeSelectionByPath(selectedFolderPath, selectedFolderPaths)">Remove</a>
+            </td>
+          </tr>
+          <tr v-for="selectedFilePath in selectedFilePaths">
+            <td>File</td>
+            <td>{{ selectedFilePath }}</td>
+            <td>
+              <a href="#" class="file-edit-button-view listbutton" v-on:click="removeSelectionByPath(selectedFilePath, selectedFilePaths)">Remove</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="list-table" cellspacing="0" border="1" v-if="mode === 'browser'">
         <thead>
           <tr>
             <th>Type</th>
@@ -22,22 +73,33 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="folder in current.folders" v-bind:class="{ selected: folder.selected }" v-on:dblclick="select(folder, selectedFolderPaths)">
-            <td>folder</td>
-            <td>{{ folder.name }}</td>
+          <tr v-if="breadcrumbs.length > 1">
+            <td>Folder</td>
+            <td v-on:click="navigate(breadcrumbs[breadcrumbs.length - 2])">[Parent]</td>
             <td>N/A</td>
             <td>N/A</td>
             <td>
-              <a href="#" class="file-edit-button-view listbutton" v-on:click="get(folder.relativePath)">View</a>
+              &nbsp;
+            </td>
+          </tr>
+          <tr v-for="folder in current.folders" v-bind:class="{ selected: folder.selected }" v-on:dblclick="select(folder, selectedFolderPaths)">
+            <td>Folder</td>
+            <td v-on:click="get(folder.relativePath)">{{ folder.name }}</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>
+              <a href="#" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" v-on:click="prepNaming('folder', folder)">[Rename]</a>
             </td>
           </tr>
           <tr v-for="file in current.files" v-bind:class="{ selected: file.selected }" v-on:dblclick="select(file, selectedFilePaths)">
-            <td>file</td>
-            <td>{{ file.name }}</td>
+            <td>File</td>
+            <td>
+              <a v-bind:href="file.relativePath" class="file-edit-button-view listbutton" target="_blank">{{ file.name }}</a>
+            </td>
             <td>{{ file.modified }}</td>
             <td>{{ file.size }}</td>
             <td>
-              <a v-bind:href="file.relativePath" class="file-edit-button-view listbutton" target="_blank">View</a>
+              <a href="#" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" v-on:click="prepNaming('file', file)">[Rename]</a>
             </td>
           </tr>
         </tbody>
@@ -45,22 +107,53 @@
     </div>
   </div>
   <div class="panel">
-    <div class="panel-right">
-        <form method="post" enctype="multipart/form-data" target="uploadOutput" v-bind:action="uploadPath"  v-if="breadcrumbs.length > 1">
-            Upload a File: <input type="file" id="file-edit-browse" name="uploadFile">
-            &nbsp;
-            <button type="button">Upload</button>
-            &nbsp;
-        </form>
-        <button type="button" v-if="breadcrumbs.length > 1">Delete</button>
-        &nbsp;
-        <button type="button" v-if="breadcrumbs.length > 1">Select</button>
-        &nbsp;
-        <button type="button" v-if="breadcrumbs.length > 1">Move to</button>
-        &nbsp;
-        <button type="button" v-if="breadcrumbs.length > 1">Copy to</button>
-        &nbsp;
-        <button type="button" v-on:click="hide">Close</button>
+    <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'browser'">
+      <button type="button" v-on:click="mode = 'selections'">Selections</button>
+      &nbsp;
+      <button type="button" v-on:click="mode = 'multiupload'">Multi-Upload</button>
+      &nbsp;
+      <button type="button" v-if="breadcrumbs.length > 2 && !current.selected" v-on:click="select(current, selectedFolderPaths)">Select Folder</button>
+      <button type="button" v-if="breadcrumbs.length > 2 && current.selected" v-on:click="select(current, selectedFolderPaths)">Unselect Folder</button>
+      &nbsp;
+      <button type="button" v-bind:disabled="!selectedFilePaths.length && !selectedFolderPaths.length" v-on:click="processSelections('move')">Move Selections to</button>
+      &nbsp;
+      <button type="button" v-bind:disabled="!selectedFilePaths.length && !selectedFolderPaths.length" v-on:click="processSelections('copy')">Copy Selections to</button>
+      &nbsp;
+      <button type="button" v-on:click="prepNaming('folder', null)">Create Folder</button>
+      &nbsp;
+      <button type="button" v-on:click="hide">Close</button>
+    </div>
+    <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'selections'">
+      <button type="button" v-on:click="mode = 'browser'">Browser</button>
+      &nbsp;
+      <button type="button" v-on:click="mode = 'multiupload'">Multi-Upload</button>
+      &nbsp;
+      <button type="button" v-bind:disabled="!selectedFilePaths.length && !selectedFolderPaths.length" v-on:click="processSelections('delete')">Delete Selections</button>
+      &nbsp;
+      <button type="button" v-on:click="hide">Close</button>
+    </div>
+    <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'multiupload'">
+      <button type="button" v-on:click="mode = 'selections'">Selections</button>
+      &nbsp;
+      <button type="button" v-on:click="mode = 'browser'">Browser</button>
+      &nbsp;
+      <button type="button" v-on:click="upload($event)">Upload Files</button>
+      &nbsp;
+      <button type="button" v-on:click="hide">Close</button>
+    </div>
+    <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'naming'">
+      <button type="button" v-on:click="mode = 'selections'">Selections</button>
+      &nbsp;
+      <button type="button" v-on:click="mode = 'browser'">Browser</button>
+      &nbsp;
+      <button type="button" v-on:click="mode = 'multiupload'">Multi-Upload</button>
+      &nbsp;
+      <button type="button" v-on:click="completeNaming()">{{ naming.title }}</button>
+      &nbsp;
+      <button type="button" v-on:click="hide">Close</button>
+    </div>
+    <div class="panel-right" v-if="breadcrumbs.length <= 1">
+      <button type="button" v-on:click="hide">Close</button>
     </div>
   </div>
 </div>

@@ -21,6 +21,13 @@ namespace PEngine.Core.Web.Controllers.Api
   {
     public string[] RESTRICTED_PATHS = { "dist", "styles", "themes" };
 
+    public enum SelectionOperation
+    {
+      Copy,
+      Move,
+      Delete
+    }
+
     [Authorize(Roles = "PEngineAdmin")]
     [HttpGet("folder")]
     public IActionResult Get()
@@ -66,23 +73,30 @@ namespace PEngine.Core.Web.Controllers.Api
               file.CopyTo(writeStream);
             }
           }
-          return this.Ok();
+          return this.Get(folderPath);
         }
       }
       return this.BadRequest();
     }
 
     [Authorize(Roles = "PEngineAdmin")]
-    [HttpDelete("folder/{*folderPath}")]
-    public IActionResult DeleteFolder(string folderPath)
+    [HttpPut("file/{*filePath}")]
+    public IActionResult RenameFile(string filePath, [FromQuery]string newName)
     {
-      if (!IsRestrictedPath(folderPath))
+      if (!IsRestrictedPath(filePath))
       {
-        var folder = new PEngineFolderModel(folderPath);
-        if (folder.Valid)
+        var file = new PEngineFileModel(filePath);
+        if (file.Valid)
         {
-          System.IO.Directory.Delete(folder.FullPath);
-          return this.Ok();
+          var fullFolderPath = file.FullPath.Substring(0, file.FullPath.Length - file.Name.Length).TrimEnd(Path.DirectorySeparatorChar);
+          var folderPath = filePath.Substring(0, filePath.Length - file.Name.Length).TrimEnd(Path.DirectorySeparatorChar);
+          var newFilePath = $"{fullFolderPath}{Path.DirectorySeparatorChar}{newName}";
+          if (!System.IO.File.Exists(newFilePath))
+          {
+            System.IO.File.Move(file.FullPath, newFilePath);
+            return this.Get(folderPath);
+          }
+          return this.BadRequest();
         }
         return this.NotFound();
       }
@@ -91,18 +105,18 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPost("folder/{*parentFolderPath}")]
-    public IActionResult CreateFolder(string parentFolderPath, [FromQuery]string newFolderName)
+    public IActionResult CreateFolder(string parentFolderPath, [FromQuery]string newName)
     {
       if (!IsRestrictedPath(parentFolderPath))
       {
         var parentFolder = new PEngineFolderModel(parentFolderPath);
         if (parentFolder.Valid)
         {
-          var newFolderPath = $"{parentFolder.FullPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}{newFolderName}";
+          var newFolderPath = $"{parentFolder.FullPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}{newName}";
           if (!System.IO.Directory.Exists(newFolderPath))
           {
             System.IO.Directory.CreateDirectory(newFolderPath);
-            return this.Ok();
+            return this.Get(parentFolderPath);
           }
           return this.BadRequest();
         }
@@ -113,18 +127,19 @@ namespace PEngine.Core.Web.Controllers.Api
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPut("folder/{*folderPath}")]
-    public IActionResult RenameFolder(string folderPath, [FromQuery]string newFolderName)
+    public IActionResult RenameFolder(string folderPath, [FromQuery]string newName)
     {
       if (!IsRestrictedPath(folderPath))
       {
         var folder = new PEngineFolderModel(folderPath);
         if (folder.Valid)
         {
-          var newFolderPath = $"{folder.Parent.FullPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}{newFolderName}";
+          var parentFolderPath = folderPath.Substring(0, folderPath.Length - folder.Name.Length).TrimEnd(Path.DirectorySeparatorChar);
+          var newFolderPath = $"{folder.Parent.FullPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}{newName}";
           if (!System.IO.Directory.Exists(newFolderPath))
           {
             System.IO.Directory.Move(folder.FullPath, newFolderPath);
-            return this.Ok();
+            return this.Get(parentFolderPath);
           }
           return this.BadRequest();
         }
@@ -134,37 +149,8 @@ namespace PEngine.Core.Web.Controllers.Api
     }
 
     [Authorize(Roles = "PEngineAdmin")]
-    [HttpDelete("file/{*filePath}")]
-    public IActionResult DeleteFile(string filePath)
-    {
-      if (!IsRestrictedPath(filePath))
-      {
-        var file = new PEngineFileModel(filePath);
-        if (file.Valid)
-        {
-          System.IO.File.Delete(file.FullPath);
-          return this.Ok();
-        }
-        return this.NotFound();
-      }
-      return this.BadRequest();
-    }
-
-    [Authorize(Roles = "PEngineAdmin")]
-    [HttpPost("copyTo/{*folderPath}")]
-    public IActionResult CopyToFolder(string folderPath, [FromBody]PEngineResourceSelectionModel selections)
-    {
-      return CopyMoveResource(folderPath, selections, false);
-    }
-
-    [Authorize(Roles = "PEngineAdmin")]
-    [HttpPost("moveTo/{*folderPath}")]
-    public IActionResult MoveToFolder(string folderPath, [FromBody]PEngineResourceSelectionModel selections)
-    {
-      return CopyMoveResource(folderPath, selections, true);
-    }
-
-    private IActionResult CopyMoveResource(string targetFolderPath, PEngineResourceSelectionModel selections, bool moveFlag)
+    [HttpPost("selection/{operation}/{*targetFolderPath}")]
+    public IActionResult ProcessSelections(SelectionOperation operation, string targetFolderPath, [FromBody]PEngineResourceSelectionModel selections)
     {
       if (!IsRestrictedPath(targetFolderPath))
       {
@@ -180,14 +166,20 @@ namespace PEngine.Core.Web.Controllers.Api
               {
                 var file = new PEngineFileModel(filePath);
                 var targetFullPath = $"{targetFolder.FullPath}{System.IO.Path.DirectorySeparatorChar}{file.Name}";
-                if (file.Valid && !moveFlag)
+                if (file.Valid)
                 {
-                  System.IO.File.Copy(file.FullPath, targetFullPath);
-                  valid = true;
-                }
-                if (file.Valid && moveFlag)
-                {
-                  System.IO.File.Move(file.FullPath, targetFullPath);
+                  switch (operation)
+                  {
+                    case SelectionOperation.Copy:
+                      System.IO.File.Copy(file.FullPath, targetFullPath);
+                      break;
+                    case SelectionOperation.Move:
+                      System.IO.File.Move(file.FullPath, targetFullPath);
+                      break;
+                    case SelectionOperation.Delete:
+                      System.IO.File.Delete(file.FullPath);
+                      break;
+                  }
                   valid = true;
                 }
               }
@@ -201,14 +193,20 @@ namespace PEngine.Core.Web.Controllers.Api
               {
                 var folder = new PEngineFolderModel(folderPath);
                 var targetFullPath = $"{targetFolder.FullPath}{System.IO.Path.DirectorySeparatorChar}{folder.Name}";
-                if (folder.Valid && !moveFlag)
+                if (folder.Valid)
                 {
-                  CopyFolder(folder.FullPath, targetFullPath);
-                  valid = true;
-                }
-                if (folder.Valid && moveFlag)
-                {
-                  System.IO.Directory.Move(folder.FullPath, targetFullPath);
+                  switch (operation)
+                  {
+                    case SelectionOperation.Copy:
+                      CopyFolder(folder.FullPath, targetFullPath);
+                      break;
+                    case SelectionOperation.Move:
+                      System.IO.Directory.Move(folder.FullPath, targetFullPath);
+                      break;
+                    case SelectionOperation.Delete:
+                      System.IO.Directory.Delete(folder.FullPath, true);
+                      break;
+                  }
                   valid = true;
                 }
               }
@@ -223,7 +221,7 @@ namespace PEngine.Core.Web.Controllers.Api
       return this.BadRequest();
     }
 
-    static public void CopyFolder(string sourceFolder, string destFolder)
+    private void CopyFolder(string sourceFolder, string destFolder)
     {
       if (!Directory.Exists(destFolder))
       {

@@ -34,11 +34,11 @@ namespace PEngine.Core.Web.Models
       } 
     }
 
-    public PEngineFileModel(string webFolderPath)
+    public PEngineFileModel(string webFilePath)
     {
-      var relativePath = webFolderPath.TrimStart('.').TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+      var relativePath = webFilePath.TrimStart('.').TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
       var fullFilePath = $"{Startup.ContentRootPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}wwwroot{Path.DirectorySeparatorChar}{relativePath}";
-      if (System.IO.File.Exists(webFolderPath))
+      if (System.IO.File.Exists(fullFilePath))
       {
         Init(new FileInfo(fullFilePath));
       }

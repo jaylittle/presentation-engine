@@ -243,8 +243,6 @@ b
   color: #201f25;
   margin: 0px;
   position: relative;
-  margin-right: -10px;
-  left: -10px;
 }
 
 .form-header-text
@@ -257,8 +255,6 @@ b
   display: block;
   position: relative;
   padding-left: 5px;
-  margin-right: -10px;
-  left: -10px;
 } 
 
 .form-subheader-text
@@ -673,8 +669,6 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   margin-bottom: 3px;
   border: none;
   position: relative;
-  padding-right: 10px;
-  left: -10px;
 }
 
 body > div.panel, div.page > div.panel
