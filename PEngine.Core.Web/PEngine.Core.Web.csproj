@@ -20,12 +20,12 @@
     <RepositoryUrl>https://github.com/jaylittle/presentation-engine/</RepositoryUrl>
     <!-- owners is not supported in MSBuild -->
   </PropertyGroup>
-  <Target Name="MyPreCompileTarget" BeforeTargets="Build">
+  <PropertyGroup>
+    <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+  </PropertyGroup>
+  <Target Name="MyPrePublishTarget" BeforeTargets="BeforePublish">
     <Exec Command="npm install &amp;&amp; npm run build" />
   </Target>
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.13.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
@@ -41,6 +41,8 @@
     <ProjectReference Include="..\PEngine.Core.Logic\PEngine.Core.Logic.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="wwwroot\" />
     <Content Include="sql\**\*" CopyToPublishDirectory="Always" />
+    <Content Remove="pengine.settings.json" />
   </ItemGroup>
 </Project>
