@@ -3,6 +3,26 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup>
+    <Authors>Jay Little</Authors>
+    <Company>Jay Little / JPL Coding</Company>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyTitle>Presentation Engine 5.0</AssemblyTitle>
+    <Description>This is the .NET Core version of the Presentation Engine CMS application.</Description>
+    <Copyright>Jay Little 2017</Copyright>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageReleaseNotes>Version 5.0.0-alpha</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/jaylittle/presentation-engine/</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/jaylittle/presentation-engine/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/jaylittle/presentation-engine/</RepositoryUrl>
+    <!-- owners is not supported in MSBuild -->
+  </PropertyGroup>
+  <Target Name="MyPreCompileTarget" BeforeTargets="Build">
+    <Exec Command="npm install &amp;&amp; npm run build" />
+  </Target>
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
@@ -19,5 +39,8 @@
     <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj" />
     <ProjectReference Include="..\PEngine.Core.Data\PEngine.Core.Data.csproj" />
     <ProjectReference Include="..\PEngine.Core.Logic\PEngine.Core.Logic.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sql\**\*" CopyToPublishDirectory="Always" />
   </ItemGroup>
 </Project>
