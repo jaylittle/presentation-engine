@@ -181,29 +181,24 @@ export default {
             });
           }
         },
-        addTarget(type, property) {
-          if (!property) {
-            let newTarget = {};
-            if (!this.record.data[type]) {
-              this.record.data[type] = [];
-            }
-            switch (type) {
-              case 'sections':
-                newTarget['name'] = 'New Section';
-                newTarget['data'] = 'New Section Data';
-                break;
-            }
-            this.record.data[type].push(newTarget);
-            this.record.state.editTarget = `${type}:${this.record.data[type].length - 1}`;
-            this.record.state.newIndex = "";
+        addTarget(type) {
+          let newTarget = {};
+          if (!this.record.data[type]) {
+            this.record.data[type] = [];
           }
-          else {
-            if (!this.record.data[type][property]) {
-              this.record.data[type][property] = [ {} ];
-            }
-            this.record.state.editTarget = `${type}:${property}`;
-            this.record.state.newIndex = property;
+          switch (type) {
+            case 'sections':
+              newTarget['name'] = 'New Section';
+              newTarget['data'] = 'New Section Data';
+              break;
+            case 'skillTypes':
+              newTarget['type'] = 'New Skill Type';
+              newTarget['skills'] = [ ];
+              break;
           }
+          this.record.data[type].push(newTarget);
+          this.record.state.editTarget = `${type}:${this.record.data[type].length - 1}`;
+          this.record.state.newIndex = "";
         },
         removeCurrentTarget() {
           let info = this.currentEditTargetInfo;
@@ -237,44 +232,38 @@ export default {
             }
           }
         },
-        renameIndex(subPropertyName) {
+        renameIndex(nameProperty, subRecordArrayProperty, subRecordNameProperty) {
           let info = this.currentEditTargetInfo;
-          if (!info.numeric && info.index != this.record.state.newIndex) {
-            this.record.data[info.property][this.record.state.newIndex] = this.record.data[info.property][info.index];
-            delete this.record.data[info.property][info.index];
-            if (subPropertyName) {
-              for (let subRecord in this.record.data[info.property][this.record.state.newIndex]) {
-                this.record.data[info.property][this.record.state.newIndex][subRecord][subPropertyName] = this.record.state.newIndex;
-              }
+          if (subRecordArrayProperty && subRecordNameProperty) {
+            for (var subRecordIndex in this.record.data[info.property][info.index][subRecordArrayProperty]) {
+              this.record.data[info.property][info.index][subRecordArrayProperty][subRecordIndex][subRecordNameProperty] = this.record.data[info.property][info.index][nameProperty];
             }
-
-            this.record.state.editTarget = `${info.property}:${this.record.state.newIndex}`;
           }
         },
-        addIndexSubRecord() {
+        addIndexSubRecord(subRecordArrayProperty, nameValue) {
           let info = this.currentEditTargetInfo;
-          if (this.record.data[info.property][info.index]) {
+          if (this.record.data[info.property][info.index][subRecordArrayProperty]) {
             let newSubRecord = {};
-            switch (info.property) {
+            switch (subRecordArrayProperty) {
               case 'skills':
-                newSubRecord['type'] = info.index;
+                newSubRecord['type'] = nameValue;
                 break;
             }
-            this.record.data[info.property][info.index].push(newSubRecord);
+            this.record.data[info.property][info.index][subRecordArrayProperty].push(newSubRecord);
           }
         },
-        removeIndexSubRecord(subRecordIndex) {
+        removeIndexSubRecord(subRecordArrayProperty, subRecordIndex) {
           let info = this.currentEditTargetInfo;
-          if (this.record.data[info.property][info.index] && this.record.data[info.property][info.index].length && this.record.data[info.property][info.index].length > subRecordIndex) {
-            this.record.data[info.property][info.index].splice(subRecordIndex, 1);
+          if (this.record.data[info.property][info.index][subRecordArrayProperty] 
+            && this.record.data[info.property][info.index][subRecordArrayProperty].length
+            && this.record.data[info.property][info.index][subRecordArrayProperty].length > subRecordIndex) {
+            this.record.data[info.property][info.index][subRecordArrayProperty].splice(subRecordIndex, 1);
           }
         }
       },
-      data() {
-        return {
-          record: editorHelpers.getRecordDefaultData(),
-          state: window.pengineState
-        };
+      data: {
+        record: editorHelpers.getRecordDefaultData(),
+        state: window.pengineState
       },
       computed: {
         currentEditTargetInfo() {

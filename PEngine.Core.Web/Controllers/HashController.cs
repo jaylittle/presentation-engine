@@ -35,7 +35,13 @@ namespace PEngine.Core.Web.Controllers
           {
             string contentType;
             new FileExtensionContentTypeProvider().TryGetContentType(hashEntry.FullPath, out contentType);
-            return PhysicalFile(hashEntry.FullPath, contentType ?? "application/octet-stream");
+            //return PhysicalFile(hashEntry.FullPath, contentType ?? "application/octet-stream");
+            //var fileInfo = new System.IO.FileInfo(hashEntry.FullPath);
+            //this.Response.StatusCode = 200;
+            //this.Response.ContentLength = fileInfo.Length;
+            //this.Response.ContentType = contentType;
+            //this.Response.Body.Write(System.IO.File.ReadAllBytes(hashEntry.FullPath), 0, (int)fileInfo.Length);
+            return this.File(System.IO.File.ReadAllBytes(hashEntry.FullPath), contentType);
           }
           else
           {

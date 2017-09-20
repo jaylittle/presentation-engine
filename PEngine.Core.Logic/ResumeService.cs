@@ -45,7 +45,7 @@ namespace PEngine.Core.Logic
       var retvalue = new ResumeModel() {
         Personals = (await _resumeDal.ListResumePersonals()).ToList(),
         Objectives = (await _resumeDal.ListResumeObjectives()).ToList(),
-        Skills = (await _resumeDal.ListResumeSkills()).GroupBy(s => s.Type, StringComparer.OrdinalIgnoreCase).ToDictionary(s => s.Key, s => s.ToList()),
+        SkillTypes = (await _resumeDal.ListResumeSkills()).GroupBy(s => s.Type, StringComparer.OrdinalIgnoreCase).Select(g => new ResumeSkillTypeModel(g.Key, g.ToList())).ToList(),
         Educations = (await _resumeDal.ListResumeEducations()).OrderByDescending(ed => ed.Started).ThenBy(ed => ed.Institute).ThenBy(ed => ed.Program).ToList(),
         WorkHistories = (await _resumeDal.ListResumeWorkHistories()).OrderByDescending(wh => wh.Started).ThenBy(wh => wh.Employer).ThenBy(wh => wh.JobTitle).ToList()
       };
@@ -58,7 +58,7 @@ namespace PEngine.Core.Logic
       ResumeModel existingResume = await GetResume();
       var existingPersonalGuids = existingResume.Personals.Select(r => r.Guid).ToDictionary(g => g, g => true);
       var existingObjectiveGuids = existingResume.Objectives.Select(r => r.Guid).ToDictionary(g => g, g => true);
-      var existingSkillGuids = existingResume.Skills.SelectMany(t => t.Value.Select(r => r.Guid)).ToDictionary(g => g, g => true);
+      var existingSkillGuids = existingResume.SkillTypes.SelectMany(t => t.Skills.Select(r => r.Guid)).ToDictionary(g => g, g => true);
       var existingEducationGuids = existingResume.Educations.Select(r => r.Guid).ToDictionary(g => g, g => true);
       var existingWorkHistoryGuids = existingResume.WorkHistories.Select(r => r.Guid).ToDictionary(g => g, g => true);
       
@@ -112,14 +112,14 @@ namespace PEngine.Core.Logic
       {
         retvalue.LogError(OBJECTIVE_ERROR_DATA_MUST_BE_PROVIDED);
       }
-      if (resume.Skills != null && resume.Skills.Count > 0 && resume.Skills.Any(s => s.Value != null && s.Value.Count > 0))
+      if (resume.SkillTypes != null && resume.SkillTypes.Count > 0 && resume.SkillTypes.Any(s => s.Skills != null && s.Skills.Count > 0))
       {
         var counter = 1;
-        foreach(var skillType in resume.Skills)
+        foreach(var skillType in resume.SkillTypes)
         {
-          if (skillType.Value != null && skillType.Value.Count > 0)
+          if (skillType.Skills != null && skillType.Skills.Count > 0)
           {
-            foreach (var skill in skillType.Value)
+            foreach (var skill in skillType.Skills)
             {
               if (!importFlag && skill.Guid != Guid.Empty && !existingSkillGuids.ContainsKey(skill.Guid))
               {
@@ -236,13 +236,13 @@ namespace PEngine.Core.Logic
             await _resumeDal.DeleteResumeObjective(guidToDelete.Key);
           }
 
-          if (resume.Skills != null)
+          if (resume.SkillTypes != null)
           {
-            foreach (var skillType in resume.Skills)
+            foreach (var skillType in resume.SkillTypes)
             {
-              if (skillType.Value != null && skillType.Value.Count > 0)
+              if (skillType.Skills != null && skillType.Skills.Count > 0)
               {
-                foreach (var skill in skillType.Value)
+                foreach (var skill in skillType.Skills)
                 {
                   if (importFlag || skill.Guid == Guid.Empty || !existingSkillGuids.ContainsKey(skill.Guid))
                   {

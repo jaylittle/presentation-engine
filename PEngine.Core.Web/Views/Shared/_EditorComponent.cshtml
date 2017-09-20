@@ -121,7 +121,7 @@
         <select class="edit-control-large" v-model="record.state.editTarget">
           <option value="personals:0">[Personal]</option>
           <option value="objectives:0">[Objective]</option>
-          <option v-for="(skillType, index) in record.data.skills" v-bind:value="'skills:' + index">[Skill Type] {{skillType[0].type}}</option>
+          <option v-for="(skillType, index) in record.data.skillTypes" v-bind:value="'skillTypes:' + index">[Skill Type] {{skillType.type}}</option>
           <option v-for="(education, index) in record.data.educations" v-bind:value="'educations:' + index">[Education] {{education.instutute}} - {{education.program}}</option>
           <option v-for="(workHistory, index) in record.data.workHistories" v-bind:value="'workHistories:' + index">[Work History] {{workHistory.employer}} - {{workHistory.jobTitle}}</option>
         </select>
@@ -132,7 +132,7 @@
         <span v-if="currentEditTargetProperty === 'educations'">&nbsp;</span>
         <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'workHistories'">Delete Work History</button>
         <span v-if="currentEditTargetProperty === 'workHistories'">&nbsp;</span>
-        <button type="button" v-on:click="addTarget('skills', 'New Skill Type')">Add Skill Type</button>
+        <button type="button" v-on:click="addTarget('skillTypes')">Add Skill Type</button>
         &nbsp;
         <button type="button" v-on:click="addTarget('educations')">Add Education</button>
         &nbsp;
@@ -188,23 +188,23 @@
           <div class="edit-field"><textarea class="edit-control" rows="10" v-model="currentEditTarget.data"></textarea></div>
         </div>
       </div>
-      <div v-if="currentEditTargetProperty === 'skills'">
+      <div v-if="currentEditTargetProperty === 'skillTypes'">
         <div class="edit-row">
           <div class="edit-label">Type:</div>
           <div class="edit-field">
-            <input type="text" class="edit-control-large" v-model="record.state.newIndex" />
+            <input type="text" class="edit-control-large" v-model="currentEditTarget.type" />
             &nbsp;
-            <button type="button" v-on:click="renameIndex('type')">Rename Type</button>
+            <button type="button" v-on:click="renameIndex('type', 'skills', 'type')">Rename Type</button>
             &nbsp;
-            <button type="button" v-on:click="addIndexSubRecord()">Add Skill</button>
+            <button type="button" v-on:click="addIndexSubRecord('skills', currentEditTarget.type)">Add Skill</button>
           </div>
         </div>
-        <div class="edit-row" v-for="(skill, index) in currentEditTarget">
+        <div class="edit-row" v-for="(skill, index) in currentEditTarget.skills">
           <div class="edit-label">Skill {{index + 1}}:</div>
           <div class="edit-field">
             <input type="text" class="edit-control-large" v-model="skill.name" />
             &nbsp;
-            <button type="button" v-on:click="removeIndexSubRecord(index)">Delete Skill</button>
+            <button type="button" v-on:click="removeIndexSubRecord('skills', index)">Delete Skill</button>
           </div>
         </div>
       </div>

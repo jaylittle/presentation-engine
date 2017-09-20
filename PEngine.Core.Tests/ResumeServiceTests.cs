@@ -186,21 +186,21 @@ namespace PEngine.Core.Tests
     public void ResumeService_Upsert_Skill_GuidIsValidated()
     {
       //Verify that skill record with invalid guid is rejected
-      resumeData.Skills.Add("Type", new List<ResumeSkillModel> {
+      resumeData.SkillTypes.Add(new ResumeSkillTypeModel("Type", new List<ResumeSkillModel> {
         new ResumeSkillModel() { Guid = invalidGuid }
-      });
+      }));
       Assert.True(TestHelpers.CallProducedError(() =>
           resumeService.UpsertResume(resumeData).Result
         , string.Format(ResumeService.SKILL_ERROR_INVALID_RECORD, 1)));
 
       //Verify that skill record with valid guid is accepted
-      resumeData.Skills["Type"][0].Guid = validGuid;
+      resumeData.SkillTypes[0].Skills[0].Guid = validGuid;
       Assert.False(TestHelpers.CallProducedError(() =>
           resumeService.UpsertResume(resumeData).Result
         , string.Format(ResumeService.SKILL_ERROR_INVALID_RECORD, 1)));
 
       //Verify that skill record with no guid is accepted
-      resumeData.Skills["Type"][0].Guid = Guid.Empty;
+      resumeData.SkillTypes[0].Skills[0].Guid = Guid.Empty;
       Assert.False(TestHelpers.CallProducedError(() =>
           resumeService.UpsertResume(resumeData).Result
         , string.Format(ResumeService.SKILL_ERROR_INVALID_RECORD, 1)));
@@ -210,15 +210,15 @@ namespace PEngine.Core.Tests
     public void ResumeService_Upsert_Skill_TypeIsValidated()
     {
       //Verify that skill record without type is rejected
-      resumeData.Skills.Add("Type", new List<ResumeSkillModel> {
+      resumeData.SkillTypes.Add(new ResumeSkillTypeModel("Type", new List<ResumeSkillModel> {
         new ResumeSkillModel() { Guid = invalidGuid }
-      });
+      }));
       Assert.True(TestHelpers.CallProducedError(() =>
           resumeService.UpsertResume(resumeData).Result
         , string.Format(ResumeService.SKILL_ERROR_TYPE_IS_REQUIRED, 1)));
 
       //Verify that skill record with type is accepted
-      resumeData.Skills["Type"][0].Type = "Type";
+      resumeData.SkillTypes[0].Skills[0].Type = "Type";
       Assert.False(TestHelpers.CallProducedError(() =>
           resumeService.UpsertResume(resumeData).Result
         , string.Format(ResumeService.SKILL_ERROR_TYPE_IS_REQUIRED, 1)));
@@ -228,15 +228,15 @@ namespace PEngine.Core.Tests
     public void ResumeService_Upsert_Skill_NameIsValidated()
     {
       //Verify that skill record without name is rejected
-      resumeData.Skills.Add("Type", new List<ResumeSkillModel> {
+      resumeData.SkillTypes.Add(new ResumeSkillTypeModel("Type", new List<ResumeSkillModel> {
         new ResumeSkillModel() { Guid = invalidGuid }
-      });
+      }));
       Assert.True(TestHelpers.CallProducedError(() =>
           resumeService.UpsertResume(resumeData).Result
         , string.Format(ResumeService.SKILL_ERROR_NAME_IS_REQUIRED, 1)));
 
       //Verify that skill record with name is accepted
-      resumeData.Skills["Type"][0].Name = "Name";
+      resumeData.SkillTypes[0].Skills[0].Name = "Name";
       Assert.False(TestHelpers.CallProducedError(() =>
           resumeService.UpsertResume(resumeData).Result 
         , string.Format(ResumeService.SKILL_ERROR_NAME_IS_REQUIRED, 1)));

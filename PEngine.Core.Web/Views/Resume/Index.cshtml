@@ -58,22 +58,22 @@
   }
 </div>
 }
-@if (Model.RecordData.Skills != null && Model.RecordData.Skills.Count > 0)
+@if (Model.RecordData.SkillTypes != null && Model.RecordData.SkillTypes.Count > 0)
 {
 <div class="resume-container">
   @Html.Raw(Rendering.MarkupSubheader("Skills"))
-  @foreach (var skillType in Model.RecordData.Skills)
+  @foreach (var skillType in Model.RecordData.SkillTypes)
   {
   <div>
     <div class="resume-row">
       <div class="resume-skill-type">
-          @skillType.Key
+          @skillType.Type
       </div>
       <div class="resumecolb">&nbsp;</div>
     </div>
     <div class="resume-row">
       <div class="resume-skill-container">
-        @(string.Join(", ", skillType.Value.Select(s => s.Name)))
+        @(string.Join(", ", skillType.Skills.Select(s => s.Name)))
       </div>
     </div>
   </div>

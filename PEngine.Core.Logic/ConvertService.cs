@@ -225,7 +225,7 @@ namespace PEngine.Core.Logic
       {
         XDocument skillDoc = XDocument.Parse(System.IO.File.ReadAllText(skillPath));
         var skillRecords = skillDoc.Descendants().Where(d => d.Name.LocalName.Equals("data"));
-        newResumeRecord.Skills = skillRecords.Select(skillRecord => new ResumeSkillModel(){
+        newResumeRecord.SkillTypes = skillRecords.Select(skillRecord => new ResumeSkillModel(){
           Guid = Guid.Parse(skillRecord.GetChildElementValue("Guid")),
           LegacyID = ParseNInt(skillRecord.GetChildElementValue("LegacyID")),
           Type = skillRecord.GetChildElementValue("Type"),
@@ -233,7 +233,7 @@ namespace PEngine.Core.Logic
           Hint = skillRecord.GetChildElementValue("Hint"),
           CreatedUTC = ParseNDateTime(skillRecord.GetChildElementValue("CreatedUTC")),
           ModifiedUTC = ParseNDateTime(skillRecord.GetChildElementValue("ModifiedUTC"))
-        }).GroupBy(r => r.Type, StringComparer.OrdinalIgnoreCase).ToDictionary(g => g.Key, g => g.ToList(), StringComparer.OrdinalIgnoreCase);
+        }).GroupBy(r => r.Type, StringComparer.OrdinalIgnoreCase).Select(g => new ResumeSkillTypeModel(g.Key, g.ToList())).ToList();
       }
 
       if (System.IO.File.Exists(educationPath))
