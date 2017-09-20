@@ -199,7 +199,7 @@ export default {
           }
           else {
             if (!this.record.data[type][property]) {
-              this.record.data[type][property] = [];
+              this.record.data[type][property] = [ {} ];
             }
             this.record.state.editTarget = `${type}:${property}`;
             this.record.state.newIndex = property;
@@ -303,10 +303,10 @@ export default {
             let data = this.record.data[info.property][info.index];
             while (!data) {
               if (info.numeric) {
-                this.addTarget(info.type);
+                this.addTarget(info.property);
               }
               else {
-                this.addTarget(info.type, info.index);
+                this.addTarget(info.property, info.index);
               }
               data = this.record.data[info.property][info.index];
             }
