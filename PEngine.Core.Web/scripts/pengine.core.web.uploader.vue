@@ -169,16 +169,17 @@
   export default {
     name: "pengine-uploader",
     mounted() {
-      this.$events.listen("show", eventData => {
-        this.show();
-      });
     },
     methods: {
-      show() {
-        document.body.style.overflow = 'hidden';
-        window.scrollTo(0, 0);
-        this.visible = true;
-        this.get();
+      fireEvent(eventName) {
+        switch (eventName || "") {
+          case "show":
+            document.body.style.overflow = 'hidden';
+            window.scrollTo(0, 0);
+            this.visible = true;
+            this.get();
+            break;
+        }
       },
       hide() {
         this.visible = false;

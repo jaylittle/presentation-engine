@@ -1,6 +1,5 @@
 import pengineHelpers from "./pengine.core.web.helpers";
 Vue.use(VueResource);
-Vue.use(VueEvents);
 import peHeader from "./pengine.core.web.header.vue";
 import peEditor from "./pengine.core.web.editor.vue";
 import peUploader from "./pengine.core.web.uploader.vue";

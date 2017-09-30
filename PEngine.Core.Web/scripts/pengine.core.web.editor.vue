@@ -570,41 +570,42 @@
   export default {
     name: "pengine-editor",
     mounted() {
-      this.$events.listen("edit", eventData => {
-        this.editRecord(eventData.type, eventData.guid, eventData.data);
-      });
       this.processLocationHash();
     },
     methods: {
-      editRecord(type, guid, data) {
-        editorHelpers.updateLocationHash(type, guid);
-        document.body.style.overflow = 'hidden';
-        window.scrollTo(0, 0);
+      fireEvent(eventName, type, guid, data) {
+        switch (eventName || "")  {
+          case "edit":
+            editorHelpers.updateLocationHash(type, guid);
+            document.body.style.overflow = 'hidden';
+            window.scrollTo(0, 0);
 
-        let newRecord = editorHelpers.initRecord(type, guid, data);
-        if (editorHelpers.isRecordGetable(newRecord) && newRecord.url)
-        {
-          new Promise(
-            (resolve, reject) => {  
-              let getUrl = newRecord.url;
-              if (newRecord.guid) {
-                getUrl = `${newRecord.url}${newRecord.guid}`;
-              }
-              this.$http.get(getUrl).then(response => {
-                newRecord.data = response.body;
-                resolve();
-              }, response => {
-                newRecord.errors = [ { type: "Error", text: "An HTTP error prevented the record from loading." } ];
-                reject();
+            let newRecord = editorHelpers.initRecord(type, guid, data);
+            if (editorHelpers.isRecordGetable(newRecord) && newRecord.url)
+            {
+              new Promise(
+                (resolve, reject) => {  
+                  let getUrl = newRecord.url;
+                  if (newRecord.guid) {
+                    getUrl = `${newRecord.url}${newRecord.guid}`;
+                  }
+                  this.$http.get(getUrl).then(response => {
+                    newRecord.data = response.body;
+                    resolve();
+                  }, response => {
+                    newRecord.errors = [ { type: "Error", text: "An HTTP error prevented the record from loading." } ];
+                    reject();
+                  });
+                }
+              ).then(() => {
+                editorHelpers.getRecordTitle(newRecord);
+                this.record = newRecord;
               });
             }
-          ).then(() => {
-            editorHelpers.getRecordTitle(newRecord);
-            this.record = newRecord;
-          });
-        }
-        else {
-          this.record = newRecord;
+            else {
+              this.record = newRecord;
+            }
+            break;
         }
       },
       cancelRecord() {
@@ -723,7 +724,7 @@
       processLocationHash() {
         if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
           let elements = window.location.hash.split('/');
-          this.$events.fire("edit", { type: elements[1], guid: (elements.length > 2 ? elements[2] : null) });
+          this.fireEvent("edit", elements[1], (elements.length > 2 ? elements[2] : null));
         }
       }
     },

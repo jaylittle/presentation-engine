@@ -14,7 +14,7 @@ module.exports = {
     var targets = document.getElementsByClassName(className);
     for (var idx = 0; idx < targets.length; idx++) {
       targets[idx].addEventListener("click", (e) => {
-        editorInstance.$events.fire(eventName, { type: typeName, guid: e.target.getAttribute("data-guid") });
+        editorInstance.$children[0].fireEvent(eventName, typeName, e.target.getAttribute("data-guid"));
         e.preventDefault();
       });
     }
