@@ -31,6 +31,15 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+          }
+          // other vue-loader options go here
+        }
+      },
+      {
         test: /\.js$/,
         exclude: /(node_modules)/,
         use: {

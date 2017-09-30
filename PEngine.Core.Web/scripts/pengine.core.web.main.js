@@ -1,13 +1,24 @@
 import pengineHelpers from "./pengine.core.web.helpers";
 Vue.use(VueResource);
 Vue.use(VueEvents);
-import peHeader from "./pengine.core.web.vue.header";
-import peEditor from "./pengine.core.web.vue.editor";
-import peUploader from "./pengine.core.web.vue.uploader";
+import peHeader from "./pengine.core.web.header.vue";
+import peEditor from "./pengine.core.web.editor.vue";
+import peUploader from "./pengine.core.web.uploader.vue";
 
-let editorInstance = peEditor.create();
-let headerInstance = peHeader.create();
-let uploaderInstance = peUploader.create();
+let headerInstance = new Vue({
+  el: '#pengine-header',
+  render: h => h(peHeader)
+});
+
+let editorInstance = new Vue({
+  el: '#pengine-editor',
+  render: h => h(peEditor)
+});
+
+let uploaderInstance = new Vue({
+  el: '#pengine-uploader',
+  render: h => h(peUploader)
+});
 
 /* Bind Events to the DOM */
 pengineHelpers.assignComponentClickEvent(editorInstance, "post_view_button_edit", "post");

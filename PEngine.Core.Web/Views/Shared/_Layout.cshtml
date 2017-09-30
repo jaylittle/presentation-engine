@@ -34,15 +34,9 @@
   <body>
     @if (!string.IsNullOrEmpty(Model.State.PEngineUserName))
     {
-    <div class="panel" id="pengine-header" v-cloak>
-      @Html.Partial("_HeaderComponent")
-    </div>
-    <div id="pengine-editor" v-cloak>
-      @Html.Partial("_EditorComponent")
-    </div>
-    <div id="pengine-uploader" v-cloak>
-      @Html.Partial("_UploaderComponent")
-    </div>
+    <div id="pengine-header"></div>
+    <div id="pengine-editor"></div>
+    <div id="pengine-uploader"></div>
     }
     else
     {
