@@ -654,4 +654,9 @@ body > .panel > .panel-right
   {
     display: none !important;
   }
+
+  .centered-text
+  {
+    text-align: center;
+  }
 }
