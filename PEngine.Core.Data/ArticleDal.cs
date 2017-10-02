@@ -53,7 +53,10 @@ namespace PEngine.Core.Data
           {
             while (!output.ContainsKey(article.Guid) && !output.TryAdd(article.Guid, article));
           }
-          output[article.Guid].Sections.Add(section);
+          if (section != null)
+          {
+            output[article.Guid].Sections.Add(section);
+          }
           return article;
         }, new {
           guid,

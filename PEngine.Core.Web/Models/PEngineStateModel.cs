@@ -246,7 +246,7 @@ namespace PEngine.Core.Web.Models
         {
           var categoryElements = articleCategory.Split('|');
           var categoryUrl = $"/article/category/{categoryElements[0]}";
-          if (!string.IsNullOrWhiteSpace(categoryElements[1]))
+          if (!HasAdmin && !string.IsNullOrWhiteSpace(categoryElements[1]))
           {
             categoryUrl = categoryElements[1];
           }

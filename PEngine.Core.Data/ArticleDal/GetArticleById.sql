@@ -1,7 +1,7 @@
 SELECT
   *
 FROM
-  Article INNER JOIN
+  Article LEFT JOIN
   ArticleSection ON Article.Guid = ArticleSection.ArticleGuid
 WHERE
   (@guid IS NULL OR Article.Guid = @guid) AND
