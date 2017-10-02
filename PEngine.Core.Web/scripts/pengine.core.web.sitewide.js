@@ -1,10 +1,12 @@
 /* Site Wide Helpers */
 
-var utcTargets = document.getElementsByClassName('datetime-display');
-for (var idx = 0; idx < utcTargets.length; idx++) {
-  var targetUtcTime = convertToLocalTime(utcTargets[idx].innerHTML);
-  utcTargets[idx].innerHTML = targetUtcTime;
-}
+(function() {
+  var utcTargets = document.getElementsByClassName('datetime-display');
+  for (var idx = 0; idx < utcTargets.length; idx++) {
+    var targetUtcTime = convertToLocalTime(utcTargets[idx].innerHTML);
+    utcTargets[idx].innerHTML = targetUtcTime;
+  }
+})();
 
 function convertToLocalTime(utcDtString) {
   let tzOffset = (new Date()).getTimezoneOffset();
@@ -19,7 +21,7 @@ function convertToLocalTime(utcDtString) {
   if (hour <= 0) {
     hour = 12;
   }
-  return `${year}/${padNumber(month, 2)}/${day} ${hour}:${padNumber(min, 2)} ${ap}`;
+  return `${year}/${month}/${day} ${hour}:${padNumber(min, 2)} ${ap}`;
 }
 
 function padNumber(number, length) {

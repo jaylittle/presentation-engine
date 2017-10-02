@@ -42,7 +42,7 @@ namespace PEngine.Core.Web.Helpers
       {
         if (tempobj <= DateTime.UtcNow || skipPresent)
         {
-          return tempobj.ToString("yyyy/MM/dd") + ((!skipTime && tempobj.TimeOfDay.TotalSeconds > 0) ? " " + tempobj.ToString("H:mm") : string.Empty);
+          return tempobj.ToString("yyyy/M/d") + ((!skipTime && tempobj.TimeOfDay.TotalSeconds > 0) ? " " + tempobj.ToString("h:mm tt") : string.Empty);
         }
         else
         {

@@ -293,7 +293,9 @@ namespace PEngine.Core.Web.Models
                   Links.Add("Next", $"/article/view/{articleData.UniqueName}/{articleSections[sectionPtr + 1].UniqueName}");
                 }
               }
-              SubMenuButtons.Add(new KeyValuePair<string, string>(section.Name, sectionUrl));
+              if (!articleData.HideButtonsFlag) {
+                SubMenuButtons.Add(new KeyValuePair<string, string>(section.Name, sectionUrl));
+              }
             }
             SummaryTitle = !HideSubTitle ? SubTitle : _settings.DefaultTitle;
             SummaryDescription = Helpers.Rendering.DataTruncate(currentSectionData?.Data ?? articleData.Description, -1);
