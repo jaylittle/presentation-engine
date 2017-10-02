@@ -24,6 +24,11 @@ namespace PEngine.Core.Web.Helpers
 
     public static string FormatDate(object dateobj, bool skipPresent)
     {
+      return FormatDate(dateobj, false, false);
+    }
+
+    public static string FormatDate(object dateobj, bool skipPresent, bool skipTime)
+    {
       DateTime tempobj = DateTime.MinValue;
       if (dateobj is DateTime)
       {
@@ -37,7 +42,7 @@ namespace PEngine.Core.Web.Helpers
       {
         if (tempobj <= DateTime.UtcNow || skipPresent)
         {
-          return tempobj.ToString("MM/dd/yyyy") + (tempobj.TimeOfDay.TotalSeconds > 0 ? " " + tempobj.ToString("HH:mm:ss") : string.Empty);
+          return tempobj.ToString("yyyy/MM/dd") + ((!skipTime && tempobj.TimeOfDay.TotalSeconds > 0) ? " " + tempobj.ToString("H:mm") : string.Empty);
         }
         else
         {

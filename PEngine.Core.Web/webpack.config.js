@@ -5,7 +5,8 @@ let webpack = require('webpack');
 module.exports = {
   entry: {
     'pengine.core.web.3rdparty': './scripts/pengine.core.web.3rdparty.js',
-    'pengine.core.web.main': './scripts/pengine.core.web.main.js'
+    'pengine.core.web.main': './scripts/pengine.core.web.main.js',
+    'pengine.core.web.sitewide': './scripts/pengine.core.web.sitewide.js'
   },
   devtool: 'source-map',
   output: {

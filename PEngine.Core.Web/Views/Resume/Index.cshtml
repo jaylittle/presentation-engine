@@ -97,9 +97,9 @@
     </div>
     <div class="resume-row">
       <div class="resume-disp">
-        @Rendering.FormatDate(education.Started)
+        @Rendering.FormatDate(education.Started, false, true)
         <span>&nbsp;-&nbsp;</span>
-        @Rendering.FormatDate(education.Completed)
+        @Rendering.FormatDate(education.Completed, false, true)
       </div>
     </div>
   </div>
@@ -125,9 +125,9 @@
     </div>
     <div class="resume-row">
       <div class="resume-disp">
-        @Rendering.FormatDate(workHistory.Started)
+        @Rendering.FormatDate(workHistory.Started, false, true)
         <span>&nbsp;-&nbsp;</span>
-        @Rendering.FormatDate(workHistory.Completed)
+        @Rendering.FormatDate(workHistory.Completed, false, true)
       </div>
     </div>
     <div class="resume-row">

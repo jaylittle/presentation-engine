@@ -1,4 +1,5 @@
 /* Generic Helpers */
+
 module.exports = {
   fixUrl(currentUrl) {
     if (currentUrl.startsWith("/"))
