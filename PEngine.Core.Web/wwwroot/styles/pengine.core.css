@@ -589,6 +589,11 @@ body > .panel > .panel-right
   color: red;
 }
 
+.centered-text
+{
+  text-align: center;
+}
+
 @media (min-height: 500px) and (min-width: 750px)
 {
   .form-container-overflow
@@ -653,10 +658,5 @@ body > .panel > .panel-right
   #noty_top_layout_container
   {
     display: none !important;
-  }
-
-  .centered-text
-  {
-    text-align: center;
   }
 }
