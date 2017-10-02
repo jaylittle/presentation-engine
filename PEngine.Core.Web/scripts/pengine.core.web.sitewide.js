@@ -10,6 +10,9 @@
 
 function convertToLocalTime(utcDtString) {
   let tzOffset = (new Date()).getTimezoneOffset();
+  if (utcDtString.endsWith(' PM') || utcDtString.endsWith(' AM')) {
+    utcDtString = utcDtString.substring(0, utcDtString.length - 3);
+  }
   utcDtString = utcDtString + (utcDtString.endsWith('Z') ? '' : 'Z');
   let dt = new Date(Date.parse(utcDtString) - (tzOffset * 60000));
   let year = dt.getUTCFullYear();
@@ -20,6 +23,9 @@ function convertToLocalTime(utcDtString) {
   let ap = hour <= 11 ? "AM" : "PM";
   if (hour <= 0) {
     hour = 12;
+  }
+  else if (hour > 12) {
+    hour = hour - 12;
   }
   return `${year}/${month}/${day} ${hour}:${padNumber(min, 2)} ${ap}`;
 }
