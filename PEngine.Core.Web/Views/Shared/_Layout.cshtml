@@ -127,7 +127,6 @@
       </div>
       <div class="page-right"></div>
     </div>
-    <script src="@Html.ContentHashFile("dist/pengine.core.web.sitewide.min.js")"></script>
     @if(!string.IsNullOrEmpty(Model.State.PEngineUserName))
     {
     <script type="text/javascript">
@@ -136,14 +135,7 @@
     <script src="@Html.ContentHashFile("dist/pengine.core.web.3rdparty.min.js")"></script>
     <script src="@Html.ContentHashFile("dist/pengine.core.web.main.min.js")"></script>
     }
-    <script type="text/javascript">
-      (function() {
-        if (document.getElementById('themeSubmit'))
-        {
-          document.getElementById('themeSubmit').style.display = 'none';
-        }
-      })();
-    </script>
+    <script src="@Html.ContentHashFile("dist/pengine.core.web.sitewide.min.js")"></script>
     @RenderSection("scripts", required: false)
   </body>
 </html>

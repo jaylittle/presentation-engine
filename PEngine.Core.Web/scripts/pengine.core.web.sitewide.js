@@ -1,6 +1,11 @@
 /* Site Wide Helpers */
 
 (function() {
+  if (document.getElementById('themeSubmit'))
+  {
+    document.getElementById('themeSubmit').style.display = 'none';
+  }
+
   var utcTargets = document.getElementsByClassName('datetime-display');
   for (var idx = 0; idx < utcTargets.length; idx++) {
     var epochTime = utcTargets[idx].getAttribute("data-epoch");
@@ -34,4 +39,9 @@ function padNumber(number, length) {
     sNumber = `0${sNumber}`;
   }
   return sNumber;
+}
+
+window.showQuote = function() {
+  document.getElementById('pengine-button-quote-show').style.display = 'none';
+  document.getElementById('quote-text').style.display = 'block';
 }
