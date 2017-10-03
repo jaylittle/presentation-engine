@@ -3,23 +3,21 @@
 (function() {
   var utcTargets = document.getElementsByClassName('datetime-display');
   for (var idx = 0; idx < utcTargets.length; idx++) {
-    var targetUtcTime = convertToLocalTime(utcTargets[idx].innerHTML);
-    utcTargets[idx].innerHTML = targetUtcTime;
+    var epochTime = utcTargets[idx].getAttribute("data-epoch");
+    if (epochTime && epochTime != "") {
+      utcTargets[idx].innerHTML = convertToLocalTime(parseInt(epochTime));
+    }
   }
 })();
 
-function convertToLocalTime(utcDtString) {
+function convertToLocalTime(epochTime) {
   let tzOffset = (new Date()).getTimezoneOffset();
-  if (utcDtString.endsWith(' PM') || utcDtString.endsWith(' AM')) {
-    utcDtString = utcDtString.substring(0, utcDtString.length - 3);
-  }
-  utcDtString = utcDtString + (utcDtString.endsWith('Z') ? '' : 'Z');
-  let dt = new Date(Date.parse(utcDtString) - (tzOffset * 60000));
-  let year = dt.getUTCFullYear();
-  let month = dt.getUTCMonth() + 1;
-  let day = dt.getUTCDate();
-  let hour = dt.getUTCHours();
-  let min = dt.getUTCMinutes();
+  let dt = new Date(epochTime);
+  let year = dt.getFullYear();
+  let month = dt.getMonth() + 1;
+  let day = dt.getDate();
+  let hour = dt.getHours();
+  let min = dt.getMinutes();
   let ap = hour <= 11 ? "AM" : "PM";
   if (hour <= 0) {
     hour = 12;

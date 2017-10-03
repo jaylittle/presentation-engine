@@ -38,7 +38,7 @@
         <td>@item.Type</td>
         <td>@item.Title</td>
         <td>@Rendering.DataTruncate(item.Content)</td>
-        <td nowrap="1" class="datetime-display">@Rendering.FormatDate(item.CreatedUTC)</td>
+        <td nowrap="1" class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(item.CreatedUTC)">@Rendering.FormatDate(item.CreatedUTC)</td>
         <td>@item.Creator</td>
         <td nowrap="1">
           <a href="@item.Link" class="list-button">[View]</a>

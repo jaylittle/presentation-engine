@@ -30,7 +30,7 @@
         <td>@item.Name</td>
         @if (item.CreatedUTC.HasValue)
         {
-        <td nowrap="1" class="datetime-display">@Rendering.FormatDate(item.CreatedUTC)</td>
+        <td nowrap="1" class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(item.CreatedUTC)">@Rendering.FormatDate(item.CreatedUTC)</td>
         }
         else
         {

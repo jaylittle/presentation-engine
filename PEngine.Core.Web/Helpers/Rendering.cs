@@ -27,6 +27,17 @@ namespace PEngine.Core.Web.Helpers
       return FormatDate(dateobj, false, false);
     }
 
+    public static string FormatDateForJavascript(DateTime? dt)
+    {
+      return dt.HasValue ? FormatDateForJavascript(dt.Value) : string.Empty;
+    }
+
+    public static string FormatDateForJavascript(DateTime dt)
+    {
+      var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+      return Convert.ToInt64((dt - epoch).TotalSeconds * 1000).ToString();
+    }
+
     public static string FormatDate(object dateobj, bool skipPresent, bool skipTime)
     {
       DateTime tempobj = DateTime.MinValue;

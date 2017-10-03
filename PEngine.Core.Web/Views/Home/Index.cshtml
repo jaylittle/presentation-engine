@@ -37,9 +37,7 @@
     {
       @Html.Raw(Rendering.MarkupIcon(post.IconFileName))
     }
-    <span class="datetime-display">
-      @post.CreatedUTC
-    </span>
+    <span class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(post.CreatedUTC)">@post.CreatedUTC</span>
     <br />
     @Html.Raw(Rendering.MarkupArticle(post.Data, false))
   </div>
