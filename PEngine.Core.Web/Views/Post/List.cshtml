@@ -28,7 +28,14 @@
     {
       <tr class='@((i++)%2!=0 ? "alt" : string.Empty)'>
         <td>@item.Name</td>
+        @if (item.CreatedUTC.HasValue)
+        {
         <td nowrap="1" class="datetime-display">@Rendering.FormatDate(item.CreatedUTC)</td>
+        }
+        else
+        {
+        <td nowrap="1">N/A</td>
+        }
         <td>@Rendering.DataTruncate(item.Data)</td>
         <td nowrap="1">
           @Html.RouteLink("[View]", new { controller = "post", action = "view", year = item.CreatedUTC.Value.Year, month = item.CreatedUTC.Value.Month, uniqueName = item.UniqueName }, new { @class = "list-button" })
