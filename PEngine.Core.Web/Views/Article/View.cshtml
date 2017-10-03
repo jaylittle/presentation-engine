@@ -12,48 +12,48 @@
 <span class="form-header-text">
   @Model.State.SubTitle
 </span>
+@if ((!article.HideDropDownFlag && article.Sections.Count > 1) || Model.State.HasAdmin)
+{
 <div class="panel">
   <div class="panel-right">
-    @if ((!article.HideDropDownFlag && article.Sections.Count > 1) || Model.State.HasAdmin)
+    @if (Model.State.Links.ContainsKey("Previous"))
     {
-      @if (Model.State.Links.ContainsKey("Previous"))
+      <a href="@Model.State.Links["Previous"]" class="list-button article_view_button_prev">[Prev]</a>
+    }
+    else
+    {
+      <a href="#" class="list-button article_view_button_prev" style="visibility: hidden">[Prev]</a>
+    }
+    @if (!article.HideDropDownFlag && article.Sections.Count > 1)
+    {
+    @Html.Raw("&nbsp;")
+    <form method="POST">
+      <select name="newSectionUniqueName" class="post_view_dropdown_section" onchange="this.form.submit()">
+      @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
       {
-        <a href="@Model.State.Links["Previous"]" class="list-button article_view_button_prev">[Prev]</a>
+        <option value="@articleSection.UniqueName"@(articleSection.Guid == section.Guid ? Html.Raw(" selected") : null)>@articleSection.Name</option>
       }
-      else
-      {
-        <a href="#" class="list-button article_view_button_prev" style="visibility: hidden">[Prev]</a>
-      }
-      @if (!article.HideDropDownFlag && article.Sections.Count > 1)
-      {
-      @Html.Raw("&nbsp;")
-      <form method="POST">
-        <select name="newSectionUniqueName" class="post_view_dropdown_section" onchange="this.form.submit()">
-        @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
-        {
-          <option value="@articleSection.UniqueName"@(articleSection.Guid == section.Guid ? Html.Raw(" selected") : null)>@articleSection.Name</option>
-        }
-        </select>
-        <input type="submit" id="sectionSubmitTop">
-      </form>
-      }
-      @Html.Raw("&nbsp;")
-      @if (Model.State.Links.ContainsKey("Next"))
-      {
-        <a href="@Model.State.Links["Next"]" class="list-button article_view_button_next">[Next]</a>
-      }
-      else
-      {
-        <a href="#" class="list-button article_view_button_next" style="visibility: hidden">[Next]</a>
-      }
-      @Html.Raw("&nbsp;")
-      @if (Model.State.HasAdmin)
-      {
-        <a href="#" class="list-button article_view_button_edit" data-guid="@article.Guid">[Edit]</a>
-      }
+      </select>
+      <input type="submit" id="sectionSubmitTop">
+    </form>
+    }
+    @Html.Raw("&nbsp;")
+    @if (Model.State.Links.ContainsKey("Next"))
+    {
+      <a href="@Model.State.Links["Next"]" class="list-button article_view_button_next">[Next]</a>
+    }
+    else
+    {
+      <a href="#" class="list-button article_view_button_next" style="visibility: hidden">[Next]</a>
+    }
+    @Html.Raw("&nbsp;")
+    @if (Model.State.HasAdmin)
+    {
+      <a href="#" class="list-button article_view_button_edit" data-guid="@article.Guid">[Edit]</a>
     }
   </div>
 </div>
+}
 <div class="display-container">
   @Html.Raw(Rendering.MarkupArticle(section.Data, false))
 </div>

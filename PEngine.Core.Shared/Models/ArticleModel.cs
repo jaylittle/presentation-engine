@@ -32,7 +32,7 @@ namespace PEngine.Core.Shared.Models
         if (!string.IsNullOrWhiteSpace(currentSection))
         {
           var section = Sections.FirstOrDefault(s => s.UniqueName.Equals(currentSection, StringComparison.OrdinalIgnoreCase));
-          if (section != null)
+          if (section != null && !subTitle.Equals(section.Name, StringComparison.OrdinalIgnoreCase))
           {
             subTitle += $" - {section.Name}";
           }

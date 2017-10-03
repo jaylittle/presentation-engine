@@ -33,7 +33,7 @@ namespace PEngine.Core.Web.Models
     {
       get
       {
-        if (!HideSubTitle && !string.IsNullOrEmpty(SubTitle))
+        if (!HideSubTitle && !string.IsNullOrEmpty(SubTitle) && !Title.Equals(SubTitle, StringComparison.OrdinalIgnoreCase))
         {
           return $"{Title} - {SubTitle}";
         }
