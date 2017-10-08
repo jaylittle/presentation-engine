@@ -111,47 +111,31 @@
       <div class="panel">
         <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'browser'">
           <button type="button" v-on:click="mode = 'selections'">Selections</button>
-          &nbsp;
           <button type="button" v-on:click="mode = 'multiupload'">Multi-Upload</button>
-          &nbsp;
           <button type="button" v-if="breadcrumbs.length > 2 && !current.selected" v-on:click="select(current, selectedFolderPaths)">Select Folder</button>
           <button type="button" v-if="breadcrumbs.length > 2 && current.selected" v-on:click="select(current, selectedFolderPaths)">Unselect Folder</button>
-          &nbsp;
           <button type="button" v-bind:disabled="!selectedFilePaths.length && !selectedFolderPaths.length" v-on:click="processSelections('move')">Move Selections to</button>
-          &nbsp;
           <button type="button" v-bind:disabled="!selectedFilePaths.length && !selectedFolderPaths.length" v-on:click="processSelections('copy')">Copy Selections to</button>
-          &nbsp;
           <button type="button" v-on:click="prepNaming('folder', null)">Create Folder</button>
-          &nbsp;
           <button type="button" v-on:click="hide">Close</button>
         </div>
         <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'selections'">
           <button type="button" v-on:click="mode = 'browser'">Browser</button>
-          &nbsp;
           <button type="button" v-on:click="mode = 'multiupload'">Multi-Upload</button>
-          &nbsp;
           <button type="button" v-bind:disabled="!selectedFilePaths.length && !selectedFolderPaths.length" v-on:click="processSelections('delete')">Delete Selections</button>
-          &nbsp;
           <button type="button" v-on:click="hide">Close</button>
         </div>
         <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'multiupload'">
           <button type="button" v-on:click="mode = 'selections'">Selections</button>
-          &nbsp;
           <button type="button" v-on:click="mode = 'browser'">Browser</button>
-          &nbsp;
           <button type="button" v-on:click="upload($event)">Upload Files</button>
-          &nbsp;
           <button type="button" v-on:click="hide">Close</button>
         </div>
         <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'naming'">
           <button type="button" v-on:click="mode = 'selections'">Selections</button>
-          &nbsp;
           <button type="button" v-on:click="mode = 'browser'">Browser</button>
-          &nbsp;
           <button type="button" v-on:click="mode = 'multiupload'">Multi-Upload</button>
-          &nbsp;
           <button type="button" v-on:click="completeNaming()">{{ naming.title }}</button>
-          &nbsp;
           <button type="button" v-on:click="hide">Close</button>
         </div>
         <div class="panel-right" v-if="breadcrumbs.length <= 1">

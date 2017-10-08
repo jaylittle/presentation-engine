@@ -48,9 +48,7 @@
                 <option value="">[Article]</option>
                 <option v-for="(section, index) in record.data.sections" v-bind:value="'sections:' + index">[Section] {{section.name}}</option>
               </select>
-              &nbsp;
               <button type="button" id="section_edit_button_add" v-on:click="addTarget('sections')" v-if="currentEditTargetProperty === ''">Add Section</button>
-              &nbsp;
               <button type="button" id="section_edit_button_delete" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'sections'">Delete Current Section</button>
             </div>
           </div>
@@ -106,7 +104,6 @@
             <div class="edit-label">Order:</div>
             <div class="edit-field">
               <button type="button" v-if="currentEditTargetPosition !== 'First'" v-on:click="moveCurrentTarget(-1)">Up</button>
-              <span v-if="currentEditTargetPosition === 'Between'">&nbsp;</span>
               <button type="button" v-if="currentEditTargetPosition !== 'Last'" v-on:click="moveCurrentTarget(1)">Down</button>
             </div>
           </div>
@@ -128,17 +125,11 @@
                 <option v-for="(education, index) in record.data.educations" v-bind:value="'educations:' + index">[Education] {{education.instutute}} - {{education.program}}</option>
                 <option v-for="(workHistory, index) in record.data.workHistories" v-bind:value="'workHistories:' + index">[Work History] {{workHistory.employer}} - {{workHistory.jobTitle}}</option>
               </select>
-              &nbsp;
               <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'skills'">Delete Skill Type</button>
-              <span v-if="currentEditTargetProperty === 'skills'">&nbsp;</span>
               <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'educations'">Delete Education</button>
-              <span v-if="currentEditTargetProperty === 'educations'">&nbsp;</span>
               <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'workHistories'">Delete Work History</button>
-              <span v-if="currentEditTargetProperty === 'workHistories'">&nbsp;</span>
               <button type="button" v-on:click="addTarget('skillTypes')">Add Skill Type</button>
-              &nbsp;
               <button type="button" v-on:click="addTarget('educations')">Add Education</button>
-              &nbsp;
               <button type="button" v-on:click="addTarget('workHistories')">Add Work History</button>
             </div>
           </div>
@@ -196,9 +187,7 @@
             <div class="edit-label">Type:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-large" v-model="currentEditTarget.type" />
-              &nbsp;
               <button type="button" v-on:click="renameIndex('type', 'skills', 'type')">Rename Type</button>
-              &nbsp;
               <button type="button" v-on:click="addIndexSubRecord('skills', currentEditTarget.type)">Add Skill</button>
             </div>
           </div>
@@ -206,7 +195,6 @@
             <div class="edit-label">Skill {{index + 1}}:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-large" v-model="skill.name" />
-              &nbsp;
               <button type="button" v-on:click="removeIndexSubRecord('skills', index)">Delete Skill</button>
             </div>
           </div>
@@ -342,7 +330,7 @@
           </div>
           <div class="edit-row">
             <div class="edit-label-large">Clippy Quotes Mode:</div>
-            <div class="edit-field">
+            <div class="edit-field edit-checkbox-list">
               <span><input type="checkbox" v-model="record.data.disableClippySmartAss" /></span>
             </div>
           </div>
@@ -398,7 +386,7 @@
           </div>
           <div class="edit-row">
             <div class="edit-label-large">Disabled Features</div>
-            <div class="edit-field">
+            <div class="edit-field edit-checkbox-list">
               <span><input type="checkbox" v-model="record.data.disableQuotes" /> Quote</span>
               <span><input type="checkbox" v-model="record.data.disableRSS" /> Rss</span>
               <span><input type="checkbox" v-model="record.data.disableResume" /> Resume</span>
@@ -441,9 +429,11 @@
           </div>
           <div class="edit-row">
             <div class="edit-label-large">Admin Pass</div>
-            <div class="edit-field">
+            <div class="edit-field edit-checkbox-list">
               <span>
                 <input type="password" class="edit-control-normal" v-model="record.data.newPasswordAdmin.value" />
+              </span>
+              <span>
                 <input type="checkbox" v-model="record.data.newPasswordAdmin.reset" />
                 Blank
               </span>
@@ -451,9 +441,8 @@
           </div>
         </div>
       </div>
-      <div class="edit-row">
-        <div class="edit-label">&nbsp;</div>
-        <div class="edit-field">
+      <div class="panel">
+        <div class="panel-right">
           <button type="button" v-on:click="saveRecord">Save</button>
           <button type="button" v-on:click="confirmDeleteRecord" v-if="record.data && record.data.guid">Delete</button>
           <button type="button" v-on:click="cancelRecord">Cancel</button>

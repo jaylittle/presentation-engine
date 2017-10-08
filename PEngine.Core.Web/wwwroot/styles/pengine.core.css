@@ -261,6 +261,13 @@ b
   border: 2px solid #4985cc;
 }
 
+body .dialog-container
+{
+  height: auto;
+  max-height: 100vh;
+  overflow: auto;
+}
+
 .list-container-overflow, .form-container-overflow
 {
   overflow: auto;
@@ -337,34 +344,50 @@ b
   clear: right;
 }
 
-.edit-label, .edit-label-normal
+body .edit-label, .edit-label-normal
 {
   font-size: 12px;
   font-weight: bold;
-  display: inline-block;
+  display: table-cell;
   clear: none;
-  width: 125px;
-  margin-right: 5px;
+  width: auto;
+  padding-right: 5px;
   text-align: right;
-  float: left;
+  float: none;
 }
 
-.edit-label-large
+body .edit-label-large
 {
   font-size: 12px;
   font-weight: bold;
-  display: inline-block;
+  display: table-cell;
   clear: none;
-  width: 200px;
-  margin-right: 5px;
+  width: auto;
+  padding-right: 5px;
   text-align: right;
-  float: left;
+  float: none;
 }
 
 .edit-field
 {
   display: block;
   margin-left: 130px;
+}
+
+.edit-field.edit-checkbox-list
+{
+  margin-left: 210px;
+}
+
+.edit-field.edit-checkbox-list > span
+{
+  display: block;
+}
+
+.edit-field.edit-checkbox-list > span > input[type=checkbox]
+{
+  display: inline-block;
+  width: auto;
 }
 
 .edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
@@ -391,52 +414,60 @@ b
 
 .resume-container
 {
-  display: block;
+  display: table;
+  width: 100%;
   margin-bottom: 10px;
 }
 
 .resume-row
 {
-  display: block;
-  width: 100%;
+  display: table-row;
 }
 
 .resume-label
 {
   font-size: 14px;
   font-weight: bold;
-  display: inline-block;
+  display: table-cell;
   clear: none;
-  width: 100px;
+  border-bottom: solid transparent 3px;
 }
 
 .resume-disp-col-1
 {
   font-size: 14px;
-  display: inline-block;
+  display: table-cell;
   clear: none;
-  width: 30%;
+  border-bottom: solid transparent 3px;
 }
 
 .resume-disp-col-2
 {
   font-size: 14px;
-  display: block;
+  display: table-cell;
+  border-bottom: solid transparent 3px;
 }
 
 .resume-disp
 {
   font-size: 14px;
-  display: block;
-  width: 100%;
+  display: table-cell;
+  border-bottom: solid transparent 3px;
 }
 
 .resume-skill-type
 {
   font-size: 14px;
   font-weight: bold;
-  display: inline-block;
+  display: table-cell;
   clear: none;
+  border-bottom: solid transparent 3px;
+}
+
+.resumecolb
+{
+  display: table-cell;
+  border-bottom: solid transparent 3px;
 }
 
 .resume-skill-container
@@ -444,6 +475,7 @@ b
   margin-left: 150px;
   font-size: 14px;
   display: block;
+  border-bottom: solid transparent 3px;
 }
 
 .quote-control
@@ -516,11 +548,33 @@ b
   vertical-align: top;
 }
 
+.panel-left > button + button, .panel-left > .panel-block > button + button
+{
+  margin-right: 10px;
+}
+
+.panel-left > button:first-child, .panel-left > .panel-block > button:first-child
+{
+  margin-left: 10px;
+}
+
 .panel-right
 {
   text-align: right;
   vertical-align: top;
 }
+
+.panel-right > button + button, .panel-right > .panel-block > button + button
+{
+  margin-left: 10px;
+}
+
+.panel-right > button:last-child, .panel-right > .panel-block > button:last-child
+{
+  margin-right: 10px;
+}
+
+
 
 body > .panel > .panel-left, body > .panel > .panel-right
 {
@@ -594,6 +648,74 @@ body > .panel > .panel-right
   text-align: center;
 }
 
+body .form-container, body .form-container-overflow
+{
+  display: table;
+  width: 100%;
+}
+
+body .dialog-container > div
+{
+  display: table;
+  width: 100%;
+}
+
+body .dialog-container .form-container, body .dialog-container .form-container-overflow
+{
+  display: table-row-group;
+}
+
+.form-container .edit-row, .form-container-overflow .edit-row
+{
+  display: table-row;
+}
+
+.form-container .edit-label, .form-container .edit-label-normal, 
+.form-container-overflow .edit-label, .form-container-overflow .edit-label-normal
+{
+  width: auto;
+  padding-right: 5px;
+  margin-right: 0;
+  text-align: right;
+  display: table-cell;
+  float: none;
+}
+
+.form-container .edit-row .edit-field, .form-container-overflow .edit-row .edit-field
+{
+  margin-left: 0;
+  padding-right: 5px;
+}
+
+.form-container .edit-row .edit-field input, .form-container-overflow .edit-row .edit-field input,
+.form-container .edit-row .edit-field select, .form-container-overflow .edit-row .edit-field select,
+.form-container .edit-row .edit-field textarea, .form-container-overflow .edit-row .edit-field textarea
+{
+  width: 95%;
+  padding-right: 5px;
+}
+
+.form-container .edit-row input[type=checkbox], .form-container-overflow .edit-row input[type=checkbox]
+{
+  display: table-cell;
+}
+
+.form-container .edit-label-large
+{
+  width: auto;
+  margin-right: 0;
+  padding-right: 5px;
+  text-align: right;
+  display: table-cell;
+  float: none;
+}
+
+.form-container .edit-field, .form-container-overflow .edit-field
+{
+  display: table-cell;
+  margin-left: 0px;
+}
+
 @media (max-width: 749px)
 {
   body #pengine-header.panel .panel-left
@@ -612,6 +734,15 @@ body > .panel > .panel-right
     width: 100%;
   }
 
+  body .dialog-container
+  {
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+  }
+
   body .dialog-container > div
   {
     display: table;
@@ -622,57 +753,6 @@ body > .panel > .panel-right
   {
     display: table-row-group;
     width: 100%;
-  }
-
-  .form-container .edit-row, .form-container-overflow .edit-row
-  {
-    display: table-row;
-  }
-  
-  .form-container .edit-label, .form-container .edit-label-normal, 
-  .form-container-overflow .edit-label, .form-container-overflow .edit-label-normal
-  {
-    width: auto;
-    padding-right: 5px;
-    margin-right: 0;
-    text-align: right;
-    display: table-cell;
-    float: none;
-  }
-
-  .form-container .edit-row .edit-field, .form-container-overflow .edit-row .edit-field
-  {
-    margin-left: 0;
-    padding-right: 5px;
-  }
-
-  .form-container .edit-row .edit-field input, .form-container-overflow .edit-row .edit-field input,
-  .form-container .edit-row .edit-field select, .form-container-overflow .edit-row .edit-field select,
-  .form-container .edit-row .edit-field textarea, .form-container-overflow .edit-row .edit-field textarea
-  {
-    width: 95%;
-    padding-right: 5px;
-  }
-
-  .form-container .edit-row input[type=checkbox], .form-container-overflow .edit-row input[type=checkbox]
-  {
-    display: table-cell;
-  }
-  
-  .form-container .edit-label-large
-  {
-    width: auto;
-    margin-right: 0;
-    padding-right: 5px;
-    text-align: right;
-    display: table-cell;
-    float: none;
-  }
-  
-  .form-container .edit-field, .form-container-overflow .edit-field
-  {
-    display: table-cell;
-    margin-left: 0px;
   }
 
   .resume-container .resume-row
@@ -690,14 +770,6 @@ body > .panel > .panel-right
   {
     margin-left: 0;
     padding-bottom: 15px;
-  }
-
-  body .dialog-container
-  {
-    width: 100vw;
-    height: 100vh;
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
   }
 }
 
@@ -740,6 +812,12 @@ body > .panel > .panel-right
   .header
   {
     display: none !important;
+  }
+
+  .content .sub-header
+  {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .footer

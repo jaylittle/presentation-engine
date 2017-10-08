@@ -486,115 +486,11 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   clear: right;
 }
 
-.edit-label, .edit-label-normal
-{
-  font-size: 12px;
-  font-weight: bold;
-  display: inline-block;
-  clear: none;
-  width: 125px;
-  margin-right: 5px;
-  text-align: right;
-  float: left;
-}
-
-.edit-label-large
-{
-  font-size: 12px;
-  font-weight: bold;
-  display: inline-block;
-  clear: none;
-  width: 200px;
-  margin-right: 5px;
-  text-align: right;
-  float: left;
-}
-
-.edit-field
-{
-  display: block;
-  margin-left: 130px;
-}
-
 .edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
 {
   font-size: 12px;
   background-color: white;
   clear: none;
-}
-
-.edit-control-small
-{
-  width: 75px;  
-}
-
-.edit-control-normal
-{
-  width: 150px;
-}
-
-.edit-control-large
-{
-  width: 250px;
-}
-
-.resume-container
-{
-  display: block;
-  margin-bottom: 10px;
-}
-
-.resume-row
-{
-  display: block;
-  width: 100%;
-}
-
-.resume-label
-{
-  font-size: 14px;
-  font-weight: bold;
-  display: inline-block;
-  clear: none;
-  width: 100px;
-}
-
-.resume-disp-col-1
-{
-  font-size: 14px;
-  display: inline-block;
-  clear: none;
-  width: 30%;
-}
-
-.resume-disp-col-2
-{
-  font-size: 14px;
-  display: inline-block;
-}
-
-.resume-disp
-{
-  font-size: 14px;
-  display: block;
-  width: 100%;
-  text-align:justify;
-  text-justify: inter-word;
-}
-
-.resume-skill-type
-{
-  font-size: 14px;
-  font-weight: bold;
-  display: inline-block;
-  clear: none;
-}
-
-.resume-skill-container
-{
-  margin-left: 150px;
-  font-size: 14px;
-  display: block;
 }
 
 .quote-control
@@ -608,54 +504,6 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 .quotelink
 {
   font-size: 14px;
-}
-
-
-.ui-autocomplete
-{
-  background-color: #131218;
-  color: white;
-  height: 100px !important;
-  overflow-y: auto;
-  max-width: 250px !important;
-  padding-left: 0;
-  border: 1px solid #201f25;
-}
-
-.ui-autocomplete li
-{
-  list-style: none;
-  padding-left: 5px;
-}
-
-.ui-datepicker
-{
-  background-color: #131218;
-  color: white;
-  border: 1px solid #201f25;
-  font-size: 13px;
-}
-
-.ui-datepicker-prev
-{
-  float: left;
-  font-size: 12px;
-}
-
-.ui-datepicker-next
-{
-  float: right;
-  font-size: 12px;
-}
-
-.ui-datepicker-title
-{
-  text-align: center;
-}
-
-.ui-datepicker-title div
-{
-  font-size: 10px;
 }
 
 .panel
