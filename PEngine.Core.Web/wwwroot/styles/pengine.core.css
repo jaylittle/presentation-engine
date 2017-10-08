@@ -594,6 +594,113 @@ body > .panel > .panel-right
   text-align: center;
 }
 
+@media (max-width: 749px)
+{
+  body #pengine-header.panel .panel-left
+  {
+    display: inline;
+  }
+
+  body #pengine-header.panel .panel-right
+  {
+    display: inline;
+  }
+
+  body .form-container, body .form-container-overflow
+  {
+    display: table;
+    width: 100%;
+  }
+
+  body .dialog-container > div
+  {
+    display: table;
+    width: 100%;
+  }
+
+  body .dialog-container .form-container, body .dialog-container .form-container-overflow
+  {
+    display: table-row-group;
+    width: 100%;
+  }
+
+  .form-container .edit-row, .form-container-overflow .edit-row
+  {
+    display: table-row;
+  }
+  
+  .form-container .edit-label, .form-container .edit-label-normal, 
+  .form-container-overflow .edit-label, .form-container-overflow .edit-label-normal
+  {
+    width: auto;
+    padding-right: 5px;
+    margin-right: 0;
+    text-align: right;
+    display: table-cell;
+    float: none;
+  }
+
+  .form-container .edit-row .edit-field, .form-container-overflow .edit-row .edit-field
+  {
+    margin-left: 0;
+    padding-right: 5px;
+  }
+
+  .form-container .edit-row .edit-field input, .form-container-overflow .edit-row .edit-field input,
+  .form-container .edit-row .edit-field select, .form-container-overflow .edit-row .edit-field select,
+  .form-container .edit-row .edit-field textarea, .form-container-overflow .edit-row .edit-field textarea
+  {
+    width: 95%;
+    padding-right: 5px;
+  }
+
+  .form-container .edit-row input[type=checkbox], .form-container-overflow .edit-row input[type=checkbox]
+  {
+    display: table-cell;
+  }
+  
+  .form-container .edit-label-large
+  {
+    width: auto;
+    margin-right: 0;
+    padding-right: 5px;
+    text-align: right;
+    display: table-cell;
+    float: none;
+  }
+  
+  .form-container .edit-field, .form-container-overflow .edit-field
+  {
+    display: table-cell;
+    margin-left: 0px;
+  }
+
+  .resume-container .resume-row
+  {
+    display: block;
+  }
+
+  .resume-container .resume-label, .resume-container .resume-disp-col-1, .resume-container .resume-disp-col-2
+  {
+    display: inline-block;
+    width: 45%;
+  }
+
+  .resume-container .resume-row .resume-skill-container
+  {
+    margin-left: 0;
+    padding-bottom: 15px;
+  }
+
+  body .dialog-container
+  {
+    width: 100vw;
+    height: 100vh;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+  }
+}
+
 @media (min-height: 500px) and (min-width: 750px)
 {
   .form-container-overflow

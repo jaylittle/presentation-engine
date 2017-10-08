@@ -40,223 +40,223 @@
         </div>
       </div>
       <div v-if="record.type && record.type == 'article'">
-        <div class="edit-row">
-          <div class="edit-label">Editing:</div>
-          <div class="edit-field">
-            <select class="edit-control-large" v-model="record.state.editTarget">
-              <option value="">[Article]</option>
-              <option v-for="(section, index) in record.data.sections" v-bind:value="'sections:' + index">[Section] {{section.name}}</option>
-            </select>
-            &nbsp;
-            <button type="button" id="section_edit_button_add" v-on:click="addTarget('sections')" v-if="currentEditTargetProperty === ''">Add Section</button>
-            &nbsp;
-            <button type="button" id="section_edit_button_delete" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'sections'">Delete Current Section</button>
+        <div class="form-container">
+          <div class="edit-row">
+            <div class="edit-label">Editing:</div>
+            <div class="edit-field">
+              <select class="edit-control-large" v-model="record.state.editTarget">
+                <option value="">[Article]</option>
+                <option v-for="(section, index) in record.data.sections" v-bind:value="'sections:' + index">[Section] {{section.name}}</option>
+              </select>
+              &nbsp;
+              <button type="button" id="section_edit_button_add" v-on:click="addTarget('sections')" v-if="currentEditTargetProperty === ''">Add Section</button>
+              &nbsp;
+              <button type="button" id="section_edit_button_delete" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'sections'">Delete Current Section</button>
+            </div>
           </div>
         </div>
-        <div class="form-container-overflow">
-          <div v-if="currentEditTargetProperty === ''">
-            <input type="hidden" id="article_edit_guid" name="Guid" :value="guid" />
-            <div class="edit-row">
-              <div class="edit-label">Title:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.name"/></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Description:</div>
-              <div class="edit-field"><textarea class="edit-control" rows="3" v-model="record.data.description"></textarea></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Content URL:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.contentURL" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Category:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.category" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Default Section:</div>
-              <div class="edit-field">
-                <select class="edit-control-large" v-model="record.data.defaultSection">
-                  <option value="">[Not Specified]</option>
-                  <option v-for="(section, index) in record.data.sections" v-bind:value="section.name">{{section.name}}</option>
-                </select>
-              </div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Visible:</div>
-              <input type="checkbox" v-model="record.data.visibleFlag" />
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Hide Buttons:</div>
-              <input type="checkbox" v-model="record.data.hideButtonsFlag" />
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Hide Dropdown:</div>
-              <input type="checkbox" v-model="record.data.hideDropDownFlag" />
+        <div v-if="currentEditTargetProperty === ''" class="form-container-overflow">
+          <input type="hidden" id="article_edit_guid" name="Guid" :value="guid" />
+          <div class="edit-row">
+            <div class="edit-label">Title:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.name"/></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Description:</div>
+            <div class="edit-field"><textarea class="edit-control" rows="3" v-model="record.data.description"></textarea></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Content URL:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.contentURL" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Category:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.category" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Default Section:</div>
+            <div class="edit-field">
+              <select class="edit-control-large" v-model="record.data.defaultSection">
+                <option value="">[Not Specified]</option>
+                <option v-for="(section, index) in record.data.sections" v-bind:value="section.name">{{section.name}}</option>
+              </select>
             </div>
           </div>
-          <div v-if="currentEditTargetProperty === 'sections'">
-            <div class="edit-row">
-              <div class="edit-label">Name:</div>
-              <div class="edit-field">
-                <input type="text" class="edit-control-large" v-model="currentEditTarget.name"  />
-              </div>
+          <div class="edit-row">
+            <div class="edit-label">Visible:</div>
+            <input type="checkbox" v-model="record.data.visibleFlag" />
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Hide Buttons:</div>
+            <input type="checkbox" v-model="record.data.hideButtonsFlag" />
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Hide Dropdown:</div>
+            <input type="checkbox" v-model="record.data.hideDropDownFlag" />
+          </div>
+        </div>
+        <div v-if="currentEditTargetProperty === 'sections'" class="form-container-overflow">
+          <div class="edit-row">
+            <div class="edit-label">Name:</div>
+            <div class="edit-field">
+              <input type="text" class="edit-control-large" v-model="currentEditTarget.name"  />
             </div>
-            <div class="edit-row">
-              <div class="edit-label">Order:</div>
-              <div class="edit-field">
-                <button type="button" v-if="currentEditTargetPosition !== 'First'" v-on:click="moveCurrentTarget(-1)">Up</button>
-                <span v-if="currentEditTargetPosition === 'Between'">&nbsp;</span>
-                <button type="button" v-if="currentEditTargetPosition !== 'Last'" v-on:click="moveCurrentTarget(1)">Down</button>
-              </div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Order:</div>
+            <div class="edit-field">
+              <button type="button" v-if="currentEditTargetPosition !== 'First'" v-on:click="moveCurrentTarget(-1)">Up</button>
+              <span v-if="currentEditTargetPosition === 'Between'">&nbsp;</span>
+              <button type="button" v-if="currentEditTargetPosition !== 'Last'" v-on:click="moveCurrentTarget(1)">Down</button>
             </div>
-            <div class="edit-row">
-              <div class="edit-label">Content:</div>
-              <div class="edit-field"><textarea rows="20" class="edit-control" v-model="currentEditTarget.data"></textarea></div>
-            </div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Content:</div>
+            <div class="edit-field"><textarea rows="20" class="edit-control" v-model="currentEditTarget.data"></textarea></div>
           </div>
         </div>
       </div>
       <div v-if="record.type && record.type == 'resume'">
-        <div class="edit-row">
-          <div class="edit-label">Editing:</div>
-          <div class="edit-field">
-            <select class="edit-control-large" v-model="record.state.editTarget">
-              <option value="personals:0">[Personal]</option>
-              <option value="objectives:0">[Objective]</option>
-              <option v-for="(skillType, index) in record.data.skillTypes" v-bind:value="'skillTypes:' + index">[Skill Type] {{skillType.type}}</option>
-              <option v-for="(education, index) in record.data.educations" v-bind:value="'educations:' + index">[Education] {{education.instutute}} - {{education.program}}</option>
-              <option v-for="(workHistory, index) in record.data.workHistories" v-bind:value="'workHistories:' + index">[Work History] {{workHistory.employer}} - {{workHistory.jobTitle}}</option>
-            </select>
-            &nbsp;
-            <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'skills'">Delete Skill Type</button>
-            <span v-if="currentEditTargetProperty === 'skills'">&nbsp;</span>
-            <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'educations'">Delete Education</button>
-            <span v-if="currentEditTargetProperty === 'educations'">&nbsp;</span>
-            <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'workHistories'">Delete Work History</button>
-            <span v-if="currentEditTargetProperty === 'workHistories'">&nbsp;</span>
-            <button type="button" v-on:click="addTarget('skillTypes')">Add Skill Type</button>
-            &nbsp;
-            <button type="button" v-on:click="addTarget('educations')">Add Education</button>
-            &nbsp;
-            <button type="button" v-on:click="addTarget('workHistories')">Add Work History</button>
+        <div class="form-container">
+          <div class="edit-row">
+            <div class="edit-label">Editing:</div>
+            <div class="edit-field">
+              <select class="edit-control-large" v-model="record.state.editTarget">
+                <option value="personals:0">[Personal]</option>
+                <option value="objectives:0">[Objective]</option>
+                <option v-for="(skillType, index) in record.data.skillTypes" v-bind:value="'skillTypes:' + index">[Skill Type] {{skillType.type}}</option>
+                <option v-for="(education, index) in record.data.educations" v-bind:value="'educations:' + index">[Education] {{education.instutute}} - {{education.program}}</option>
+                <option v-for="(workHistory, index) in record.data.workHistories" v-bind:value="'workHistories:' + index">[Work History] {{workHistory.employer}} - {{workHistory.jobTitle}}</option>
+              </select>
+              &nbsp;
+              <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'skills'">Delete Skill Type</button>
+              <span v-if="currentEditTargetProperty === 'skills'">&nbsp;</span>
+              <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'educations'">Delete Education</button>
+              <span v-if="currentEditTargetProperty === 'educations'">&nbsp;</span>
+              <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'workHistories'">Delete Work History</button>
+              <span v-if="currentEditTargetProperty === 'workHistories'">&nbsp;</span>
+              <button type="button" v-on:click="addTarget('skillTypes')">Add Skill Type</button>
+              &nbsp;
+              <button type="button" v-on:click="addTarget('educations')">Add Education</button>
+              &nbsp;
+              <button type="button" v-on:click="addTarget('workHistories')">Add Work History</button>
+            </div>
           </div>
         </div>
-        <div class="form-container-overflow">
-          <div v-if="currentEditTargetProperty === 'personals'">
-            <div class="edit-row">
-              <div class="edit-label">Full Name:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.fullName" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Email:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.email" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Web:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.websiteURL" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Phone:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.phone" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Fax:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.fax" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Address:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.address1" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Address 2:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.address2" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">City:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.city" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">State:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.state" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Zip:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.zip" /></div>
+        <div v-if="currentEditTargetProperty === 'personals'" class="form-container-overflow">
+          <div class="edit-row">
+            <div class="edit-label">Full Name:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.fullName" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Email:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.email" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Web:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.websiteURL" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Phone:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.phone" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Fax:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.fax" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Address:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.address1" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Address 2:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.address2" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">City:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.city" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">State:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.state" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Zip:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.zip" /></div>
+          </div>
+        </div>
+        <div v-if="currentEditTargetProperty === 'objectives'" class="form-container-overflow">
+          <div class="edit-row">
+            <div class="edit-label">Content:</div>
+            <div class="edit-field"><textarea class="edit-control" rows="10" v-model="currentEditTarget.data"></textarea></div>
+          </div>
+        </div>
+        <div v-if="currentEditTargetProperty === 'skillTypes'" class="form-container-overflow">
+          <div class="edit-row">
+            <div class="edit-label">Type:</div>
+            <div class="edit-field">
+              <input type="text" class="edit-control-large" v-model="currentEditTarget.type" />
+              &nbsp;
+              <button type="button" v-on:click="renameIndex('type', 'skills', 'type')">Rename Type</button>
+              &nbsp;
+              <button type="button" v-on:click="addIndexSubRecord('skills', currentEditTarget.type)">Add Skill</button>
             </div>
           </div>
-          <div v-if="currentEditTargetProperty === 'objectives'">
-            <div class="edit-row">
-              <div class="edit-label">Content:</div>
-              <div class="edit-field"><textarea class="edit-control" rows="10" v-model="currentEditTarget.data"></textarea></div>
+          <div class="edit-row" v-for="(skill, index) in currentEditTarget.skills">
+            <div class="edit-label">Skill {{index + 1}}:</div>
+            <div class="edit-field">
+              <input type="text" class="edit-control-large" v-model="skill.name" />
+              &nbsp;
+              <button type="button" v-on:click="removeIndexSubRecord('skills', index)">Delete Skill</button>
             </div>
           </div>
-          <div v-if="currentEditTargetProperty === 'skillTypes'">
-            <div class="edit-row">
-              <div class="edit-label">Type:</div>
-              <div class="edit-field">
-                <input type="text" class="edit-control-large" v-model="currentEditTarget.type" />
-                &nbsp;
-                <button type="button" v-on:click="renameIndex('type', 'skills', 'type')">Rename Type</button>
-                &nbsp;
-                <button type="button" v-on:click="addIndexSubRecord('skills', currentEditTarget.type)">Add Skill</button>
-              </div>
-            </div>
-            <div class="edit-row" v-for="(skill, index) in currentEditTarget.skills">
-              <div class="edit-label">Skill {{index + 1}}:</div>
-              <div class="edit-field">
-                <input type="text" class="edit-control-large" v-model="skill.name" />
-                &nbsp;
-                <button type="button" v-on:click="removeIndexSubRecord('skills', index)">Delete Skill</button>
-              </div>
-            </div>
+        </div>
+        <div v-if="currentEditTargetProperty === 'educations'" class="form-container-overflow">
+          <div class="edit-row">
+            <div class="edit-label">Institute:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.institute" /></div>
           </div>
-          <div v-if="currentEditTargetProperty === 'educations'">
-            <div class="edit-row">
-              <div class="edit-label">Institute:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.institute" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Institute URL:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.instituteUrl" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Program:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.program" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Started:</div>
-              <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.started" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Completed:</div>
-              <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.completed" /></div>
-            </div>
+          <div class="edit-row">
+            <div class="edit-label">Institute URL:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.instituteUrl" /></div>
           </div>
-          <div v-if="currentEditTargetProperty === 'workHistories'">
-            <div class="edit-row">
-              <div class="edit-label">Employer:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.employer" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Employer URL:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.employerUrl" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Job Title:</div>
-              <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.jobTitle" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Started:</div>
-              <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.started" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Completed:</div>
-              <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.completed" /></div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-label">Job Description:</div>
-              <div class="edit-field"><textarea class="edit-control" rows="10" v-model="currentEditTarget.jobDescription"></textarea></div>
-            </div>
+          <div class="edit-row">
+            <div class="edit-label">Program:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.program" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Started:</div>
+            <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.started" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Completed:</div>
+            <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.completed" /></div>
+          </div>
+        </div>
+        <div v-if="currentEditTargetProperty === 'workHistories'" class="form-container-overflow">
+          <div class="edit-row">
+            <div class="edit-label">Employer:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.employer" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Employer URL:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.employerUrl" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Job Title:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.jobTitle" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Started:</div>
+            <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.started" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Completed:</div>
+            <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.completed" /></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Job Description:</div>
+            <div class="edit-field"><textarea class="edit-control" rows="10" v-model="currentEditTarget.jobDescription"></textarea></div>
           </div>
         </div>
       </div>
