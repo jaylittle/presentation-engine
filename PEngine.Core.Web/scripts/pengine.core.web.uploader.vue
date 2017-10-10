@@ -22,7 +22,7 @@
         <li v-for="error in errors">{{ error.text }}</li>
       </ul>
       <div>
-        <div class="form-container-overflow" v-if="mode === 'multiupload'">
+        <div class="form-container" v-if="mode === 'multiupload'">
           <div class="edit-row" v-for="n in maxFiles">
             <div class="edit-label">File #{{n}}:</div>
             <div class="edit-field">
@@ -30,7 +30,7 @@
             </div>
           </div>
         </div>
-        <div class="form-container-overflow" v-if="mode === 'naming'">
+        <div class="form-container" v-if="mode === 'naming'">
           <div class="edit-row">
             <div class="edit-label">New Name:</div>
             <div class="edit-field">

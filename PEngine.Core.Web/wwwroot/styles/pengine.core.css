@@ -266,6 +266,7 @@ body .dialog-container
   height: auto;
   max-height: 100vh;
   overflow: auto;
+  box-sizing: border-box;
 }
 
 .list-container-overflow, .form-container-overflow
@@ -574,21 +575,17 @@ body .edit-label-large
   margin-right: 10px;
 }
 
-
-
-body > .panel > .panel-left, body > .panel > .panel-right
-{
-  display: inline-block;
-  width: calc(50vw - 1.25em);
-}
-
 body > .panel > .panel-left
 {
+  display: inline-block;
+  width: calc(30vw - 1.25em);
   margin-left: .25em;
 }
 
 body > .panel > .panel-right
 {
+  display: inline-block;
+  width: calc(70vw - 1.25em);
   margin-right: .25em;
 }
 
@@ -791,6 +788,16 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
 
 @media (min-width: 750px)
 {
+  body #pengine-header.panel .panel-left
+  {
+    display: inline;
+  }
+
+  body #pengine-header.panel .panel-right
+  {
+    display: inline;
+  }
+
   .dialog-container
   {
     width: 80%;
@@ -804,6 +811,19 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
   #modal-overlay
   {
     display: block;
+  }
+}
+
+@media (min-width: 1000px)
+{
+  body #pengine-header.panel .panel-left
+  {
+    display: inline-block;
+  }
+
+  body #pengine-header.panel .panel-right
+  {
+    display: inline-block;
   }
 }
 

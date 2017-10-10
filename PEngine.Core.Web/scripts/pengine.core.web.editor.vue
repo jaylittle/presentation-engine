@@ -13,7 +13,7 @@
         <li v-for="error in record.errors">{{ error.text }}</li>
       </ul>
       <div v-if="record.type && record.type == 'post'">
-        <div class="form-container-overflow">
+        <div class="form-container">
           <div class="edit-row">
             <div class="edit-label">Title:</div>
             <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.name"></div>
@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-        <div v-if="currentEditTargetProperty === ''" class="form-container-overflow">
+        <div v-if="currentEditTargetProperty === ''" class="form-container">
           <input type="hidden" id="article_edit_guid" name="Guid" :value="guid" />
           <div class="edit-row">
             <div class="edit-label">Title:</div>
@@ -93,7 +93,7 @@
             <input type="checkbox" v-model="record.data.hideDropDownFlag" />
           </div>
         </div>
-        <div v-if="currentEditTargetProperty === 'sections'" class="form-container-overflow">
+        <div v-if="currentEditTargetProperty === 'sections'" class="form-container">
           <div class="edit-row">
             <div class="edit-label">Name:</div>
             <div class="edit-field">
@@ -134,7 +134,7 @@
             </div>
           </div>
         </div>
-        <div v-if="currentEditTargetProperty === 'personals'" class="form-container-overflow">
+        <div v-if="currentEditTargetProperty === 'personals'" class="form-container">
           <div class="edit-row">
             <div class="edit-label">Full Name:</div>
             <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.fullName" /></div>
@@ -176,13 +176,13 @@
             <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.zip" /></div>
           </div>
         </div>
-        <div v-if="currentEditTargetProperty === 'objectives'" class="form-container-overflow">
+        <div v-if="currentEditTargetProperty === 'objectives'" class="form-container">
           <div class="edit-row">
             <div class="edit-label">Content:</div>
             <div class="edit-field"><textarea class="edit-control" rows="10" v-model="currentEditTarget.data"></textarea></div>
           </div>
         </div>
-        <div v-if="currentEditTargetProperty === 'skillTypes'" class="form-container-overflow">
+        <div v-if="currentEditTargetProperty === 'skillTypes'" class="form-container">
           <div class="edit-row">
             <div class="edit-label">Type:</div>
             <div class="edit-field">
@@ -199,7 +199,7 @@
             </div>
           </div>
         </div>
-        <div v-if="currentEditTargetProperty === 'educations'" class="form-container-overflow">
+        <div v-if="currentEditTargetProperty === 'educations'" class="form-container">
           <div class="edit-row">
             <div class="edit-label">Institute:</div>
             <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.institute" /></div>
@@ -221,7 +221,7 @@
             <div class="edit-field"><input type="text" class="edit-control-normal datepicker" v-model="currentEditTarget.completed" /></div>
           </div>
         </div>
-        <div v-if="currentEditTargetProperty === 'workHistories'" class="form-container-overflow">
+        <div v-if="currentEditTargetProperty === 'workHistories'" class="form-container">
           <div class="edit-row">
             <div class="edit-label">Employer:</div>
             <div class="edit-field"><input type="text" class="edit-control-large" v-model="currentEditTarget.employer" /></div>
@@ -249,7 +249,7 @@
         </div>
       </div>
       <div v-if="record.type && record.type == 'settings'">
-        <div class="form-container-overflow">
+        <div class="form-container">
           <div class="edit-row">
             <div class="edit-label-large">Owner Name / Email:</div>
             <div class="edit-field">

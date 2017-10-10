@@ -511,7 +511,6 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   background-color: #edede7;
   display: block;
   width: 100%;
-  min-width: 800px;
   min-height: 25px;
   margin-top: 0px;
   margin-bottom: 3px;
@@ -521,7 +520,6 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 body > div.panel, div.page > div.panel
 {
-  min-width: 810px;
   margin-top: 0px;
   margin-bottom: 0px;
   position: static;
@@ -546,22 +544,6 @@ div.page > div.panel
 {
   text-align: right;
   vertical-align: top;
-}
-
-body > .panel > .panel-left, body > .panel > .panel-right
-{
-  display: inline-block;
-  width: calc(50vw - 1.25em);
-}
-
-body > .panel > .panel-left
-{
-  margin-left: .25em;
-}
-
-body > .panel > .panel-right
-{
-  margin-right: .25em;
 }
 
 

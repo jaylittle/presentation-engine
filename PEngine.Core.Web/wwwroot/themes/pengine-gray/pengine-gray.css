@@ -467,12 +467,6 @@ body > div.panel
   vertical-align: top;
 }
 
-body > .panel > .panel-left, body > .panel > .panel-right
-{
-  display: inline-block;
-  width: calc(50vw - 1.25em);
-}
-
 body > .panel > .panel-left
 {
   margin-left: .25em;
