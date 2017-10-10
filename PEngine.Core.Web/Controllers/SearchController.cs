@@ -34,7 +34,7 @@ namespace PEngine.Core.Web.Controllers
       model.State.CurrentSection = query;
       
       var results = new List<PEngineSearchResultModel>();
-      string[] searchTerms = query.Split(' ');
+      string[] searchTerms = !string.IsNullOrWhiteSpace(query) ? query.Split(' ') : new string[] {};
       
       results.AddRange((await _articleService.SearchArticles(searchTerms, model.State.HasAdmin))
         .Select(a => new PEngineSearchResultModel(a)));

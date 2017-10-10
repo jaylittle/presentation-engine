@@ -12,6 +12,24 @@ textarea
   width:95%;
 }
 
+button
+{
+  background-color: #524a7b;
+  color: white;
+  border: 0px solid #201f25;
+  border-radius: 2px;
+  min-width: 95px;
+  margin: 0px 5px 5px 5px;
+  padding: 2px 0 3px 0;
+  height: 22px;
+}
+
+button:hover
+{
+  background-color: white;
+  color: #524a7b;
+}
+
 blockquote, div.quoted-text
 {
   border-style: none;
@@ -489,7 +507,6 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 .edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
 {
   font-size: 12px;
-  background-color: white;
   clear: none;
 }
 
