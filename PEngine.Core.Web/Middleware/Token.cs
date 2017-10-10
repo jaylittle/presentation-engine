@@ -289,11 +289,13 @@ namespace PEngine.Core.Web.Middleware
 
     private void AddJwtCookie(HttpContext context, string encodedJwt, int expirationMinutes)
     {
+      var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase)
+        || context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase);
       var cookieOptions = new CookieOptions()
       {
         Expires = DateTimeOffset.Now.AddMinutes(expirationMinutes),
         HttpOnly = true,
-        Secure = context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase)
+        Secure = secureFlag
       };
       if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
       {
