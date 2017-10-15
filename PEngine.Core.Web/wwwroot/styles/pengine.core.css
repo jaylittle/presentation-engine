@@ -89,7 +89,6 @@ b
 
 .content-menu
 {
-  /* border: dashed 2px blue; */
   display: block;
   position: relative;
   background-color: #0b35a6;
@@ -98,7 +97,6 @@ b
 
 .menu
 {
-  /* border: dashed 2px purple; */
   display: inline-block;
   position: static;
   width: 170px;
@@ -136,7 +134,6 @@ b
 
 .content
 {
-  /* border: dashed 2px green; */
   display: block;
   position: static;
   margin-left: 190px;

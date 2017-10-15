@@ -1,15 +1,9 @@
 ﻿body
 {
-  margin: .25em .25em .25em .25em;
   background-color: white;
   font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 15px;
   color: #201f25;
-}
-
-textarea 
-{
-  width:95%;
 }
 
 button
@@ -80,19 +74,15 @@ b
   color: #201f25;
 }
 
-/* Modded for PE4 (removed float) */
 .page
 {
-  width: 100%;
   min-width: 800px;
   background-color: white;
 }
 
 .header
 {
-  width: 100%;
   min-width: 810px;
-  min-height: 59px;
   background-color: white;
   background-image: url(./btopmid.png);
   background-repeat: repeat-x;
@@ -101,7 +91,6 @@ b
 .header-left
 {
   width: 190px;
-  min-height: 59px;
   background-image: url(./btopleft.png);
   background-position: left top;
   background-repeat: no-repeat;
@@ -111,7 +100,6 @@ b
 .header-right
 {
   width: 190px;
-  min-height: 59px;
   vertical-align: middle;
   background-image: url(./btopright.png);
   background-position: right top;
@@ -122,14 +110,8 @@ b
 .header-middle
 {
   display: none;
-  text-align: left;
-  margin-left: 190px;
-  margin-right: 190px;
   font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 38px;
-  font-weight:bold;
-  color: white;
-  background-color: transparent;
 }
 
 .content-menu
@@ -142,13 +124,11 @@ b
 
 .menu
 {
-  /* border: dashed 2px purple; */
   display: block;
   position: relative;
   clear: both;
   padding-top: 5px;
   padding-left: 0px;
-  /* background-image:url(menubg.png); */
   background-color: white;
   background-repeat: repeat;
   width: 100%;
@@ -175,9 +155,6 @@ b
   border-radius: 2px;
   font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 14px;
-  font-weight: bold;
-  font-style: normal;
-  color: white; 
 }
 
 .menu-button:hover
@@ -192,15 +169,12 @@ b
   width: 0px;
   margin-left: 0px;
   margin-right: 0px;
-  vertical-align: middle;
-  text-align: center;
   clear: both;
   display: inline-block;
 }
 
 .content
 {
-  /* border: dashed 2px green; */
   display: block;
   position: relative;
   clear: both;
@@ -218,22 +192,9 @@ b
   margin-right: auto;
 }
 
-/* Modded for PE4 (removed float) */
 .footer
 {
   display: none;
-}
-
-.footer-left
-{
-}
-
-.footer-mid
-{
-}
-
-.footer-right
-{
 }
 
 .sub-header
@@ -268,10 +229,6 @@ b
 {
   font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 20px;
-  font-weight: bold;
-  color: inherit;
-  margin-bottom: 5px;
-  display: block;
   position: relative;
   padding-left: 5px;
 } 
@@ -282,16 +239,6 @@ b
   font-size: 14px;
   font-weight: bold;
   color: inherit;
-  margin-bottom: 15px;
-  display: block;
-} 
-
-.logo-container
-{
-  text-align: center;
-  width: 100%;
-  display: block;
-  margin-bottom: 10px;
 }
 
 .logo-container img
@@ -302,15 +249,11 @@ b
 
 .post-icon
 {
-  float: right;
-  margin: 10px 10px 10px 10px;
   border: none;
 }
 
 .list-container
 {
-  display: block;
-  margin-bottom: 10px;
   text-align:justify;
   text-justify: inter-word;
   margin-right: 5px;
@@ -320,9 +263,6 @@ b
 {
   text-align:justify;
   text-justify: inter-word;
-  display: block;
-  margin-bottom: 10px;
-  margin-top: 10px;
 }
 
 div.display-container > p:first-child
@@ -360,36 +300,16 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   margin-bottom: 0;
 }
 
-.form-container
-{
-  text-align: left;
-  width: 100%;
-  display: block;
-  margin-bottom: 10px;
-}
-
 .dialog-container
 {
-  width: 100%;
-  height: 100%;
   background-color: #edede7;
-  padding: 5px;
   border: 2px solid #131218;
-}
-
-.list-container-overflow, .form-container-overflow
-{
-  overflow: auto;
 }
 
 .form-container-center
 {
   text-align: center;
   width: 400px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
 }
 
 .list-table
@@ -397,9 +317,6 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   color: #201f25;
   font-size: 13px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
   border: none !important;
 }
 
@@ -492,33 +409,6 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   color: white;
 }
 
-.list-button
-{
-  width: 75px;
-  height: 22px;
-  margin: 0px 5px 0px 0px;
-}
-
-.edit-row
-{
-  margin-bottom: 10px;
-  clear: right;
-}
-
-.edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
-{
-  font-size: 12px;
-  clear: none;
-}
-
-.quote-control
-{
-  width: 100%;
-  text-align: center;
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-
 .quotelink
 {
   font-size: 14px;
@@ -527,9 +417,6 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 .panel
 {
   background-color: #edede7;
-  display: block;
-  width: 100%;
-  min-height: 25px;
   margin-top: 0px;
   margin-bottom: 3px;
   border: none;
@@ -548,43 +435,6 @@ body > div.panel, div.page > div.panel
 div.page > div.panel
 {
   background: transparent;
-}
-
-
-.panel-left
-{
-  text-align: left;
-  vertical-align: top;
-}
-
-
-.panel-right
-{
-  text-align: right;
-  vertical-align: top;
-}
-
-
-.panel-center
-{
-  display: block;
-  margin-right: 5px;
-  margin-left: 5px;
-  text-align: center;
-}
-
-
-.panel-block
-{
-  display: inline-block;
-  margin-right: 5px;
-  margin-left: 5px;
-}
-
-
-.panel-block span
-{
-  padding-right: 5px;
 }
 
 @media screen and (max-width: 325px)
@@ -620,40 +470,6 @@ div.page > div.panel
   {
     display: inline-block;
     margin-bottom: 2px;
-  }
-}
-
-@media (min-height: 500px) and (min-width: 750px)
-{
-  .form-container-overflow
-  {
-    max-height: 425px;
-  }
-}
-
-@media (min-height: 700px) and (min-width: 750px)
-{
-  .form-container-overflow
-  {
-    max-height: 75vh;
-  }
-}
-
-@media (min-width: 750px)
-{
-  .dialog-container
-  {
-    width: 80%;
-    margin-left: 10%;
-    margin-right: auto;
-    margin-bottom: 10px;
-    height: auto;
-    min-width: 600px;
-  }
-
-  #modal-overlay
-  {
-    display: block;
   }
 }
 
