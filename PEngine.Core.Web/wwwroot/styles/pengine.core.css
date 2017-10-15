@@ -342,6 +342,11 @@ body .dialog-container
   clear: right;
 }
 
+.edit-row .edit-field, .edit-row .edit-label
+{
+	padding-bottom: 2px;
+}
+
 body .edit-label, .edit-label-normal
 {
   font-size: 12px;
@@ -481,53 +486,6 @@ body .edit-label-large
   text-align: center;
   margin-bottom: 10px;
   margin-top: 10px;
-}
-
-.ui-autocomplete
-{
-  background-color: #4985cc;
-  color: white;
-  height: 100px !important;
-  overflow-y: auto;
-  max-width: 250px !important;
-  padding-left: 0;
-  border: 1px solid black;
-}
-
-.ui-autocomplete li
-{
-  list-style: none;
-  padding-left: 5px;
-}
-
-.ui-datepicker
-{
-  background-color: #4985cc;
-  color: white;
-  border: 1px solid black;
-  font-size: 13px;
-}
-
-.ui-datepicker-prev
-{
-  float: left;
-  font-size: 12px;
-}
-
-.ui-datepicker-next
-{
-  float: right;
-  font-size: 12px;
-}
-
-.ui-datepicker-title
-{
-  text-align: center;
-}
-
-.ui-datepicker-title div
-{
-  font-size: 10px;
 }
 
 .panel
@@ -684,8 +642,9 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
 .form-container .edit-row .edit-field select, .form-container-overflow .edit-row .edit-field select,
 .form-container .edit-row .edit-field textarea, .form-container-overflow .edit-row .edit-field textarea
 {
-  width: 95%;
+  width: 100%;
   padding-right: 5px;
+  box-sizing: border-box;
 }
 
 .form-container .edit-row input[type=checkbox], .form-container-overflow .edit-row input[type=checkbox]
