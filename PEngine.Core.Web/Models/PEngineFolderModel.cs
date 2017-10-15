@@ -61,8 +61,8 @@ namespace PEngine.Core.Web.Models
       FullPath = current.FullName;
       if (populateChildren)
       {
-        Files = current.GetFiles().Select(f => new PEngineFileModel(f)).ToList();
-        Folders = current.GetDirectories().Select(d => new PEngineFolderModel(d, false)).ToList();
+        Files = current.GetFiles().Select(f => new PEngineFileModel(f)).OrderBy(f => f.Name).ToList();
+        Folders = current.GetDirectories().Select(d => new PEngineFolderModel(d, false)).OrderBy(f => f.Name).ToList();
         Parent = new PEngineFolderModel(current.Parent, false);
       }
       Valid = true;
