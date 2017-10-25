@@ -10,8 +10,9 @@ namespace PEngine.Core.Shared
     {
       if (!string.IsNullOrEmpty(plainText))
       {
+        var plainData = Settings.Current.SecretKey.ToString() + plainText;
         var sha256 = System.Security.Cryptography.SHA256.Create();
-        return BytesToHex(sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(plainText)));
+        return BytesToHex(sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(plainData)));
       }
       return string.Empty;
     }
@@ -20,8 +21,9 @@ namespace PEngine.Core.Shared
     {
       if (!string.IsNullOrEmpty(targetHash) || !string.IsNullOrEmpty(plainText))
       {
+        var plainData = Settings.Current.SecretKey.ToString() + plainText;
         var sha256 = System.Security.Cryptography.SHA256.Create();
-        var computedHash = BytesToHex(sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(plainText)));
+        var computedHash = BytesToHex(sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(plainData)));
         return computedHash == targetHash;
       }
       return true;
