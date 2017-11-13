@@ -145,7 +145,10 @@ namespace PEngine.Core.Web
           template: "{controller=Home}/{action=Index}/{id?}");
       });
 
-      app.UseStaticFiles();
+      app.UseStaticFiles(new StaticFileOptions() {
+        DefaultContentType = "application/octet-stream",
+        ServeUnknownFileTypes = true
+      });
 
       PEngine.Core.Data.Database.Startup(env.ContentRootPath, new SQLiteDataProvider()).Wait();
       PEngine.Core.Logic.FeedManager.Startup(env.ContentRootPath, svp.GetRequiredService<IPostService>()).Wait();
