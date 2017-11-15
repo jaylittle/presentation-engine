@@ -198,23 +198,23 @@ b
 
 .sub-header
 {
-  background-image: linear-gradient(top, #FFFFFF 4%, #EDEDE7 96%);
-  background-image: -o-linear-gradient(top, #FFFFFF 4%, #EDEDE7 96%);
-  background-image: -moz-linear-gradient(top, #FFFFFF 4%, #EDEDE7 96%);
-  background-image: -webkit-linear-gradient(top, #FFFFFF 4%, #EDEDE7 96%);
-  background-image: -ms-linear-gradient(top, #FFFFFF 4%, #EDEDE7 96%);
+  background-image: linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
+  background-image: -o-linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
+  background-image: -moz-linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
+  background-image: -webkit-linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
+  background-image: -ms-linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
   background-image: -webkit-gradient(
     linear,
     left top,
     left bottom,
-    color-stop(0.04, #FFFFFF),
-    color-stop(0.96, #EDEDE7)
+    color-stop(0.96, #EDEDE7),
+    color-stop(0.04, #FFFFFF)
   );
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EDEDE7',GradientType=0 ); /* IE6-9 */
   min-height: 27px;
   background-position: top;
   background-repeat: repeat;
-  padding-left: 10px;
+  padding-left: 0;
   padding-right: 10px;
   font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 17px;
@@ -415,11 +415,16 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .panel
 {
-  background-color: #edede7;
+  background-color: #EDEDE7;
   margin-top: 0px;
   margin-bottom: 3px;
   border: none;
   position: relative;
+}
+
+.sub-header + .panel
+{
+  background-color: #FFFFFF;
 }
 
 body > div.panel, div.page > div.panel
