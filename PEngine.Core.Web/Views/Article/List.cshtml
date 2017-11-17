@@ -44,7 +44,7 @@
           @if (Model.State.HasAdmin)
           {
             @Html.Raw("&nbsp;|&nbsp;")
-            <a href="#" class="list-button article_view_button_edit" data-guid="@item.Guid">[Edit]</a>
+            <a href="javascript:void" class="list-button article_view_button_edit" data-guid="@item.Guid">[Edit]</a>
           }
         </td>
       </tr>

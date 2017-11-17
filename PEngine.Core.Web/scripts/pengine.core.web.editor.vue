@@ -465,7 +465,12 @@
             myHash += `/${guid}`;
           }
         }
-        window.location.hash = myHash;
+        if (myHash != '' || !history) {
+          window.location.hash = myHash;
+        }
+        else {
+          history.pushState("", document.title, window.location.pathname + window.location.search);
+        }
       },
       getRecordDefaultData() {
         return {
