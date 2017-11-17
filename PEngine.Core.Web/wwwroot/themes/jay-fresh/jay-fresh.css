@@ -199,16 +199,16 @@ b
 
 .sub-header
 {
-  background-image: linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
-  background-image: -o-linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
-  background-image: -moz-linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
-  background-image: -webkit-linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
-  background-image: -ms-linear-gradient(top, #EDEDE7 96%, #FFFFFF 4%);
+  background-image: linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
+  background-image: -o-linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
+  background-image: -moz-linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
+  background-image: -webkit-linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
+  background-image: -ms-linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
   background-image: -webkit-gradient(
     linear,
     left top,
     left bottom,
-    color-stop(0.96, #EDEDE7),
+    color-stop(0.96, #dbdbd6),
     color-stop(0.04, #FFFFFF)
   );
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EDEDE7',GradientType=0 ); /* IE6-9 */
