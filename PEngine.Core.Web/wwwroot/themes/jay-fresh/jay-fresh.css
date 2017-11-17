@@ -28,7 +28,7 @@ button:hover
 blockquote, div.quoted-text
 {
   border-style: none;
-	background-color: #edede7;
+	background-color: #dbdbd6;
 	color: #201f25;
 	font-size: 14px;
 	min-width: 35%;
@@ -140,7 +140,7 @@ b
 
 .menu-button
 {
-  background-color: #edede7;
+  background-color: #dbdbd6;
   background-position: top;
   height: 22px;
   margin: 0px 5px 5px 5px;
@@ -211,7 +211,7 @@ b
     color-stop(0.96, #dbdbd6),
     color-stop(0.04, #FFFFFF)
   );
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EDEDE7',GradientType=0 ); /* IE6-9 */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dbdbd6', endColorstr='#FFFFFF',GradientType=0 ); /* IE6-9 */
   min-height: 27px;
   background-position: top;
   background-repeat: repeat;
@@ -302,7 +302,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .dialog-container
 {
-  background-color: #edede7;
+  background-color: #EDEDE7;
   border: 2px solid #131218;
 }
 
@@ -338,7 +338,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table thead tr
 {
-  background-color: #edede7;
+  background-color: #dbdbd6;
   color: #201f25;
   font-size: 14px;
 }
@@ -354,7 +354,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
     linear,
     left top,
     left bottom,
-    color-stop(0.04, #EDEDE7),
+    color-stop(0.04, #dbdbd6),
     color-stop(0.96, #FFFFFF)
   );
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f1ef', endColorstr='#FFFFFF',GradientType=0 ); /* IE6-9 */
@@ -374,7 +374,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
     linear,
     left top,
     left bottom,
-    color-stop(0.04, #EDEDE7),
+    color-stop(0.04, #dbdbd6),
     color-stop(0.96, #FFFFFF)
   );
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#f1f1ef',GradientType=0 ); /* IE6-9 */
@@ -398,7 +398,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table tfoot tr
 {
-  background-color: #edede7;
+  background-color: #dbdbd6;
   color: #201f25;
   font-size: 12px;
 }
