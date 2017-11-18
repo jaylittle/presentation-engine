@@ -298,19 +298,19 @@ body .dialog-container
   font-size: 15px;
 }
 
-.list-table tbody tr
+.list-table tbody tr:nth-child(odd)
 {
   background-color: #2b4873;
   color: white;
 }
 
-.list-table tbody tr.alt
+.list-table tbody tr:nth-child(even)
 {
   background-color: #447bbd;
   color: #adc7e7;
 }
 
-.list-table tbody tr.hover, .list-table tbody tr.alt.hover
+.list-table tbody tr:hover
 {
   background-color: black;
   color: red;

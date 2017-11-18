@@ -139,7 +139,7 @@ b
 
 .menu-button
 {
-  background-color: #dbdbd6;
+  background-color: #f1f1ef;
   background-position: top;
   height: 22px;
   margin: 0px 5px 5px 5px;
@@ -337,12 +337,12 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table thead tr
 {
-  background-color: #dbdbd6;
+  background-color: #f1f1ef;
   color: #201f25;
   font-size: 14px;
 }
 
-.list-table tbody tr
+.list-table tbody tr:nth-child(odd)
 {
   background-image: linear-gradient(top, #f1f1ef 4%, #FFFFFF 96%);
   background-image: -o-linear-gradient(top, #f1f1ef 4%, #FFFFFF 96%);
@@ -353,7 +353,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
     linear,
     left top,
     left bottom,
-    color-stop(0.04, #dbdbd6),
+    color-stop(0.04, #f1f1ef),
     color-stop(0.96, #FFFFFF)
   );
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f1ef', endColorstr='#FFFFFF',GradientType=0 ); /* IE6-9 */
@@ -362,7 +362,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   color: #201f25;
 }
 
-.list-table tbody tr.alt
+.list-table tbody tr:nth-child(even)
 {
   background-image: linear-gradient(top, #FFFFFF 4%, #f1f1ef 96%);
   background-image: -o-linear-gradient(top, #FFFFFF 4%, #f1f1ef 96%);
@@ -373,8 +373,8 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
     linear,
     left top,
     left bottom,
-    color-stop(0.04, #dbdbd6),
-    color-stop(0.96, #FFFFFF)
+    color-stop(0.04, #FFFFFF),
+    color-stop(0.96, #f1f1ef)
   );
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#f1f1ef',GradientType=0 ); /* IE6-9 */
   background-position: top;
@@ -383,23 +383,16 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 }
 
 
-.list-table tbody tr:hover, .list-table tbody tr.alt:hover
+.list-table tbody tr:hover
 {
   background-image: none;
   background-color: #524a7b;
   color: white;
 }
 
-.list-table tbody tr:hover td a, .list-table tbody tr.alt:hover td a
+.list-table tbody tr:hover td a
 {
   color: white;
-}
-
-.list-table tfoot tr
-{
-  background-color: #dbdbd6;
-  color: #201f25;
-  font-size: 12px;
 }
 
 .list-table tbody tr.selected td, .list-table tbody tr.selected td a

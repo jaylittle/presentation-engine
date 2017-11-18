@@ -268,13 +268,13 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   font-size: 14px;
 }
 
-.list-table tbody tr
+.list-table tbody tr:nth-child(odd)
 {
   background-color: #222126;
   color: white;
 }
 
-.list-table tbody tr.alt
+.list-table tbody tr:nth-child(even)
 {
   background-color: #131218;
   color: white;
