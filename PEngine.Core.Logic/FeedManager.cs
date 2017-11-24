@@ -114,8 +114,8 @@ namespace PEngine.Core.Logic
     private static string RenderForFeed(string data)
     {
       var pipeline = new MarkdownPipelineBuilder()
-        .UseAdvancedExtensions()
-        .DisableHtml();
+        .UseAdvancedExtensions();
+        
       return Regex.Replace(Markdown.ToHtml(data, pipeline.Build()), @"<(.|\n)*?>", string.Empty);
     }
 
