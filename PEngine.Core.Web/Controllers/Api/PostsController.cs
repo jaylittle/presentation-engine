@@ -48,7 +48,7 @@ namespace PEngine.Core.Web.Controllers.Api
       var result = await _postService.UpsertPost(post);
       if (result.Successful)
       {
-        await FeedManager.GetRSSXml();
+        await FeedManager.GenerateRSS();
         return this.Ok(post);
       }
       else
@@ -69,7 +69,7 @@ namespace PEngine.Core.Web.Controllers.Api
     public async Task<IActionResult> DeletePost(Guid guid)
     {
       await _postDal.DeletePost(guid);
-      await FeedManager.GetRSSXml();
+      await FeedManager.GenerateRSS();
       return this.Ok();
     }
   }
