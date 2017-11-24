@@ -60,12 +60,6 @@ namespace PEngine.Core.Shared
 
     public static string DataTruncate(this string data, int length = 75)
     {
-      data = data
-        .Replace("[", string.Empty)
-        .Replace("]", string.Empty)
-        .Replace("<", string.Empty)
-        .Replace(">", string.Empty);
-
       if (length > 0)
       {
         if (data.Length > length)
@@ -75,7 +69,7 @@ namespace PEngine.Core.Shared
       }
       else
       {
-        string[] delimiters = { Environment.NewLine, "\n", "<br>", "[br]" };
+        string[] delimiters = { Environment.NewLine, "\n", "<br>", "</p>" };
         int strptr = -1;
         int dptr = 0;
         while (strptr < 0 && dptr < delimiters.Length)

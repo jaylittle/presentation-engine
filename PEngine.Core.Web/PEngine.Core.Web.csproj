@@ -1,4 +1,3 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -18,31 +17,30 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/jaylittle/presentation-engine/</RepositoryUrl>
-    <!-- owners is not supported in MSBuild -->
   </PropertyGroup>
   <PropertyGroup>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
   <Target Name="MyPrePublishTarget" BeforeTargets="BeforePublish">
-    <Exec Command="npm install &amp;&amp; npm run build" />
+    <Exec Command="npm install &amp;&amp; npm run build"/>
   </Target>
   <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.13.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.1.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="CommandLine.Options" Version="0.0.2" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.4.0" />
+    <PackageReference Include="Markdig" Version="0.14.6"/>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0"/>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.1.5"/>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3"/>
+    <PackageReference Include="CommandLine.Options" Version="0.0.2"/>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.4.0"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj" />
-    <ProjectReference Include="..\PEngine.Core.Data\PEngine.Core.Data.csproj" />
-    <ProjectReference Include="..\PEngine.Core.Logic\PEngine.Core.Logic.csproj" />
+    <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj"/>
+    <ProjectReference Include="..\PEngine.Core.Data\PEngine.Core.Data.csproj"/>
+    <ProjectReference Include="..\PEngine.Core.Logic\PEngine.Core.Logic.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-    <Content Include="sql\**\*" CopyToPublishDirectory="Always" />
-    <Content Remove="pengine.settings.json" />
+    <Folder Include="wwwroot\"/>
+    <Content Include="sql\**\*" CopyToPublishDirectory="Always"/>
+    <Content Remove="pengine.settings.json"/>
   </ItemGroup>
 </Project>

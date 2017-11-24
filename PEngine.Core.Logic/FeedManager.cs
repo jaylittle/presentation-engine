@@ -4,12 +4,14 @@ using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Logic.Interfaces;
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Markdig;
 
 namespace PEngine.Core.Logic
 {
@@ -64,7 +66,7 @@ namespace PEngine.Core.Logic
         frameXml.Append("<channel>");
         frameXml.Append($"<title>{title}</title>");
         frameXml.Append($"<link>{location}</link>");
-        frameXml.Append($"<description>{title}></description>");
+        frameXml.Append($"<description>{title}</description>");
         frameXml.Append($"<lastBuildDate>{string.Format("{0:R}", DateTime.Now)}</lastBuildDate>");
         frameXml.Append("<language>en-us</language>");
         if (!string.IsNullOrEmpty(logo))
@@ -90,11 +92,13 @@ namespace PEngine.Core.Logic
           foreach (var post in posts)
           {
             var postDate = string.Format("{0:R}", post.CreatedUTC.Value);
+            var postData = RenderForFeed(post.Data);
+
             postXml.Append("<item>");
             postXml.Append($"<title>{System.Net.WebUtility.HtmlEncode(post.Name)}</title>");
             postXml.Append($"<link>{location}/post/view/{post.CreatedYear}/{post.CreatedMonth}/{post.UniqueName}</link>");
             postXml.Append($"<pubDate>{postDate}</pubDate>");
-            postXml.Append($"<description>{post.Data.DataTruncate(-1)}</description>");
+            postXml.Append($"<description>{System.Net.WebUtility.HtmlEncode(postData.DataTruncate(-1))}</description>");
             postXml.Append("</item>");
           }
           rssChannel.InnerXml += postXml.ToString();
@@ -105,6 +109,14 @@ namespace PEngine.Core.Logic
           }
         }
       }
+    }
+
+    private static string RenderForFeed(string data)
+    {
+      var pipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
+        .DisableHtml();
+      return Regex.Replace(Markdown.ToHtml(data, pipeline.Build()), @"<(.|\n)*?>", string.Empty);
     }
 
     public static async Task<string> GetRSSXml()

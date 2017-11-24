@@ -4,13 +4,13 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="dotnet-xunit" Version="2.3.0-beta4-build3742"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0"/>
-    <PackageReference Include="Moq" Version="4.7.99"/>
+    <PackageReference Include="dotnet-xunit" Version="2.3.1"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0"/>
+    <PackageReference Include="Moq" Version="4.7.145"/>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3"/>
-    <PackageReference Include="xunit" Version="2.3.0-beta4-build3742"/>
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0-beta4-build3742"/>
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta4-build3742"/>
+    <PackageReference Include="xunit" Version="2.3.1"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1"/>
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj"/>
