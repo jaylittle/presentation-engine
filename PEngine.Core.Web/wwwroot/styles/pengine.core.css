@@ -336,6 +336,18 @@ body .dialog-container
   margin: 0px 5px 0px 0px;
 }
 
+.search-list-description, .post-list-description
+{
+  max-width: 450px;
+}
+
+.search-list-description div, .post-list-description div
+{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .edit-row
 {
   margin-bottom: 10px;

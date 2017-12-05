@@ -37,7 +37,11 @@
       <tr class='@((i++)%2!=0 ? "alt" : string.Empty)'>
         <td>@item.Type</td>
         <td>@item.Title</td>
-        <td>@Rendering.DataTruncate(item.Content)</td>
+        <td class="search-list-description">
+          <div>
+            @item.Content
+          </div>
+        </td>
         <td nowrap="1" class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(item.CreatedUTC)">@Rendering.FormatDate(item.CreatedUTC)</td>
         <td>@item.Creator</td>
         <td nowrap="1">

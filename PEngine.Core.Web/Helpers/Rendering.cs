@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Mvc;
@@ -132,6 +133,14 @@ namespace PEngine.Core.Web.Helpers
     public static string DataTruncate(string data, int length = 75)
     {
       return data.DataTruncate(length);
+    }
+
+    public static string DataRenderAndTruncate(string data, int length =75)
+    {
+      var pipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions();
+        
+      return DataTruncate(Regex.Replace(Markdown.ToHtml(data, pipeline.Build()), @"<(.|\n)*?>", string.Empty), length);
     }
 
     public static IEnumerable<string> ThemeList

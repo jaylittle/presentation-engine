@@ -36,7 +36,11 @@
         {
         <td nowrap="1">N/A</td>
         }
-        <td>@Rendering.DataTruncate(item.Data)</td>
+        <td class="post-list-description">
+          <div>
+            @Rendering.DataRenderAndTruncate(item.Data, 255)
+          </div>
+        </td>
         <td nowrap="1">
           @Html.RouteLink("[View]", new { controller = "post", action = "view", year = item.CreatedUTC.Value.Year, month = item.CreatedUTC.Value.Month, uniqueName = item.UniqueName }, new { @class = "list-button" })
           @if (Model.State.HasAdmin)

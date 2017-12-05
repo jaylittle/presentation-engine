@@ -24,7 +24,7 @@ namespace PEngine.Core.Web.Models
     {
       Type = "Post";
       Title = post.Name;
-      Content = Helpers.Rendering.DataTruncate(post.Data, 75);
+      Content = Helpers.Rendering.DataRenderAndTruncate(post.Data, 255);
       CreatedUTC = post.CreatedUTC;
       Creator = "Admin";
       Link = $"/post/view/{post.CreatedYear}/{post.CreatedMonth}/{post.UniqueName}";
@@ -34,7 +34,7 @@ namespace PEngine.Core.Web.Models
     {
       Type = "Article";
       Title = article.Name;
-      Content = Helpers.Rendering.DataTruncate(article.Description, 75);
+      Content = Helpers.Rendering.DataRenderAndTruncate(article.Description, 255);
       CreatedUTC = article.CreatedUTC;
       Creator = "Admin";
       Link = $"/article/view/{article.UniqueName}";
@@ -44,7 +44,7 @@ namespace PEngine.Core.Web.Models
     {
       Type = "Forum";
       Title = forumThreadPost.ForumThreadName;
-      Content = Helpers.Rendering.DataTruncate(forumThreadPost.Data, 75);
+      Content = Helpers.Rendering.DataRenderAndTruncate(forumThreadPost.Data, 255);
       CreatedUTC = forumThreadPost.CreatedUTC;
       Creator = forumThreadPost.ForumUserId;
       Link = $"/forum/thread/{forumThreadPost.ForumUniqueName}/{forumThreadPost.ForumThreadUniqueName}";

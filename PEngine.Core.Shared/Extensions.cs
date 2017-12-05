@@ -64,7 +64,7 @@ namespace PEngine.Core.Shared
       {
         if (data.Length > length)
         {
-          return data.Substring(0, length) + "...";
+          return data.Substring(0, length);
         }
       }
       else
