@@ -71,7 +71,7 @@
         <a href="@Model.State.Links["Previous"]" class="list-button article_view_button_prev">[Prev]</a>
         @Html.Raw("&nbsp;")
       }
-      <form method="POST" onload="javascript:alert('test1')">
+      <form method="POST">
         <select name="newSectionUniqueName" class="post_view_dropdown_section" onchange="this.form.submit()">
         @foreach (var articleSection in Model.RecordData.Sections.OrderBy(o => o.SortOrder).ThenBy(o => o.Name))
         {
