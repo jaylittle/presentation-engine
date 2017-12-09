@@ -265,10 +265,11 @@ namespace PEngine.Core.Web.Middleware
 
         var response = new
         {
-          acessToken = encodedJwt,
+          access_token = encodedJwt,
+          token_type = "Bearer",
           expires = (DateTime)expires,
-          expiresIn = (int)expirationMinutes * 60,
-          expiresInMilliseconds = (long)expirationMinutes * 60 * 1000
+          expires_in = (int)expirationMinutes * 60,
+          expires_in_milliseconds = (long)expirationMinutes * 60 * 1000
         };
   
         // Serialize and return the response

@@ -1,0 +1,513 @@
+{
+	"info": {
+		"name": "PEngine.Core - Forum",
+		"_postman_id": "9d70e21c-3fa1-a149-bfa2-b8b1f518da66",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Forum - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum - Get By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/b5548800-e4e9-4573-8834-03f8fd6ec2d9",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"b5548800-e4e9-4573-8834-03f8fd6ec2d9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Test Forum\",\n\t\"description\": \"Place for crap\",\n\t\"visibleflag\": true\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum - Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"guid\": \"b5548800-e4e9-4573-8834-03f8fd6ec2d9\",\n  \"name\": \"Test Forum Rev3\",\n  \"description\": \"Place for crap - rev 3\",\n  \"visibleFlag\": false,\n  \"uniqueName\": \"test-forum\",\n  \"createdUTC\": \"2017-05-26T18:47:03.866075Z\"\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum Thread - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/b5548800-e4e9-4573-8834-03f8fd6ec2d9/threads",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"b5548800-e4e9-4573-8834-03f8fd6ec2d9",
+						"threads"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum Thread - Get By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/thread/12348800-e4e9-4573-8834-03f8fd6ec2d9",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"thread",
+						"12348800-e4e9-4573-8834-03f8fd6ec2d9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum Thread - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"ForumGuid\": \"b5548800-e4e9-4573-8834-03f8fd6ec2d9\",\n\t\"Name\": \"This is a crappy thread\",\n\t\"ForumUserGuid\": \"b82d818f-8183-a661-513c-1404d3d18aa2\",\n\t\"InitialPost\": {\n\t\t\"Data\": \"Crappy Content as Requested\",\n\t\t\"ForumUserGuid\": \"b82d818f-8183-a661-513c-1404d3d18aa2\",\n\t\t\"IPAddress\": \"127.0.0.1\"\n\t}\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/thread",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"thread"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum Thread - Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"guid\": \"e7c512f9-d588-41d6-afa0-daed3812ca50\",\n  \"forumGuid\": \"b5548800-e4e9-4573-8834-03f8fd6ec2d9\",\n  \"forumName\": null,\n  \"forumUniqueName\": null,\n  \"forumUserGuid\": \"b82d818f-8183-a661-513c-1404d3d18aa2\",\n  \"forumUserId\": null,\n  \"visibleFlag\": false,\n  \"lockFlag\": false,\n  \"name\": \"This is a crappy thread rev2\",\n  \"uniqueName\": \"this-is-a-crappy-thread\",\n  \"initialPost\": {\n    \"guid\": \"02b879ae-404d-4acf-8c30-7ca36e4f1c82\",\n    \"forumThreadGuid\": \"e7c512f9-d588-41d6-afa0-daed3812ca50\",\n    \"forumThreadName\": null,\n    \"forumThreadUniqueName\": null,\n    \"forumName\": null,\n    \"forumUniqueName\": null,\n    \"forumUserGuid\": \"b82d818f-8183-a661-513c-1404d3d18aa2\",\n    \"forumUserId\": null,\n    \"visibleFlag\": false,\n    \"lockFlag\": false,\n    \"data\": \"Crappy Content as Requested rev2\",\n    \"ipAddress\": \"127.0.0.1\"\n  }\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/thread",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"thread"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum Post - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/thread/e7c512f9-d588-41d6-afa0-daed3812ca50/posts",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"thread",
+						"e7c512f9-d588-41d6-afa0-daed3812ca50",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum Post - Get By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/post/51371f23-cf6d-40a5-b17e-1ba7bfece90d",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"post",
+						"51371f23-cf6d-40a5-b17e-1ba7bfece90d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum Post - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"forumThreadGuid\": \"e7c512f9-d588-41d6-afa0-daed3812ca50\",\n\t\"forumThreadName\": null,\n\t\"forumThreadUniqueName\": null,\n\t\"forumName\": null,\n\t\"forumUniqueName\": null,\n\t\"forumUserGuid\": \"b82d818f-8183-a661-513c-1404d3d18aa2\",\n\t\"forumUserId\": null,\n\t\"visibleFlag\": true,\n\t\"lockFlag\": false,\n\t\"data\": \"Crappy Reply\",\n\t\"ipAddress\": \"127.0.0.1\"\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/post",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum Post - Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"guid\": \"51371f23-cf6d-40a5-b17e-1ba7bfece90d\",\n  \"forumThreadGuid\": \"e7c512f9-d588-41d6-afa0-daed3812ca50\",\n  \"forumThreadName\": null,\n  \"forumThreadUniqueName\": null,\n  \"forumName\": null,\n  \"forumUniqueName\": null,\n  \"forumUserGuid\": \"b82d818f-8183-a661-513c-1404d3d18aa2\",\n  \"forumUserId\": null,\n  \"visibleFlag\": true,\n  \"lockFlag\": false,\n  \"data\": \"Crappy Reply - rev2\",\n  \"ipAddress\": \"127.0.0.1\"\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/post",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum User - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/users",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum User - Get By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/user/0d390f37-89c0-4ba8-bca0-703d92ebc4e3",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"user",
+						"0d390f37-89c0-4ba8-bca0-703d92ebc4e3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum User - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"Jay\",\n    \"adminFlag\": true,\n    \"banFlag\": false,\n    \"email\": \"jaylittle@jaylittle.com\",\n    \"website\": \"http://jaylittle.com\",\n    \"comment\": \"\",\n    \"lastIPAddress\": \"\",\n    \"lastLogon\": null,\n    \"newPassword\": {\n    \t\"value\": \"crappyPassword\"\n    },\n    \"comment\": \"Total Asshole\" \n  }"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/user",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forum User - Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"guid\": \"0d390f37-89c0-4ba8-bca0-703d92ebc4e3\",\n    \"userId\": \"Jay\",\n    \"adminFlag\": true,\n    \"banFlag\": false,\n    \"email\": \"jaylittle@jaylittle.com.2\",\n    \"website\": \"http://jaylittle.com.2\",\n    \"comment\": \"Total Asshole - Rev2\",\n    \"lastIPAddress\": \"\",\n    \"lastLogon\": null,\n    \"newPassword\": {\n      \"value\": \"fuckThis\",\n      \"reset\": false\n    }\n  }"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/forums/user",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"forums",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login - Forum Admin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "password",
+							"value": "pengine",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/token/forum",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"token",
+						"forum"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login - Refresh Token",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "password",
+							"value": "pengine",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "pengineadmin",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/token/refresh",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"token",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessToken",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3b784b4a-bfef-4169-8d9a-e068b780ab49",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "56270498-db85-45ff-ace7-8bce132acc2e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

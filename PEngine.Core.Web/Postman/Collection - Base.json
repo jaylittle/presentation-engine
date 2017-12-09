@@ -1,0 +1,564 @@
+{
+	"info": {
+		"name": "PEngine.Core - Base",
+		"_postman_id": "ae18f994-1d2c-919b-77f9-38e28f23add8",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Post - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/posts?start=1&count=2&sortfield=CreatedUTC&sortAscending=false",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "1",
+							"equals": true
+						},
+						{
+							"key": "count",
+							"value": "2",
+							"equals": true
+						},
+						{
+							"key": "sortfield",
+							"value": "CreatedUTC",
+							"equals": true
+						},
+						{
+							"key": "sortAscending",
+							"value": "false",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"legacyID\": null,\n\t\"name\": \"Test Post By Jay\",\n\t\"data\": \"Blah Blah Blah\\nThis is total crap\\nHappy now?\",\n\t\"iconFileName\": \"\",\n\t\"visibleFlag\": true\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/posts/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post - Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/posts/4b003481-aead-4442-b37a-9fb8fc1f19ef",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"4b003481-aead-4442-b37a-9fb8fc1f19ef"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post - Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"guid\": \"4b003481-aead-4442-b37a-9fb8fc1f19ef\",\n  \"legacyID\": null,\n  \"name\": \"Test Post By Jay 2\",\n  \"data\": \"Blah Blah Blah\\nThis is total crap\\nHappy now?\\nRev2\",\n  \"iconFileName\": \"\",\n  \"visibleFlag\": false,\n  \"uniqueName\": \"test-post-by-jay\",\n  \"createdUTC\": \"2017-05-21T15:01:11.698394Z\",\n  \"modifiedUTC\": \"2017-05-21T15:01:11.698394Z\"\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/posts/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Article - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/articles?start=1&count=2&sortfield=CreatedUTC&sortAscending=false",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"articles"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "1",
+							"equals": true
+						},
+						{
+							"key": "count",
+							"value": "2",
+							"equals": true
+						},
+						{
+							"key": "sortfield",
+							"value": "CreatedUTC",
+							"equals": true
+						},
+						{
+							"key": "sortAscending",
+							"value": "false",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Article - Get By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/articles/5840b7e3-566d-49c9-bff0-97e91a1acdb8",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"5840b7e3-566d-49c9-bff0-97e91a1acdb8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Article - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Test Post By Jay\",\n\t\"description\": \"This is more crap\",\n\t\"category\": \"Fucked\",\n\t\"defaultSection\": \"section1\",\n\t\"visibleFlag\": true,\n\t\"sections\": [\n\t\t{\n\t\t\t\"name\": \"section1\",\n\t\t\t\"data\": \"Blah blah blah\\nCrap Data\\nSection 01\",\n\t\t\t\"sortOrder\": \"1\"\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/articles/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Article - Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"guid\": \"146db262-2a51-4ce7-b22c-d80e7c71d7f9\",\n  \"legacyID\": null,\n  \"name\": \"Test Post By Jay\",\n  \"description\": \"This is more crap\",\n  \"category\": \"Fucked\",\n  \"contentURL\": null,\n  \"defaultSection\": \"section1\",\n  \"visibleFlag\": true,\n  \"uniqueName\": \"test-post-by-jay\",\n  \"hideDropDownFlag\": false,\n  \"hideButtonsFlag\": false,\n  \"createdUTC\": \"2017-05-26T20:25:12.748929\",\n  \"modifiedUTC\": \"2017-05-26T20:25:12.748929\",\n  \"sections\": [\n    {\n      \"guid\": \"8e629a1f-b7bb-4028-9c63-43ebee83adf4\",\n      \"articleGuid\": \"5840b7e3-566d-49c9-bff0-97e91a1acdb8\",\n      \"name\": \"section1\",\n      \"data\": \"Blah blah blah\\nCrap Data\\nSection 01\",\n      \"sortOrder\": 1,\n      \"uniqueName\": \"section1\",\n      \"createdUTC\": \"2017-05-26T20:25:12.756316\",\n      \"modifiedUTC\": \"2017-05-26T20:25:12.756316\"\n    }\n  ],\n  \"newAdminPass\": {\n    \"value\": null,\n    \"reset\": true\n  }\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/articles/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Article - Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"guid\": \"4b003481-aead-4442-b37a-9fb8fc1f19ef\",\n  \"legacyID\": null,\n  \"name\": \"Test Post By Jay 2\",\n  \"data\": \"Blah Blah Blah\\nThis is total crap\\nHappy now?\\nRev2\",\n  \"iconFileName\": \"\",\n  \"visibleFlag\": false,\n  \"uniqueName\": \"test-post-by-jay\",\n  \"createdUTC\": \"2017-05-21T15:01:11.698394Z\",\n  \"modifiedUTC\": \"2017-05-21T15:01:11.698394Z\"\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/articles/00000000-0000-0000-0000-000000000000",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"articles",
+						"00000000-0000-0000-0000-000000000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resume - Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/resume/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"resume",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resume - Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"personals\": [\n  \t{\n  \t\t\"fullName\": \"Jay Little\",\n  \t\t\"address1\": \"123 Somewhere Dr.\",\n  \t\t\"city\": \"Anywhere\",\n  \t\t\"state\": \"SC\",\n  \t\t\"zip\": \"12345\",\n  \t\t\"email\": \"dork@aol.com\"\n  \t}\n  ],\n  \"objectives\": [\n  \t{\n  \t\t\"data\": \"To get a fucking job. What else?\"\n  \t}\n  ],\n  \"skills\": {\n  \t\"Bathroom\": [\n  \t\t{\n  \t\t\t\"Type\": \"Bathroom\",\n  \t\t\t\"Name\": \"Shitting\"\n  \t\t},\n  \t\t{\n  \t\t\t\"Type\": \"Bathroom\",\n  \t\t\t\"Name\": \"Pissing\"\n  \t\t}\n  \t],\n  \t\"Kitchen\": [\n\t\t{\n\t\t\t\"Type\": \"Kitchen\",\n\t\t\t\"Name\": \"Cooking\"\n\t\t},\n\t\t{\n\t\t\t\"Type\": \"Kitchen\",\n\t\t\t\"Name\": \"Cleaning\"\n\t\t}\n  \t]\n  },\n  \"educations\": [\n  \t{\n  \t\t\"Institute\": \"Fuck You University\",\n  \t\t\"InstituteURL\": \"http://www.fuckyou.com\",\n  \t\t\"Program\": \"Being a twat\",\n  \t\t\"Started\": \"2001-05-06\",\n  \t\t\"Ended\": \"2010-07-06\"\n  \t}\n  ],\n  \"workHistories\": [\n  \t{\n  \t\t\"Employer\": \"Ditch Digging Inc\",\n  \t\t\"EmployerURL\": \"http://www.digafuckingditchyoulazycunt.com\",\n  \t\t\"JobTitle\": \"Assistant Ditch Digger\",\n  \t\t\"JobDescription\": \"Pretended to dig ditches. Herp Derp.\",\n  \t\t\"Started\": \"2002-09-27\"\n  \t}\n  ]\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/resume/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"resume",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Quotes - List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/quotes?start=1&count=2&sortfield=guid&sortAscending=false",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"quotes"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "1",
+							"equals": true
+						},
+						{
+							"key": "count",
+							"value": "2",
+							"equals": true
+						},
+						{
+							"key": "sortfield",
+							"value": "guid",
+							"equals": true
+						},
+						{
+							"key": "sortAscending",
+							"value": "false",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Quotes - Random",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/quotes/random",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"quotes",
+						"random"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Settings - Get",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/settings/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"settings",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Settings - Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newPasswordAdmin\": {\n        \"value\": \"pengine\",\n        \"reset\": false\n    },\n    \"ownerName\": \"PEngine User\",\n    \"ownerEmail\": \"pengineuser@pengine.com\",\n    \"defaultTitle\": \"Presentation Engine 5.0\",\n    \"defaultTheme\": \"default\",\n    \"logoFrontPage\": \"pengine_logo4.png\",\n    \"perPagePostArchived\": 10,\n    \"perPagePostFront\": 2,\n    \"perPageSearchResults\": 20,\n    \"perPageForumPosts\": 15,\n    \"perPageRSS\": 20,\n    \"timeLimitForumPostEdit\": 30,\n    \"timeLimitForumToken\": 30,\n    \"timeLimitAdminToken\": 30,\n    \"disableResume\": false,\n    \"disableThemeSelection\": false,\n    \"disableLeetSpeak\": false,\n    \"disableQuotes\": false,\n    \"disableSearch\": false,\n    \"disableForum\": false,\n    \"disableRSS\": false,\n    \"disablePrint\": false,\n    \"disableClippyShortcut\": false,\n    \"disableClippyButton\": false,\n    \"disableClippySmartAss\": false,\n    \"clippyRandomChance\": 5,\n    \"clippyShortcutKeyCode\": 190,\n    \"clippyShortcutKeyCont\": 3,\n    \"labelHomeButton\": \"Home\",\n    \"labelThemeButton\": \"Theme\",\n    \"labelResumeButton\": \"Resume\",\n    \"labelLeetOnButton\": \"I am Elite\",\n    \"labelLeetOffButton\": \"I am a Loser\",\n    \"labelAdminLoginButton\": \"Admin\",\n    \"labelAdminLogoffButton\": \"Standard\",\n    \"labelPrintButton\": \"Print\",\n    \"labelQuoteButton\": \"Quote\",\n    \"labelClippyButton\": \"Help!\",\n    \"labelForumButton\": \"Forums\",\n    \"labelForumLoginButton\": \"Sign In\",\n    \"labelForumLogoutButton\": \"Sign Out\",\n    \"perPageForumThreads\": 25,\n    \"labelForumRegisterButton\": \"Register\",\n    \"externalBaseUrl\": \"http://petest.jaylittle.local/pengine/\",\n    \"userNameAdmin\": \"PEngineAdmin\"\n}"
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/settings/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"settings",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resource - Root Folder List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/api/resource/folder/",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"resource",
+						"folder",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login - PEngine God",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "pengineadmin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/token/pengine",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"token",
+						"pengine"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login - Refresh Token",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "password",
+							"value": "pengine",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "pengineadmin",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{PEngineBaseUrl}}/token/refresh",
+					"host": [
+						"{{PEngineBaseUrl}}"
+					],
+					"path": [
+						"token",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessToken",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3b784b4a-bfef-4169-8d9a-e068b780ab49",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "56270498-db85-45ff-ace7-8bce132acc2e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

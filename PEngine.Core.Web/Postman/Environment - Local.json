@@ -1,0 +1,40 @@
+{
+  "id": "96973af7-2147-dd8c-4640-aa121f2d5cfc",
+  "name": "PEngine - Local Dev",
+  "values": [
+    {
+      "enabled": true,
+      "key": "PEngineBaseUrl",
+      "value": "http://localhost:5000",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "PEngineUserName",
+      "value": "PEngineAdmin",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "PEnginePassword",
+      "value": "",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "PEngineForumUserName",
+      "value": "Admin",
+      "type": "text"
+    },
+    {
+      "enabled": true,
+      "key": "PEngineForumPassword",
+      "value": "",
+      "type": "text"
+    }
+  ],
+  "timestamp": 1512843848561,
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2017-12-09T18:24:48.803Z",
+  "_postman_exported_using": "Postman/5.4.1"
+}

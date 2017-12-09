@@ -46,8 +46,8 @@ function setupAutoTokenRefresh()
 function refreshToken()
 {
   Vue.http.get(pengineHelpers.fixUrl('/token/refresh')).then(response => {
-    window.pengineState.tokenExpires = response.body.expires;
-    window.pengineState.tokenExpiresMilliseconds = response.body.expiresInMilliseconds;
+    window.pengineState.tokenExpires = response.body['expires'];
+    window.pengineState.tokenExpiresMilliseconds = response.body['expires_in_milliseconds'];
     setupAutoTokenRefresh();
   });
 }
