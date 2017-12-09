@@ -42,5 +42,6 @@
     <Folder Include="wwwroot\"/>
     <Content Include="sql\**\*" CopyToPublishDirectory="Always"/>
     <Content Remove="pengine.settings.json"/>
+    <Content Remove="Postman\**"/>
   </ItemGroup>
 </Project>
