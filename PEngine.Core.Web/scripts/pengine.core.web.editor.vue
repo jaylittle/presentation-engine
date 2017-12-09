@@ -394,7 +394,6 @@
               <span><input type="checkbox" v-model="record.data.disableSearch" /> Search</span>
               <span><input type="checkbox" v-model="record.data.disableClippyButton" /> Clippy Button</span>
               <span><input type="checkbox" v-model="record.data.disableClippyShortcut" /> Clippy Shortcut</span>
-              <span><input type="checkbox" v-model="record.data.disableForum" /> Forum</span>
             </div>
           </div>
           <div class="edit-row">

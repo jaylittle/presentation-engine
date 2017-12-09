@@ -197,7 +197,8 @@ namespace PEngine.Core.Web.Middleware
       var roleClaims = new List<string>();
       ClaimsIdentity identity = null;
       var forumUser = await _forumDal.GetForumUserById(null, userName);
-      if (forumUser != null && (refreshFlag || Security.EncryptAndCompare(password, forumUser.Password)))
+      var forumEnabled = !Settings.Current.DisableForum;
+      if (forumEnabled && forumUser != null && (refreshFlag || Security.EncryptAndCompare(password, forumUser.Password)))
       {
         if (!forumUser.BanFlag)
         {

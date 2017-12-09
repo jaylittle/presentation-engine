@@ -45,7 +45,8 @@ namespace PEngine.Core.Shared
     // app_exclude_search,
     public bool DisableSearch { get; set; } = false;
     // app_exclude_forum,
-    public bool DisableForum { get; set; } = false;
+    [JsonIgnore]
+    public bool DisableForum { get; set; } = true;
     // app_exclude_rss,
     public bool DisableRSS { get; set; } = false;
     // app_exclude_print,
