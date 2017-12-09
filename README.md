@@ -25,3 +25,7 @@ Yeah this port is being developed 100% on Linux.  The goal is for it to be able 
 ### 6. What tools?
 
 VS Code is my primary development tool. Although I have a Rider license, I just haven't been able to get that into it.  A lot of this has to do with the fact that it lagged VS Code in support .NET Core 2.0 which I transitioned to pretty aggressively (e.g. days after it was released).  Bottom Line: For me the jury is still out on Rider, but I love VS Code.  Beyond that I've continued to use Gimp for the graphical work and I have made extensive use of DataGrip for working with sqlite databases.
+
+### 7. What do I need to have installed to run this?
+
+Node.js and the .NET Core 2.0 runtime.  We utilize npm to pull down node packages we make use of which includes babel and webpack among others.  The .NET Core 2.0 runtime is a no brainer of course.  If you want to hack in the codebase, you'll want to also have the .NET Core 2.0 SDK installed.
