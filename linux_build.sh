@@ -8,6 +8,7 @@ cd PEngine.Core.Tests
 dotnet clean
 dotnet test
 cd ../PEngine.Core.Web
+npm install
 dotnet clean
 dotnet publish -c Release
 cd ..
