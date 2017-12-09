@@ -1,4 +1,5 @@
 #!/bin/bash
+dotnet restore
 if [ -f pengine_current.tgz ]
 then
   rm pengine_current.tgz
