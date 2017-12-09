@@ -1,18 +1,18 @@
 # Presentation Engine 5.0
 
-This repo is a journal of my quest to port the Presentation Engine code base to ASP.NET Core.  So far, good.
+This repo is a journal of my quest to port the Presentation Engine code base to ASP.NET Core.  Current Status: Success!
 
 ### 1. What is the timeline for this?
 
-I am currently beta testing the MVP version on my two primary websites.  Once all the kinks are worked out, I'll make an official release.
+I have officially completed beta testing the current version. Feel free to clone, build and install to your hearts content!
 
 ### 2. Would you recommend using this right now?
 
-Well I'm using it right now, but I've been known to do some stupid shit.  It's not fully tested but it is relatively secure and performs like a bat out of hell.
+It screams like a bat out of hell and is relatively secure. If you don't like those things, don't use it now.
 
 ### 3. What the hell is this project anyway?
 
-Go here for more information and downloads of the current version. Both source and binary: http://jaylittle.com/article/view/presentation-engine
+My version of a basic blog.  More info is available here:  http://jaylittle.com/article/view/presentation-engine
 
 ### 4. Your previous versions didn't have a license? What gives?
 
