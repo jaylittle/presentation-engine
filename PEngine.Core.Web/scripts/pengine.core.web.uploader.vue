@@ -5,7 +5,7 @@
         <span>Uploader</span>
         <span v-for="breadcrumb in breadcrumbs" v-if="mode === 'browser'">
           &nbsp;:&nbsp;
-          <a href="javascript:void" v-on:click="navigate(breadcrumb)">{{ breadcrumb.title }}</a>
+          <a href="javascript:void(0)" v-on:click="navigate(breadcrumb)">{{ breadcrumb.title }}</a>
         </span>
         <span v-if="mode === 'selections'">
           File &amp; Folder Selections
@@ -52,14 +52,14 @@
                 <td>Folder</td>
                 <td>{{ selectedFolderPath }}</td>
                 <td>
-                  <a href="javascript:void" class="file-edit-button-view listbutton" v-on:click="removeSelectionByPath(selectedFolderPath, selectedFolderPaths)">Remove</a>
+                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-on:click="removeSelectionByPath(selectedFolderPath, selectedFolderPaths)">Remove</a>
                 </td>
               </tr>
               <tr v-for="selectedFilePath in selectedFilePaths">
                 <td>File</td>
                 <td>{{ selectedFilePath }}</td>
                 <td>
-                  <a href="javascript:void" class="file-edit-button-view listbutton" v-on:click="removeSelectionByPath(selectedFilePath, selectedFilePaths)">Remove</a>
+                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-on:click="removeSelectionByPath(selectedFilePath, selectedFilePaths)">Remove</a>
                 </td>
               </tr>
             </tbody>
@@ -90,7 +90,7 @@
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>
-                  <a href="javascript:void" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" v-on:click="prepNaming('folder', folder)">[Rename]</a>
+                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" v-on:click="prepNaming('folder', folder)">[Rename]</a>
                 </td>
               </tr>
               <tr v-for="file in current.files" v-bind:class="{ selected: file.selected }" v-on:dblclick="select(file, selectedFilePaths)">
@@ -101,7 +101,7 @@
                 <td>{{ file.modified }}</td>
                 <td>{{ file.size }}</td>
                 <td>
-                  <a href="javascript:void" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" v-on:click="prepNaming('file', file)">[Rename]</a>
+                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" v-on:click="prepNaming('file', file)">[Rename]</a>
                 </td>
               </tr>
             </tbody>

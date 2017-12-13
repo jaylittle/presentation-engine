@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft​.AspNetCore​.Mvc​.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 //Note: The majority of this code was shamelessly copied and pasted from:
 //https://www.strathweb.com/2016/09/required-query-string-parameters-in-asp-net-core-mvc/

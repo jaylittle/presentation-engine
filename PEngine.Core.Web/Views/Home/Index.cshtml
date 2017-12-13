@@ -14,7 +14,7 @@
   @if (!Model.Settings.DisableQuotes)
   {
     <div class="quote-control">
-        <a id="pengine-button-quote-show" href="javascript:void" onclick="window.showQuote()">@Model.Settings.LabelQuoteButton</a>
+        <a id="pengine-button-quote-show" href="javascript:void(0)" onclick="window.showQuote()">@Model.Settings.LabelQuoteButton</a>
         <div id="quote-text" class="quoted-text">
           @Html.Raw(Model.State.QuoteText)
         </div>
@@ -24,11 +24,11 @@
 @foreach (var post in Model.ListData)
 {
   @Html.Raw(Rendering.MarkupSubheader(post.Name))
-  @if (Model.State.HasAdmin)
+  if (Model.State.HasAdmin)
   {
     <div class="panel">
       <div class="panel-right">
-        <a href="javascript:void" class="list-button post_view_button_edit" data-guid="@post.Guid">[Edit]</a>
+        <a href="javascript:void(0)" class="list-button post_view_button_edit" data-guid="@post.Guid">[Edit]</a>
       </div>
     </div>
   }

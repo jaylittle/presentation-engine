@@ -42,9 +42,9 @@
             @item.Content
           </div>
         </td>
-        <td nowrap="1" class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(item.CreatedUTC)">@Rendering.FormatDate(item.CreatedUTC)</td>
+        <td nowrap class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(item.CreatedUTC)">@Rendering.FormatDate(item.CreatedUTC)</td>
         <td>@item.Creator</td>
-        <td nowrap="1">
+        <td nowrap>
           <a href="@item.Link" class="list-button">[View]</a>
         </td>
       </tr>

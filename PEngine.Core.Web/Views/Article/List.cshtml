@@ -32,19 +32,19 @@
         <td>@item.Name</td>
         @if (item.CreatedUTC.HasValue)
         {
-        <td nowrap="1" class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(item.CreatedUTC)">@Rendering.FormatDate(item.CreatedUTC)</td>
+        <td nowrap class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(item.CreatedUTC)">@Rendering.FormatDate(item.CreatedUTC)</td>
         }
         else
         {
-        <td nowrap="1">N/A</td>
+        <td nowrap>N/A</td>
         }
         <td>@item.Description</td>
-        <td nowrap="1">
-          @Html.RouteLink("[View]", new { controller = "article", action = "view", id = item.UniqueName }, new { @class = "list-button" })
+        <td nowrap>
+          @Html.RouteLink("[View]", new { controller = "article", action = "ViewArticle", uniqueName = item.UniqueName }, new { @class = "list-button" })
           @if (Model.State.HasAdmin)
           {
             @Html.Raw("&nbsp;|&nbsp;")
-            <a href="javascript:void" class="list-button article_view_button_edit" data-guid="@item.Guid">[Edit]</a>
+            <a href="javascript:void(0)" class="list-button article_view_button_edit" data-guid="@item.Guid">[Edit]</a>
           }
         </td>
       </tr>

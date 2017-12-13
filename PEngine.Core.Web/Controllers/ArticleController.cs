@@ -56,13 +56,15 @@ namespace PEngine.Core.Web.Controllers
       }
     }
 
-    [HttpGet("view/{uniqueName}")]
+    [HttpGet]
+    [Route("view/{uniqueName}")]
     public async Task<IActionResult> ViewArticle(string uniqueName)
     {
       return await ViewArticleSection(uniqueName, null);
     }
 
-    [HttpGet("view/{uniqueName}/{sectionUniqueName}")]
+    [HttpGet]
+    [Route("view/{uniqueName}/{sectionUniqueName}")]
     public async Task<IActionResult> ViewArticleSection(string uniqueName, string sectionUniqueName)
     {
       var model = new PEngineGenericRecordModel<ArticleModel>(HttpContext, false, false, null, sectionUniqueName);
