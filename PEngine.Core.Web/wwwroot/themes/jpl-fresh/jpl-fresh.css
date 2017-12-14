@@ -24,6 +24,18 @@ button:hover
   color: #524a7b;
 }
 
+button:disabled
+{
+  background-color: #dbdbd6;
+  color: #524a7b;
+}
+
+button:disabled:hover
+{
+  background-color: #dbdbd6;
+  color: #524a7b;
+}
+
 blockquote, div.quoted-text
 {
   border-style: none;

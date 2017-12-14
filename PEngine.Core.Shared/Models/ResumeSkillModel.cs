@@ -10,6 +10,7 @@ namespace PEngine.Core.Shared.Models
     public string Type { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string Hint { get; set; } = string.Empty;
+    public int Order { get; set; }
     public DateTime? CreatedUTC { get; set; }
     public DateTime? ModifiedUTC { get; set; }
   }

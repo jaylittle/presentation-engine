@@ -45,7 +45,7 @@ namespace PEngine.Core.Logic
       var retvalue = new ResumeModel() {
         Personals = (await _resumeDal.ListResumePersonals()).ToList(),
         Objectives = (await _resumeDal.ListResumeObjectives()).ToList(),
-        SkillTypes = (await _resumeDal.ListResumeSkills()).GroupBy(s => s.Type, StringComparer.OrdinalIgnoreCase).Select(g => new ResumeSkillTypeModel(g.Key, g.ToList())).ToList(),
+        SkillTypes = (await _resumeDal.ListResumeSkills()).GroupBy(s => s.Type, StringComparer.OrdinalIgnoreCase).Select(g => new ResumeSkillTypeModel(g.Key, g.OrderBy(s => s.Order).ToList())).ToList(),
         Educations = (await _resumeDal.ListResumeEducations()).OrderByDescending(ed => ed.Started).ThenBy(ed => ed.Institute).ThenBy(ed => ed.Program).ToList(),
         WorkHistories = (await _resumeDal.ListResumeWorkHistories()).OrderByDescending(wh => wh.Started).ThenBy(wh => wh.Employer).ThenBy(wh => wh.JobTitle).ToList()
       };
@@ -240,10 +240,13 @@ namespace PEngine.Core.Logic
           {
             foreach (var skillType in resume.SkillTypes)
             {
+              int skillOrder = -1;
               if (skillType.Skills != null && skillType.Skills.Count > 0)
               {
                 foreach (var skill in skillType.Skills)
                 {
+                  skillOrder +=1 ;
+                  skill.Order = skillOrder;
                   if (importFlag || skill.Guid == Guid.Empty || !existingSkillGuids.ContainsKey(skill.Guid))
                   {
                     await _resumeDal.InsertResumeSkill(skill, importFlag);

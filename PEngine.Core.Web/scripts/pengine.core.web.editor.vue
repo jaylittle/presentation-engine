@@ -196,6 +196,8 @@
             <div class="edit-field">
               <input type="text" class="edit-control-large" v-model="skill.name" />
               <button type="button" v-on:click="removeIndexSubRecord('skills', index)">Delete Skill</button>
+              <button type="button" v-on:click="moveIndexSubRecord('skills', index, -1)" v-bind:disabled="index <= 0">Move Up</button>
+              <button type="button" v-on:click="moveIndexSubRecord('skills', index, 1)" v-bind:disabled="index >= currentEditTarget.skills.length - 1">Move Down</button>
             </div>
           </div>
         </div>
@@ -712,6 +714,18 @@
           && this.record.data[info.property][info.index][subRecordArrayProperty].length
           && this.record.data[info.property][info.index][subRecordArrayProperty].length > subRecordIndex) {
           this.record.data[info.property][info.index][subRecordArrayProperty].splice(subRecordIndex, 1);
+        }
+      },
+      moveIndexSubRecord(subRecordArrayProperty, subRecordIndex, offset) {
+        let info = this.currentEditTargetInfo;
+        if (this.record.data[info.property][info.index][subRecordArrayProperty] 
+          && this.record.data[info.property][info.index][subRecordArrayProperty].length
+          && this.record.data[info.property][info.index][subRecordArrayProperty].length > subRecordIndex
+          && this.record.data[info.property][info.index][subRecordArrayProperty].length > subRecordIndex + offset) {
+          let current = this.record.data[info.property][info.index][subRecordArrayProperty][subRecordIndex];
+          let target = this.record.data[info.property][info.index][subRecordArrayProperty][subRecordIndex + offset];
+          this.record.data[info.property][info.index][subRecordArrayProperty].splice(subRecordIndex, 1, target);
+          this.record.data[info.property][info.index][subRecordArrayProperty].splice(subRecordIndex + offset, 1, current);
         }
       },
       processLocationHash() {

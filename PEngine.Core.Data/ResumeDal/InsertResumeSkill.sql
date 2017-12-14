@@ -4,6 +4,7 @@ INSERT INTO ResumeSkill (
   Type,
   Name,
   Hint,
+  [Order],
   CreatedUTC,
   ModifiedUTC
 ) VALUES (
@@ -12,6 +13,7 @@ INSERT INTO ResumeSkill (
   @Type,
   @Name,
   @Hint,
+  @Order,
   @CreatedUTC,
   @ModifiedUTC
 );
