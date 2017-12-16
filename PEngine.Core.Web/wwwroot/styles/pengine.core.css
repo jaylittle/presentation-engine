@@ -329,6 +329,17 @@ body .dialog-container
   color: #2b4873;
 }
 
+.list-table tbody tr td a.invisible-link
+{
+  text-decoration: none;
+  color: black;
+}
+
+.list-table tbody tr td a.invisible-link:hover
+{
+  text-decoration: underline;
+}
+
 .list-button
 {
   width: 75px;

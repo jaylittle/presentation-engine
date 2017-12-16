@@ -36,7 +36,11 @@
     {
       <tr class='@((i++)%2!=0 ? "alt" : string.Empty)'>
         <td>@item.Type</td>
-        <td>@item.Title</td>
+        <td>
+          <a href="@item.Link" class="invisible-link">
+            @item.Title
+          </a>
+        </td>
         <td class="search-list-description">
           <div>
             @item.Content

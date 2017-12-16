@@ -29,7 +29,9 @@
     @foreach (var item in Model.ListData)
     {
       <tr class='@((i++)%2==0 ? "listrow" : "listrowalt")'>
-        <td>@item.Name</td>
+        <td>
+          @Html.RouteLink(item.Name, new { controller = "article", action = "ViewArticle", uniqueName = item.UniqueName }, new { @class = "invisible-link" })
+        </td>
         @if (item.CreatedUTC.HasValue)
         {
         <td nowrap class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(item.CreatedUTC)">@Rendering.FormatDate(item.CreatedUTC)</td>

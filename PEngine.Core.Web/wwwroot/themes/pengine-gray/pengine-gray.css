@@ -293,6 +293,11 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   color: #131218;
 }
 
+.list-table tbody tr td a.invisible-link
+{
+  color: white;
+}
+
 .edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
 {
   background-color: white;
