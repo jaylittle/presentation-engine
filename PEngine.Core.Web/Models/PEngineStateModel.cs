@@ -306,7 +306,7 @@ namespace PEngine.Core.Web.Models
         {
           var postData = (PostModel)_viewDataRecord;
           SummaryTitle = !HideSubTitle ? SubTitle : _settings.DefaultTitle;
-          SummaryDescription = Helpers.Rendering.DataTruncate(postData.Data, -1);
+          SummaryDescription = Helpers.Rendering.DataRenderAndTruncate(postData.Data, -1);
         }
       }
 
