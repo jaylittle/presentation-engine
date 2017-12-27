@@ -31,20 +31,13 @@ namespace PEngine.Core.Shared.Models
       }
     }
 
-    public string GetSubTitle(bool inList, string currentSection, int? currentPage)
+    public string GetSubTitle(bool inList, string currentSection)
     {
       if (!inList)
       {
         return $"{Name}";
       }
-      if (currentPage.HasValue)
-      {
-        return $"Archived Posts - Page {currentPage.Value}";
-      }
-      else
-      {
-        return $"Archived Posts";
-      }
+      return Settings.Current.LabelArchivedPostsButton ?? "Archived Posts";
     }
   }
 }

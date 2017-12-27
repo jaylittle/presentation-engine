@@ -278,24 +278,33 @@
             <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.logoFrontPage" /></div>
           </div>
           <div class="edit-row">
-            <div class="edit-label-large">Admin Login / Logoff Labels:</div>
+            <div class="edit-label-large">Admin Login Label:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.labelAdminLoginButton" />
+            </div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label-large">Admin Logoff Labels</div>
+            <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.labelAdminLogoffButton" />
             </div>
           </div>
           <div class="edit-row">
-            <div class="edit-label-large">Home / Theme Labels:</div>
+            <div class="edit-label-large">Home Label:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.labelHomeButton" />
+            </div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label-large">Theme Label:</div>
+            <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.labelThemeButton" />
             </div>
           </div>
           <div class="edit-row">
-            <div class="edit-label-large">Quote / Clippy Button Labels:</div>
+            <div class="edit-label-large">Quote Label:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.labelQuoteButton" />
-              <input type="text" class="edit-control-normal" v-model="record.data.labelClippyButton" />
             </div>
           </div>
           <div class="edit-row">
@@ -305,41 +314,9 @@
             </div>
           </div>
           <div class="edit-row">
-            <div class="edit-label-large">Forum / Registration Label:</div>
+            <div class="edit-label-large">Archived Posts Label:</div>
             <div class="edit-field">
-              <input type="text" class="edit-control-normal" v-model="record.data.labelForumButton" />
-              <input type="text" class="edit-control-normal" v-model="record.data.labelForumRegisterButton" />
-            </div>
-          </div>
-          <div class="edit-row">
-            <div class="edit-label-large">Forum Login / Logoff Labels:</div>
-            <div class="edit-field">
-              <input type="text" class="edit-control-normal" v-model="record.data.labelForumLoginButton" />
-              <input type="text" class="edit-control-normal" v-model="record.data.labelForumLogoffButton" />
-            </div>
-          </div>
-          <div class="edit-row">
-            <div class="edit-label-large">Clippy Shortcut KeyCode:</div>
-            <div class="edit-field">
-              <input type="text" class="edit-control-normal" v-model="record.data.clippyShortcutKeyCode" />
-            </div>
-          </div>
-          <div class="edit-row">
-            <div class="edit-label-large">Clippy Shortcut Key Count:</div>
-            <div class="edit-field">
-              <input type="text" class="edit-control-normal" v-model="record.data.clippyShortcutKeyCount" />
-            </div>
-          </div>
-          <div class="edit-row">
-            <div class="edit-label-large">Clippy Quotes Mode:</div>
-            <div class="edit-field edit-checkbox-list">
-              <span><input type="checkbox" v-model="record.data.disableClippySmartAss" /></span>
-            </div>
-          </div>
-          <div class="edit-row">
-            <div class="edit-label-large">Clippy Random Chance (0 - 100)</div>
-            <div class="edit-field">
-              <input type="text" class="edit-control-normal" v-model="record.data.clippyRandomChance" />
+              <input type="text" class="edit-control-normal" v-model="record.data.labelArchivedPostsButton" />
             </div>
           </div>
           <div class="edit-row">
@@ -367,20 +344,6 @@
             </div>
           </div>
           <div class="edit-row">
-            <div class="edit-label-large">Forum Threads / Posts Per Page:</div>
-            <div class="edit-field">
-              <input type="text" class="edit-control-normal" v-model="record.data.perPageForumThreads" />
-              <input type="text" class="edit-control-normal" v-model="record.data.perPageForumPosts" />
-            </div>
-          </div>
-          <div class="edit-row">
-            <div class="edit-label-large">Forum Login / Edit Timeout</div>
-            <div class="edit-field">
-              <input type="text" class="edit-control-normal" v-model="record.data.timeLimitForumToken" />
-              <input type="text" class="edit-control-normal" v-model="record.data.timeLimitForumPostEdit" />
-            </div>
-          </div>
-          <div class="edit-row">
             <div class="edit-label-large">Admin Session Timeout</div>
             <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.timeLimitAdminToken" />
@@ -394,8 +357,6 @@
               <span><input type="checkbox" v-model="record.data.disableResume" /> Resume</span>
               <span><input type="checkbox" v-model="record.data.disableThemeSelection" /> Theme</span>
               <span><input type="checkbox" v-model="record.data.disableSearch" /> Search</span>
-              <span><input type="checkbox" v-model="record.data.disableClippyButton" /> Clippy Button</span>
-              <span><input type="checkbox" v-model="record.data.disableClippyShortcut" /> Clippy Shortcut</span>
             </div>
           </div>
           <div class="edit-row">

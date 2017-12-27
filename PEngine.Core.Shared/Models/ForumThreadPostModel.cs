@@ -20,20 +20,13 @@ namespace PEngine.Core.Shared.Models
     public DateTime? CreatedUTC { get; set; }
     public DateTime? ModifiedUTC { get; set; }
 
-    public string GetSubTitle(bool inList, string currentSection, int? currentPage)
+    public string GetSubTitle(bool inList, string currentSection)
     {
       if (!inList)
       {
         return $"Forums - {ForumName} - Thread {ForumThreadName} - Post {Guid}";
       }
-      if (currentPage.HasValue)
-      {
-        return $"Forums - {ForumName} - Thread {ForumThreadName} - Page {currentPage.Value}";
-      }
-      else
-      {
-        return $"Forums - {ForumName} - Thread {ForumThreadName}";
-      }
+      return $"Forums - {ForumName} - Thread {ForumThreadName}";
     }
   }
 }

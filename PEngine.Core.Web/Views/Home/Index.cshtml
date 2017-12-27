@@ -14,7 +14,7 @@
   @if (!Model.Settings.DisableQuotes)
   {
     <div class="quote-control">
-        <a id="pengine-button-quote-show" href="javascript:void(0)" onclick="window.showQuote()">@Model.Settings.LabelQuoteButton</a>
+        <a id="pengine-button-quote-show" href="javascript:void(0)" onclick="window.showQuote()">[@Model.Settings.LabelQuoteButton]</a>
         <div id="quote-text" class="quoted-text">
           @Html.Raw(Model.State.QuoteText)
         </div>
@@ -44,6 +44,6 @@
 }
 <div class="panel">
   <div class="panel-right">
-    @Html.ActionLink("[Archived Posts]", "list", "post")
+    @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list", "post")
   </div>
 </div>

@@ -24,8 +24,6 @@ namespace PEngine.Core.Shared
     public int PerPagePostFront { get; set; } = 5;
     // app_recpage_search_results,
     public int PerPageSearchResults { get; set; } = 20;
-    // app_recpage_forum_posts,
-    public int PerPageForumPosts { get; set; } = 15;
     // app_recpage_rss,
     public int PerPageRSS { get; set; } = 20;
     // app_timelimit_forum_edit,
@@ -38,8 +36,6 @@ namespace PEngine.Core.Shared
     public bool DisableResume { get; set; } = false;
     // app_exclude_theme,
     public bool DisableThemeSelection { get; set; } = false;
-    // app_exclude_leet,
-    public bool DisableLeetSpeak { get; set; } = false;
     // app_exclude_quotes,
     public bool DisableQuotes { get; set; } = false;
     // app_exclude_search,
@@ -49,30 +45,13 @@ namespace PEngine.Core.Shared
     public bool DisableForum { get; set; } = true;
     // app_exclude_rss,
     public bool DisableRSS { get; set; } = false;
-    // app_exclude_print,
-    public bool DisablePrint { get; set; } = false;
-    // app_exclude_clippy_shortcut,
-    public bool DisableClippyShortcut { get; set; } = false;
-    // app_exclude_clippy_button,
-    public bool DisableClippyButton { get; set; } = false;
-    // app_clippy_quote_mode,
-    public bool DisableClippySmartAss { get; set; } = false;
-    // app_clippy_random_chance,
-    public int ClippyRandomChance { get; set; } = 5;
-    // app_clippy_shortcut_keycode,
-    public int ClippyShortcutKeyCode { get; set; } = 190;
-    // app_clippy_shortcut_keycount,
-    public int ClippyShortcutKeyCount { get; set; } = 3;
+    public string LabelArchivedPostsButton { get; set; } = "[Archived Posts]";
     // app_label_home,
     public string LabelHomeButton { get; set; } = "Home";
     // app_label_theme,
     public string LabelThemeButton { get; set; } = "Theme";
     // app_label_resume,
     public string LabelResumeButton { get; set; } = "Resume";
-    // app_label_leet,
-    public string LabelLeetOnButton { get; set; } = "I am Elite";
-    // app_label_leet2,
-    public string LabelLeetOffButton { get; set; } = "I am a Loser";
     // app_label_admin,
     public string LabelAdminLoginButton { get; set; } = "Admin";
     // app_label_admin2,
@@ -85,16 +64,6 @@ namespace PEngine.Core.Shared
     public string LabelClippyButton { get; set; } = "Help!";
     // app_pass_admin,
     public virtual string PasswordAdmin { get; set; } = string.Empty;
-    // app_label_forum,
-    public string LabelForumButton { get; set; } = "Forums";
-    // app_label_forum_login,
-    public string LabelForumLoginButton { get; set; } = "Sign In";
-    // app_label_forum_logout,
-    public string LabelForumLogoffButton { get; set; } = "Sign Out";
-    // app_recpage_forum_threads,
-    public int PerPageForumThreads { get; set; } = 25;
-    // app_label_forum_register
-    public string LabelForumRegisterButton { get; set; } = "Register";
     public string ExternalBaseUrl { get; set; } = "http://localhost:5000/";
     public string TwitterCardSite { get; set; } = string.Empty;
     public virtual Guid SecretKey { get; set; } = Guid.NewGuid();

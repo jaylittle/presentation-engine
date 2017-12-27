@@ -13,7 +13,7 @@ namespace PEngine.Core.Shared.Models
     public DateTime? CreatedUTC { get; set; }
     public DateTime? ModifiedUTC { get; set; }
 
-    public string GetSubTitle(bool inList, string currentSection, int? currentPage)
+    public string GetSubTitle(bool inList, string currentSection)
     {
       if (!inList)
       {

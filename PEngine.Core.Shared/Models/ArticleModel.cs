@@ -24,7 +24,7 @@ namespace PEngine.Core.Shared.Models
 
     public List<ArticleSectionModel> Sections { get; set; } = new List<ArticleSectionModel>();
 
-    public string GetSubTitle(bool inList, string currentSection, int? currentPage)
+    public string GetSubTitle(bool inList, string currentSection)
     {
       if (!inList)
       {

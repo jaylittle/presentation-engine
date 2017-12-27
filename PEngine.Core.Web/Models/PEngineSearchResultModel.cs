@@ -50,16 +50,9 @@ namespace PEngine.Core.Web.Models
       Link = $"/forum/thread/{forumThreadPost.ForumUniqueName}/{forumThreadPost.ForumThreadUniqueName}";
     }
 
-    public string GetSubTitle(bool inList, string currentSection, int? currentPage)
+    public string GetSubTitle(bool inList, string currentSection)
     {
-      if (currentPage.HasValue)
-      {
-        return $"Search Results for \"{currentSection}\" - Page {currentPage.Value}";
-      }
-      else
-      {
-        return $"Search Results for \"{currentSection}\"";
-      }
+      return $"Search Results for \"{currentSection}\"";
     }
   }
 }

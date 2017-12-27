@@ -54,7 +54,6 @@ namespace PEngine.Core.Web.Models
     public DateTime? TokenExpires { get; set; }
     public long? TokenExpiresMilliseconds { get; set; }
     public string CurrentSection { get; set; }
-    public int? CurrentPage { get; set; }
     public bool IsForum { get; set; }
     public string Theme { get; set; }
     public string ThemePath
@@ -126,7 +125,6 @@ namespace PEngine.Core.Web.Models
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = null;
-      CurrentPage = null;
 
       Init();
     }
@@ -138,7 +136,6 @@ namespace PEngine.Core.Web.Models
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = currentSection;
-      CurrentPage = currentPage;
 
       UpdateData(viewDataRecord);
     }
@@ -150,7 +147,6 @@ namespace PEngine.Core.Web.Models
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = currentSection;
-      CurrentPage = currentPage;
 
       UpdateData(viewDataList);
     }
@@ -263,7 +259,7 @@ namespace PEngine.Core.Web.Models
 
       if (_viewDataRecord != null)
       {
-        SubTitle = _viewDataRecord.GetSubTitle(_viewDataInList, CurrentSection, CurrentPage);
+        SubTitle = _viewDataRecord.GetSubTitle(_viewDataInList, CurrentSection);
         
         if (!_viewDataInList && _viewDataRecord is ArticleModel)
         {
@@ -277,7 +273,7 @@ namespace PEngine.Core.Web.Models
             var articleSections = articleData.Sections.OrderBy(s => s.SortOrder).ThenBy(s => s.Name).ToList();
             currentSectionData = currentSectionData ?? articleSections.First();
             CurrentSection = currentSectionData.UniqueName;
-            SubTitle = _viewDataRecord.GetSubTitle(_viewDataInList, CurrentSection, CurrentPage);
+            SubTitle = _viewDataRecord.GetSubTitle(_viewDataInList, CurrentSection);
             for (var sectionPtr = 0; sectionPtr < articleSections.Count; sectionPtr++)
             {
               var section = articleSections[sectionPtr];
