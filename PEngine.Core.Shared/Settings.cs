@@ -45,7 +45,7 @@ namespace PEngine.Core.Shared
     public bool DisableForum { get; set; } = true;
     // app_exclude_rss,
     public bool DisableRSS { get; set; } = false;
-    public string LabelArchivedPostsButton { get; set; } = "[Archived Posts]";
+    public string LabelArchivedPostsButton { get; set; } = "Archived Posts";
     // app_label_home,
     public string LabelHomeButton { get; set; } = "Home";
     // app_label_theme,
