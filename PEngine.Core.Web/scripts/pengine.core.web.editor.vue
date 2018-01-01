@@ -384,6 +384,12 @@
             </div>
           </div>
           <div class="edit-row">
+            <div class="edit-label-large">Content Cache Seconds</div>
+            <div class="edit-field">
+              <input type="text" class="edit-control-normal" v-model="record.data.cacheControlSeconds" />
+            </div>
+          </div>
+          <div class="edit-row">
             <div class="edit-label-large">Admin UserName:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-large" v-model="record.data.userNameAdmin" />

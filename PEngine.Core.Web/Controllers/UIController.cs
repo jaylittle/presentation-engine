@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Http.Headers;
 namespace PEngine.Core.Web.Controllers
 {
   [Route("ui")]
-  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+  [ResponseCache(CacheProfileName = "None")]
   public class UIController : Controller
   {
     public UIController()

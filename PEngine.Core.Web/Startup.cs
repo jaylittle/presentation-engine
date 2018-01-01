@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -55,7 +56,23 @@ namespace PEngine.Core.Web
     public void ConfigureServices(IServiceCollection services)
     {
       // Add framework services.
-      services.AddMvc();
+      services.AddMvc(options => {
+        options.CacheProfiles.Add("None",
+          new CacheProfile()
+          {
+            Location = ResponseCacheLocation.None,
+            NoStore = true
+          }
+        );
+        options.CacheProfiles.Add("Content",
+          new CacheProfile()
+          {
+            Location = ResponseCacheLocation.Any,
+            Duration = PEngine.Core.Shared.Settings.Current.CacheControlSeconds,
+            NoStore = false
+          }
+        );
+      });
       services.AddScoped<IPostDal, PostDal>();
       services.AddScoped<IArticleDal, ArticleDal>();
       services.AddScoped<IResumeDal, ResumeDal>();
@@ -151,9 +168,8 @@ namespace PEngine.Core.Web
         ServeUnknownFileTypes = true,
         OnPrepareResponse = ctx =>
         {
-          const int durationInSeconds = 60 * 60 * 24;
           ctx.Context.Response.Headers[HeaderNames.CacheControl] =
-            "public,max-age=" + durationInSeconds;
+            "public,max-age=" + PEngine.Core.Shared.Settings.Current.CacheControlSeconds;
         }
       });
 

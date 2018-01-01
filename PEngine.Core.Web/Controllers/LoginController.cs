@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Http;
 namespace PEngine.Core.Web.Controllers
 {
   [Route("log")]
-  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+  [ResponseCache(CacheProfileName = "None")]
   public class LoginController : Controller
   {
     public LoginController()

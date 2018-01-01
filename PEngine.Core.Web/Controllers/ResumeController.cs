@@ -14,7 +14,7 @@ using PEngine.Core.Web.Models;
 
 namespace PEngine.Core.Web.Controllers
 {
-  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+  [ResponseCache(CacheProfileName = "None")]
   public class ResumeController : Controller
   {
     private IResumeDal _resumeDal;

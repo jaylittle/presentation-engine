@@ -17,7 +17,7 @@ using System.IO;
 namespace PEngine.Core.Web.Controllers.Api
 {
   [Route("api/[controller]")]
-  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+  [ResponseCache(CacheProfileName = "None")]
   public class ResourceController : Controller
   {
     public string[] RESTRICTED_PATHS = { "dist", "styles", "themes" };

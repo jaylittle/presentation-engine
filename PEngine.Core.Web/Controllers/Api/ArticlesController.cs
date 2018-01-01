@@ -15,7 +15,7 @@ using PEngine.Core.Web.Constraints;
 namespace PEngine.Core.Web.Controllers.Api
 {
   [Route("api/[controller]")]
-  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+  [ResponseCache(CacheProfileName = "None")]
   public class ArticlesController : Controller
   {
     private IArticleDal _articleDal;

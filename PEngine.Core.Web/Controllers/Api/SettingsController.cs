@@ -16,7 +16,7 @@ using PEngine.Core.Web.Models;
 namespace PEngine.Core.Web.Controllers.Api
 {
   [Route("api/[controller]")]
-  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+  [ResponseCache(CacheProfileName = "None")]
   public class SettingsController : Controller
   {
     private ISettingsProvider _settingsProvider;
