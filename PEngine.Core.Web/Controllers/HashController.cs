@@ -11,6 +11,7 @@ using PEngine.Core.Shared;
 namespace PEngine.Core.Web.Controllers
 {
   [Route("hash")]
+  [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 86400, NoStore = false)]
   public class HashController : Controller
   {
     private Regex _md5HashRegex = new Regex(@"(?:[0-9]|[A-F]){32}");
@@ -21,7 +22,6 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("{hash}/{*filePath}")]
-    [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 86400, NoStore = false)]
     public async Task<IActionResult> GetHashedFileName(string hash, string filePath)
     {
       filePath = System.Net.WebUtility.UrlDecode(filePath);

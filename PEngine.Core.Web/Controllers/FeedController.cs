@@ -15,6 +15,7 @@ using PEngine.Core.Web.Models;
 namespace PEngine.Core.Web.Controllers
 {
   [Route("feed")]
+  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
   public class FeedController : Controller
   {
     public FeedController()

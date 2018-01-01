@@ -14,6 +14,7 @@ using PEngine.Core.Web.Models;
 
 namespace PEngine.Core.Web.Controllers
 {
+  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
   public class HomeController : Controller
   {
     private IPostService _postService;

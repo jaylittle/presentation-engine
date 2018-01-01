@@ -15,6 +15,7 @@ using PEngine.Core.Web.Models;
 namespace PEngine.Core.Web.Controllers
 {
   [Route("post")]
+  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
   public class PostController : Controller
   {
     private IPostDal _postDal;

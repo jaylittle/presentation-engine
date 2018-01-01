@@ -15,6 +15,7 @@ using PEngine.Core.Web.Models;
 namespace PEngine.Core.Web.Controllers
 {
   [Route("article")]
+  [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
   public class ArticleController : Controller
   {
     private IArticleDal _articleDal;
