@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using PEngine.Core.Data;
 using PEngine.Core.Data.Interfaces;
 using PEngine.Core.Data.Providers;
@@ -147,7 +148,13 @@ namespace PEngine.Core.Web
 
       app.UseStaticFiles(new StaticFileOptions() {
         DefaultContentType = "application/octet-stream",
-        ServeUnknownFileTypes = true
+        ServeUnknownFileTypes = true,
+        OnPrepareResponse = ctx =>
+        {
+          const int durationInSeconds = 60 * 60 * 24;
+          ctx.Context.Response.Headers[HeaderNames.CacheControl] =
+            "public,max-age=" + durationInSeconds;
+        }
       });
 
       PEngine.Core.Data.Database.Startup(env.ContentRootPath, new SQLiteDataProvider()).Wait();
