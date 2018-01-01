@@ -21,6 +21,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("{hash}/{*filePath}")]
+    [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 86400, NoStore = false)]
     public async Task<IActionResult> GetHashedFileName(string hash, string filePath)
     {
       filePath = System.Net.WebUtility.UrlDecode(filePath);
