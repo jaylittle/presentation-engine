@@ -64,11 +64,16 @@ namespace PEngine.Core.Web
             NoStore = true
           }
         );
+        var contentCacheDuration = 86400;
+        if (PEngine.Core.Shared.Settings.Current.CacheControlSeconds > 0)
+        {
+          contentCacheDuration = PEngine.Core.Shared.Settings.Current.CacheControlSeconds;
+        }
         options.CacheProfiles.Add("Content",
           new CacheProfile()
           {
             Location = ResponseCacheLocation.Any,
-            Duration = PEngine.Core.Shared.Settings.Current.CacheControlSeconds,
+            Duration = contentCacheDuration,
             NoStore = false
           }
         );
@@ -168,8 +173,12 @@ namespace PEngine.Core.Web
         ServeUnknownFileTypes = true,
         OnPrepareResponse = ctx =>
         {
-          ctx.Context.Response.Headers[HeaderNames.CacheControl] =
-            "public,max-age=" + PEngine.Core.Shared.Settings.Current.CacheControlSeconds;
+          var contentCacheDuration = 86400;
+          if (PEngine.Core.Shared.Settings.Current.CacheControlSeconds > 0)
+          {
+            contentCacheDuration = PEngine.Core.Shared.Settings.Current.CacheControlSeconds;
+          }
+          ctx.Context.Response.Headers[HeaderNames.CacheControl] = $"public,max-age={contentCacheDuration}";
         }
       });
 
