@@ -126,7 +126,12 @@ namespace PEngine.Core.Web.Helpers
     {
       get
       {
-        return !string.IsNullOrWhiteSpace(Settings.Current.LogoFrontPage);
+        if (!string.IsNullOrWhiteSpace(Settings.Current.LogoFrontPage))
+        {
+          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", LogoPath, true).Result;
+          return hashEntry != null;
+        }
+        return false;
       }
     }
 

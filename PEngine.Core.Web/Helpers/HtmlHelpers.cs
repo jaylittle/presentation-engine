@@ -17,15 +17,19 @@ namespace PEngine.Core.Web.Helpers
 {
   public static class Html
   {
-    public static HtmlString ContentHashFile(this IHtmlHelper htmlHelper, string webPath)
+    public static HtmlString ContentHashFile(this IHtmlHelper htmlHelper, string webPath, bool checkForExistence = false)
     {
       var urlHelper = new UrlHelper(htmlHelper.ViewContext);
-      var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath).Result;
-      var hashUrl = System.Net.WebUtility.UrlDecode(urlHelper.Action("GetHashedFileName", "hash", new
+      var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath, checkForExistence).Result;
+      string hashUrl = string.Empty;
+      if (!checkForExistence || hashEntry != null)
       {
-        hash = hashEntry.Hash,
-        filePath = hashEntry.WebPath
-      }));
+        hashUrl = System.Net.WebUtility.UrlDecode(urlHelper.Action("GetHashedFileName", "hash", new
+        {
+          hash = hashEntry.Hash,
+          filePath = hashEntry.WebPath
+        }));
+      }
       return new HtmlString(hashUrl);
     }
 

@@ -23,7 +23,6 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("{hash}/{*filePath}")]
     public async Task<IActionResult> GetHashedFileName(string hash, string filePath)
     {
-      Console.WriteLine($"Hash Request Received for {hash}/{filePath}");
       filePath = System.Net.WebUtility.UrlDecode(filePath);
       if (_md5HashRegex.Matches(hash).Count == 1 && !string.IsNullOrWhiteSpace(filePath) 
         && !filePath.Contains("..") && _filePathRegex.IsMatch(filePath))
