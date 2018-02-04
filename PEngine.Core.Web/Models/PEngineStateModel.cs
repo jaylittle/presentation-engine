@@ -317,7 +317,9 @@ namespace PEngine.Core.Web.Models
         if (themeList.Any(t => t.Equals(requestedTheme, StringComparison.OrdinalIgnoreCase)))
         {
           Theme = requestedTheme;
-          _context.Response.Cookies.Append(COOKIE_THEME, requestedTheme);
+          _context.Response.Cookies.Append(COOKIE_THEME, requestedTheme, new CookieOptions() {
+            Expires = DateTime.UtcNow.AddYears(10)
+          });
         }
       }
     }
