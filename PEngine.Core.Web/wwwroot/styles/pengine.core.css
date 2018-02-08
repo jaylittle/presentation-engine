@@ -691,6 +691,15 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
   margin-left: 0px;
 }
 
+pre code
+{
+  font-family: monospace;
+  font-size: 13px;
+  display: block;
+  max-height: 300px;
+  overflow: auto;
+}
+
 @media (max-width: 1050px)
 {
   .search-list-description, .post-list-description
