@@ -169,7 +169,7 @@ namespace PEngine.Core.Web.Middleware
       var userId = string.Empty;
       var roleClaims = new List<string>();
       if (Settings.Current.UserNameAdmin.Equals(userName, StringComparison.OrdinalIgnoreCase) 
-        && (refreshFlag || Security.EncryptAndCompare(password, Settings.Current.PasswordAdmin)))
+        && (refreshFlag || Security.HashAndCompare(password, Settings.Current.PasswordAdmin)))
       {
         roleClaims.Add("PEngineAdmin");
         userId = Settings.Current.UserNameAdmin;
@@ -198,7 +198,7 @@ namespace PEngine.Core.Web.Middleware
       ClaimsIdentity identity = null;
       var forumUser = await _forumDal.GetForumUserById(null, userName);
       var forumEnabled = !Settings.Current.DisableForum;
-      if (forumEnabled && forumUser != null && (refreshFlag || Security.EncryptAndCompare(password, forumUser.Password)))
+      if (forumEnabled && forumUser != null && (refreshFlag || Security.HashAndCompare(password, forumUser.Password)))
       {
         if (!forumUser.BanFlag)
         {

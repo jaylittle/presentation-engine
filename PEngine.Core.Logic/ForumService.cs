@@ -352,7 +352,7 @@ namespace PEngine.Core.Logic
         {
           if (!importFlag)
           {
-            forumUser.Password = Security.Encrypt(forumUser.NewPassword.Value);
+            forumUser.Password = Security.Hash(forumUser.NewPassword.Value);
           }
           await _forumDal.InsertForumUser(forumUser, importFlag);
         }
@@ -360,11 +360,11 @@ namespace PEngine.Core.Logic
         {
           if (forumUser.NewPassword.Reset)
           {
-            forumUser.Password = Security.Encrypt(string.Empty);
+            forumUser.Password = Security.Hash(string.Empty);
           }
           else if (!string.IsNullOrEmpty(forumUser.NewPassword.Value))
           {
-            forumUser.Password = Security.Encrypt(forumUser.NewPassword.Value);
+            forumUser.Password = Security.Hash(forumUser.NewPassword.Value);
           }
           else
           {

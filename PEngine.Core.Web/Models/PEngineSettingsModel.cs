@@ -38,7 +38,7 @@ namespace PEngine.Core.Web.Models
             }
             if (newPassword != null)
             {
-              prop.SetValue(current, Security.Encrypt(newPassword));
+              prop.SetValue(current, Security.Hash(newPassword));
             }
             break;
           case "SecretKey":
