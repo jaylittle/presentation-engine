@@ -8,7 +8,7 @@
 
 button
 {
-  background-color: #8981af;
+  background-color: #9e97c4;
   color: black;
   border: 0px solid #dfe0da;
   border-radius: 2px;
@@ -21,20 +21,39 @@ button
 button:hover
 {
   background-color: black;
-  color: #8981af;
-  border: 1px solid #8981af;
+  color: #9e97c4;
+  border: 1px solid #9e97c4;
 }
 
 button:disabled
 {
   background-color: #242429;
-  color: #8981af;
+  color: #9e97c4;
 }
 
 button:disabled:hover
 {
   background-color: #242429;
-  color: #8981af;
+  color: #9e97c4;
+}
+
+input, select, textarea
+{
+  color: #9e97c4;
+  background-color: #0e0e10;
+  background-position: top;
+  margin: 0;
+  display: inline-block;
+  padding: 0rem 0.5rem 0rem 0.5rem;
+  border-radius: 5px;
+  border: 0px solid #dfe0da;
+  border-radius: 2px;
+}
+
+input, select
+{
+  height: 1.5rem;
+  vertical-align: middle;
 }
 
 blockquote, div.quoted-text
@@ -53,12 +72,12 @@ blockquote, div.quoted-text
 
 a:link 
 {
-  color: #8981af;
+  color: #9e97c4;
 }
 
 a:visited
 {
-  color: #8981af;
+  color: #9e97c4;
 }
 
 a:active
@@ -171,7 +190,7 @@ b
 
 .menu-button:hover
 {
-  background-color: #8981af;
+  background-color: #9e97c4;
   color: black;
 }
 
@@ -232,7 +251,7 @@ b
   font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 17px;
   font-weight: bold;
-  color: #8981af;
+  color: #9e97c4;
   margin: 0px;
   position: relative;
 }
@@ -243,7 +262,7 @@ b
   font-size: 20px;
   position: relative;
   padding-left: 5px;
-  color: #8981af;
+  color: #9e97c4;
 } 
 
 .form-subheader-text
@@ -352,7 +371,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 .list-table thead tr
 {
   background-color: #0e0e10;
-  color: #8981af;
+  color: #9e97c4;
   font-size: 14px;
 }
 
@@ -400,7 +419,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 .list-table tbody tr:hover
 {
   background-image: none;
-  background-color: #8981af;
+  background-color: #9e97c4;
   color: black;
 }
 
