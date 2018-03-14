@@ -1,15 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj" />
+    <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="1.50.4" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.0.0" />
-    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
-    <EmbeddedResource Include="**\*.sql" />
+    <PackageReference Include="Dapper" Version="1.50.4"/>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.0.1"/>
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0"/>
+    <EmbeddedResource Include="**\*.sql"/>
   </ItemGroup>
 </Project>
