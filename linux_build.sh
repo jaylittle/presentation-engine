@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ -d PEngine.Core.Web/bin/Release/netcoreapp2.0/publish ]
+then
+  rm -rf PEngine.Core.Web/bin/Release/netcoreapp2.0/publish
+fi
 dotnet restore
 if [ -f pengine_current.tgz ]
 then
