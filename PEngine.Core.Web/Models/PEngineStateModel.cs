@@ -317,9 +317,26 @@ namespace PEngine.Core.Web.Models
         if (themeList.Any(t => t.Equals(requestedTheme, StringComparison.OrdinalIgnoreCase)))
         {
           Theme = requestedTheme;
-          _context.Response.Cookies.Append(COOKIE_THEME, requestedTheme, new CookieOptions() {
+
+          var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase)
+            || _context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase);
+
+          var cookieOptions = new CookieOptions() {
+            HttpOnly = true,
+            Secure = secureFlag,
             Expires = DateTime.UtcNow.AddYears(10)
-          });
+          };
+
+          if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
+          {
+            cookieOptions.Domain = Settings.Current.CookieDomain;
+          }
+          if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
+          {
+            cookieOptions.Path = Settings.Current.CookiePath;
+          }
+
+          _context.Response.Cookies.Append(COOKIE_THEME, requestedTheme, cookieOptions);
         }
       }
     }
