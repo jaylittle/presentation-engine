@@ -261,7 +261,7 @@ namespace PEngine.Core.Web.Middleware
       {
         if (HasJwtCookie(context))
         {
-          AddJwtCookie(context, encodedJwt, expirationMinutes);
+          AddJwtCookie(context, encodedJwt);
         }
 
         var response = new
@@ -279,7 +279,7 @@ namespace PEngine.Core.Web.Middleware
       }
       else
       {
-        AddJwtCookie(context, encodedJwt, expirationMinutes);
+        AddJwtCookie(context, encodedJwt);
         context.Response.Redirect(successUrl);
       }
     }
@@ -289,15 +289,14 @@ namespace PEngine.Core.Web.Middleware
       return context.Request.Cookies.Any(c => c.Key.Equals(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, StringComparison.OrdinalIgnoreCase));
     }
 
-    private void AddJwtCookie(HttpContext context, string encodedJwt, int expirationMinutes)
+    private void AddJwtCookie(HttpContext context, string encodedJwt)
     {
       var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase)
         || context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase);
       var cookieOptions = new CookieOptions()
       {
-        Expires = DateTimeOffset.Now.AddMinutes(expirationMinutes),
         HttpOnly = true,
-        Secure = secureFlag
+        Secure = secureFlag,
       };
       if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
       {
