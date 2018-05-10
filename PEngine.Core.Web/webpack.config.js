@@ -1,6 +1,7 @@
 let path = require('path');
 let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 let webpack = require('webpack');
+let vueloader = require('vue-loader')
 
 module.exports = {
   entry: {
@@ -8,6 +9,7 @@ module.exports = {
     'pengine.core.web.main': './scripts/pengine.core.web.main.js',
     'pengine.core.web.sitewide': './scripts/pengine.core.web.sitewide.js'
   },
+  mode: 'production',
   devtool: 'source-map',
   output: {
     filename: '[name].min.js',
@@ -19,15 +21,10 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
     new UglifyJSPlugin({
-      compress: { warnings: false },
       sourceMap: true
-    })
+    }),
+    new vueloader.VueLoaderPlugin(),
   ],
   module: {
     rules: [
