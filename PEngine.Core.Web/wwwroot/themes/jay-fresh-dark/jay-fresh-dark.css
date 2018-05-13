@@ -116,9 +116,7 @@ b
 .header
 {
   min-width: 810px;
-  background-color: black;
-  background-image: url(./btopmid.png);
-  background-repeat: repeat-x;
+  background-color: transparent;
 }
 
 .header-left
@@ -330,7 +328,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .dialog-container > .panel
 {
-  padding-top: 15px;
+  padding-top: 10px;
 }
 
 .form-container-center
@@ -429,11 +427,13 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   margin-bottom: 3px;
   border: none;
   position: relative;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
-body > .panel:first-child, #pengine-header.panel
+body > .panel, #pengine-header.panel
 {
-  background-color: #000000;
+  background-color: #0e0e10;
 }
 
 body > div.panel, div.page > div.panel
@@ -453,6 +453,16 @@ div.page > div.panel
 pre code
 {
   background-color: #0e0e10;
+}
+
+body .edit-label, .edit-label-normal
+{
+  font-size: 13px;
+}
+
+.edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
+{
+  font-size: 13px;
 }
 
 @media screen and (max-width: 325px)

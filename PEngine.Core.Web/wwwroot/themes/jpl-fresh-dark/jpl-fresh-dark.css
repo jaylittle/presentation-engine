@@ -116,9 +116,7 @@ b
 .header
 {
   min-width: 810px;
-  background-color: black;
-  background-image: url(./btopmid.png);
-  background-repeat: repeat-x;
+  background-color: transparent;
 }
 
 .header-left
