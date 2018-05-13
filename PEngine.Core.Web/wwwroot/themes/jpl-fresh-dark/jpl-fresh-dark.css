@@ -1,16 +1,16 @@
 ﻿body
 {
-  background-color: black;
+  background-color: #131217;
   font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 15px;
-  color: #dfe0da;
+  color: #9e97c4;
 }
 
 button
 {
   background-color: #9e97c4;
   color: black;
-  border: 0px solid #dfe0da;
+  border: 1px solid #9e97c4;
   border-radius: 2px;
   min-width: 95px;
   margin: 0px 5px 5px 5px;
@@ -20,27 +20,29 @@ button
 
 button:hover
 {
-  background-color: black;
+  background-color: #131217;
   color: #9e97c4;
   border: 1px solid #9e97c4;
 }
 
 button:disabled
 {
-  background-color: #242429;
+  background-color: #131217;
   color: #9e97c4;
+  border: 1px solid #242429;
 }
 
 button:disabled:hover
 {
-  background-color: #242429;
+  background-color: #131217;
   color: #9e97c4;
+  border: 1px solid #242429;
 }
 
 input, select, textarea
 {
   color: #9e97c4;
-  background-color: #0e0e10;
+  background-color: #08080a;
   background-position: top;
   margin: 0;
   display: inline-block;
@@ -108,7 +110,7 @@ b
 .page
 {
   min-width: 800px;
-  background-color: black;
+  background-color: #131217;
 }
 
 .header
@@ -147,7 +149,7 @@ b
 
 .content-menu
 {
-  background-color: black;
+  background-color: #131217;
   background-repeat: repeat;
   padding: 5px 5px 5px 5px;
   min-width: 800px;
@@ -160,7 +162,7 @@ b
   clear: both;
   padding-top: 5px;
   padding-left: 0px;
-  background-color: black;
+  background-color: #131217;
   background-repeat: repeat;
   width: 100%;
   max-width: 75%;
@@ -191,7 +193,7 @@ b
 .menu-button:hover
 {
   background-color: #9e97c4;
-  color: black;
+  color: #131217;
 }
 
 .menu-separator
@@ -215,7 +217,7 @@ b
   font-size: 15px;
   color: #ecede7;  
   text-align: left;
-  background-color: black;
+  background-color: #131217;
   width: 100%;
   max-width: 75%;
   min-width: 800px;
@@ -230,19 +232,7 @@ b
 
 .sub-header
 {
-  background-image: linear-gradient(top, #242429 96%, #000000 4%);
-  background-image: -o-linear-gradient(top, #242429 96%, #000000 4%);
-  background-image: -moz-linear-gradient(top, #242429 96%, #000000 4%);
-  background-image: -webkit-linear-gradient(top, #242429 96%, #000000 4%);
-  background-image: -ms-linear-gradient(top, #242429 96%, #000000 4%);
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0.96, #242429),
-    color-stop(0.04, #000000)
-  );
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#242429', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+  background-color: #0e0e10;
   min-height: 27px;
   background-position: top;
   background-repeat: repeat;
@@ -335,7 +325,12 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 .dialog-container
 {
   background-color: #121218;
-  border: 2px solid #ecede7;
+  border: 2px solid #131217;
+}
+
+.dialog-container > .panel
+{
+  padding-top: 15px;
 }
 
 .form-container-center
@@ -375,43 +370,15 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   font-size: 14px;
 }
 
-.list-table tbody tr:nth-child(odd)
+.list-table tbody tr
 {
-  background-image: linear-gradient(top, #0e0e10 4%, #000000 96%);
-  background-image: -o-linear-gradient(top, #0e0e10 4%, #000000 96%);
-  background-image: -moz-linear-gradient(top, #0e0e10 4%, #000000 96%);
-  background-image: -webkit-linear-gradient(top, #0e0e10 4%, #000000 96%);
-  background-image: -ms-linear-gradient(top, #0e0e10 4%, #000000 96%);
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0.04, #0e0e10),
-    color-stop(0.96, #000000)
-  );
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0e0e10', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
-  background-position: top;
-  background-repeat: repeat;
+  background-color: #131217;
   color: #dfe0da;
 }
 
-.list-table tbody tr:nth-child(even)
+.list-table tbody tr:nth-child(even), .list-table tbody tr:nth-child(odd)
 {
-  background-image: linear-gradient(top, #000000 4%, #0e0e10 96%);
-  background-image: -o-linear-gradient(top, #000000 4%, #0e0e10 96%);
-  background-image: -moz-linear-gradient(top, #000000 4%, #0e0e10 96%);
-  background-image: -webkit-linear-gradient(top, #000000 4%, #0e0e10 96%);
-  background-image: -ms-linear-gradient(top, #000000 4%, #0e0e10 96%);
-  background-image: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0.04, #000000),
-    color-stop(0.96, #0e0e10)
-  );
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#0e0e10',GradientType=0 ); /* IE6-9 */
-  background-position: top;
-  background-repeat: repeat;
+  background-color: #131217;
   color: #dfe0da;
 }
 
@@ -420,18 +387,18 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 {
   background-image: none;
   background-color: #9e97c4;
-  color: black;
+  color: #131217;
 }
 
 .list-table tbody tr:hover td a
 {
-  color: black;
+  color: #131217;
 }
 
 .list-table tbody tr.selected td, .list-table tbody tr.selected td a
 {
   background-color: #dfe0da;
-  color: black;
+  color: #131217;
 }
 
 .list-table tbody tr td a.invisible-link
@@ -441,7 +408,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table tbody tr:hover td a.invisible-link
 {
-  color: black;
+  color: #131217;
 }
 
 .list-table tfoot tr
@@ -457,14 +424,14 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .panel
 {
-  background-color: #121218;
+  background-color: #131217;
   margin-top: 0px;
   margin-bottom: 3px;
   border: none;
   position: relative;
 }
 
-.sub-header + .panel
+#pengine-header.panel
 {
   background-color: #000000;
 }
@@ -481,6 +448,11 @@ body > div.panel, div.page > div.panel
 div.page > div.panel
 {
   background: transparent;
+}
+
+pre code
+{
+  background-color: #0e0e10;
 }
 
 @media screen and (max-width: 325px)
