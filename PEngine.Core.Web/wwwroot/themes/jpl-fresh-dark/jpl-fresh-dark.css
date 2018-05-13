@@ -431,7 +431,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
   position: relative;
 }
 
-#pengine-header.panel
+body > .panel:first-child, #pengine-header.panel
 {
   background-color: #000000;
 }
