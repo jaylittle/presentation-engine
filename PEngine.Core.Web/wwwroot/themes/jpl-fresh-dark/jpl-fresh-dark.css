@@ -523,6 +523,7 @@ body .edit-label, .edit-label-normal
     min-width: 0px;
     max-width: inherit;
     margin: 0;
+    text-align: center;
   }
 
   .content
