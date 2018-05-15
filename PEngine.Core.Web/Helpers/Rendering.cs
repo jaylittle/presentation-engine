@@ -158,6 +158,7 @@ namespace PEngine.Core.Web.Helpers
           return new DirectoryInfo(themePath).GetDirectories()
             .Where(d => System.IO.File.Exists($"{d.FullName}{Path.DirectorySeparatorChar}{d.Name}.css"))
             .Select(d => d.Name)
+            .Where(t => !Settings.Current.IsThemeHidden(t))
             .OrderBy(d => d);
         }
         return new List<string>();

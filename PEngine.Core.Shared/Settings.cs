@@ -71,6 +71,13 @@ namespace PEngine.Core.Shared
     public string CookieDomain { get; set; } = string.Empty;
     public string CookiePath { get; set; } = string.Empty;
     public int CacheControlSeconds { get; set; } = 86400;
+    public string HiddenThemeList { get; set; }
+    
+    public bool IsThemeHidden(string theme)
+    {
+      return (HiddenThemeList ?? string.Empty).Split(',')
+        .Any(ht => !string.IsNullOrWhiteSpace(ht) && string.Equals(ht, theme, StringComparison.OrdinalIgnoreCase));
+    }
   }
 
   public class SettingsProvider : ISettingsProvider

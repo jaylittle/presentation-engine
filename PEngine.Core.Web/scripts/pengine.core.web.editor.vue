@@ -390,6 +390,12 @@
             </div>
           </div>
           <div class="edit-row">
+            <div class="edit-label-large">Hidden Theme List (comma delimited)</div>
+            <div class="edit-field">
+              <input type="text" class="edit-control-normal" v-model="record.data.hiddenThemeList" />
+            </div>
+          </div>
+          <div class="edit-row">
             <div class="edit-label-large">Admin UserName:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-large" v-model="record.data.userNameAdmin" />
