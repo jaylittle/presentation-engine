@@ -3,7 +3,7 @@ body
   margin: .25em .25em .25em .25em;
   background-color: white;
   font-family: Tahoma;
-  font-size: 15px;
+  font-size: 18px;
   color: black;
 }
 
@@ -81,7 +81,7 @@ b
   margin-left: 190px;
   margin-right: 190px;
   font-family: Tahoma;
-  font-size: 20px;
+  font-size: 24px;
   font-weight:bold;
   color: white;
   background-color: transparent;
@@ -116,8 +116,7 @@ b
   vertical-align: middle;
   text-align: center;
   font-family: Tahoma;
-  font-size: 15px;
-  font-weight: bold;
+  font-size: 18px;
   font-style: normal;
   color: white;
 }
@@ -140,7 +139,7 @@ b
   padding-left: 10px;
   padding-top: 10px;
   font-family: Tahoma;
-  font-size: 15px;
+  font-size: 18px;
   color: black;  
   text-align: left;
   background-color: white;
@@ -178,7 +177,7 @@ b
   padding-left: 25px;
   padding-right: 25px;
   font-family: Tahoma;
-  font-size: 16px;
+  font-size: 19px;
   font-weight: bold;
   color: white;
 }
@@ -186,7 +185,7 @@ b
 .form-header-text
 {
   font-family: Tahoma;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
   color: black;
   margin-bottom: 5px;
@@ -196,7 +195,7 @@ b
 .form-subheader-text
 {
   font-family: Tahoma;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   color: black;
   margin-bottom: 15px;
@@ -285,7 +284,7 @@ body .dialog-container
 {
   font-family: Tahoma;
   color: white;
-  font-size: 13px;
+  font-size: 15px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
@@ -295,7 +294,7 @@ body .dialog-container
 {
   background-color: white;
   color: black;
-  font-size: 15px;
+  font-size: 18px;
 }
 
 .list-table tbody tr:nth-child(odd)
@@ -320,7 +319,7 @@ body .dialog-container
 {
   background-color: white;
   color: black;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .list-table tbody tr.selected td, .list-table tbody tr.selected td a
@@ -372,7 +371,7 @@ body .dialog-container
 
 body .edit-label, .edit-label-normal
 {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   display: table-cell;
   clear: none;
@@ -384,7 +383,7 @@ body .edit-label, .edit-label-normal
 
 body .edit-label-large
 {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   display: table-cell;
   clear: none;
@@ -418,7 +417,7 @@ body .edit-label-large
 
 .edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
 {
-  font-size: 12px;
+  font-size: 14px;
   clear: none;
 }
 
@@ -451,7 +450,7 @@ body .edit-label-large
 
 .resume-label
 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   display: table-cell;
   clear: none;
@@ -460,7 +459,7 @@ body .edit-label-large
 
 .resume-disp-col-1
 {
-  font-size: 14px;
+  font-size: 16px;
   display: table-cell;
   clear: none;
   border-bottom: solid transparent 3px;
@@ -468,21 +467,21 @@ body .edit-label-large
 
 .resume-disp-col-2
 {
-  font-size: 14px;
+  font-size: 16px;
   display: table-cell;
   border-bottom: solid transparent 3px;
 }
 
 .resume-disp
 {
-  font-size: 14px;
+  font-size: 16px;
   display: table-cell;
   border-bottom: solid transparent 3px;
 }
 
 .resume-skill-type
 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   display: table-cell;
   clear: none;
@@ -498,7 +497,7 @@ body .edit-label-large
 .resume-skill-container
 {
   margin-left: 150px;
-  font-size: 14px;
+  font-size: 16px;
   display: block;
   border-bottom: solid transparent 3px;
 }
@@ -613,7 +612,7 @@ body > .panel > .panel-right
 {
   padding-left: 130px;
   list-style: none;
-  font-size: 12px;
+  font-size: 14px;
   color: red;
 }
 
@@ -694,7 +693,7 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
 pre code
 {
   font-family: monospace;
-  font-size: 13px;
+  font-size: 15px;
   display: block;
   max-height: 300px;
   overflow: auto;

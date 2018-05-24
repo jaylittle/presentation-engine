@@ -1,8 +1,8 @@
 ﻿body
 {
   background-color: white;
-  font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
-  font-size: 15px;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 18px;
   color: #201f25;
 }
 
@@ -22,6 +22,7 @@ button:hover
 {
   background-color: white;
   color: #524a7b;
+  border: 1px solid #524a7b;
 }
 
 button:disabled
@@ -41,7 +42,7 @@ blockquote, div.quoted-text
   border-style: none;
 	background-color: #dbdbd6;
 	color: #201f25;
-	font-size: 14px;
+	font-size: 17px;
 	min-width: 35%;
 	max-width: 70%;
 	margin-left: auto;
@@ -121,7 +122,7 @@ b
 .header-middle
 {
   display: none;
-  font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 38px;
 }
 
@@ -164,8 +165,8 @@ b
   border-radius: 5px;
   border: 0px solid #201f25;
   border-radius: 2px;
-  font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
-  font-size: 14px;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 17px;
 }
 
 .menu-button:hover
@@ -191,8 +192,8 @@ b
   clear: both;
   padding-left: 0px;
   padding-top: 5px;
-  font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
-  font-size: 15px;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 18px;
   color: #131218;  
   text-align: left;
   background-color: white;
@@ -201,6 +202,7 @@ b
   min-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.5rem;
 }
 
 .footer
@@ -228,7 +230,7 @@ b
   background-repeat: repeat;
   padding-left: 0;
   padding-right: 10px;
-  font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 17px;
   font-weight: bold;
   color: #201f25;
@@ -238,7 +240,7 @@ b
 
 .form-header-text
 {
-  font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 20px;
   position: relative;
   padding-left: 5px;
@@ -246,11 +248,11 @@ b
 
 .form-subheader-text
 {
-  font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
-  font-size: 14px;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 17px;
   font-weight: bold;
   color: inherit;
-} 
+}
 
 .logo-container img
 {
@@ -265,15 +267,13 @@ b
 
 .list-container
 {
-  text-align:justify;
-  text-justify: inter-word;
+  text-align: left;
   margin-right: 5px;
 }
 
 .display-container
 {
-  text-align:justify;
-  text-justify: inter-word;
+  text-align: left;
 }
 
 div.display-container > p:first-child
@@ -325,9 +325,9 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table
 {
-  font-family: "Segoe WP Semibold", "Segoe UI Semibold", "Segoe UI Web Semibold", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   color: #201f25;
-  font-size: 13px;
+  font-size: 16px;
   border: none !important;
 }
 
@@ -351,7 +351,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 {
   background-color: #f1f1ef;
   color: #201f25;
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .list-table tbody tr:nth-child(odd)
@@ -415,7 +415,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .quotelink
 {
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .panel
@@ -444,6 +444,21 @@ body > div.panel, div.page > div.panel
 div.page > div.panel
 {
   background: transparent;
+}
+
+pre code
+{
+  background-color: #dbdbd6;
+}
+
+body .edit-label, .edit-label-normal
+{
+  font-size: 16px;
+}
+
+.edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
+{
+  font-size: 16px;
 }
 
 @media screen and (max-width: 325px)
