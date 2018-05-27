@@ -1,0 +1,721 @@
+﻿body
+{
+  background-color: white;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 18px;
+  color: #201f25;
+}
+
+button
+{
+  background-color: #524a7b;
+  color: white;
+  border: 0px solid #201f25;
+  border-radius: 2px;
+  min-width: 95px;
+  margin: 0px 5px 5px 5px;
+  padding: 2px 2px 3px 2px;
+  height: 22px;
+}
+
+button:hover
+{
+  background-color: white;
+  color: #524a7b;
+  border: 1px solid #524a7b;
+}
+
+button:disabled
+{
+  background-color: #dbdbd6;
+  color: #524a7b;
+}
+
+button:disabled:hover
+{
+  background-color: #dbdbd6;
+  color: #524a7b;
+}
+
+blockquote, div.quoted-text
+{
+  border-style: none;
+	background-color: #dbdbd6;
+	color: #201f25;
+	font-size: 17px;
+	min-width: 35%;
+	max-width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 5px;
+	border-radius: 3px;
+}
+
+a:link 
+{
+  color: #524a7b;
+}
+
+a:visited
+{
+  color: #524a7b;
+}
+
+a:active
+{
+  color: inherit;
+}
+
+a:hover
+{
+  color: inherit;
+}
+
+form
+{
+  display: inline-block;
+}
+
+.form-container form
+{
+  display: block;
+}
+
+b
+{
+  color: #201f25;
+}
+
+.page
+{
+  min-width: 800px;
+  background-color: white;
+}
+
+.header
+{
+  min-width: 810px;
+  background-color: white;
+  background-image: url(./btopmid.png);
+  background-repeat: repeat-x;
+}
+
+.header-left
+{
+  width: 10px;
+  float: left;
+}
+
+.header-right
+{
+  width: 10px;
+  vertical-align: middle;
+  float: right;
+}
+
+.header-middle
+{
+  color: #201f25;
+  font-weight: bold;
+  display: block;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 34px;
+}
+
+.content-menu
+{
+  background-color: white;
+  background-repeat: repeat;
+  padding: 5px 5px 5px 5px;
+  min-width: 800px;
+}
+
+.menu
+{
+  display: block;
+  position: relative;
+  clear: both;
+  padding-top: 5px;
+  padding-left: 0px;
+  background-color: white;
+  background-repeat: repeat;
+  width: 100%;
+  max-width: 75%;
+  min-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.menu-button
+{
+  background-color: #f1f1ef;
+  background-position: top;
+  height: 22px;
+  margin: 0px 5px 5px 5px;
+  vertical-align: middle;
+  text-align: center;
+  display: inline-block;
+  width: auto;
+  min-width: 120px;
+  padding-bottom: 5px;
+  border-radius: 5px;
+  border: 0px solid #201f25;
+  border-radius: 2px;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 17px;
+}
+
+.menu-button:hover
+{
+  background-color: #524a7b;
+  color: white;
+}
+
+.menu-separator
+{
+  height: 22px;
+  width: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  clear: both;
+  display: inline-block;
+}
+
+.content
+{
+  display: block;
+  position: relative;
+  clear: both;
+  padding-left: 0px;
+  padding-top: 5px;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 18px;
+  color: #131218;  
+  text-align: left;
+  background-color: white;
+  width: 100%;
+  max-width: 75%;
+  min-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5rem;
+}
+
+.footer
+{
+  display: none;
+}
+
+.sub-header
+{
+  background-image: linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
+  background-image: -o-linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
+  background-image: -moz-linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
+  background-image: -webkit-linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
+  background-image: -ms-linear-gradient(top, #dbdbd6 96%, #FFFFFF 4%);
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.96, #dbdbd6),
+    color-stop(0.04, #FFFFFF)
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dbdbd6', endColorstr='#FFFFFF',GradientType=0 ); /* IE6-9 */
+  min-height: 27px;
+  background-position: top;
+  background-repeat: repeat;
+  padding-left: 0;
+  padding-right: 10px;
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  color: #201f25;
+  margin: 0px;
+  position: relative;
+}
+
+.form-header-text
+{
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 20px;
+  position: relative;
+  padding-left: 5px;
+} 
+
+.form-subheader-text
+{
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  color: inherit;
+}
+
+.logo-container img
+{
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+}
+
+.post-icon
+{
+  border: none;
+}
+
+.list-container
+{
+  text-align: left;
+  margin-right: 5px;
+}
+
+.display-container
+{
+  text-align: left;
+}
+
+div.display-container > p:first-child
+{
+  margin-top: 0;
+}
+
+div.display-container div.quoted-text > p:first-child
+{
+  margin-top: 0;
+}
+
+div.display-container div.centered-text
+{
+  text-align: center;
+}
+
+div.display-container div.sub-header p
+{
+  margin-bottom: 0;
+}
+
+div.display-container div.sub-header + p
+{
+  margin-top: 0;
+}
+
+div.display-container div.centered-text p:last-child
+{
+  margin-bottom: 0;
+}
+
+blockquote p:last-child, div.display-container div.quoted-text p:last-child
+{
+  margin-bottom: 0;
+}
+
+.dialog-container
+{
+  background-color: #EDEDE7;
+  border: 2px solid #131218;
+}
+
+.form-container-center
+{
+  text-align: center;
+  width: 400px;
+}
+
+.list-table
+{
+  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  color: #201f25;
+  font-size: 16px;
+  border: none !important;
+}
+
+.list-table thead tr th, .list-table tbody tr td
+{
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: solid 1px #201f25;
+  padding-right: 2px;
+  padding-left: 2px;
+  text-align: left;
+}
+
+.list-table tfoot tr td
+{
+  border: none !important;
+}
+
+.list-table thead tr
+{
+  background-color: #f1f1ef;
+  color: #201f25;
+  font-size: 17px;
+}
+
+.list-table tbody tr:nth-child(odd)
+{
+  background-image: linear-gradient(top, #f1f1ef 4%, #FFFFFF 96%);
+  background-image: -o-linear-gradient(top, #f1f1ef 4%, #FFFFFF 96%);
+  background-image: -moz-linear-gradient(top, #f1f1ef 4%, #FFFFFF 96%);
+  background-image: -webkit-linear-gradient(top, #f1f1ef 4%, #FFFFFF 96%);
+  background-image: -ms-linear-gradient(top, #f1f1ef 4%, #FFFFFF 96%);
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.04, #f1f1ef),
+    color-stop(0.96, #FFFFFF)
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f1ef', endColorstr='#FFFFFF',GradientType=0 ); /* IE6-9 */
+  background-position: top;
+  background-repeat: repeat;
+  color: #201f25;
+}
+
+.list-table tbody tr:nth-child(even)
+{
+  background-image: linear-gradient(top, #FFFFFF 4%, #f1f1ef 96%);
+  background-image: -o-linear-gradient(top, #FFFFFF 4%, #f1f1ef 96%);
+  background-image: -moz-linear-gradient(top, #FFFFFF 4%, #f1f1ef 96%);
+  background-image: -webkit-linear-gradient(top, #FFFFFF 4%, #f1f1ef 96%);
+  background-image: -ms-linear-gradient(top, #FFFFFF 4%, #f1f1ef 96%);
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.04, #FFFFFF),
+    color-stop(0.96, #f1f1ef)
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#f1f1ef',GradientType=0 ); /* IE6-9 */
+  background-position: top;
+  background-repeat: repeat;
+  color: #201f25;
+}
+
+
+.list-table tbody tr:hover
+{
+  background-image: none;
+  background-color: #524a7b;
+  color: white;
+}
+
+.list-table tbody tr:hover td a
+{
+  color: white;
+}
+
+.list-table tbody tr.selected td, .list-table tbody tr.selected td a
+{
+  background-color: #201f25;
+  color: white;
+}
+
+.quotelink
+{
+  font-size: 17px;
+}
+
+.panel
+{
+  background-color: #EDEDE7;
+  margin-top: 0px;
+  margin-bottom: 3px;
+  border: none;
+  position: relative;
+}
+
+.sub-header + .panel
+{
+  background-color: #FFFFFF;
+}
+
+body > div.panel, div.page > div.panel
+{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  position: static;
+  padding-right: 0px;
+  left: 0px;
+}
+
+div.page > div.panel
+{
+  background: transparent;
+}
+
+pre code
+{
+  background-color: #dbdbd6;
+}
+
+body .edit-label, .edit-label-normal
+{
+  font-size: 16px;
+}
+
+.edit-control, .edit-control-small, .edit-control-normal, .edit-control-large
+{
+  font-size: 16px;
+}
+
+@media screen and (max-width: 325px)
+{
+  .logo-container
+  {
+    display: none;
+    box-shadow: none;
+  }
+}
+
+@media screen and (max-width: 425px)
+{
+  .header-right
+  {
+    display: none;
+  }
+  .header-middle
+  {
+    margin-right: 0px;
+    margin-left: 0px;
+    text-align: center;
+  }
+  .header-left
+  {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 540px)
+{
+  body > div.panel > div.panel-right-inline, div.page > div.panel > div.panel-right-inline
+  {
+    display: none;
+  }
+
+  .panel-block
+  {
+    display: inline-block;
+    margin-bottom: 2px;
+  }
+}
+
+@media screen and (max-width: 850px)
+{
+  .page
+  {
+    min-width: 0px;
+  }
+
+  .header
+  {
+    min-width: 0px;
+  }
+
+  .content-menu
+  {
+    min-width: 0px;
+  }
+
+  .menu
+  {
+    min-width: 0px;
+    max-width: inherit;
+    margin: 0;
+    text-align: center;
+  }
+
+  .content
+  {
+    min-width: 0px;
+    max-width: inherit;
+    margin: 0;
+  }
+
+  .panel
+  {
+    min-width: 0px;
+  }
+
+  body > div.panel, div.page > div.panel
+  {
+    min-width: 0px;
+  }
+
+  .form-container-center
+  {
+    width: auto;
+    margin: 0;
+  }
+
+  .panel-block
+  {
+    display: inline;
+  }
+}
+
+@media screen and (max-width: 1000px)
+{
+  body > div.panel > div.panel-right-inline, div.page > div.panel > div.panel-right.inline
+  {
+    display: inline;
+  }
+
+  body > div.panel > div.panel-left-inline, div.page > div.panel > div.panel-left-inline
+  {
+    display: inline;
+  }
+
+  .content
+  {
+    clear: right;
+    max-width: 800px;
+  }
+}
+
+@media screen and (min-width: 1200px)
+{
+  .menu
+  {
+    width: 12%;
+    max-width: inherit;
+    min-width: 0px;
+    margin: 0;
+    background-color: transparent;
+    float: left;
+  }
+
+  .menu-button
+  {
+    display: block;
+    min-width: 95px;
+    max-width: inherit;
+  }
+
+  .content
+  {
+    clear: right;
+  }
+}
+
+@media screen and (min-width: 1250px)
+{
+  .menu
+  {
+    width: 12%;
+    max-width: inherit;
+    min-width: 0px;
+    margin: 0;
+    background-color: transparent;
+    float: left;
+  }
+
+  .menu-button
+  {
+    display: block;
+    min-width: 95px;
+    max-width: inherit;
+  }
+
+  .content
+  {
+    clear: right;
+    max-width: 900px;
+  }
+}
+
+@media screen and (min-width: 1450px)
+{
+  .menu
+  {
+    width: 200px;
+  }
+
+  .content
+  {
+    max-width: 1000px;
+  } 
+}
+
+@media print
+{
+  .page
+  {
+    min-width: 0px;
+  }
+
+  .header
+  {
+    min-width: 0px;
+  }
+
+  .content-menu
+  {
+    min-width: 0px;
+  }
+
+  .menu
+  {
+    min-width: 0px;
+    max-width: inherit;
+    margin: 0;
+  }
+
+  .content
+  {
+    min-width: 0px;
+    max-width: inherit;
+    margin: 0;
+  }
+
+  .panel
+  {
+    min-width: 0px;
+  }
+
+  body > div.panel, div.page > div.panel
+  {
+    min-width: 0px;
+  }
+
+  body > div.panel > div.panel-right-inline, div.page > div.panel > div.panel-right.inline
+  {
+    display: inline;
+  }
+
+  body > div.panel > div.panel-left-inline, div.page > div.panel > div.panel-left-inline
+  {
+    display: inline;
+  }
+
+  .dialog-container
+  {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-width: 0px;
+  }
+
+  .form-container-center
+  {
+    width: auto;
+    margin: 0;
+  }
+
+  .panel-block
+  {
+    display: inline;
+  }
+
+  .logo-container
+  {
+    background-image: none;
+    height: auto;
+  }
+
+  .logo-container img
+  {
+    display: inline;
+  }
+}
