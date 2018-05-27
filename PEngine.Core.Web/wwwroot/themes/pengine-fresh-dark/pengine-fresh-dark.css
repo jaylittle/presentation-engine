@@ -121,14 +121,12 @@ b
 
 .header-left
 {
-  width: 10px;
-  float: left;
+  display: none;
 }
 
 .header-right
 {
-  width: 10px;
-  float: right;
+  display: none;
 }
 
 .header-middle
@@ -472,19 +470,11 @@ body .edit-label, .edit-label-normal
 
 @media screen and (max-width: 425px)
 {
-  .header-right
-  {
-    display: none;
-  }
   .header-middle
   {
     margin-right: 0px;
     margin-left: 0px;
     text-align: center;
-  }
-  .header-left
-  {
-    display: none;
   }
 }
 
