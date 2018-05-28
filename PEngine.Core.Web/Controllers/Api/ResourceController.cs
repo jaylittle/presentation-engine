@@ -53,6 +53,7 @@ namespace PEngine.Core.Web.Controllers.Api
       return this.BadRequest();
     }
 
+    [RequestSizeLimit(1_000_000_000)]
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPost("file/{*folderPath}")]
     public IActionResult UploadFile(string folderPath)
@@ -72,6 +73,10 @@ namespace PEngine.Core.Web.Controllers.Api
             using (var writeStream = System.IO.File.OpenWrite(fullFilePath))
             {
               file.CopyTo(writeStream);
+              //using (var reader = file.OpenReadStream())
+              //{
+              //  reader.CopyTo(writeStream); 
+              //}
             }
           }
           return this.Get(folderPath);

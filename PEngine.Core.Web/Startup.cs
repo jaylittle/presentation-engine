@@ -23,6 +23,7 @@ using PEngine.Core.Shared;
 using PEngine.Core.Web.Middleware;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace PEngine.Core.Web
 {
@@ -123,6 +124,12 @@ namespace PEngine.Core.Web
         .AddJwtBearer(o => {
           o.TokenValidationParameters = tokenValidationParameters;
         });
+
+      services.Configure<FormOptions>(options => {
+        options.ValueLengthLimit = int.MaxValue;
+        options.MultipartBodyLengthLimit = int.MaxValue;
+        options.MultipartHeadersLengthLimit = int.MaxValue;
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
