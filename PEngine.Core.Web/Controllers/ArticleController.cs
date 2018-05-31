@@ -20,17 +20,19 @@ namespace PEngine.Core.Web.Controllers
   {
     private IArticleDal _articleDal;
     private IArticleService _articleService;
+    private IServiceProvider _svp;
 
-    public ArticleController(IArticleDal articleDal, IArticleService articleService)
+    public ArticleController(IServiceProvider svp, IArticleDal articleDal, IArticleService articleService)
     {
       _articleDal = articleDal;
       _articleService = articleService;
+      _svp = svp;
     }
 
     [HttpGet("category/{category}")]
     public async Task<IActionResult> Category(string category, [FromQuery]PagingModel paging = null)
     {
-      var model = new PEngineGenericListModel<ArticleModel>(HttpContext, false);
+      var model = new PEngineGenericListModel<ArticleModel>(_svp, HttpContext, false);
       if (paging != null)
       {
         paging.Count = paging.Count > 0 ? paging.Count : model.Settings.PerPagePostArchived;
@@ -68,7 +70,7 @@ namespace PEngine.Core.Web.Controllers
     [Route("view/{uniqueName}/{sectionUniqueName}")]
     public async Task<IActionResult> ViewArticleSection(string uniqueName, string sectionUniqueName)
     {
-      var model = new PEngineGenericRecordModel<ArticleModel>(HttpContext, false, false, null, sectionUniqueName);
+      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false, false, null, sectionUniqueName);
       var article = await _articleService.GetArticleById(null, null, uniqueName, model.State.HasAdmin);
       if (article == null || article.Guid == Guid.Empty)
       {

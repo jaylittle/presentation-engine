@@ -18,12 +18,14 @@ namespace PEngine.Core.Web.Controllers
   [ResponseCache(CacheProfileName = "None")]
   public class SearchController : Controller
   {
+    private IServiceProvider _svp;
     private IForumService _forumService;
     private IPostService _postService;
     private IArticleService _articleService;
 
-    public SearchController(IForumService forumService, IPostService postService, IArticleService articleService)
+    public SearchController(IServiceProvider svp, IForumService forumService, IPostService postService, IArticleService articleService)
     {
+      _svp = svp;
       _forumService = forumService;
       _postService = postService;
       _articleService = articleService;
@@ -31,7 +33,7 @@ namespace PEngine.Core.Web.Controllers
 
     public async Task<IActionResult> Index([FromQuery]string query, [FromQuery]PagingModel paging = null)
     {
-      var model = new PEngineGenericListModel<PEngineSearchResultModel>(HttpContext, false);
+      var model = new PEngineGenericListModel<PEngineSearchResultModel>(_svp, HttpContext, false);
       model.State.CurrentSection = query;
       
       var results = new List<PEngineSearchResultModel>();

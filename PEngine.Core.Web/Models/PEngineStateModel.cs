@@ -23,6 +23,7 @@ namespace PEngine.Core.Web.Models
     private ISubTitleModel _viewDataRecord;
     private IEnumerable<ISubTitleModel> _viewDataList;
     private bool _viewDataInList;
+    private IServiceProvider _svp;
 
     public string Url { get; set; }
     public string Title { get; set; }
@@ -118,35 +119,38 @@ namespace PEngine.Core.Web.Models
 
     public string QuoteText { get; set; }
 
-    public PEngineStateModel(SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false)
     {
       _settings = settings;
       _context = context;
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = null;
+      _svp = svp;
 
       Init();
     }
 
-    public PEngineStateModel(SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = currentSection;
+      _svp = svp;
 
       UpdateData(viewDataRecord);
     }
 
-    public PEngineStateModel(SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = currentSection;
+      _svp = svp;
 
       UpdateData(viewDataList);
     }
@@ -231,7 +235,7 @@ namespace PEngine.Core.Web.Models
 
       if (!IsForum)
       {
-        var articleDal = Startup.ServiceProvider.GetRequiredService<IArticleDal>();
+        var articleDal = _svp.GetRequiredService<IArticleDal>();
         var articleCategories = articleDal.ListArticles(null).Result
           .Where(a => a.VisibleFlag || HasAdmin)
           .Select(a => $"{a.Category}|{a.ContentURL}")

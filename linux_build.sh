@@ -1,7 +1,7 @@
 #!/bin/bash
-if [ -d PEngine.Core.Web/bin/Release/netcoreapp2.0/publish ]
+if [ -d PEngine.Core.Web/bin/Release/netcoreapp2.1/publish ]
 then
-  rm -rf PEngine.Core.Web/bin/Release/netcoreapp2.0/publish
+  rm -rf PEngine.Core.Web/bin/Release/netcoreapp2.1/publish
 fi
 dotnet restore
 if [ -f pengine_current.tgz ]
@@ -17,4 +17,4 @@ npm install
 dotnet clean
 dotnet publish -c Release
 cd ..
-tar -C PEngine.Core.Web/bin/Release/netcoreapp2.0/publish -czvf pengine_current.tgz ./
+tar -C PEngine.Core.Web/bin/Release/netcoreapp2.1/publish -czvf pengine_current.tgz ./

@@ -17,18 +17,20 @@ namespace PEngine.Core.Web.Controllers
   [ResponseCache(CacheProfileName = "None")]
   public class ResumeController : Controller
   {
+    private IServiceProvider _svp;
     private IResumeDal _resumeDal;
     private IResumeService _resumeService;
 
-    public ResumeController(IResumeDal resumeDal, IResumeService resumeService)
+    public ResumeController(IServiceProvider svp, IResumeDal resumeDal, IResumeService resumeService)
     {
+      _svp = svp;
       _resumeDal = resumeDal;
       _resumeService = resumeService;
     }
 
     public async Task<IActionResult> Index()
     {
-      var model = new PEngineGenericRecordModel<ResumeModel>(HttpContext, false);
+      var model = new PEngineGenericRecordModel<ResumeModel>(_svp, HttpContext, false);
       model.RecordData = await _resumeService.GetResume();
       return View(model);
     }

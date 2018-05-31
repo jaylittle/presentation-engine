@@ -22,8 +22,11 @@ namespace PEngine.Core.Web.Controllers
   [ResponseCache(CacheProfileName = "None")]
   public class LoginController : Controller
   {
-    public LoginController()
+    private IServiceProvider _svp;
+
+    public LoginController(IServiceProvider svp)
     {
+      _svp = svp;
     }
 
     [HttpGet("in")]
@@ -35,7 +38,7 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("in/{userType}")]
     public IActionResult Index(string userType, [FromQuery]bool authFailed)
     {
-      var model = new PEngineGenericRecordModel<PEngineLoginModel>(HttpContext, true);
+      var model = new PEngineGenericRecordModel<PEngineLoginModel>(_svp, HttpContext, true);
       model.RecordData = new PEngineLoginModel();
       model.RecordData.AuthFailed = authFailed;
       switch (userType.ToLower().Trim())

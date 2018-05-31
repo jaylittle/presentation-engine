@@ -8,10 +8,10 @@ namespace PEngine.Core.Web.Models
 {
   public class PEngineGenericRecordModel<T> where T: ISubTitleModel
   {
-    public PEngineGenericRecordModel(HttpContext context, bool hideSubTitle = false, bool isForum = false, T recordData = default(T), string currentSection = null, int? currentPage = null)
+    public PEngineGenericRecordModel(IServiceProvider svp, HttpContext context, bool hideSubTitle = false, bool isForum = false, T recordData = default(T), string currentSection = null, int? currentPage = null)
     {
       Settings = PEngine.Core.Shared.Settings.Current;
-      State = new PEngineStateModel(Settings, context, hideSubTitle, isForum, recordData, currentSection, currentPage);
+      State = new PEngineStateModel(svp, Settings, context, hideSubTitle, isForum, recordData, currentSection, currentPage);
       RecordData = recordData;
     }
     public PEngineStateModel State { get; set; }

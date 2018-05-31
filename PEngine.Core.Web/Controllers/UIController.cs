@@ -23,14 +23,17 @@ namespace PEngine.Core.Web.Controllers
   [ResponseCache(CacheProfileName = "None")]
   public class UIController : Controller
   {
-    public UIController()
+    private IServiceProvider _svp;
+    
+    public UIController(IServiceProvider svp)
     {
+      _svp = svp;
     }
 
     [HttpGet("theme")]
     public IActionResult ChangeTheme([FromQuery]string selection)
     {
-      var state = new PEngineStateModel(Settings.Current, HttpContext, false, false);
+      var state = new PEngineStateModel(_svp, Settings.Current, HttpContext, false, false);
       if (state.ThemeList.Any(t => t.Equals(selection, StringComparison.OrdinalIgnoreCase)))
       {
         state.ThemeChange(selection);
