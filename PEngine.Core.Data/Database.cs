@@ -69,7 +69,7 @@ namespace PEngine.Core.Data
                 foreach (var updateCommand in updateCommands)
                 {
                   lastUpdateCommand = updateCommand;
-                  ct.DbConnection.Execute(updateCommand);
+                  ct.DbConnection.Execute(updateCommand, null, ct.DbTransaction);
                 }
                 lastUpdateCommand = "Standard_InsertVersion";
                 await versionDal.InsertVersion(databaseType, updateVersion);
