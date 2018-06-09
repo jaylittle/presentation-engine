@@ -12,8 +12,9 @@
     @RenderSection("head", required: false)
     @if (Model.State.HasSummary)
     {
+    <meta name="description" content="@Model.State.SummaryDescription" />
     <meta property="og:title" content="@Model.State.SummaryTitle" />
-    <meta property="og:type" content="article" />
+    <meta property="og:type" content="website" />
     <meta property="og:url" content="@Model.State.SummaryUrl" />
     <meta property="og:image" content="@Model.State.SummaryImage" />
     <meta property="og:site_name" content="@Model.State.SummarySite" />
