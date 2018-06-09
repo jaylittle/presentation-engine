@@ -308,6 +308,13 @@ namespace PEngine.Core.Web.Models
           SummaryTitle = !HideSubTitle ? SubTitle : _settings.DefaultTitle;
           SummaryDescription = Helpers.Rendering.DataRenderAndTruncate(postData.Data, -1);
         }
+
+        if (!_viewDataInList && _viewDataRecord is ResumeModel)
+        {
+          var resumeData = (ResumeModel)_viewDataRecord;
+          SummaryTitle = !HideSubTitle ? SubTitle : _settings.DefaultTitle;
+          SummaryDescription = resumeData.Objectives?.FirstOrDefault()?.Data ?? string.Empty;
+        }
       }
 
       HasSummary = !String.IsNullOrWhiteSpace(SummaryTitle);
