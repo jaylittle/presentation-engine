@@ -61,7 +61,7 @@ namespace PEngine.Core.Shared
             if (fileInfo.FullName.StartsWith(actualFileRoot, StringComparison.OrdinalIgnoreCase))
             {
               var md5 = System.Security.Cryptography.MD5.Create();
-              using (var reader = System.IO.File.OpenRead(hashEntry.FullPath))
+              using (var reader = System.IO.File.Open(hashEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
               {
                 var md5Bytes = md5.ComputeHash(reader);
                 hashEntry.Hash = Security.BytesToHex(md5Bytes);
