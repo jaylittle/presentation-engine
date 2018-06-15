@@ -43,5 +43,7 @@
     <Content Include="sql\**\*" CopyToPublishDirectory="Always" />
     <Content Remove="pengine.settings.json" />
     <Content Remove="Postman\**" />
+    <Content Remove="package.json" />
+    <Content Remove="package-lock.json" />
   </ItemGroup>
 </Project>
