@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.1" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.2" />
     <PackageReference Include="CommandLine.Options" Version="0.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
