@@ -699,6 +699,11 @@ pre code
   overflow: auto;
 }
 
+.article-image, .content img
+{
+  max-width: 100%;
+}
+
 @media (max-width: 1050px)
 {
   .search-list-description, .post-list-description
