@@ -27,7 +27,7 @@ namespace PEngine.Core.Web.Models
       Content = Helpers.Rendering.DataRenderAndTruncate(post.Data, 255);
       CreatedUTC = post.CreatedUTC;
       Creator = "Admin";
-      Link = $"/post/view/{post.CreatedYear}/{post.CreatedMonth}/{post.UniqueName}";
+      Link = $"post/view/{post.CreatedYear}/{post.CreatedMonth}/{post.UniqueName}";
     }
 
     public PEngineSearchResultModel(ArticleModel article)
@@ -37,7 +37,7 @@ namespace PEngine.Core.Web.Models
       Content = Helpers.Rendering.DataRenderAndTruncate(article.Description, 255);
       CreatedUTC = article.CreatedUTC;
       Creator = "Admin";
-      Link = $"/article/view/{article.UniqueName}";
+      Link = $"article/view/{article.UniqueName}";
     }
 
     public PEngineSearchResultModel(ForumThreadPostModel forumThreadPost)
@@ -47,7 +47,7 @@ namespace PEngine.Core.Web.Models
       Content = Helpers.Rendering.DataRenderAndTruncate(forumThreadPost.Data, 255);
       CreatedUTC = forumThreadPost.CreatedUTC;
       Creator = forumThreadPost.ForumUserId;
-      Link = $"/forum/thread/{forumThreadPost.ForumUniqueName}/{forumThreadPost.ForumThreadUniqueName}";
+      Link = $"forum/thread/{forumThreadPost.ForumUniqueName}/{forumThreadPost.ForumThreadUniqueName}";
     }
 
     public string GetSubTitle(bool inList, string currentSection)

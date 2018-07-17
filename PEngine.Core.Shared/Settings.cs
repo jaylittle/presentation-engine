@@ -72,6 +72,19 @@ namespace PEngine.Core.Shared
     public string CookiePath { get; set; } = string.Empty;
     public int CacheControlSeconds { get; set; } = 86400;
     public string HiddenThemeList { get; set; }
+
+    [JsonIgnore]
+    public string BasePath
+    {
+      get
+      {
+        if (string.IsNullOrWhiteSpace(CookiePath))
+        {
+          return "/";
+        }
+        return CookiePath.EndsWith("/") ? CookiePath : $"{CookiePath}/";
+      }
+    }
     
     public bool IsThemeHidden(string theme)
     {

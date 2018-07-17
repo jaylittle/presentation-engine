@@ -30,7 +30,7 @@ namespace PEngine.Core.Web.Helpers
           filePath = hashEntry.WebPath
         }));
       }
-      return new HtmlString(hashUrl);
+      return new HtmlString(hashUrl.TrimStart('/'));
     }
 
     public static IHtmlContent PEPager(this IHtmlHelper htmlHelper, PagingModel paging, object htmlAttributes, string action, object routeValues = null)
@@ -59,12 +59,12 @@ namespace PEngine.Core.Web.Helpers
         RouteValueDictionary linkRd = CopyRVD(routeValues);
         linkRd.Add("start", 1);
         linkRd.Add("count", count);
-        retvalue.AppendHtml(htmlHelper.ActionLink("[Start]", action, linkRd, new RouteValueDictionary(htmlAttributes)));
+        retvalue.AppendHtml(htmlHelper.ActionLink("[Start]", action, linkRd, new RouteValueDictionary(htmlAttributes)).RelativeHref());
         retvalue.AppendHtml("&nbsp;");
         linkRd = CopyRVD(routeValues);
         linkRd.Add("start", start - count);
         linkRd.Add("count", count);
-        retvalue.AppendHtml(htmlHelper.ActionLink("[Prev]", action, linkRd, new RouteValueDictionary(htmlAttributes)));
+        retvalue.AppendHtml(htmlHelper.ActionLink("[Prev]", action, linkRd, new RouteValueDictionary(htmlAttributes)).RelativeHref());
       }
       else
       {
@@ -87,12 +87,12 @@ namespace PEngine.Core.Web.Helpers
         RouteValueDictionary linkRd = CopyRVD(routeValues);
         linkRd.Add("start", start + count);
         linkRd.Add("count", count);
-        retvalue.AppendHtml(htmlHelper.ActionLink("[Next]", action, linkRd, new RouteValueDictionary(htmlAttributes)));
+        retvalue.AppendHtml(htmlHelper.ActionLink("[Next]", action, linkRd, new RouteValueDictionary(htmlAttributes)).RelativeHref());
         retvalue.AppendHtml("&nbsp;");
         linkRd = CopyRVD(routeValues);
         linkRd.Add("start", (total - (total % count)) + 1);
         linkRd.Add("count", count);
-        retvalue.AppendHtml(htmlHelper.ActionLink("[End]", action, linkRd, new RouteValueDictionary(htmlAttributes)));
+        retvalue.AppendHtml(htmlHelper.ActionLink("[End]", action, linkRd, new RouteValueDictionary(htmlAttributes)).RelativeHref());
       }
       else
       {
@@ -125,7 +125,30 @@ namespace PEngine.Core.Web.Helpers
     {
       linkRd.Add("start", start);
       linkRd.Add("count", count);
-      return htmlHelper.ActionLink(linkText, actionName, linkRd);
+      return htmlHelper.ActionLink(linkText, actionName, linkRd).RelativeHref();
+    }
+
+    public static IHtmlContent RelativeHref(this IHtmlContent htmlContent)
+    {
+      if (htmlContent is Microsoft.AspNetCore.Mvc.Rendering.TagBuilder)
+      {
+        var tagBuilder = (Microsoft.AspNetCore.Mvc.Rendering.TagBuilder)htmlContent;
+        KeyValuePair<string, string> newHref = default(KeyValuePair<string, string>);
+        foreach (var attribute in tagBuilder.Attributes)
+        {
+          if (attribute.Key.Equals("href", StringComparison.OrdinalIgnoreCase))
+          {
+            newHref = new KeyValuePair<string, string>(attribute.Key, attribute.Value.TrimStart('/'));
+          }
+        }
+        if (!string.IsNullOrWhiteSpace(newHref.Key))
+        {
+          tagBuilder.Attributes.Remove(newHref.Key);
+          tagBuilder.Attributes.Add(newHref);
+        }
+        return tagBuilder;
+      }
+      return htmlContent;
     }
   }
 }

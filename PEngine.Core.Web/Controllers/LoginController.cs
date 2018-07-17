@@ -44,14 +44,14 @@ namespace PEngine.Core.Web.Controllers
       switch (userType.ToLower().Trim())
       {
         case "pengine":
-          model.RecordData.ActionUrl = "/token/pengine";
-          model.RecordData.SuccessUrl = "/";
-          model.RecordData.FailUrl = "/log/in/pengine";
+          model.RecordData.ActionUrl = $"{Settings.Current.BasePath}token/pengine";
+          model.RecordData.SuccessUrl = Settings.Current.BasePath;
+          model.RecordData.FailUrl = $"{Settings.Current.BasePath}log/in/pengine";
           break;
         case "forum":
-          model.RecordData.ActionUrl = "/token/forum";
-          model.RecordData.SuccessUrl = "/forum";
-          model.RecordData.FailUrl = "/log/in/forum";
+          model.RecordData.ActionUrl = $"{Settings.Current.BasePath}token/forum";
+          model.RecordData.SuccessUrl = $"{Settings.Current.BasePath}forum";
+          model.RecordData.FailUrl = $"{Settings.Current.BasePath}log/in/forum";
           break;
       }
       return View(model);
@@ -70,7 +70,7 @@ namespace PEngine.Core.Web.Controllers
         cookieOptions.Path = Settings.Current.CookiePath;
       }
       this.Response.Cookies.Delete(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, cookieOptions);
-      this.Response.Redirect("/");
+      this.Response.Redirect(Settings.Current.BasePath);
     }
   }
 }

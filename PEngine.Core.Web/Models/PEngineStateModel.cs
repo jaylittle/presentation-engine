@@ -83,9 +83,9 @@ namespace PEngine.Core.Web.Models
       {
         if (PEngineUserType.Equals("Anonymous", StringComparison.OrdinalIgnoreCase))
         {
-          return (IsForum ? "/log/in/forum" : "/log/in/pengine");
+          return (IsForum ? "log/in/forum" : "log/in/pengine");
         }
-        return "/log/out";
+        return "log/out";
       }
     }
 
@@ -223,14 +223,14 @@ namespace PEngine.Core.Web.Models
       SubMenuButtons = new List<KeyValuePair<string, string>>();
       Links = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-      TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelHomeButton, "/"));
+      TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelHomeButton, string.Empty));
       if (!IsForum && !_settings.DisableResume)
       {
-        TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelResumeButton, "/resume"));
+        TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelResumeButton, "resume"));
       }
       //if (!_settings.DisableForum)
       //{
-      //  TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelForumButton, "/forum"));
+      //  TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelForumButton, "forum"));
       //}
 
       if (!IsForum)
@@ -245,7 +245,7 @@ namespace PEngine.Core.Web.Models
         foreach (var articleCategory in articleCategories)
         {
           var categoryElements = articleCategory.Split('|');
-          var categoryUrl = $"/article/category/{categoryElements[0]}";
+          var categoryUrl = $"article/category/{categoryElements[0]}";
           if (!HasAdmin && !string.IsNullOrWhiteSpace(categoryElements[1]))
           {
             categoryUrl = categoryElements[1];
@@ -281,16 +281,16 @@ namespace PEngine.Core.Web.Models
             for (var sectionPtr = 0; sectionPtr < articleSections.Count; sectionPtr++)
             {
               var section = articleSections[sectionPtr];
-              var sectionUrl = $"/article/view/{articleData.UniqueName}/{section.UniqueName}";
+              var sectionUrl = $"article/view/{articleData.UniqueName}/{section.UniqueName}";
               if (section == currentSectionData)
               {
                 if (sectionPtr > 0)
                 {
-                  Links.Add("Previous", $"/article/view/{articleData.UniqueName}/{articleSections[sectionPtr - 1].UniqueName}");
+                  Links.Add("Previous", $"article/view/{articleData.UniqueName}/{articleSections[sectionPtr - 1].UniqueName}");
                 }
                 if (sectionPtr < articleSections.Count -1)
                 {
-                  Links.Add("Next", $"/article/view/{articleData.UniqueName}/{articleSections[sectionPtr + 1].UniqueName}");
+                  Links.Add("Next", $"article/view/{articleData.UniqueName}/{articleSections[sectionPtr + 1].UniqueName}");
                 }
               }
               if (!articleData.HideButtonsFlag) {

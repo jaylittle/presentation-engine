@@ -38,7 +38,7 @@ namespace PEngine.Core.Web.Controllers
       {
         state.ThemeChange(selection);
       }
-      var redirectUrl = "/";
+      var redirectUrl = PEngine.Core.Shared.Settings.Current.BasePath;
       if (!string.IsNullOrWhiteSpace(Request.Headers[HeaderNames.Referer]))
       {
         if (!string.IsNullOrWhiteSpace(Settings.Current.ExternalBaseUrl) 

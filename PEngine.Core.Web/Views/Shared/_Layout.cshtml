@@ -4,11 +4,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <base href="/">
+    <base href="@Model.Settings.BasePath">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@Model.State.FullTitle</title>
-    <link rel="alternate" type="application/rss+xml" title="Posts Feed" href="/feed/rss" />
+    <link rel="alternate" type="application/rss+xml" title="Posts Feed" href="feed/rss" />
     @RenderSection("head", required: false)
     @if (Model.State.HasSummary)
     {
@@ -43,7 +43,7 @@
     <div class="panel">
       <div class="panel-left">
         @if (!Model.Settings.DisableThemeSelection) {
-        <form id="theme" method="GET" action="/ui/theme">
+        <form id="theme" method="GET" action="ui/theme">
           <select name="selection" onchange="this.form.submit()">
             @foreach (var theme in Model.State.ThemeList)
             {
@@ -107,7 +107,7 @@
         <div class="panel-center">
           @if (!Model.Settings.DisableSearch)
           {
-          <form method="get" action="/search">
+          <form method="get" action="search">
             <span class="buttonrowlabel">Search:</span>
             <input type="text" class="pengine-search-query edit-control-large" name="query" />
             <button type="submit" class="pengine-button-search">Find</button>
@@ -116,7 +116,7 @@
           @if (!Model.Settings.DisableRSS)
           {
           @Html.Raw("&nbsp;")
-          <a href="/feed/rss" class="list-button">[Rss]</a>
+          <a href="feed/rss" class="list-button">[Rss]</a>
           }
           @if (!string.IsNullOrWhiteSpace(Model.Settings.OwnerEmail))
           {

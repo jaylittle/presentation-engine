@@ -30,7 +30,7 @@
     {
       <tr class='@((i++)%2==0 ? "listrow" : "listrowalt")'>
         <td>
-          @Html.RouteLink(item.Name, new { controller = "article", action = "ViewArticle", uniqueName = item.UniqueName }, new { @class = "invisible-link" })
+          @Html.RouteLink(item.Name, new { controller = "article", action = "ViewArticle", uniqueName = item.UniqueName }, new { @class = "invisible-link" }).RelativeHref()
         </td>
         @if (item.CreatedUTC.HasValue)
         {
@@ -42,7 +42,7 @@
         }
         <td>@item.Description</td>
         <td nowrap>
-          @Html.RouteLink("[View]", new { controller = "article", action = "ViewArticle", uniqueName = item.UniqueName }, new { @class = "list-button" })
+          @Html.RouteLink("[View]", new { controller = "article", action = "ViewArticle", uniqueName = item.UniqueName }, new { @class = "list-button" }).RelativeHref()
           @if (Model.State.HasAdmin)
           {
             @Html.Raw("&nbsp;|&nbsp;")

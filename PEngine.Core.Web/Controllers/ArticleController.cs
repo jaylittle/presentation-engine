@@ -55,7 +55,7 @@ namespace PEngine.Core.Web.Controllers
       }
       else
       {
-        return Redirect($"/article/view/{articles.First().UniqueName}");
+        return Redirect($"{Settings.Current.BasePath}article/view/{articles.First().UniqueName}");
       }
     }
 
@@ -89,13 +89,15 @@ namespace PEngine.Core.Web.Controllers
     [HttpPost("view/{uniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, [FromForm] string newSectionUniqueName)
     {
-      return Redirect($"/article/view/{uniqueName}/{newSectionUniqueName}");
+      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false, false);
+      return Redirect($"{Settings.Current.BasePath}article/view/{uniqueName}/{newSectionUniqueName}");
     }
 
     [HttpPost("view/{uniqueName}/{sectionUniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, string sectionUniqueName, [FromForm] string newSectionUniqueName)
     {
-      return Redirect($"/article/view/{uniqueName}/{newSectionUniqueName}");
+      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false, false);
+      return Redirect($"{Settings.Current.BasePath}article/view/{uniqueName}/{newSectionUniqueName}");
     }
   }
 }
