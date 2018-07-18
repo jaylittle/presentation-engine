@@ -1,7 +1,7 @@
 <template>
   <div id="pengine-header" class="panel">
     <div class="panel-left">
-      <form id="theme" method="GET" action="/ui/theme">
+      <form id="theme" method="GET" action="ui/theme">
         <select name="selection" onchange="this.form.submit()" v-model="state.theme">
           <option v-for="theme in state.themeList" v-bind:value="theme">{{theme}}</option>
         </select>

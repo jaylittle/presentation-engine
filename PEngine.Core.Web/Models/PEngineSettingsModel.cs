@@ -16,7 +16,10 @@ namespace PEngine.Core.Web.Models
     {
       foreach (PropertyInfo prop in settings.GetType().GetProperties())
       {
-        GetType().GetProperty(prop.Name).SetValue(this, prop.GetValue(settings, null), null);
+        if (prop.GetMethod != null && prop.SetMethod != null)
+        {
+          prop.SetValue(this, prop.GetValue(settings, null), null);
+        }
       }
     }
 
@@ -24,31 +27,34 @@ namespace PEngine.Core.Web.Models
     {
       foreach (PropertyInfo prop in current.GetType().GetProperties())
       {
-        switch (prop.Name)
+        if (prop.SetMethod != null && prop.GetMethod != null)
         {
-          case "PasswordAdmin":
-            string newPassword = null;
-            if (NewPasswordAdmin.Reset)
-            {
-              newPassword = string.Empty;
-            }
-            else if (!string.IsNullOrWhiteSpace(NewPasswordAdmin.Value))
-            {
-              newPassword = NewPasswordAdmin.Value;
-            }
-            if (newPassword != null)
-            {
-              prop.SetValue(current, Security.Hash(newPassword));
-            }
-            break;
-          case "SecretKey":
-            //Skip it - never set this
-            break;
-          default:
-            prop.SetValue(current, GetType().GetProperty(prop.Name).GetValue(this, null));
-            break;
+          switch (prop.Name)
+          {
+            case "PasswordAdmin":
+              string newPassword = null;
+              if (NewPasswordAdmin.Reset)
+              {
+                newPassword = string.Empty;
+              }
+              else if (!string.IsNullOrWhiteSpace(NewPasswordAdmin.Value))
+              {
+                newPassword = NewPasswordAdmin.Value;
+              }
+              if (newPassword != null)
+              {
+                prop.SetValue(current, Security.Hash(newPassword));
+              }
+              break;
+            case "SecretKey":
+              //Skip it - never set this
+              break;
+            default:
+              prop.SetValue(current, GetType().GetProperty(prop.Name).GetValue(this, null));
+              break;
+          }
+          GetType().GetProperty(prop.Name).SetValue(this, prop.GetValue(current, null), null);
         }
-        GetType().GetProperty(prop.Name).SetValue(this, prop.GetValue(current, null), null);
       }
       return current;
     }

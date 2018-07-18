@@ -223,7 +223,7 @@ namespace PEngine.Core.Web.Models
       SubMenuButtons = new List<KeyValuePair<string, string>>();
       Links = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-      TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelHomeButton, string.Empty));
+      TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelHomeButton, _settings.BasePath));
       if (!IsForum && !_settings.DisableResume)
       {
         TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelResumeButton, "resume"));

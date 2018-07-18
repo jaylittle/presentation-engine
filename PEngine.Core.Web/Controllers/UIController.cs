@@ -41,20 +41,7 @@ namespace PEngine.Core.Web.Controllers
       var redirectUrl = PEngine.Core.Shared.Settings.Current.BasePath;
       if (!string.IsNullOrWhiteSpace(Request.Headers[HeaderNames.Referer]))
       {
-        if (!string.IsNullOrWhiteSpace(Settings.Current.ExternalBaseUrl) 
-          && Request.Headers[HeaderNames.Referer].ToString().StartsWith(Settings.Current.ExternalBaseUrl, StringComparison.OrdinalIgnoreCase)
-          && Request.Headers[HeaderNames.Referer].ToString().Length > Settings.Current.ExternalBaseUrl.Length)
-        {
-          redirectUrl = Request.Headers[HeaderNames.Referer];
-          if (Settings.Current.ExternalBaseUrl.EndsWith("/"))
-          {
-            redirectUrl = redirectUrl.Substring(Settings.Current.ExternalBaseUrl.Length - 1);
-          }
-          else
-          {
-            redirectUrl = redirectUrl.Substring(Settings.Current.ExternalBaseUrl.Length);
-          }
-        }
+        redirectUrl = Request.Headers[HeaderNames.Referer];
       }
       return this.Redirect(redirectUrl);
     }

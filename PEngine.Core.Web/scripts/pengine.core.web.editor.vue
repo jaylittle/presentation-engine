@@ -463,16 +463,16 @@
         switch (type)
         {
           case 'post':
-            return pengineHelpers.fixUrl('/api/posts/');
+            return pengineHelpers.fixUrl('api/posts/');
             break;
           case 'article':
-            return pengineHelpers.fixUrl('/api/articles/');
+            return pengineHelpers.fixUrl('api/articles/');
             break;
           case 'resume':
-            return pengineHelpers.fixUrl('/api/resume/');
+            return pengineHelpers.fixUrl('api/resume/');
             break;
           case 'settings':
-            return pengineHelpers.fixUrl('/api/settings/');
+            return pengineHelpers.fixUrl('api/settings/');
             break;
         }
         return null;

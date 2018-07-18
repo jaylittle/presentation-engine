@@ -176,10 +176,10 @@
         while (path.indexOf('.') === 0 || path.indexOf('/') === 0) {
           path = path.substr(1);
         }
-        let getUrl = `/api/resource/folder/${path}`;
+        let getUrl = `api/resource/folder/${path}`;
         return this.$http.get(getUrl).then(response => {
           this.loadFolder(response.body, skipBreadcrumb);
-          this.uploadPath = `./api/resource/file/${path}`;
+          this.uploadPath = `api/resource/file/${path}`;
         }, response => {
           this.pushError('An HTTP error prevented the folder from loading.');
         });
@@ -270,7 +270,7 @@
           data.folderPaths.push(this.selectedFolderPaths[selectedFolderPath]);
           selectionCount++;
         }
-        var operationUrl = `./api/resource/selection/${operation}/${path}`;
+        var operationUrl = `api/resource/selection/${operation}/${path}`;
         if (selectionCount <= 0) {
           this.pushError('You must select at least one file or folder!');
         }
@@ -341,7 +341,7 @@
         while (path.indexOf('.') === 0 || path.indexOf('/') === 0) {
           path = path.substr(1);
         }
-        var namingUrl = `./api/resource/${this.naming.type}/${path}?newName=${this.naming.new}`;
+        var namingUrl = `api/resource/${this.naming.type}/${path}?newName=${this.naming.new}`;
         if (!this.errors.length) {
           var promise = this.naming.entity
             ? this.$http.put(namingUrl)
