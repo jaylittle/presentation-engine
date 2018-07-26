@@ -10,6 +10,7 @@ using PEngine.Core.Shared.Models;
 using PEngine.Core.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -35,6 +36,10 @@ namespace PEngine.Core.Web.Middleware
 
   public class TokenCookieMiddleware
   {
+    public const string COOKIE_ACCESS_TOKEN = "access_token";
+    public const string COOKIE_XSRF_COOKIE_TOKEN = "xsrf_cookie_token";
+    public const string HEADER_XSRF_FORM_TOKEN = "xsrf_form_token";
+    public const string HEADER_XSRF_COMBINED_TOKEN = "xsrf_combined_token";
     private readonly RequestDelegate _next;
     private readonly TokenCookieOptions _options;
 
@@ -53,6 +58,74 @@ namespace PEngine.Core.Web.Middleware
       }
 
       await _next.Invoke(context);
+    }
+
+    public static bool HasJwtCookie(HttpContext context)
+    {
+      return context.Request.Cookies.Any(c => c.Key.Equals(TokenCookieMiddleware.COOKIE_ACCESS_TOKEN, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public static bool HasXsrfCookie(HttpContext context)
+    {
+      return context.Request.Cookies.Any(c => c.Key.Equals(TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public static void AddJwtCookie(HttpContext context, string encodedJwt)
+    {
+      var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase)
+        || context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase);
+      var cookieOptions = new CookieOptions()
+      {
+        HttpOnly = true,
+        Secure = secureFlag,
+      };
+      if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
+      {
+        cookieOptions.Domain = Settings.Current.CookieDomain;
+      }
+      if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
+      {
+        cookieOptions.Path = Settings.Current.CookiePath;
+      }
+      context.Response.Cookies.Append(TokenCookieMiddleware.COOKIE_ACCESS_TOKEN, encodedJwt, cookieOptions);
+    }
+
+    public static bool RemoveJwtCookie(HttpContext httpContext)
+    {
+      if (httpContext.Request.Cookies.ContainsKey(Middleware.TokenCookieMiddleware.COOKIE_ACCESS_TOKEN))
+      {
+        var cookieOptions = new CookieOptions();
+        if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
+        {
+          cookieOptions.Domain = Settings.Current.CookieDomain;
+        }
+        if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
+        {
+          cookieOptions.Path = Settings.Current.CookiePath;
+        }
+        httpContext.Response.Cookies.Delete(Middleware.TokenCookieMiddleware.COOKIE_ACCESS_TOKEN, cookieOptions);
+        return true;
+      }
+      return false;
+    }
+
+    public static bool RemoveXsrfCookie(HttpContext httpContext)
+    {
+      if (httpContext.Request.Cookies.ContainsKey(Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN))
+      {
+        var cookieOptions = new CookieOptions();
+        if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
+        {
+          cookieOptions.Domain = Settings.Current.CookieDomain;
+        }
+        if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
+        {
+          cookieOptions.Path = Settings.Current.CookiePath;
+        }
+        httpContext.Response.Cookies.Delete(Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN, cookieOptions);
+        return true;
+      }
+      return false;
     }
   }
 
@@ -81,12 +154,14 @@ namespace PEngine.Core.Web.Middleware
     private readonly RequestDelegate _next;
     private readonly TokenProviderOptions _options;
     private IForumDal _forumDal;
+    private IAntiforgery _antiforgery;
 
-    public TokenProviderMiddleware(RequestDelegate next, IOptions<TokenProviderOptions> options, IForumDal forumDal)
+    public TokenProviderMiddleware(RequestDelegate next, IOptions<TokenProviderOptions> options, IForumDal forumDal, IAntiforgery antiforgery)
     {
       _next = next;
       _options = options.Value;
       _forumDal = forumDal;
+      _antiforgery = antiforgery;
     }
 
     public Task Invoke(HttpContext context)
@@ -169,7 +244,7 @@ namespace PEngine.Core.Web.Middleware
       var userId = string.Empty;
       var roleClaims = new List<string>();
       if (Settings.Current.UserNameAdmin.Equals(userName, StringComparison.OrdinalIgnoreCase) 
-        && (refreshFlag || Security.HashAndCompare(password, Settings.Current.PasswordAdmin)))
+        && (refreshFlag || PEngine.Core.Shared.Security.HashAndCompare(password, Settings.Current.PasswordAdmin)))
       {
         roleClaims.Add("PEngineAdmin");
         userId = Settings.Current.UserNameAdmin;
@@ -198,7 +273,7 @@ namespace PEngine.Core.Web.Middleware
       ClaimsIdentity identity = null;
       var forumUser = await _forumDal.GetForumUserById(null, userName);
       var forumEnabled = !Settings.Current.DisableForum;
-      if (forumEnabled && forumUser != null && (refreshFlag || Security.HashAndCompare(password, forumUser.Password)))
+      if (forumEnabled && forumUser != null && (refreshFlag || PEngine.Core.Shared.Security.HashAndCompare(password, forumUser.Password)))
       {
         if (!forumUser.BanFlag)
         {
@@ -241,7 +316,7 @@ namespace PEngine.Core.Web.Middleware
       // You can add other claims here, if you want:
       var claims = new Claim[]
       {
-        new Claim(JwtRegisteredClaimNames.Sub, userId),
+        new Claim(ClaimTypes.NameIdentifier, userId),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
       };
@@ -256,12 +331,16 @@ namespace PEngine.Core.Web.Middleware
         signingCredentials: _options.SigningCredentials);
 
       var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+      var tempIdentity = new ClaimsIdentity(jwt.Claims, "Token");
+      context.User = new ClaimsPrincipal(tempIdentity);
+      var xsrfTokens = _antiforgery.GetTokens(context);
 
       if (string.IsNullOrWhiteSpace(successUrl))
       {
-        if (HasJwtCookie(context))
+        if (TokenCookieMiddleware.HasJwtCookie(context))
         {
-          AddJwtCookie(context, encodedJwt);
+          xsrfTokens = _antiforgery.GetAndStoreTokens(context);
+          TokenCookieMiddleware.AddJwtCookie(context, encodedJwt);
         }
 
         var response = new
@@ -270,7 +349,8 @@ namespace PEngine.Core.Web.Middleware
           token_type = "Bearer",
           expires = (DateTime)expires,
           expires_in = (int)expirationMinutes * 60,
-          expires_in_milliseconds = (long)expirationMinutes * 60 * 1000
+          expires_in_milliseconds = (long)expirationMinutes * 60 * 1000,
+          xsrf_combined_token = !refreshFlag ? $"{xsrfTokens.CookieToken}:{xsrfTokens.RequestToken}" : null
         };
   
         // Serialize and return the response
@@ -279,34 +359,10 @@ namespace PEngine.Core.Web.Middleware
       }
       else
       {
-        AddJwtCookie(context, encodedJwt);
+        xsrfTokens = _antiforgery.GetAndStoreTokens(context);
+        TokenCookieMiddleware.AddJwtCookie(context, encodedJwt);
         context.Response.Redirect(successUrl);
       }
-    }
-
-    private bool HasJwtCookie(HttpContext context)
-    {
-      return context.Request.Cookies.Any(c => c.Key.Equals(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private void AddJwtCookie(HttpContext context, string encodedJwt)
-    {
-      var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase)
-        || context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase);
-      var cookieOptions = new CookieOptions()
-      {
-        HttpOnly = true,
-        Secure = secureFlag,
-      };
-      if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
-      {
-        cookieOptions.Domain = Settings.Current.CookieDomain;
-      }
-      if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
-      {
-        cookieOptions.Path = Settings.Current.CookiePath;
-      }
-      context.Response.Cookies.Append(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, encodedJwt, cookieOptions);
     }
 
     private Task<ClaimsIdentity> GetIdentity(string userId, string userName, string userType, string[] roleClaims)

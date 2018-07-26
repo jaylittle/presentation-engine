@@ -18,15 +18,18 @@ using Microsoft.AspNetCore.Http;
 
 namespace PEngine.Core.Web.Controllers
 {
+  [Security.XSRF.XSRFCheck]
   [Route("log")]
   [ResponseCache(CacheProfileName = "None")]
   public class LoginController : Controller
   {
     private IServiceProvider _svp;
+    private IHttpContextAccessor _httpAccessor;
 
-    public LoginController(IServiceProvider svp)
+    public LoginController(IServiceProvider svp,  IHttpContextAccessor httpAccessor)
     {
       _svp = svp;
+      _httpAccessor = httpAccessor;
     }
 
     [HttpGet("in")]
@@ -38,6 +41,9 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("in/{userType}")]
     public IActionResult Index(string userType, [FromQuery]bool authFailed)
     {
+      Middleware.TokenCookieMiddleware.RemoveJwtCookie(_httpAccessor.HttpContext);
+      Middleware.TokenCookieMiddleware.RemoveXsrfCookie(_httpAccessor.HttpContext);
+
       var model = new PEngineGenericRecordModel<PEngineLoginModel>(_svp, HttpContext, true);
       model.RecordData = new PEngineLoginModel();
       model.RecordData.AuthFailed = authFailed;
@@ -60,16 +66,8 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("out")]
     public void Logout()
     {
-      var cookieOptions = new CookieOptions();
-      if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
-      {
-        cookieOptions.Domain = Settings.Current.CookieDomain;
-      }
-      if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
-      {
-        cookieOptions.Path = Settings.Current.CookiePath;
-      }
-      this.Response.Cookies.Delete(Models.PEngineStateModel.COOKIE_ACCESS_TOKEN, cookieOptions);
+      Middleware.TokenCookieMiddleware.RemoveJwtCookie(_httpAccessor.HttpContext);
+      Middleware.TokenCookieMiddleware.RemoveXsrfCookie(_httpAccessor.HttpContext);
       this.Response.Redirect(Settings.Current.BasePath);
     }
   }

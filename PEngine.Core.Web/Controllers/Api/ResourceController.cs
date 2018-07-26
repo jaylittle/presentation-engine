@@ -16,6 +16,7 @@ using System.IO;
 
 namespace PEngine.Core.Web.Controllers.Api
 {
+  [Security.XSRF.XSRFCheck]
   [Route("api/[controller]")]
   [ResponseCache(CacheProfileName = "None")]
   public class ResourceController : Controller

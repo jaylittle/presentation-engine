@@ -7,6 +7,7 @@ using PEngine.Core.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Antiforgery;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -119,6 +120,8 @@ namespace PEngine.Core.Web.Models
 
     public string QuoteText { get; set; }
 
+    public string XSRFToken { get; set; }
+
     public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false)
     {
       _settings = settings;
@@ -194,6 +197,9 @@ namespace PEngine.Core.Web.Models
           Theme = _settings.DefaultTheme;
         }
       }
+
+      var antiforgery = _svp.GetRequiredService<IAntiforgery>();
+      XSRFToken = antiforgery.GetTokens(_context).RequestToken;
       
       //Process Cookies
       if (_context.Request?.Cookies != null)

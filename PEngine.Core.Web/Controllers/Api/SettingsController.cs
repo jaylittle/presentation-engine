@@ -15,6 +15,7 @@ using PEngine.Core.Web.Models;
 
 namespace PEngine.Core.Web.Controllers.Api
 {
+  [Security.XSRF.XSRFCheck]
   [Route("api/[controller]")]
   [ResponseCache(CacheProfileName = "None")]
   public class SettingsController : Controller

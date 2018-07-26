@@ -69,20 +69,20 @@ namespace PEngine.Core.Shared
     public virtual Guid SecretKey { get; set; } = Guid.NewGuid();
     public string UserNameAdmin { get; set; } = "PEngineAdmin";
     public string CookieDomain { get; set; } = string.Empty;
-    public string CookiePath { get; set; } = string.Empty;
+    public string BasePath { get; set; } = "/";
     public int CacheControlSeconds { get; set; } = 86400;
     public string HiddenThemeList { get; set; }
 
     [JsonIgnore]
-    public string BasePath
+    public string CookiePath
     {
       get
       {
-        if (string.IsNullOrWhiteSpace(CookiePath))
+        if (string.IsNullOrWhiteSpace(BasePath))
         {
-          return "/";
+          return string.Empty;
         }
-        return CookiePath.EndsWith("/") ? CookiePath : $"{CookiePath}/";
+        return BasePath.TrimEnd('/');
       }
     }
     

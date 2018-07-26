@@ -10,6 +10,7 @@ using PEngine.Core.Shared;
 
 namespace PEngine.Core.Web.Controllers
 {
+  [Security.XSRF.XSRFCheck]
   [Route("hash")]
   [ResponseCache(CacheProfileName = "Content")]
   public class HashController : Controller

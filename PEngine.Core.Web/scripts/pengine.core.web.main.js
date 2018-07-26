@@ -4,6 +4,12 @@ import peHeader from "./pengine.core.web.header.vue";
 import peEditor from "./pengine.core.web.editor.vue";
 import peUploader from "./pengine.core.web.uploader.vue";
 
+/* Configure XSRF Token */
+let xsrfToken = window.pengineState.xsrfToken;
+if (xsrfToken) {
+  Vue.http.headers.common['xsrf_form_token'] = xsrfToken;
+}
+
 let headerInstance = new Vue({
   el: '#pengine-header',
   render: h => h(peHeader)

@@ -15,6 +15,7 @@ using PEngine.Core.Web.Constraints;
 
 namespace PEngine.Core.Web.Controllers.Api
 {
+  [Security.XSRF.XSRFCheck]
   [Route("api/[controller]")]
   [ResponseCache(CacheProfileName = "None")]
   public class ForumsController : Controller

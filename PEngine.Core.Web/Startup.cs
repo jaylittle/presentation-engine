@@ -23,6 +23,8 @@ using PEngine.Core.Shared;
 using PEngine.Core.Web.Middleware;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Http.Features;
 
 namespace PEngine.Core.Web
@@ -78,6 +80,26 @@ namespace PEngine.Core.Web
           }
         );
       });
+
+      services.AddAntiforgery(options => {
+        var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
+        options.SuppressXFrameOptionsHeader = false;
+        options.CookieName = Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN;
+        options.Cookie.Name = Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN;
+        options.Cookie.HttpOnly = false;
+        options.HeaderName = Middleware.TokenCookieMiddleware.HEADER_XSRF_FORM_TOKEN;
+        if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
+        {
+          options.CookieDomain = Settings.Current.CookieDomain;
+          options.Cookie.Domain = Settings.Current.CookieDomain;
+        }
+        if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
+        {
+          options.CookiePath = Settings.Current.CookiePath;
+          options.Cookie.Path = Settings.Current.CookiePath;
+        }
+      });
+
       services.AddScoped<IPostDal, PostDal>();
       services.AddScoped<IArticleDal, ArticleDal>();
       services.AddScoped<IResumeDal, ResumeDal>();
@@ -187,6 +209,7 @@ namespace PEngine.Core.Web
         }
       });
 
+      Security.XSRF.Init(svp.GetRequiredService<IAntiforgeryTokenSerializer>(), svp.GetRequiredService<IAntiforgeryTokenGenerator>());
       PEngine.Core.Data.Database.Startup(env.ContentRootPath, new SQLiteDataProvider()).Wait();
       PEngine.Core.Logic.FeedManager.Startup(env.ContentRootPath, svp.GetRequiredService<IPostService>()).Wait();
     }

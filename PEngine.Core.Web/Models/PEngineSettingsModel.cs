@@ -43,7 +43,7 @@ namespace PEngine.Core.Web.Models
               }
               if (newPassword != null)
               {
-                prop.SetValue(current, Security.Hash(newPassword));
+                prop.SetValue(current, PEngine.Core.Shared.Security.Hash(newPassword));
               }
               break;
             case "SecretKey":

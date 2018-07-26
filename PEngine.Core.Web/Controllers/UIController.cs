@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Http.Headers;
 
 namespace PEngine.Core.Web.Controllers
 {
+  [Security.XSRF.XSRFCheck]
   [Route("ui")]
   [ResponseCache(CacheProfileName = "None")]
   public class UIController : Controller
