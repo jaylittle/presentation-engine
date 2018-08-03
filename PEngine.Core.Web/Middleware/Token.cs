@@ -244,13 +244,6 @@ namespace PEngine.Core.Web.Middleware
         roleClaims.Add("PEngineAdmin");
         userId = Settings.Current.UserNameAdmin;
         Console.WriteLine($"{operation} succeeded for {userName} from {remoteIP}");
-        foreach (var header in context.Request.Headers)
-        {
-          foreach (var value in header.Value)
-          {
-            Console.WriteLine($"HTTP Header {header.Key} has value of: {value}");
-          }
-        }
       }
       else
       {
