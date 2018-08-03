@@ -29,29 +29,22 @@ namespace PEngine.Core.Web.Middleware
     public SigningCredentials SigningCredentials { get; set; }
   }
 
-  public class TokenCookieOptions
-  {
-    public string CookieName { get; set; } = "access_token";
-  }
-
   public class TokenCookieMiddleware
   {
-    public const string COOKIE_ACCESS_TOKEN = "access_token";
-    public const string COOKIE_XSRF_COOKIE_TOKEN = "xsrf_cookie_token";
-    public const string HEADER_XSRF_FORM_TOKEN = "xsrf_form_token";
-    public const string HEADER_XSRF_COMBINED_TOKEN = "xsrf_combined_token";
+    public const string COOKIE_ACCESS_TOKEN = "access-token";
+    public const string COOKIE_XSRF_COOKIE_TOKEN = "xsrf-cookie-token";
+    public const string HEADER_XSRF_FORM_TOKEN = "xsrf-form-token";
+    public const string HEADER_XSRF_COMBINED_TOKEN = "xsrf-combined-token";
     private readonly RequestDelegate _next;
-    private readonly TokenCookieOptions _options;
 
-    public TokenCookieMiddleware(RequestDelegate next, IOptions<TokenCookieOptions> options)
+    public TokenCookieMiddleware(RequestDelegate next)
     {
       _next = next;
-      _options = options.Value;
     }
 
     public async Task Invoke(HttpContext context)
     {
-      var cookie = context.Request.Cookies[_options.CookieName];
+      var cookie = context.Request.Cookies[COOKIE_ACCESS_TOKEN];
       if (!string.IsNullOrWhiteSpace(cookie) && !context.Request.Headers.ContainsKey("Authorization"))
       {
         context.Request.Headers.Append("Authorization", $"Bearer {cookie}");
@@ -243,11 +236,25 @@ namespace PEngine.Core.Web.Middleware
     {
       var userId = string.Empty;
       var roleClaims = new List<string>();
+      var operation = refreshFlag ? "Refresh" : "Login";
+      var remoteIP = context.Request.Headers.ContainsKey("X-Forwarded-For") ? context.Request.Headers["X-Forwarded-For"].First().Split(',').First() : context.Connection.RemoteIpAddress.ToString();
       if (Settings.Current.UserNameAdmin.Equals(userName, StringComparison.OrdinalIgnoreCase) 
         && (refreshFlag || PEngine.Core.Shared.Security.HashAndCompare(password, Settings.Current.PasswordAdmin)))
       {
         roleClaims.Add("PEngineAdmin");
         userId = Settings.Current.UserNameAdmin;
+        Console.WriteLine($"{operation} succeeded for {userName} from {remoteIP}");
+        foreach (var header in context.Request.Headers)
+        {
+          foreach (var value in header.Value)
+          {
+            Console.WriteLine($"HTTP Header {header.Key} has value of: {value}");
+          }
+        }
+      }
+      else
+      {
+        Console.WriteLine($"{operation} failed for {userName} from {remoteIP}");
       }
 
       ClaimsIdentity identity = null;

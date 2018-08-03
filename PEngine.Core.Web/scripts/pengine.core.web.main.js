@@ -7,7 +7,7 @@ import peUploader from "./pengine.core.web.uploader.vue";
 /* Configure XSRF Token */
 let xsrfToken = window.pengineState.xsrfToken;
 if (xsrfToken) {
-  Vue.http.headers.common['xsrf_form_token'] = xsrfToken;
+  Vue.http.headers.common['xsrf-form-token'] = xsrfToken;
 }
 
 let headerInstance = new Vue({

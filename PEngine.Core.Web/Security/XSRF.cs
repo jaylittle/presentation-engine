@@ -49,6 +49,7 @@ namespace PEngine.Core.Web.Security
           string xsrfMessage = null;
           if (!IsNotXsrf(context, out xsrfMessage))
           {
+            Console.WriteLine($"XSRF Check failed. Message: {xsrfMessage}");
             context.Result = new BadRequestResult();
             return;
           }

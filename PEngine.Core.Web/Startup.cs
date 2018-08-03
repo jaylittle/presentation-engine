@@ -84,18 +84,15 @@ namespace PEngine.Core.Web
       services.AddAntiforgery(options => {
         var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
         options.SuppressXFrameOptionsHeader = false;
-        options.CookieName = Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN;
         options.Cookie.Name = Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN;
         options.Cookie.HttpOnly = false;
         options.HeaderName = Middleware.TokenCookieMiddleware.HEADER_XSRF_FORM_TOKEN;
         if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
         {
-          options.CookieDomain = Settings.Current.CookieDomain;
           options.Cookie.Domain = Settings.Current.CookieDomain;
         }
         if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
         {
-          options.CookiePath = Settings.Current.CookiePath;
           options.Cookie.Path = Settings.Current.CookiePath;
         }
       });
@@ -170,11 +167,7 @@ namespace PEngine.Core.Web
       PEngine.Core.Shared.Settings.Startup(env.ContentRootPath);
 
       // Add Support for JWTs passed in cookies
-      var cookieOptions = new TokenCookieOptions
-      {
-        CookieName = Models.PEngineStateModel.COOKIE_ACCESS_TOKEN
-      };
-      app.UseMiddleware<TokenCookieMiddleware>(Options.Create(cookieOptions));
+      app.UseMiddleware<TokenCookieMiddleware>();
 
       app.UseAuthentication();
 
