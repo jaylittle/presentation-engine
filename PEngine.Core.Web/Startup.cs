@@ -83,7 +83,7 @@ namespace PEngine.Core.Web
 
       services.AddAntiforgery(options => {
         var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
-        options.SuppressXFrameOptionsHeader = false;
+        options.SuppressXFrameOptionsHeader = true;
         options.Cookie.Name = Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN;
         options.Cookie.HttpOnly = false;
         options.HeaderName = Middleware.TokenCookieMiddleware.HEADER_XSRF_FORM_TOKEN;
@@ -181,6 +181,12 @@ namespace PEngine.Core.Web
         SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
       };
       app.UseMiddleware<TokenProviderMiddleware>(Options.Create(providerOptions));
+
+      app.Use(async (context, next) =>
+      {
+        context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+        await next();
+      });
 
       app.UseMvc(m => {
         m.MapRoute(
