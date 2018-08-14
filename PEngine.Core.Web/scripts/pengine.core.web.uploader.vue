@@ -3,9 +3,9 @@
     <div class="dialog-container" v-if="visible">
       <span class="form-header-text">
         <span>Uploader</span>
-        <span v-for="breadcrumb in breadcrumbs" v-if="mode === 'browser'">
+        <span v-for="breadcrumb in breadcrumbs" :key="breadcrumb.title" v-if="mode === 'browser'">
           &nbsp;:&nbsp;
-          <a href="javascript:void(0)" v-on:click="navigate(breadcrumb)">{{ breadcrumb.title }}</a>
+          <a href="javascript:void(0)" @click="navigate(breadcrumb)">{{ breadcrumb.title }}</a>
         </span>
         <span v-if="mode === 'selections'">
           File &amp; Folder Selections
@@ -19,14 +19,14 @@
         </span>
       </span>
       <ul class="form-errors" v-if="errors">
-        <li v-for="error in errors">{{ error.text }}</li>
+        <li v-for="error in errors" :key="error">{{ error.text }}</li>
       </ul>
       <div>
         <div class="form-container" v-if="mode === 'multiupload'">
-          <div class="edit-row" v-for="n in maxFiles">
+          <div class="edit-row" v-for="n in maxFiles" :key="n">
             <div class="edit-label">File #{{n}}:</div>
             <div class="edit-field">
-              <input type="file" v-bind:id="'uploaderFile' + n">
+              <input type="file" :id="'uploaderFile' + n">
             </div>
           </div>
         </div>
@@ -48,18 +48,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="selectedFolderPath in selectedFolderPaths">
+              <tr v-for="selectedFolderPath in selectedFolderPaths" :key="selectedFolderPath">
                 <td>Folder</td>
                 <td>{{ selectedFolderPath }}</td>
                 <td>
-                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-on:click="removeSelectionByPath(selectedFolderPath, selectedFolderPaths)">Remove</a>
+                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" @click="removeSelectionByPath(selectedFolderPath, selectedFolderPaths)">Remove</a>
                 </td>
               </tr>
-              <tr v-for="selectedFilePath in selectedFilePaths">
+              <tr v-for="selectedFilePath in selectedFilePaths" :key="selectedFilePath">
                 <td>File</td>
                 <td>{{ selectedFilePath }}</td>
                 <td>
-                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-on:click="removeSelectionByPath(selectedFilePath, selectedFilePaths)">Remove</a>
+                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" @click="removeSelectionByPath(selectedFilePath, selectedFilePaths)">Remove</a>
                 </td>
               </tr>
             </tbody>
@@ -77,31 +77,31 @@
             <tbody>
               <tr v-if="breadcrumbs.length > 1">
                 <td>Folder</td>
-                <td v-on:click="navigate(breadcrumbs[breadcrumbs.length - 2])">[Parent]</td>
+                <td @click="navigate(breadcrumbs[breadcrumbs.length - 2])">[Parent]</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>
                   &nbsp;
                 </td>
               </tr>
-              <tr v-for="folder in current.folders" v-bind:class="{ selected: folder.selected }" v-on:dblclick="select(folder, selectedFolderPaths)">
+              <tr v-for="folder in current.folders" :key="folder.relativePath" :class="{ selected: folder.selected }" @dblclick="select(folder, selectedFolderPaths)">
                 <td>Folder</td>
-                <td v-on:click="get(folder.relativePath)">{{ folder.name }}</td>
+                <td @click="get(folder.relativePath)">{{ folder.name }}</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>
-                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" v-on:click="prepNaming('folder', folder)">[Rename]</a>
+                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" @click="prepNaming('folder', folder)">[Rename]</a>
                 </td>
               </tr>
-              <tr v-for="file in current.files" v-bind:class="{ selected: file.selected }" v-on:dblclick="select(file, selectedFilePaths)">
+              <tr v-for="file in current.files" :key="file.relativePath" :class="{ selected: file.selected }" @dblclick="select(file, selectedFilePaths)">
                 <td>File</td>
                 <td>
-                  <a v-bind:href="file.relativePath" class="file-edit-button-view listbutton" target="_blank">{{ file.name }}</a>
+                  <a :href="file.relativePath" class="file-edit-button-view listbutton" target="_blank">{{ file.name }}</a>
                 </td>
                 <td>{{ file.modified }}</td>
                 <td>{{ file.size }}</td>
                 <td>
-                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" v-on:click="prepNaming('file', file)">[Rename]</a>
+                  <a href="javascript:void(0)" class="file-edit-button-view listbutton" v-if="breadcrumbs.length > 1" @click="prepNaming('file', file)">[Rename]</a>
                 </td>
               </tr>
             </tbody>
@@ -110,36 +110,36 @@
       </div>
       <div class="panel">
         <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'browser'">
-          <button type="button" v-on:click="mode = 'selections'">Selections</button>
-          <button type="button" v-on:click="mode = 'multiupload'">Multi-Upload</button>
-          <button type="button" v-if="breadcrumbs.length > 2 && !current.selected" v-on:click="select(current, selectedFolderPaths)">Select Folder</button>
-          <button type="button" v-if="breadcrumbs.length > 2 && current.selected" v-on:click="select(current, selectedFolderPaths)">Unselect Folder</button>
-          <button type="button" v-bind:disabled="!selectedFilePaths.length && !selectedFolderPaths.length" v-on:click="processSelections('move')">Move Selections to</button>
-          <button type="button" v-bind:disabled="!selectedFilePaths.length && !selectedFolderPaths.length" v-on:click="processSelections('copy')">Copy Selections to</button>
-          <button type="button" v-on:click="prepNaming('folder', null)">Create Folder</button>
-          <button type="button" v-on:click="hide">Close</button>
+          <button type="button" @click="mode = 'selections'">Selections</button>
+          <button type="button" @click="mode = 'multiupload'">Multi-Upload</button>
+          <button type="button" v-if="breadcrumbs.length > 2 && !current.selected" @click="select(current, selectedFolderPaths)">Select Folder</button>
+          <button type="button" v-if="breadcrumbs.length > 2 && current.selected" @click="select(current, selectedFolderPaths)">Unselect Folder</button>
+          <button type="button" :disabled="!selectedFilePaths.length && !selectedFolderPaths.length" @click="processSelections('move')">Move Selections to</button>
+          <button type="button" :disabled="!selectedFilePaths.length && !selectedFolderPaths.length" @click="processSelections('copy')">Copy Selections to</button>
+          <button type="button" @click="prepNaming('folder', null)">Create Folder</button>
+          <button type="button" @click="hide">Close</button>
         </div>
         <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'selections'">
-          <button type="button" v-on:click="mode = 'browser'">Browser</button>
-          <button type="button" v-on:click="mode = 'multiupload'">Multi-Upload</button>
-          <button type="button" v-bind:disabled="!selectedFilePaths.length && !selectedFolderPaths.length" v-on:click="processSelections('delete')">Delete Selections</button>
-          <button type="button" v-on:click="hide">Close</button>
+          <button type="button" @click="mode = 'browser'">Browser</button>
+          <button type="button" @click="mode = 'multiupload'">Multi-Upload</button>
+          <button type="button" :disabled="!selectedFilePaths.length && !selectedFolderPaths.length" @click="processSelections('delete')">Delete Selections</button>
+          <button type="button" @click="hide">Close</button>
         </div>
         <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'multiupload'">
-          <button type="button" v-on:click="mode = 'selections'">Selections</button>
-          <button type="button" v-on:click="mode = 'browser'">Browser</button>
-          <button type="button" v-on:click="upload($event)">Upload Files</button>
-          <button type="button" v-on:click="hide">Close</button>
+          <button type="button" @click="mode = 'selections'">Selections</button>
+          <button type="button" @click="mode = 'browser'">Browser</button>
+          <button type="button" @click="upload($event)">Upload Files</button>
+          <button type="button" @click="hide">Close</button>
         </div>
         <div class="panel-right" v-if="breadcrumbs.length > 1 && mode === 'naming'">
-          <button type="button" v-on:click="mode = 'selections'">Selections</button>
-          <button type="button" v-on:click="mode = 'browser'">Browser</button>
-          <button type="button" v-on:click="mode = 'multiupload'">Multi-Upload</button>
-          <button type="button" v-on:click="completeNaming()">{{ naming.title }}</button>
-          <button type="button" v-on:click="hide">Close</button>
+          <button type="button" @click="mode = 'selections'">Selections</button>
+          <button type="button" @click="mode = 'browser'">Browser</button>
+          <button type="button" @click="mode = 'multiupload'">Multi-Upload</button>
+          <button type="button" @click="completeNaming()">{{ naming.title }}</button>
+          <button type="button" @click="hide">Close</button>
         </div>
         <div class="panel-right" v-if="breadcrumbs.length <= 1">
-          <button type="button" v-on:click="hide">Close</button>
+          <button type="button" @click="hide">Close</button>
         </div>
       </div>
     </div>

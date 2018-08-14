@@ -3,7 +3,7 @@
     <div class="panel-left">
       <form id="theme" method="GET" action="ui/theme">
         <select name="selection" onchange="this.form.submit()" v-model="state.theme">
-          <option v-for="theme in state.themeList" v-bind:value="theme">{{theme}}</option>
+          <option v-for="theme in state.themeList" :key="theme" :value="theme">{{theme}}</option>
         </select>
       </form>
     </div>
@@ -15,7 +15,7 @@
         <button type="button" class="pengine-button-uploader">Uploader</button>
       </div>
       <div class="panel-block">
-        <form method="get" v-bind:action="fixedLoginUrl">
+        <form method="get" :action="fixedLoginUrl">
           <button type="submit" class="pengine-button-search">{{state.loginText}}</button>
         </form>
       </div>

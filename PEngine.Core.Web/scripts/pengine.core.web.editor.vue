@@ -10,7 +10,7 @@
           Modified: <span class="datetime-display">{{record.data.modifiedUTC}}</span>
       </span>
       <ul class="form-errors" v-if="record.errors">
-        <li v-for="error in record.errors">{{ error.text }}</li>
+        <li v-for="error in record.errors" :key="error.text">{{ error.text }}</li>
       </ul>
       <div v-if="record.type && record.type == 'post'">
         <div class="form-container">
@@ -27,7 +27,7 @@
             <div class="edit-field">
               <select class="edit-control-normal" v-model="record.data.iconFileName">
                 <option value="" selected=""></option>
-                <option v-for="icon in state.iconList" v-bind:value="icon">
+                <option v-for="icon in state.iconList" :key="icon" :value="icon">
                   {{ icon }}
                 </option>
               </select>
@@ -46,10 +46,10 @@
             <div class="edit-field">
               <select class="edit-control-large" v-model="record.state.editTarget">
                 <option value="">[Article]</option>
-                <option v-for="(section, index) in record.data.sections" v-bind:value="'sections:' + index">[Section] {{section.name}}</option>
+                <option v-for="(section, index) in record.data.sections" :key="section.guid" :value="'sections:' + index">[Section] {{section.name}}</option>
               </select>
-              <button type="button" id="section_edit_button_add" v-on:click="addTarget('sections')" v-if="currentEditTargetProperty === ''">Add Section</button>
-              <button type="button" id="section_edit_button_delete" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'sections'">Delete Current Section</button>
+              <button type="button" id="section_edit_button_add" @click="addTarget('sections')" v-if="currentEditTargetProperty === ''">Add Section</button>
+              <button type="button" id="section_edit_button_delete" @click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'sections'">Delete Current Section</button>
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@
             <div class="edit-field">
               <select class="edit-control-large" v-model="record.data.defaultSection">
                 <option value="">[Not Specified]</option>
-                <option v-for="(section, index) in record.data.sections" v-bind:value="section.name">{{section.name}}</option>
+                <option v-for="(section) in record.data.sections" :key="section.guid" :value="section.name">{{section.name}}</option>
               </select>
             </div>
           </div>
@@ -103,8 +103,8 @@
           <div class="edit-row">
             <div class="edit-label">Order:</div>
             <div class="edit-field">
-              <button type="button" v-if="currentEditTargetPosition !== 'First'" v-on:click="moveCurrentTarget(-1)">Up</button>
-              <button type="button" v-if="currentEditTargetPosition !== 'Last'" v-on:click="moveCurrentTarget(1)">Down</button>
+              <button type="button" v-if="currentEditTargetPosition !== 'First'" @click="moveCurrentTarget(-1)">Up</button>
+              <button type="button" v-if="currentEditTargetPosition !== 'Last'" @click="moveCurrentTarget(1)">Down</button>
             </div>
           </div>
           <div class="edit-row">
@@ -121,16 +121,16 @@
               <select class="edit-control-large" v-model="record.state.editTarget">
                 <option value="personals:0">[Personal]</option>
                 <option value="objectives:0">[Objective]</option>
-                <option v-for="(skillType, index) in record.data.skillTypes" v-bind:value="'skillTypes:' + index">[Skill Type] {{skillType.type}}</option>
-                <option v-for="(education, index) in record.data.educations" v-bind:value="'educations:' + index">[Education] {{education.instutute}} - {{education.program}}</option>
-                <option v-for="(workHistory, index) in record.data.workHistories" v-bind:value="'workHistories:' + index">[Work History] {{workHistory.employer}} - {{workHistory.jobTitle}}</option>
+                <option v-for="(skillType, index) in record.data.skillTypes" :key="skillType.type" :value="'skillTypes:' + index">[Skill Type] {{skillType.type}}</option>
+                <option v-for="(education, index) in record.data.educations" :key="education.guid" :value="'educations:' + index">[Education] {{education.instutute}} - {{education.program}}</option>
+                <option v-for="(workHistory, index) in record.data.workHistories" :key="workHistory.guid" :value="'workHistories:' + index">[Work History] {{workHistory.employer}} - {{workHistory.jobTitle}}</option>
               </select>
-              <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'skills'">Delete Skill Type</button>
-              <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'educations'">Delete Education</button>
-              <button type="button" v-on:click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'workHistories'">Delete Work History</button>
-              <button type="button" v-on:click="addTarget('skillTypes')">Add Skill Type</button>
-              <button type="button" v-on:click="addTarget('educations')">Add Education</button>
-              <button type="button" v-on:click="addTarget('workHistories')">Add Work History</button>
+              <button type="button" @click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'skills'">Delete Skill Type</button>
+              <button type="button" @click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'educations'">Delete Education</button>
+              <button type="button" @click="removeCurrentTarget()" v-if="currentEditTargetProperty === 'workHistories'">Delete Work History</button>
+              <button type="button" @click="addTarget('skillTypes')">Add Skill Type</button>
+              <button type="button" @click="addTarget('educations')">Add Education</button>
+              <button type="button" @click="addTarget('workHistories')">Add Work History</button>
             </div>
           </div>
         </div>
@@ -187,17 +187,17 @@
             <div class="edit-label">Type:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-large" v-model="currentEditTarget.type" />
-              <button type="button" v-on:click="renameIndex('type', 'skills', 'type')">Rename Type</button>
-              <button type="button" v-on:click="addIndexSubRecord('skills', currentEditTarget.type)">Add Skill</button>
+              <button type="button" @click="renameIndex('type', 'skills', 'type')">Rename Type</button>
+              <button type="button" @click="addIndexSubRecord('skills', currentEditTarget.type)">Add Skill</button>
             </div>
           </div>
-          <div class="edit-row" v-for="(skill, index) in currentEditTarget.skills">
+          <div class="edit-row" v-for="(skill, index) in currentEditTarget.skills" :key="skill.guid">
             <div class="edit-label">Skill {{index + 1}}:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-large" v-model="skill.name" />
-              <button type="button" v-on:click="removeIndexSubRecord('skills', index)">Delete Skill</button>
-              <button type="button" v-on:click="moveIndexSubRecord('skills', index, -1)" v-bind:disabled="index <= 0">Move Up</button>
-              <button type="button" v-on:click="moveIndexSubRecord('skills', index, 1)" v-bind:disabled="index >= currentEditTarget.skills.length - 1">Move Down</button>
+              <button type="button" @click="removeIndexSubRecord('skills', index)">Delete Skill</button>
+              <button type="button" @click="moveIndexSubRecord('skills', index, -1)" :disabled="index <= 0">Move Up</button>
+              <button type="button" @click="moveIndexSubRecord('skills', index, 1)" :disabled="index >= currentEditTarget.skills.length - 1">Move Down</button>
             </div>
           </div>
         </div>
@@ -269,7 +269,7 @@
             <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.defaultTitle" />
               <select class="editctl" v-model="record.data.defaultTheme">
-                <option v-for="theme in state.themeList" v-bind:value="theme">{{theme}}</option>
+                <option v-for="theme in state.themeList" :key="theme" :value="theme">{{theme}}</option>
               </select>
             </div>
           </div>
@@ -417,9 +417,9 @@
       </div>
       <div class="panel">
         <div class="panel-right">
-          <button type="button" v-on:click="saveRecord">Save</button>
-          <button type="button" v-on:click="confirmDeleteRecord" v-if="record.data && record.data.guid">Delete</button>
-          <button type="button" v-on:click="cancelRecord">Cancel</button>
+          <button type="button" @click="saveRecord">Save</button>
+          <button type="button" @click="confirmDeleteRecord" v-if="record.data && record.data.guid">Delete</button>
+          <button type="button" @click="cancelRecord">Cancel</button>
         </div>
       </div>
     </div>
