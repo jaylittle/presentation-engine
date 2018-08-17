@@ -1,6 +1,6 @@
 ﻿body
 {
-  background-color: #131217;
+  background-color: #151419;
   font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
   font-size: 18px;
   color: #9e97c4;
@@ -20,21 +20,21 @@ button
 
 button:hover
 {
-  background-color: #131217;
+  background-color: #151419;
   color: #9e97c4;
   border: 1px solid #9e97c4;
 }
 
 button:disabled
 {
-  background-color: #131217;
+  background-color: #151419;
   color: #9e97c4;
   border: 1px solid #242429;
 }
 
 button:disabled:hover
 {
-  background-color: #131217;
+  background-color: #151419;
   color: #9e97c4;
   border: 1px solid #242429;
 }
@@ -110,7 +110,7 @@ b
 .page
 {
   min-width: 800px;
-  background-color: #131217;
+  background-color: #151419;
 }
 
 .header
@@ -142,7 +142,7 @@ b
 
 .content-menu
 {
-  background-color: #131217;
+  background-color: #151419;
   background-repeat: repeat;
   padding: 5px 5px 5px 5px;
   min-width: 800px;
@@ -155,7 +155,7 @@ b
   clear: both;
   padding-top: 5px;
   padding-left: 0px;
-  background-color: #131217;
+  background-color: #151419;
   background-repeat: repeat;
   width: 100%;
   max-width: 75%;
@@ -186,7 +186,7 @@ b
 .menu-button:hover
 {
   background-color: #9e97c4;
-  color: #131217;
+  color: #151419;
 }
 
 .menu-separator
@@ -210,7 +210,7 @@ b
   font-size: 18px;
   color: #ecede7;  
   text-align: left;
-  background-color: #131217;
+  background-color: #151419;
   width: 100%;
   max-width: 75%;
   min-width: 800px;
@@ -317,7 +317,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 .dialog-container
 {
   background-color: #121218;
-  border: 2px solid #131217;
+  border: 2px solid #151419;
 }
 
 .dialog-container > .panel
@@ -364,13 +364,13 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table tbody tr
 {
-  background-color: #131217;
+  background-color: #151419;
   color: #dfe0da;
 }
 
 .list-table tbody tr:nth-child(even), .list-table tbody tr:nth-child(odd)
 {
-  background-color: #131217;
+  background-color: #151419;
   color: #dfe0da;
 }
 
@@ -379,18 +379,18 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 {
   background-image: none;
   background-color: #9e97c4;
-  color: #131217;
+  color: #151419;
 }
 
 .list-table tbody tr:hover td a
 {
-  color: #131217;
+  color: #151419;
 }
 
 .list-table tbody tr.selected td, .list-table tbody tr.selected td a
 {
   background-color: #dfe0da;
-  color: #131217;
+  color: #151419;
 }
 
 .list-table tbody tr td a.invisible-link
@@ -400,7 +400,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table tbody tr:hover td a.invisible-link
 {
-  color: #131217;
+  color: #151419;
 }
 
 .list-table tfoot tr
@@ -416,7 +416,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .panel
 {
-  background-color: #131217;
+  background-color: #151419;
   margin-top: 0px;
   margin-bottom: 3px;
   border: none;
