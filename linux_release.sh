@@ -4,6 +4,8 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+./linux_build.sh
+
 RELEASE=pengine-v$1
 RELEASE_DIR=./$RELEASE
 RELEASE_ARCHIVE=$RELEASE.tgz
@@ -17,8 +19,6 @@ if [ -f $RELEASE_ARCHIVE ]
 then
   rm $RELEASE_ARCHIVE
 fi
-
-./linux-build.sh
 
 mkdir $RELEASE_DIR
 tar -C $RELEASE_DIR -xf ./pengine_current.tgz
