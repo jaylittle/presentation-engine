@@ -1,7 +1,19 @@
 let path = require('path');
 let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 let webpack = require('webpack');
-let vueloader = require('vue-loader')
+let vueloader = require('vue-loader');
+let PROD = (process.env.NODE_ENV === 'production');
+
+var plugins = [
+  new vueloader.VueLoaderPlugin()
+];
+
+if (PROD) {
+  plugins.push(new UglifyJSPlugin({
+    sourceMap: true,
+    include: /\.min\.js$/
+  }));
+}
 
 module.exports = {
   entry: {
@@ -9,7 +21,7 @@ module.exports = {
     'pengine.core.web.main': './scripts/pengine.core.web.main.js',
     'pengine.core.web.sitewide': './scripts/pengine.core.web.sitewide.js'
   },
-  mode: 'production',
+  mode: PROD ? 'production' : 'development',
   devtool: 'source-map',
   output: {
     filename: '[name].min.js',
@@ -20,12 +32,7 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
-  plugins: [
-    new UglifyJSPlugin({
-      sourceMap: true
-    }),
-    new vueloader.VueLoaderPlugin(),
-  ],
+  plugins: plugins,
   module: {
     rules: [
       {
