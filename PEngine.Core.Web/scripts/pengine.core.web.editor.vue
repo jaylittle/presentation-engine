@@ -54,7 +54,7 @@
           </div>
         </div>
         <div v-if="currentEditTargetProperty === ''" class="form-container">
-          <input type="hidden" id="article_edit_guid" name="Guid" :value="guid" />
+          <input type="hidden" id="article_edit_guid" name="Guid" :value="record.data.guid" />
           <div class="edit-row">
             <div class="edit-label">Title:</div>
             <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.name"/></div>
