@@ -1,7 +1,13 @@
-﻿body
+﻿@font-face
+{
+  font-family: 'Webly Sleek UI Regular';
+  src: url(../../fonts/weblysleekui.ttf);
+}
+
+body
 {
   background-color: #151419;
-  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Webly Sleek UI Regular";
   font-size: 18px;
   color: #9e97c4;
 }
@@ -136,7 +142,7 @@ b
   display: block;
   margin-left: 10px;
   margin-right: 10px;
-  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Webly Sleek UI Regular";
   font-size: 34px;
 }
 
@@ -179,7 +185,7 @@ b
   border-radius: 5px;
   border: 0px solid #dfe0da;
   border-radius: 2px;
-  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Webly Sleek UI Regular";
   font-size: 17px;
 }
 
@@ -206,7 +212,7 @@ b
   clear: both;
   padding-left: 0px;
   padding-top: 5px;
-  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Webly Sleek UI Regular";
   font-size: 18px;
   color: #ecede7;  
   text-align: left;
@@ -232,7 +238,7 @@ b
   background-repeat: repeat;
   padding-left: 0;
   padding-right: 10px;
-  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Webly Sleek UI Regular";
   font-size: 17px;
   font-weight: bold;
   color: #9e97c4;
@@ -242,7 +248,7 @@ b
 
 .form-header-text
 {
-  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Webly Sleek UI Regular";
   font-size: 20px;
   position: relative;
   padding-left: 5px;
@@ -251,7 +257,7 @@ b
 
 .form-subheader-text
 {
-  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Webly Sleek UI Regular";
   font-size: 17px;
   font-weight: bold;
   color: inherit;
@@ -333,7 +339,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table
 {
-  font-family: "Segoe WP", "Segoe UI", "Segoe UI Web", 'Segoe UI', Segoe, 'Helvetica Neue', Helvetica, Roboto, Arial, FreeSans, sans-serif;
+  font-family: "Webly Sleek UI Regular";
   color: #dfe0da;
   font-size: 16px;
   border: none !important;
