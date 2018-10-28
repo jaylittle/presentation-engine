@@ -14,7 +14,6 @@ using PEngine.Core.Web.Models;
 
 namespace PEngine.Core.Web.Controllers
 {
-  [Security.XSRF.XSRFCheck]
   [Route("post")]
   [ResponseCache(CacheProfileName = "None")]
   public class PostController : Controller

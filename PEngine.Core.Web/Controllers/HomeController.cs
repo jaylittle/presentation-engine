@@ -14,7 +14,6 @@ using PEngine.Core.Web.Models;
 
 namespace PEngine.Core.Web.Controllers
 {
-  [Security.XSRF.XSRFCheck]
   [ResponseCache(CacheProfileName = "None")]
   public class HomeController : Controller
   {
