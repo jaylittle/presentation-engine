@@ -244,18 +244,28 @@ namespace PEngine.Core.Web.Models
         var articleDal = _svp.GetRequiredService<IArticleDal>();
         var articleCategories = articleDal.ListArticles(null).Result
           .Where(a => a.VisibleFlag || HasAdmin)
-          .Select(a => $"{a.Category}|{a.ContentURL}")
-          .Distinct(StringComparer.OrdinalIgnoreCase)
-          .OrderBy(a => a);
+          .GroupBy(a => $"{a.Category}|{a.ContentURL}", StringComparer.OrdinalIgnoreCase)
+          .OrderBy(g => g.Key)
+          .Select(g => new { key = g.Key, firstUniqueName = g.First().UniqueName, count = g.Count() });
 
         foreach (var articleCategory in articleCategories)
         {
-          var categoryElements = articleCategory.Split('|');
+          var categoryElements = articleCategory.key.Split('|');
           var categoryUrl = $"article/category/{categoryElements[0]}";
-          if (!HasAdmin && !string.IsNullOrWhiteSpace(categoryElements[1]))
+
+          //Override Category URL if appropriate
+          if (!HasAdmin)
           {
-            categoryUrl = categoryElements[1];
+            if (!string.IsNullOrWhiteSpace(categoryElements[1]))
+            {
+              categoryUrl = categoryElements[1];
+            }
+            else if (articleCategory.count == 1)
+            {
+              categoryUrl = $"article/view/{articleCategory.firstUniqueName}";
+            }
           }
+
           TopMenuButtons.Add(new KeyValuePair<string, string>(categoryElements[0], categoryUrl));
         }
       }
