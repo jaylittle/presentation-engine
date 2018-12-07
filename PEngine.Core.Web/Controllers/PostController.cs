@@ -52,7 +52,11 @@ namespace PEngine.Core.Web.Controllers
     {
       var model = new PEngineGenericRecordModel<PostModel>(_svp, HttpContext, false);
       model.RecordData = (await _postService.ListPosts(model.State.HasAdmin)).FirstOrDefault(p => p.CreatedUTC.HasValue && p.CreatedYear == year && p.CreatedMonth == month && p.UniqueName.Equals(uniqueName, StringComparison.OrdinalIgnoreCase));
-      return View(model);
+      if (model.RecordData != null)
+      {
+        return View(model);
+      }
+      return model.State.HasAdmin ? (IActionResult)this.Redirect(Settings.Current.BasePath) : this.NotFound();
     }
   }
 }

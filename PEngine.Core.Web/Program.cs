@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using PEngine.Core.Logic;
 
 namespace PEngine.Core.Web
@@ -19,8 +22,22 @@ namespace PEngine.Core.Web
       var host = new WebHostBuilder()
         .UseKestrel()
         .UseContentRoot(Directory.GetCurrentDirectory())
+        .ConfigureAppConfiguration((hostingContext, config) =>
+        {
+            var env = hostingContext.HostingEnvironment;
+            Console.WriteLine($"Hosting Environment: {env.EnvironmentName}");
+            config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                  .AddJsonFile($"appsettings.{env.EnvironmentName}.json", 
+                      optional: true, reloadOnChange: true);
+            config.AddEnvironmentVariables();
+        })
         .UseIISIntegration()
         .UseStartup<Startup>()
+        .ConfigureLogging((hostingContext, logging) => {
+          logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+          logging.AddConsole();
+          logging.AddDebug();
+        })
         .Build();
 
       var launchKestrelFlag = true;

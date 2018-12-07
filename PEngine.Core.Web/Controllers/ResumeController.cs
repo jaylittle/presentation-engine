@@ -31,8 +31,15 @@ namespace PEngine.Core.Web.Controllers
     public async Task<IActionResult> Index()
     {
       var model = new PEngineGenericRecordModel<ResumeModel>(_svp, HttpContext, false);
-      model.RecordData = await _resumeService.GetResume();
-      return View(model);
+      if (!Settings.Current.DisableResume)
+      {
+        model.RecordData = await _resumeService.GetResume();
+        if (model.RecordData != null)
+        {
+          return View(model);
+        }
+      }
+      return model.State.HasAdmin ? (IActionResult)this.Redirect(Settings.Current.BasePath) : this.NotFound();
     }
   }
 }

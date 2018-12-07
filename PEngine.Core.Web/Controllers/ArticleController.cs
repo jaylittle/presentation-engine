@@ -45,7 +45,7 @@ namespace PEngine.Core.Web.Controllers
       var articles = (await _articleService.ListArticles(category, model.State.HasAdmin)).ToList();
       if (!articles.Any())
       {
-        return this.NotFound();
+        return model.State.HasAdmin ? (IActionResult)this.Redirect(Settings.Current.BasePath) : this.NotFound();
       }
       if (articles.Count > 1 || model.State.HasAdmin)
       {
@@ -74,13 +74,13 @@ namespace PEngine.Core.Web.Controllers
       var article = await _articleService.GetArticleById(null, null, uniqueName, model.State.HasAdmin);
       if (article == null || article.Guid == Guid.Empty)
       {
-        return this.NotFound();
+        return model.State.HasAdmin ? (IActionResult)this.Redirect(Settings.Current.BasePath) : this.NotFound();
       }
       model.RecordData = article;
 
       if (!string.IsNullOrWhiteSpace(sectionUniqueName) && !model.State.CurrentSection.Equals(sectionUniqueName))
       {
-        return this.NotFound();
+        return model.State.HasAdmin ? (IActionResult)this.Redirect(Settings.Current.BasePath) : this.NotFound();
       }
       
       return View("View", model);

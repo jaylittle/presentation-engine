@@ -122,6 +122,9 @@ csx
 # Windows Store app package directory
 AppPackages/
 
+# NPM package.lock file (we use yarn)
+package-lock.json
+
 # Others
 *.Cache
 ClientBin/

@@ -42,17 +42,9 @@ namespace PEngine.Core.Web
 
     public static string ContentRootPath { get; private set; }
 
-    public Startup(IHostingEnvironment env)
+    public Startup()
     {
-      var builder = new ConfigurationBuilder()
-        .SetBasePath(env.ContentRootPath)
-        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-        .AddEnvironmentVariables();
-      Configuration = builder.Build();
     }
-
-    public IConfigurationRoot Configuration { get; }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
@@ -151,13 +143,10 @@ namespace PEngine.Core.Web
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
     {
       _httpContextAccessor = svp.GetRequiredService<IHttpContextAccessor>();
       ContentRootPath = env.ContentRootPath;
-      
-      loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-      loggerFactory.AddDebug();
 
       app.UseForwardedHeaders(new ForwardedHeadersOptions()
       {

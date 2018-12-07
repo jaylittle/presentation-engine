@@ -34,35 +34,39 @@ namespace PEngine.Core.Web.Controllers
     public async Task<IActionResult> Index([FromQuery]string query, [FromQuery]PagingModel paging = null)
     {
       var model = new PEngineGenericListModel<PEngineSearchResultModel>(_svp, HttpContext, false);
-      model.State.CurrentSection = query;
-      
-      var results = new List<PEngineSearchResultModel>();
-      string[] searchTerms = !string.IsNullOrWhiteSpace(query) ? query.Split(' ') : new string[] {};
-      
-      results.AddRange((await _articleService.SearchArticles(searchTerms, model.State.HasAdmin))
-        .Select(a => new PEngineSearchResultModel(a)));
-
-      results.AddRange((await _postService.SearchPosts(searchTerms, model.State.HasAdmin))
-        .Select(p => new PEngineSearchResultModel(p)));
-      
-      if (!Settings.Current.DisableForum)
+      if (!Settings.Current.DisableSearch)
       {
-        results.AddRange((await _forumService.SearchForumThreadPosts(searchTerms, model.State.HasForumAdmin))
-          .Select(ftp => new PEngineSearchResultModel(ftp)));
-      }
+        model.State.CurrentSection = query;
+        
+        var results = new List<PEngineSearchResultModel>();
+        string[] searchTerms = !string.IsNullOrWhiteSpace(query) ? query.Split(' ') : new string[] {};
+        
+        results.AddRange((await _articleService.SearchArticles(searchTerms, model.State.HasAdmin))
+          .Select(a => new PEngineSearchResultModel(a)));
 
-      if (paging != null)
-      {
-        paging.Count = paging.Count > 0 ? paging.Count : model.Settings.PerPageSearchResults;
-        if (string.IsNullOrEmpty(paging.SortField))
+        results.AddRange((await _postService.SearchPosts(searchTerms, model.State.HasAdmin))
+          .Select(p => new PEngineSearchResultModel(p)));
+        
+        if (!Settings.Current.DisableForum)
         {
-          paging.SortField = "CreatedUTC";
-          paging.SortAscending = false;
+          results.AddRange((await _forumService.SearchForumThreadPosts(searchTerms, model.State.HasForumAdmin))
+            .Select(ftp => new PEngineSearchResultModel(ftp)));
         }
+
+        if (paging != null)
+        {
+          paging.Count = paging.Count > 0 ? paging.Count : model.Settings.PerPageSearchResults;
+          if (string.IsNullOrEmpty(paging.SortField))
+          {
+            paging.SortField = "CreatedUTC";
+            paging.SortAscending = false;
+          }
+        }
+        model.ListData = PagingUtils.Paginate<PEngineSearchResultModel>(ref paging, results);
+        model.Paging = paging;
+        return View(model);
       }
-      model.ListData = PagingUtils.Paginate<PEngineSearchResultModel>(ref paging, results);
-      model.Paging = paging;
-      return View(model);
+      return model.State.HasAdmin ? (IActionResult)this.Redirect(Settings.Current.BasePath) : this.NotFound();
     }
   }
 }

@@ -25,7 +25,14 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("rss")]
     public async Task<IActionResult> RSS()
     {
-      return this.Content(await FeedManager.GetRSSXml(), "application/rss+xml");
+      if (!Settings.Current.DisableRSS)
+      {
+        return this.Content(await FeedManager.GetRSSXml(), "application/rss+xml");
+      }
+      else
+      {
+        return this.NotFound();
+      }
     }
   }
 }

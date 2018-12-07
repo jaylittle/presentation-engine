@@ -34,16 +34,23 @@ namespace PEngine.Core.Web.Controllers
     public IActionResult ChangeTheme([FromQuery]string selection)
     {
       var state = new PEngineStateModel(_svp, Settings.Current, HttpContext, false, false);
-      if (state.ThemeList.Any(t => t.Equals(selection, StringComparison.OrdinalIgnoreCase)))
+      if (!Settings.Current.DisableThemeSelection)
       {
-        state.ThemeChange(selection);
+        if (state.ThemeList.Any(t => t.Equals(selection, StringComparison.OrdinalIgnoreCase)))
+        {
+          state.ThemeChange(selection);
+        }
+        var redirectUrl = PEngine.Core.Shared.Settings.Current.BasePath;
+        if (!string.IsNullOrWhiteSpace(Request.Headers[HeaderNames.Referer]))
+        {
+          redirectUrl = Request.Headers[HeaderNames.Referer];
+        }
+        return this.Redirect(redirectUrl);
       }
-      var redirectUrl = PEngine.Core.Shared.Settings.Current.BasePath;
-      if (!string.IsNullOrWhiteSpace(Request.Headers[HeaderNames.Referer]))
+      else
       {
-        redirectUrl = Request.Headers[HeaderNames.Referer];
+        return this.NotFound();
       }
-      return this.Redirect(redirectUrl);
     }
   }
 }
