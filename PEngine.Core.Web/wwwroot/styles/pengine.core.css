@@ -188,6 +188,11 @@ b
   color: white;
 }
 
+.sub-header  p
+{
+  margin-top: 0px;
+}
+
 .form-header-text
 {
   font-family: "Webly Sleek UI Regular";
@@ -366,7 +371,6 @@ body .dialog-container
 
 .edit-row
 {
-  margin-bottom: 10px;
   clear: right;
 }
 
@@ -382,7 +386,7 @@ body .edit-label, .edit-label-normal
   display: table-cell;
   clear: none;
   width: auto;
-  padding-right: 5px;
+  padding-right: 10px;
   text-align: right;
   float: none;
 }
@@ -394,7 +398,7 @@ body .edit-label-large
   display: table-cell;
   clear: none;
   width: auto;
-  padding-right: 5px;
+  padding-right: 10px;
   text-align: right;
   float: none;
 }
@@ -653,16 +657,18 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
 .form-container-overflow .edit-label, .form-container-overflow .edit-label-normal
 {
   width: auto;
-  padding-right: 5px;
+  padding-right: 10px;
   margin-right: 0;
   text-align: right;
   display: table-cell;
   float: none;
+  vertical-align: top;
 }
 
 .form-container .edit-row .edit-field, .form-container-overflow .edit-row .edit-field
 {
   margin-left: 0;
+  margin-bottom: 5px;
   padding-right: 5px;
 }
 
@@ -672,6 +678,7 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
 {
   width: 100%;
   padding-right: 5px;
+  margin-bottom: 5px;
   box-sizing: border-box;
 }
 
@@ -684,7 +691,7 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
 {
   width: auto;
   margin-right: 0;
-  padding-right: 5px;
+  padding-right: 10px;
   text-align: right;
   display: table-cell;
   float: none;
