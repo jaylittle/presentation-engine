@@ -48,7 +48,7 @@ button:disabled:hover
 input, select, textarea
 {
   color: #9e97c4;
-  background-color: #08080a;
+  background-color: #27262c;
   background-position: top;
   margin: 0;
   display: inline-block;
@@ -67,7 +67,7 @@ input, select
 blockquote, div.quoted-text
 {
   border-style: none;
-	background-color: #0e0e10;
+	background-color: #202025;
 	color: #dfe0da;
 	font-size: 17px;
 	min-width: 35%;
@@ -172,7 +172,7 @@ b
 
 .menu-button
 {
-  background-color: #0e0e10;
+  background-color: #202025;
   background-position: top;
   height: 22px;
   margin: 0px 5px 5px 5px;
@@ -181,7 +181,7 @@ b
   display: inline-block;
   width: auto;
   min-width: 120px;
-  padding-bottom: 5px;
+  padding: 3px 5px 5px 3px;
   border-radius: 5px;
   border: 0px solid #dfe0da;
   border-radius: 2px;
@@ -232,18 +232,18 @@ b
 
 .sub-header
 {
-  background-color: #0e0e10;
+  background-color: #202025;
   min-height: 27px;
   background-position: top;
   background-repeat: repeat;
-  padding-left: 0;
-  padding-right: 10px;
+  padding: 3px 10px 3px 5px;
   font-family: "Webly Sleek UI Regular";
   font-size: 17px;
   font-weight: bold;
   color: #9e97c4;
   margin: 0px;
   position: relative;
+  border-radius: 5px;
 }
 
 .form-header-text
@@ -363,7 +363,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table thead tr
 {
-  background-color: #0e0e10;
+  background-color: #202025;
   color: #9e97c4;
   font-size: 17px;
 }
@@ -411,7 +411,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 .list-table tfoot tr
 {
-  background-color: #0e0e10;
+  background-color: #202025;
   color: #dfe0da;
 }
 
@@ -433,7 +433,7 @@ blockquote p:last-child, div.display-container div.quoted-text p:last-child
 
 body > .panel, #pengine-header.panel
 {
-  background-color: #0e0e10;
+  background-color: #202025;
 }
 
 body > div.panel, div.page > div.panel
@@ -452,7 +452,7 @@ div.page > div.panel
 
 pre code
 {
-  background-color: #0e0e10;
+  background-color: #202025;
 }
 
 body .edit-label, .edit-label-normal

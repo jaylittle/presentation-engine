@@ -162,7 +162,7 @@ b
   display: inline-block;
   width: auto;
   min-width: 120px;
-  padding-bottom: 5px;
+  padding: 3px 5px 5px 3px;
   border-radius: 5px;
   border: 0px solid #201f25;
   border-radius: 2px;
@@ -229,14 +229,14 @@ b
   min-height: 27px;
   background-position: top;
   background-repeat: repeat;
-  padding-left: 0;
-  padding-right: 10px;
+  padding: 3px 10px 3px 5px;
   font-family: "Webly Sleek UI Regular";
   font-size: 17px;
   font-weight: bold;
   color: #201f25;
   margin: 0px;
   position: relative;
+  border-radius: 5px;
 }
 
 .form-header-text
