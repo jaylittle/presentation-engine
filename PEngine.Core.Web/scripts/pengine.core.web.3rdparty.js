@@ -1,4 +1,3 @@
-import "babel-polyfill";
 import Vue from "vue";
 import VueResource from "vue-resource";
 window.Vue = Vue;
