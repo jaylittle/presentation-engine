@@ -28,4 +28,4 @@ VS Code is my primary development tool. Although I have a Rider license, I just 
 
 ### 7. What do I need to have installed to run this?
 
-Node.js and the .NET Core 2.1 runtime.  We utilize npm to pull down node packages we make use of which includes babel and webpack among others.  The .NET Core 2.1 runtime is a no brainer of course.  If you want to hack in the codebase, you'll want to also have the .NET Core 2.1 SDK installed.
+Node.js and the .NET Core 3.0 runtime.  We utilize npm to pull down node packages we make use of which includes babel and webpack among others.  The .NET Core 3.0 runtime is a no brainer of course.  If you want to hack in the codebase, you'll want to also have the .NET Core 3.0 SDK installed.
