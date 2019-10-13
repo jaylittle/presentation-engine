@@ -8,7 +8,7 @@ rss.xml
 pengine_current.tgz
 pengine-v*.tgz
 pengine-v*/
-PEngine.Core.Web/logs/
+logs/
 
 # JetBrains IDE files
 .idea/
