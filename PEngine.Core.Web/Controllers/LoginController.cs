@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting.Internal;
 using PEngine.Core.Shared;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data;

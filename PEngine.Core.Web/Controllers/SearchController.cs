@@ -19,14 +19,12 @@ namespace PEngine.Core.Web.Controllers
   public class SearchController : Controller
   {
     private IServiceProvider _svp;
-    private IForumService _forumService;
     private IPostService _postService;
     private IArticleService _articleService;
 
-    public SearchController(IServiceProvider svp, IForumService forumService, IPostService postService, IArticleService articleService)
+    public SearchController(IServiceProvider svp, IPostService postService, IArticleService articleService)
     {
       _svp = svp;
-      _forumService = forumService;
       _postService = postService;
       _articleService = articleService;
     }
@@ -46,12 +44,6 @@ namespace PEngine.Core.Web.Controllers
 
         results.AddRange((await _postService.SearchPosts(searchTerms, model.State.HasAdmin))
           .Select(p => new PEngineSearchResultModel(p)));
-        
-        if (!Settings.Current.DisableForum)
-        {
-          results.AddRange((await _forumService.SearchForumThreadPosts(searchTerms, model.State.HasForumAdmin))
-            .Select(ftp => new PEngineSearchResultModel(ftp)));
-        }
 
         if (paging != null)
         {

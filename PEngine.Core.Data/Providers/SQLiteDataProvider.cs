@@ -45,6 +45,7 @@ namespace PEngine.Core.Data.Providers
 
     private void SetupDapper()
     {
+      Dapper.SqlMapper.AddTypeHandler(typeof(Guid?), new SqliteGuidTypeHandler());
       Dapper.SqlMapper.AddTypeHandler(typeof(Guid), new SqliteGuidTypeHandler());
       Dapper.SqlMapper.AddTypeHandler(typeof(long?), new SqliteNLongTypeHandler());
       Dapper.SqlMapper.AddTypeHandler(typeof(long), new SqliteLongTypeHandler());
@@ -54,12 +55,16 @@ namespace PEngine.Core.Data.Providers
     {
       public override Guid Parse(object value)
       {
-        return value != null ? new Guid((byte[])value) : Guid.Empty;
+        if (value is byte[])
+        {
+          return value != null ? new Guid((byte[])value) : Guid.Empty;
+        }
+        return value != null ? Guid.Parse((string)value) : Guid.Empty;
       }
 
       public override void SetValue(System.Data.IDbDataParameter parameter, Guid value)
       {
-        parameter.Value = value.ToByteArray();
+        parameter.Value = value.ToString();
       }
     }
 

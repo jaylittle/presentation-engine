@@ -9,8 +9,6 @@ using PEngine.Core.Shared;
 using PEngine.Core.Shared.Models;
 using PEngine.Core.Data.Interfaces;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http.Authentication;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -22,7 +20,6 @@ namespace PEngine.Core.Web.Middleware
   public class TokenProviderOptions
   {
     public string PEnginePath { get; set; } = "/token/pengine";
-    public string ForumPath { get; set; } = "/token/forum";
     public string RefreshPath { get; set; } = "/token/refresh";
     public string Issuer { get; set; }
     public string Audience { get; set; }
@@ -65,21 +62,7 @@ namespace PEngine.Core.Web.Middleware
 
     public static void AddJwtCookie(HttpContext context, string encodedJwt)
     {
-      var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase)
-        || context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase);
-      var cookieOptions = new CookieOptions()
-      {
-        HttpOnly = true,
-        Secure = secureFlag,
-      };
-      if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
-      {
-        cookieOptions.Domain = Settings.Current.CookieDomain;
-      }
-      if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
-      {
-        cookieOptions.Path = Settings.Current.CookiePath;
-      }
+      var cookieOptions = Helpers.HttpHelpers.GetCookieOptions(context);
       context.Response.Cookies.Append(TokenCookieMiddleware.COOKIE_ACCESS_TOKEN, encodedJwt, cookieOptions);
     }
 
@@ -87,34 +70,24 @@ namespace PEngine.Core.Web.Middleware
     {
       if (httpContext.Request.Cookies.ContainsKey(Middleware.TokenCookieMiddleware.COOKIE_ACCESS_TOKEN))
       {
-        var cookieOptions = new CookieOptions();
-        if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
-        {
-          cookieOptions.Domain = Settings.Current.CookieDomain;
-        }
-        if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
-        {
-          cookieOptions.Path = Settings.Current.CookiePath;
-        }
+        var cookieOptions = Helpers.HttpHelpers.GetCookieOptions(httpContext);
         httpContext.Response.Cookies.Delete(Middleware.TokenCookieMiddleware.COOKIE_ACCESS_TOKEN, cookieOptions);
         return true;
       }
       return false;
     }
 
+    public static void AddXsrfCookie(HttpContext context, string xsrfCookieValue)
+    {
+      var cookieOptions = Helpers.HttpHelpers.GetCookieOptions(context);
+      context.Response.Cookies.Append(TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN, xsrfCookieValue, cookieOptions);
+    }
+
     public static bool RemoveXsrfCookie(HttpContext httpContext)
     {
       if (httpContext.Request.Cookies.ContainsKey(Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN))
       {
-        var cookieOptions = new CookieOptions();
-        if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
-        {
-          cookieOptions.Domain = Settings.Current.CookieDomain;
-        }
-        if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
-        {
-          cookieOptions.Path = Settings.Current.CookiePath;
-        }
+        var cookieOptions = Helpers.HttpHelpers.GetCookieOptions(httpContext);
         httpContext.Response.Cookies.Delete(Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN, cookieOptions);
         return true;
       }
@@ -146,22 +119,16 @@ namespace PEngine.Core.Web.Middleware
   {
     private readonly RequestDelegate _next;
     private readonly TokenProviderOptions _options;
-    private IForumDal _forumDal;
-    private IAntiforgery _antiforgery;
-
-    public TokenProviderMiddleware(RequestDelegate next, IOptions<TokenProviderOptions> options, IForumDal forumDal, IAntiforgery antiforgery)
+    public TokenProviderMiddleware(RequestDelegate next, IOptions<TokenProviderOptions> options)
     {
       _next = next;
       _options = options.Value;
-      _forumDal = forumDal;
-      _antiforgery = antiforgery;
     }
 
     public Task Invoke(HttpContext context)
     {
       // If the request path doesn't match, skip
       if (!context.Request.Path.Equals(_options.PEnginePath, StringComparison.OrdinalIgnoreCase)
-        && !context.Request.Path.Equals(_options.ForumPath, StringComparison.OrdinalIgnoreCase)
         && !context.Request.Path.Equals(_options.RefreshPath, StringComparison.OrdinalIgnoreCase))
       {
         return _next(context);
@@ -172,10 +139,6 @@ namespace PEngine.Core.Web.Middleware
         if (context.Request.Path.Equals(_options.PEnginePath, StringComparison.OrdinalIgnoreCase))
         {
           return ValidatePEngineUser(context);
-        }
-        if (context.Request.Path.Equals(_options.ForumPath, StringComparison.OrdinalIgnoreCase))
-        {
-          return ValidateForumUser(context);
         }
       }
       if (context.Request.Method.Equals("GET") 
@@ -194,7 +157,7 @@ namespace PEngine.Core.Web.Middleware
       var password = (string)context.Request.Form["password"] ?? string.Empty;
       var successUrl = context.Request.Form.ContainsKey("successUrl") ? (string)context.Request.Form["successUrl"] : (string)null;
       var failUrl = context.Request.Form.ContainsKey("failUrl") ? (string)context.Request.Form["failUrl"] : (string)null;
-      await ValidatePEngineUser(context, userName, password, successUrl, failUrl, false);
+      await ValidatePEngineUser(context, userName, password, null, successUrl, failUrl, false);
     }
 
     private async Task RefreshToken(HttpContext context)
@@ -203,7 +166,8 @@ namespace PEngine.Core.Web.Middleware
       if (context.Request?.HttpContext?.User != null && context.Request.HttpContext.User.Identity.IsAuthenticated)
       {
         string userName = context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserName"))?.Value;
-        string userType = context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserType"))?.Value;;
+        string userType = context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserType"))?.Value;
+        string sessionId = context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineSessionId"))?.Value;
         string token = context.Request.Headers.FirstOrDefault(h => h.Key.Equals("Authorization"))
           .Value.FirstOrDefault()?.Replace("Bearer ", string.Empty);
 
@@ -216,11 +180,7 @@ namespace PEngine.Core.Web.Middleware
           {
             case "PEngine":
               isTokenValid = true;
-              await ValidatePEngineUser(context, userName, null, null, null, true);
-              break;
-            case "Forum":
-              isTokenValid = true;
-              await ValidateForumUser(context, userName, null, null, null, true);
+              await ValidatePEngineUser(context, userName, null, sessionId, null, null, true);
               break;
           }
         }
@@ -232,9 +192,10 @@ namespace PEngine.Core.Web.Middleware
       }
     }
 
-    private async Task ValidatePEngineUser(HttpContext context, string userName, string password, string successUrl, string failUrl, bool refreshFlag)
+    private async Task ValidatePEngineUser(HttpContext context, string userName, string password, string sessionId, string successUrl, string failUrl, bool refreshFlag)
     {
       var userId = string.Empty;
+      sessionId = !string.IsNullOrWhiteSpace(sessionId) ? sessionId : Guid.NewGuid().ToString();
       var roleClaims = new List<string>();
       var operation = refreshFlag ? "Refresh" : "Login";
       var remoteIP = context.Request.Headers.ContainsKey("X-Forwarded-For") ? context.Request.Headers["X-Forwarded-For"].First().Split(',').First() : context.Connection.RemoteIpAddress.ToString();
@@ -253,46 +214,12 @@ namespace PEngine.Core.Web.Middleware
       ClaimsIdentity identity = null;
       if (!string.IsNullOrEmpty(userId))
       {
-        identity = await GetIdentity(userId, userId, "PEngine", roleClaims.ToArray());
+        identity = await GetIdentity(userId, userId, "PEngine", sessionId, roleClaims.ToArray());
       }
-      await GenerateToken(context, identity, userId, Settings.Current.TimeLimitAdminToken, successUrl, failUrl, refreshFlag);
+      await GenerateToken(context, identity, userId, sessionId, Settings.Current.TimeLimitAdminToken, successUrl, failUrl, refreshFlag);
     }
 
-    private async Task ValidateForumUser(HttpContext context)
-    {
-      var userName = (string)context.Request.Form["username"] ?? string.Empty;
-      var password = (string)context.Request.Form["password"] ?? string.Empty;
-      var successUrl = context.Request.Form.ContainsKey("successUrl") ? (string)context.Request.Form["successUrl"] : (string)null;
-      var failUrl = context.Request.Form.ContainsKey("failUrl") ? (string)context.Request.Form["failUrl"] : (string)null;
-      await ValidateForumUser(context, userName, password, successUrl, failUrl, false);
-    }
-
-    private async Task ValidateForumUser(HttpContext context, string userName, string password, string successUrl, string failUrl, bool refreshFlag)
-    {
-      var roleClaims = new List<string>();
-      ClaimsIdentity identity = null;
-      var forumUser = await _forumDal.GetForumUserById(null, userName);
-      var forumEnabled = !Settings.Current.DisableForum;
-      if (forumEnabled && forumUser != null && (refreshFlag || PEngine.Core.Shared.Security.HashAndCompare(password, forumUser.Password)))
-      {
-        if (!forumUser.BanFlag)
-        {
-          roleClaims.Add("ForumUser");
-          if (forumUser.AdminFlag)
-          {
-            roleClaims.Add("ForumAdmin");
-          }
-        }
-        else
-        {
-          roleClaims.Add("ForumBanned");
-        }
-        identity = await GetIdentity(forumUser.Guid.ToString(), userName, "Forum", roleClaims.ToArray());
-      }
-      await GenerateToken(context, identity, forumUser?.Guid.ToString(), Settings.Current.TimeLimitForumToken, successUrl, failUrl, refreshFlag);
-    }
-
-    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string userId, int expirationMinutes, string successUrl = null, string failUrl = null, bool refreshFlag = false)
+    private async Task GenerateToken(HttpContext context, ClaimsIdentity identity, string userId, string sessionId, int expirationMinutes, string successUrl = null, string failUrl = null, bool refreshFlag = false)
     {
       if (identity == null)
       {
@@ -333,13 +260,13 @@ namespace PEngine.Core.Web.Middleware
       var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
       var tempIdentity = new ClaimsIdentity(jwt.Claims, "Token");
       context.User = new ClaimsPrincipal(tempIdentity);
-      var xsrfTokens = _antiforgery.GetTokens(context);
+      var xsrfTokens = Security.XSRF.GetXsrfValues(userId, sessionId);
 
       if (string.IsNullOrWhiteSpace(successUrl))
       {
         if (TokenCookieMiddleware.HasJwtCookie(context))
         {
-          xsrfTokens = _antiforgery.GetAndStoreTokens(context);
+          TokenCookieMiddleware.AddXsrfCookie(context, xsrfTokens.cookieValue);
           TokenCookieMiddleware.AddJwtCookie(context, encodedJwt);
         }
 
@@ -350,7 +277,7 @@ namespace PEngine.Core.Web.Middleware
           expires = (DateTime)expires,
           expires_in = (int)expirationMinutes * 60,
           expires_in_milliseconds = (long)expirationMinutes * 60 * 1000,
-          xsrf_combined_token = !refreshFlag ? $"{xsrfTokens.CookieToken}:{xsrfTokens.RequestToken}" : null
+          xsrf_combined_token = !refreshFlag ? $"{xsrfTokens.cookieValue}:{xsrfTokens.formValue}" : null
         };
   
         // Serialize and return the response
@@ -359,18 +286,19 @@ namespace PEngine.Core.Web.Middleware
       }
       else
       {
-        xsrfTokens = _antiforgery.GetAndStoreTokens(context);
+        TokenCookieMiddleware.AddXsrfCookie(context, xsrfTokens.cookieValue);
         TokenCookieMiddleware.AddJwtCookie(context, encodedJwt);
         context.Response.Redirect(successUrl);
       }
     }
 
-    private Task<ClaimsIdentity> GetIdentity(string userId, string userName, string userType, string[] roleClaims)
+    private Task<ClaimsIdentity> GetIdentity(string userId, string userName, string userType, string sessionId, string[] roleClaims)
     {
       var identity = new System.Security.Principal.GenericIdentity(userId, "Token");
       var claims = roleClaims.Select(rc => new Claim(identity.RoleClaimType, rc)).ToList();
       claims.Add(new Claim("PEngineUserName", userName));
       claims.Add(new Claim("PEngineUserType", userType));
+      claims.Add(new Claim("PEngineSessionId", sessionId));
       return Task.FromResult(new ClaimsIdentity(identity, claims));
     }
   }

@@ -1,0 +1,297 @@
+2019-10-13 15:30:06.499 -04:00 [INF] Configuring Host
+2019-10-13 15:30:06.952 -04:00 [WRN] No XML encryptor configured. Key "2f80efc3-9a50-43c9-a6f8-9c56d56d8521" may be persisted to storage in unencrypted form.
+2019-10-13 15:32:51.592 -04:00 [ERR] Connection id "0HLQG2F91EN5Q", Request id "0HLQG2F91EN5Q:00000013": An unhandled exception was thrown by the application.
+System.Data.DataException: Error parsing column 0 (Guid=70F60373-0499-46DC-AF2C-0C805167AEA1 - String)
+ ---> System.InvalidCastException: Unable to cast object of type 'System.String' to type 'System.Byte[]'.
+   at PEngine.Core.Data.Providers.SQLiteDataProvider.SqliteGuidTypeHandler.Parse(Object value) in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Providers/SQLiteDataProvider.cs:line 57
+   at Dapper.SqlMapper.TypeHandler`1.Dapper.SqlMapper.ITypeHandler.Parse(Type destinationType, Object value) in C:\projects\dapper\Dapper\SqlMapper.TypeHandler.cs:line 42
+   at Dapper.SqlMapper.TypeHandlerCache`1.Parse(Object value) in C:\projects\dapper\Dapper\SqlMapper.TypeHandlerCache.cs:line 23
+   at Deserializeadc98425-feca-467e-9993-9642e7233d99(IDataReader )
+   --- End of inner exception stack trace ---
+   at Dapper.SqlMapper.ThrowDataException(Exception ex, Int32 index, IDataReader reader, Object value) in C:\projects\dapper\Dapper\SqlMapper.cs:line 3633
+   at Deserializeadc98425-feca-467e-9993-9642e7233d99(IDataReader )
+   at Dapper.SqlMapper.QueryAsync[T](IDbConnection cnn, Type effectiveType, CommandDefinition command)
+   at PEngine.Core.Data.PostDal.ListPosts()
+   at PEngine.Core.Logic.PostService.ListPosts(Boolean isAdmin)
+   at PEngine.Core.Logic.FeedManager.GenerateRSS(Nullable`1 count)
+   at PEngine.Core.Web.Controllers.Api.PostsController.InsertPost(PostModel post)
+   at PEngine.Core.Web.Controllers.Api.PostsController.UpdatePost(PostModel post)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|24_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at PEngine.Core.Web.Startup.<>c.<<Configure>b__9_0>d.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at PEngine.Core.Web.Middleware.TokenCookieMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2019-10-13 15:35:49.172 -04:00 [INF] Configuring Host
+2019-10-13 15:47:38.976 -04:00 [INF] Configuring Host
+2019-10-13 15:57:23.183 -04:00 [INF] Configuring Host
+2019-10-13 16:20:15.749 -04:00 [INF] Configuring Host
+2019-10-13 16:21:39.425 -04:00 [INF] Configuring Host
+2019-10-13 16:22:26.351 -04:00 [INF] Configuring Host
+2019-10-13 16:27:00.527 -04:00 [INF] Configuring Host
+2019-10-13 16:36:58.130 -04:00 [INF] Configuring Host
+2019-10-13 16:38:54.099 -04:00 [INF] Configuring Host
+2019-10-13 16:38:54.712 -04:00 [FTL] Application startup exception
+System.AggregateException: One or more errors occurred. (PEngine version 0.0.1 update failed while processing command CREATE TABLE Version
+(
+  Guid BLOB PRIMARY KEY NOT NULL,
+  Major INT NOT NULL,
+  Minor INT NOT NULL,
+  Build INT NOT NULL,
+  CreatedUTC REAL,
+  ModifiedUTC REAL
+))
+ ---> System.Exception: PEngine version 0.0.1 update failed while processing command CREATE TABLE Version
+(
+  Guid BLOB PRIMARY KEY NOT NULL,
+  Major INT NOT NULL,
+  Minor INT NOT NULL,
+  Build INT NOT NULL,
+  CreatedUTC REAL,
+  ModifiedUTC REAL
+)
+ ---> Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'table Version already exists'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteNonQuery()
+   at Dapper.SqlMapper.ExecuteCommand(IDbConnection cnn, CommandDefinition& command, Action`2 paramReader) in C:\projects\dapper\Dapper\SqlMapper.cs:line 2797
+   at Dapper.SqlMapper.ExecuteImpl(IDbConnection cnn, CommandDefinition& command) in C:\projects\dapper\Dapper\SqlMapper.cs:line 568
+   at Dapper.SqlMapper.Execute(IDbConnection cnn, String sql, Object param, IDbTransaction transaction, Nullable`1 commandTimeout, Nullable`1 commandType) in C:\projects\dapper\Dapper\SqlMapper.cs:line 441
+   at PEngine.Core.Data.Database.Update() in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 72
+   --- End of inner exception stack trace ---
+   at PEngine.Core.Data.Database.Update() in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 82
+   at PEngine.Core.Data.Database.Startup(String contentRootPath, IDataProvider dataProvider) in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 37
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.Wait(Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.Wait()
+   at PEngine.Core.Web.Startup.Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp, ILoggerFactory logFactory) in /data/Code/dotnet/pengine.core/PEngine.Core.Web/Startup.cs:line 185
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.Invoke(Object instance, IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.<>c__DisplayClass4_0.<Build>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostBuilder.<>c__DisplayClass13_0.<UseStartup>b__2(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Mvc.Filters.MiddlewareFilterBuilderStartupFilter.<>c__DisplayClass0_0.<Configure>g__MiddlewareFilterBuilder|0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2019-10-13 16:41:49.959 -04:00 [INF] Configuring Host
+2019-10-13 16:41:50.582 -04:00 [FTL] Application startup exception
+System.AggregateException: One or more errors occurred. (PEngine version 0.0.4 update failed while processing command 
+UPDATE
+  Article
+SET
+  Guid = hex(substr(Guid, 4, 1)) ||
+  hex(substr(Guid, 3, 1)) ||
+  hex(substr(Guid, 2, 1)) ||
+  hex(substr(Guid, 1, 1)) || '-' ||
+  hex(substr(Guid, 6, 1)) ||
+  hex(substr(Guid, 5, 1)) || '-' ||
+  hex(substr(Guid, 8, 1)) ||
+  hex(substr(Guid, 7, 1)) || '-' ||
+  hex(substr(Guid, 9, 2)) || '-' ||
+  hex(substr(Guid, 11, 6))
+WHERE
+  typeof(Guid) == 'blob')
+ ---> System.Exception: PEngine version 0.0.4 update failed while processing command 
+UPDATE
+  Article
+SET
+  Guid = hex(substr(Guid, 4, 1)) ||
+  hex(substr(Guid, 3, 1)) ||
+  hex(substr(Guid, 2, 1)) ||
+  hex(substr(Guid, 1, 1)) || '-' ||
+  hex(substr(Guid, 6, 1)) ||
+  hex(substr(Guid, 5, 1)) || '-' ||
+  hex(substr(Guid, 8, 1)) ||
+  hex(substr(Guid, 7, 1)) || '-' ||
+  hex(substr(Guid, 9, 2)) || '-' ||
+  hex(substr(Guid, 11, 6))
+WHERE
+  typeof(Guid) == 'blob'
+ ---> Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 19: 'FOREIGN KEY constraint failed'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteNonQuery()
+   at Dapper.SqlMapper.ExecuteCommand(IDbConnection cnn, CommandDefinition& command, Action`2 paramReader) in C:\projects\dapper\Dapper\SqlMapper.cs:line 2797
+   at Dapper.SqlMapper.ExecuteImpl(IDbConnection cnn, CommandDefinition& command) in C:\projects\dapper\Dapper\SqlMapper.cs:line 568
+   at Dapper.SqlMapper.Execute(IDbConnection cnn, String sql, Object param, IDbTransaction transaction, Nullable`1 commandTimeout, Nullable`1 commandType) in C:\projects\dapper\Dapper\SqlMapper.cs:line 441
+   at PEngine.Core.Data.Database.Update() in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 72
+   --- End of inner exception stack trace ---
+   at PEngine.Core.Data.Database.Update() in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 82
+   at PEngine.Core.Data.Database.Startup(String contentRootPath, IDataProvider dataProvider) in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 37
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.Wait(Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.Wait()
+   at PEngine.Core.Web.Startup.Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp, ILoggerFactory logFactory) in /data/Code/dotnet/pengine.core/PEngine.Core.Web/Startup.cs:line 185
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.Invoke(Object instance, IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.<>c__DisplayClass4_0.<Build>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostBuilder.<>c__DisplayClass13_0.<UseStartup>b__2(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Mvc.Filters.MiddlewareFilterBuilderStartupFilter.<>c__DisplayClass0_0.<Configure>g__MiddlewareFilterBuilder|0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2019-10-13 16:56:08.193 -04:00 [INF] Configuring Host
+2019-10-13 16:56:08.803 -04:00 [FTL] Application startup exception
+System.AggregateException: One or more errors occurred. (PEngine version 0.0.4 update failed while processing command 
+UPDATE
+  Article
+SET
+  Guid = hex(substr(Guid, 4, 1)) ||
+  hex(substr(Guid, 3, 1)) ||
+  hex(substr(Guid, 2, 1)) ||
+  hex(substr(Guid, 1, 1)) || '-' ||
+  hex(substr(Guid, 6, 1)) ||
+  hex(substr(Guid, 5, 1)) || '-' ||
+  hex(substr(Guid, 8, 1)) ||
+  hex(substr(Guid, 7, 1)) || '-' ||
+  hex(substr(Guid, 9, 2)) || '-' ||
+  hex(substr(Guid, 11, 6))
+WHERE
+  typeof(Guid) == 'blob')
+ ---> System.Exception: PEngine version 0.0.4 update failed while processing command 
+UPDATE
+  Article
+SET
+  Guid = hex(substr(Guid, 4, 1)) ||
+  hex(substr(Guid, 3, 1)) ||
+  hex(substr(Guid, 2, 1)) ||
+  hex(substr(Guid, 1, 1)) || '-' ||
+  hex(substr(Guid, 6, 1)) ||
+  hex(substr(Guid, 5, 1)) || '-' ||
+  hex(substr(Guid, 8, 1)) ||
+  hex(substr(Guid, 7, 1)) || '-' ||
+  hex(substr(Guid, 9, 2)) || '-' ||
+  hex(substr(Guid, 11, 6))
+WHERE
+  typeof(Guid) == 'blob'
+ ---> Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 19: 'FOREIGN KEY constraint failed'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteNonQuery()
+   at Dapper.SqlMapper.ExecuteCommand(IDbConnection cnn, CommandDefinition& command, Action`2 paramReader) in C:\projects\dapper\Dapper\SqlMapper.cs:line 2797
+   at Dapper.SqlMapper.ExecuteImpl(IDbConnection cnn, CommandDefinition& command) in C:\projects\dapper\Dapper\SqlMapper.cs:line 568
+   at Dapper.SqlMapper.Execute(IDbConnection cnn, String sql, Object param, IDbTransaction transaction, Nullable`1 commandTimeout, Nullable`1 commandType) in C:\projects\dapper\Dapper\SqlMapper.cs:line 441
+   at PEngine.Core.Data.Database.Update() in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 72
+   --- End of inner exception stack trace ---
+   at PEngine.Core.Data.Database.Update() in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 82
+   at PEngine.Core.Data.Database.Startup(String contentRootPath, IDataProvider dataProvider) in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 37
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.Wait(Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.Wait()
+   at PEngine.Core.Web.Startup.Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp, ILoggerFactory logFactory) in /data/Code/dotnet/pengine.core/PEngine.Core.Web/Startup.cs:line 185
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.Invoke(Object instance, IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.<>c__DisplayClass4_0.<Build>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostBuilder.<>c__DisplayClass13_0.<UseStartup>b__2(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Mvc.Filters.MiddlewareFilterBuilderStartupFilter.<>c__DisplayClass0_0.<Configure>g__MiddlewareFilterBuilder|0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2019-10-13 16:57:07.904 -04:00 [INF] Configuring Host
+2019-10-13 16:57:08.456 -04:00 [FTL] Application startup exception
+System.AggregateException: One or more errors occurred. (PEngine version 0.0.4 update failed while processing command 
+BEGIN TRANSACTION)
+ ---> System.Exception: PEngine version 0.0.4 update failed while processing command 
+BEGIN TRANSACTION
+ ---> Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'cannot start a transaction within a transaction'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteNonQuery()
+   at Dapper.SqlMapper.ExecuteCommand(IDbConnection cnn, CommandDefinition& command, Action`2 paramReader) in C:\projects\dapper\Dapper\SqlMapper.cs:line 2797
+   at Dapper.SqlMapper.ExecuteImpl(IDbConnection cnn, CommandDefinition& command) in C:\projects\dapper\Dapper\SqlMapper.cs:line 568
+   at Dapper.SqlMapper.Execute(IDbConnection cnn, String sql, Object param, IDbTransaction transaction, Nullable`1 commandTimeout, Nullable`1 commandType) in C:\projects\dapper\Dapper\SqlMapper.cs:line 441
+   at PEngine.Core.Data.Database.Update() in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 72
+   --- End of inner exception stack trace ---
+   at PEngine.Core.Data.Database.Update() in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 82
+   at PEngine.Core.Data.Database.Startup(String contentRootPath, IDataProvider dataProvider) in /data/Code/dotnet/pengine.core/PEngine.Core.Data/Database.cs:line 37
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.Wait(Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.Wait()
+   at PEngine.Core.Web.Startup.Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp, ILoggerFactory logFactory) in /data/Code/dotnet/pengine.core/PEngine.Core.Web/Startup.cs:line 185
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.Invoke(Object instance, IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.<>c__DisplayClass4_0.<Build>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostBuilder.<>c__DisplayClass13_0.<UseStartup>b__2(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Mvc.Filters.MiddlewareFilterBuilderStartupFilter.<>c__DisplayClass0_0.<Configure>g__MiddlewareFilterBuilder|0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2019-10-13 16:58:50.911 -04:00 [INF] Configuring Host
+2019-10-13 17:05:17.836 -04:00 [INF] Configuring Host
+2019-10-13 17:08:06.580 -04:00 [ERR] Connection id "0HLQG44P5F7A7", Request id "0HLQG44P5F7A7:00000025": An unhandled exception was thrown by the application.
+System.NotSupportedException: Deserialization of reference types without parameterless constructor is not supported. Type 'PEngine.Core.Shared.Models.ResumeSkillTypeModel'
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_DeserializeMissingParameterlessConstructor(Type invalidType)
+   at System.Text.Json.JsonSerializer.HandleStartObject(JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.JsonSerializer.ReadCore(JsonSerializerOptions options, Utf8JsonReader& reader, ReadStack& readStack)
+   at System.Text.Json.JsonSerializer.ReadCore(JsonReaderState& readerState, Boolean isFinalBlock, ReadOnlySpan`1 buffer, JsonSerializerOptions options, ReadStack& readStack)
+   at System.Text.Json.JsonSerializer.ReadAsync[TValue](Stream utf8Json, Type returnType, JsonSerializerOptions options, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder.BindModelAsync(ModelBindingContext bindingContext)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.ParameterBinder.BindModelAsync(ActionContext actionContext, IModelBinder modelBinder, IValueProvider valueProvider, ParameterDescriptor parameter, ModelMetadata metadata, Object value)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerBinderDelegateProvider.<>c__DisplayClass0_0.<<CreateBinderDelegate>g__Bind|0>d.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|24_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at PEngine.Core.Web.Startup.<>c.<<Configure>b__9_0>d.MoveNext() in /data/Code/dotnet/pengine.core/PEngine.Core.Web/Startup.cs:line 161
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at PEngine.Core.Web.Middleware.TokenCookieMiddleware.Invoke(HttpContext context) in /data/Code/dotnet/pengine.core/PEngine.Core.Web/Middleware/Token.cs:line 50
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2019-10-13 17:08:28.246 -04:00 [INF] Configuring Host
+2019-10-13 17:08:33.686 -04:00 [ERR] Connection id "0HLQG460P7U0Q", Request id "0HLQG460P7U0Q:00000001": An unhandled exception was thrown by the application.
+System.NotSupportedException: Deserialization of reference types without parameterless constructor is not supported. Type 'PEngine.Core.Shared.Models.ResumeSkillTypeModel'
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_DeserializeMissingParameterlessConstructor(Type invalidType)
+   at System.Text.Json.JsonSerializer.HandleStartObject(JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.JsonSerializer.ReadCore(JsonSerializerOptions options, Utf8JsonReader& reader, ReadStack& readStack)
+   at System.Text.Json.JsonSerializer.ReadCore(JsonReaderState& readerState, Boolean isFinalBlock, ReadOnlySpan`1 buffer, JsonSerializerOptions options, ReadStack& readStack)
+   at System.Text.Json.JsonSerializer.ReadAsync[TValue](Stream utf8Json, Type returnType, JsonSerializerOptions options, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder.BindModelAsync(ModelBindingContext bindingContext)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.ParameterBinder.BindModelAsync(ActionContext actionContext, IModelBinder modelBinder, IValueProvider valueProvider, ParameterDescriptor parameter, ModelMetadata metadata, Object value)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerBinderDelegateProvider.<>c__DisplayClass0_0.<<CreateBinderDelegate>g__Bind|0>d.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|24_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at PEngine.Core.Web.Startup.<>c.<<Configure>b__9_0>d.MoveNext() in /data/Code/dotnet/pengine.core/PEngine.Core.Web/Startup.cs:line 161
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at PEngine.Core.Web.Middleware.TokenCookieMiddleware.Invoke(HttpContext context) in /data/Code/dotnet/pengine.core/PEngine.Core.Web/Middleware/Token.cs:line 50
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2019-10-13 17:11:50.051 -04:00 [INF] Configuring Host

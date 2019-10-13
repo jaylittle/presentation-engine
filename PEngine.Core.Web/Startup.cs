@@ -23,8 +23,6 @@ using PEngine.Core.Shared;
 using PEngine.Core.Web.Middleware;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Http.Features;
 
 namespace PEngine.Core.Web
@@ -71,35 +69,22 @@ namespace PEngine.Core.Web
             NoStore = false
           }
         );
-      });
-
-      services.AddAntiforgery(options => {
-        var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase);
-        options.SuppressXFrameOptionsHeader = true;
-        options.Cookie.Name = Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN;
-        options.Cookie.HttpOnly = false;
-        options.HeaderName = Middleware.TokenCookieMiddleware.HEADER_XSRF_FORM_TOKEN;
-        if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
-        {
-          options.Cookie.Domain = Settings.Current.CookieDomain;
-        }
-        if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
-        {
-          options.Cookie.Path = Settings.Current.CookiePath;
-        }
+        
+        options.EnableEndpointRouting = false;
+      }).AddNewtonsoftJson(opt => {
+        opt.SerializerSettings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
+        opt.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.RoundtripKind;
       });
 
       services.AddScoped<IPostDal, PostDal>();
       services.AddScoped<IArticleDal, ArticleDal>();
       services.AddScoped<IResumeDal, ResumeDal>();
-      services.AddScoped<IForumDal, ForumDal>();
       services.AddScoped<IQuoteDal, QuoteDal>();
       services.AddScoped<IVersionDal, VersionDal>();
       services.AddScoped<ISettingsProvider, SettingsProvider>();
       services.AddScoped<IPostService, PostService>();
       services.AddScoped<IArticleService, ArticleService>();
       services.AddScoped<IResumeService, ResumeService>();
-      services.AddScoped<IForumService, ForumService>();
       services.AddScoped<IQuoteService, QuoteService>();
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -136,14 +121,14 @@ namespace PEngine.Core.Web
         });
 
       services.Configure<FormOptions>(options => {
-        options.ValueLengthLimit = int.MaxValue;
-        options.MultipartBodyLengthLimit = int.MaxValue;
-        options.MultipartHeadersLengthLimit = int.MaxValue;
+        options.ValueLengthLimit = 1024 * 1024 * 10;
+        options.MultipartBodyLengthLimit = 1024 * 1024 * 20;
+        options.MultipartHeadersLengthLimit = 1024 * 1024 * 1;
       });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp, ILoggerFactory logFactory)
     {
       _httpContextAccessor = svp.GetRequiredService<IHttpContextAccessor>();
       ContentRootPath = env.ContentRootPath;
@@ -197,7 +182,7 @@ namespace PEngine.Core.Web
         }
       });
 
-      Security.XSRF.Init(svp.GetRequiredService<IAntiforgeryTokenSerializer>(), svp.GetRequiredService<IAntiforgeryTokenGenerator>());
+      Security.XSRF.Startup(logFactory);
       PEngine.Core.Data.Database.Startup(env.ContentRootPath, new SQLiteDataProvider()).Wait();
       PEngine.Core.Logic.FeedManager.Startup(env.ContentRootPath, svp.GetRequiredService<IPostService>()).Wait();
     }

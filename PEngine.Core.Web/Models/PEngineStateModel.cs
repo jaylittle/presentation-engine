@@ -15,7 +15,6 @@ namespace PEngine.Core.Web.Models
 {
   public class PEngineStateModel
   {
-    public const string COOKIE_ELITE = "elite";
     public const string COOKIE_THEME = "theme";
     public const string COOKIE_ACCESS_TOKEN = "access_token";
 
@@ -197,9 +196,6 @@ namespace PEngine.Core.Web.Models
           Theme = _settings.DefaultTheme;
         }
       }
-
-      var antiforgery = _svp.GetRequiredService<IAntiforgery>();
-      XSRFToken = antiforgery.GetTokens(_context).RequestToken;
       
       //Process Cookies
       if (_context.Request?.Cookies != null)
@@ -218,9 +214,11 @@ namespace PEngine.Core.Web.Models
         HasForumAdmin = _context.Request.HttpContext.User.IsInRole("ForumAdmin");
         PEngineUserName = _context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserName"))?.Value;
         PEngineUserType = _context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineUserType"))?.Value;
+        string sessionId = _context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("PEngineSessionId"))?.Value;
         var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         TokenExpires = epoch.AddSeconds(double.Parse(_context.Request.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("exp"))?.Value));
         TokenExpiresMilliseconds = (long)TokenExpires.Value.Subtract(DateTime.UtcNow).TotalMilliseconds;
+        XSRFToken = Security.XSRF.GetXsrfValues(PEngineUserName, sessionId).formValue;
       }
 
       //Process Record
@@ -345,23 +343,8 @@ namespace PEngine.Core.Web.Models
         {
           Theme = requestedTheme;
 
-          var secureFlag = Settings.Current.ExternalBaseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase)
-            || _context.Request.Protocol.StartsWith("https", StringComparison.OrdinalIgnoreCase);
-
-          var cookieOptions = new CookieOptions() {
-            HttpOnly = true,
-            Secure = secureFlag,
-            Expires = DateTime.UtcNow.AddYears(10)
-          };
-
-          if (!string.IsNullOrWhiteSpace(Settings.Current.CookieDomain))
-          {
-            cookieOptions.Domain = Settings.Current.CookieDomain;
-          }
-          if (!string.IsNullOrWhiteSpace(Settings.Current.CookiePath))
-          {
-            cookieOptions.Path = Settings.Current.CookiePath;
-          }
+          var cookieOptions = Helpers.HttpHelpers.GetCookieOptions(_context);
+          cookieOptions.Expires = DateTime.UtcNow.AddYears(10);
 
           _context.Response.Cookies.Append(COOKIE_THEME, requestedTheme, cookieOptions);
         }
