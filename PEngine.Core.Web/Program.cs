@@ -65,9 +65,9 @@ namespace PEngine.Core.Web
           {
             var env = hostingContext.HostingEnvironment;
             Console.WriteLine($"Hosting Environment: {env.EnvironmentName}");
-            config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
                   .AddJsonFile($"appsettings.{env.EnvironmentName}.json", 
-                      optional: true, reloadOnChange: true);
+                      optional: true, reloadOnChange: false);
             config.AddEnvironmentVariables();
           })
           .ConfigureWebHostDefaults(webHostBuilder => {
