@@ -48,12 +48,18 @@ namespace PEngine.Core.Web.Security
           if (!IsNotXsrf(context, out xsrfMessage))
           {
             logger.LogError($"XSRF Check failed for user with error: {xsrfMessage}");
-            context.Result = new JsonResult(new List<string>(new string[] { "XSRF Security Check Failed. Refresh this browser tab and try again." })) {
+
+            var result = new OpResult(false);
+            result.LogError("XSRF Security Check Failed. Refresh this browser tab and try again.");
+            context.Result = new JsonResult(result) {
               StatusCode = 400
             };
           }
+          else
+          {
+            await next();
+          }
         }
-        await next();
       }
     }
 
