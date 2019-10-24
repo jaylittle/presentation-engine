@@ -309,22 +309,26 @@ div.display-container div.centered-text p:last-child
 
 blockquote > ol:first-child, div.display-container div.quoted-text > ol:first-child
   , blockquote > ul:first-child, div.display-container div.quoted-text > ul:first-child
+  , blockquote > ol:first-child > li:first-child > p:first-child, div.display-container div.quoted-text > ol:first-child > li:first-child > p:first-child
+  , blockquote > ul:first-child > li:first-child > p:first-child, div.display-container div.quoted-text > ul:first-child > li:first-child > p:first-child
 {
   margin-top: 0;
 }
 
 blockquote > ol:last-child, div.display-container div.quoted-text > ol:last-child
   , blockquote > ul:last-child, div.display-container div.quoted-text > ul:last-child
+  , blockquote > ol:last-child > li:last-child > p:first-child, div.display-container div.quoted-text > ol:last-child > li:last-child > p:first-child
+  , blockquote > ul:last-child > li:last-child > p:first-child, div.display-container div.quoted-text > ul:last-child > li:last-child > p:first-child
 {
   margin-bottom: 0;
 }
 
-blockquote p:first-child, div.display-container div.quoted-text p:first-child
+blockquote > p:first-child, div.display-container div.quoted-text > p:first-child
 {
   margin-top: 0;
 }
 
-blockquote p:last-child, div.display-container div.quoted-text p:last-child
+blockquote > p:last-child, div.display-container div.quoted-text > p:last-child
 {
   margin-bottom: 0;
 }
