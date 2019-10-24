@@ -71,10 +71,10 @@ blockquote, div.quoted-text
 	color: #dfe0da;
 	font-size: 17px;
 	min-width: 35%;
-	max-width: 70%;
+	max-width: 95%;
 	margin-left: auto;
 	margin-right: auto;
-	padding: 5px;
+	padding: 10px;
 	border-radius: 3px;
 }
 
@@ -320,6 +320,23 @@ div.display-container div.centered-text p:last-child
   margin-bottom: 0;
 }
 
+blockquote > ol:first-child, div.display-container div.quoted-text > ol:first-child
+  , blockquote > ul:first-child, div.display-container div.quoted-text > ul:first-child
+{
+  margin-top: 0;
+}
+
+blockquote > ol:last-child, div.display-container div.quoted-text > ol:last-child
+  , blockquote > ul:last-child, div.display-container div.quoted-text > ul:last-child
+{
+  margin-bottom: 0;
+}
+
+blockquote p:first-child, div.display-container div.quoted-text p:first-child
+{
+  margin-top: 0;
+}
+
 blockquote p:last-child, div.display-container div.quoted-text p:last-child
 {
   margin-bottom: 0;
@@ -458,6 +475,10 @@ div.page > div.panel
 pre code
 {
   background-color: #202025;
+  max-width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
 }
 
 body .edit-label, .edit-label-normal
