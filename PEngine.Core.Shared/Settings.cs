@@ -72,6 +72,8 @@ namespace PEngine.Core.Shared
     public string BasePath { get; set; } = "/";
     public int CacheControlSeconds { get; set; } = 86400;
     public string HiddenThemeList { get; set; }
+    public string FavIcon { get; set; } = "pengine_icon5.png";
+    public string AdditionalHeaders { get; set; } = string.Empty;
 
     [JsonIgnore]
     public string CookiePath

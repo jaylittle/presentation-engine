@@ -135,6 +135,35 @@ namespace PEngine.Core.Web.Helpers
       }
     }
 
+    public static string FavIconPath
+    {
+      get
+      {
+        return $"images/system/{Settings.Current.FavIcon}";
+      }
+    }
+
+    public static bool FavIconEnabled
+    {
+      get
+      {
+        if (!string.IsNullOrWhiteSpace(Settings.Current.FavIcon))
+        {
+          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", FavIconPath, true).Result;
+          return hashEntry != null;
+        }
+        return false;
+      }
+    }
+
+    public static bool AdditionalHeadersEnabled
+    {
+      get
+      {
+        return !string.IsNullOrWhiteSpace(Settings.Current.AdditionalHeaders);
+      }
+    }
+
     public static string DataTruncate(string data, int length = 75)
     {
       return data.DataTruncate(length);

@@ -30,6 +30,14 @@
     }
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile("styles/pengine.core.css")"> 
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile((string)Model.State.ThemePath)"> 
+    @if (Rendering.LogoEnabled)
+    {
+    <link rel="icon" href="@Html.ContentHashFile(Rendering.FavIconPath, true)">
+    }
+    @if (Rendering.AdditionalHeadersEnabled)
+    {
+    @Html.Raw(Model.Settings.AdditionalHeaders)
+    }
   </head>
   <body>
     @if (!string.IsNullOrEmpty(Model.State.PEngineUserName))

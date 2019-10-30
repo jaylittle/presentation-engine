@@ -278,6 +278,10 @@
             <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.logoFrontPage" /></div>
           </div>
           <div class="edit-row">
+            <div class="edit-label-large">Website Icon:</div>
+            <div class="edit-field"><input type="text" class="edit-control-large" v-model="record.data.favIcon" /></div>
+          </div>
+          <div class="edit-row">
             <div class="edit-label-large">Admin Login Label:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.labelAdminLoginButton" />
@@ -394,6 +398,10 @@
             <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.hiddenThemeList" />
             </div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Additional Headers:</div>
+            <div class="edit-field"><textarea rows="20" class="edit-control" v-model="record.data.additionalHeaders"></textarea></div>
           </div>
           <div class="edit-row">
             <div class="edit-label-large">Admin UserName:</div>
