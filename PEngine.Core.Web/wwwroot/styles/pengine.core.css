@@ -350,6 +350,11 @@ body .dialog-container
   text-decoration: underline;
 }
 
+.sub-header a.invisible-link
+{
+  text-decoration: none;
+}
+
 .list-button
 {
   width: 75px;

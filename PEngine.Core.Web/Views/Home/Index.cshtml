@@ -23,7 +23,7 @@
 </div>
 @foreach (var post in Model.ListData)
 {
-  @Html.Raw(Rendering.MarkupSubheader(post.Name))
+  @Html.Raw(Rendering.MarkupSubheader(Html.RouteLink(post.Name, new { controller = "post", action = "view", year = post.CreatedUTC.Value.Year, month = post.CreatedUTC.Value.Month, uniqueName = post.UniqueName }, new { @class = "invisible-link" }).RelativeHref().GetString(), false))
   if (Model.State.HasAdmin)
   {
     <div class="panel">
