@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using PEngine.Core.Shared;
 using Markdig;
+using Markdig.Renderers;
+using Markdig.Renderers.Html;
+using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 
 namespace PEngine.Core.Web.Helpers
 {
@@ -94,7 +98,14 @@ namespace PEngine.Core.Web.Helpers
     {
       if (!string.IsNullOrWhiteSpace(text) && !string.IsNullOrWhiteSpace(url))
       {
-        return $"<a class=\"menu-button\" href=\"{url}\">{text}</a>";
+        if (IsUrlAbsolute(url))
+        {
+          return $"<a class=\"menu-button\" href=\"{url}\" target=\"_blank\">{text}</a>";
+        }
+        else
+        {
+          return $"<a class=\"menu-button\" href=\"{url}\">{text}</a>";
+        }
       }
       else
       {
@@ -104,14 +115,50 @@ namespace PEngine.Core.Web.Helpers
 
     public static string MarkupArticle(string secdata, bool forum)
     {
-      var pipeline = new MarkdownPipelineBuilder()
+      var pipelineBuilder = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions();
-
       if (forum)
       {
-        pipeline.DisableHtml();
+        pipelineBuilder.DisableHtml();
       }
-      return Markdown.ToHtml(secdata, pipeline.Build());
+      var pipeline = pipelineBuilder.Build();
+
+      //Parse and Render Markup while applying special optimizations
+      //Shamelessly ripped off from https://github.com/lunet-io/markdig/issues/293#issuecomment-456376415
+      var document = Markdown.Parse(secdata, pipeline);
+      foreach (var descendant in document.Descendants())
+      {
+        string url = null;
+        if (descendant is AutolinkInline autoLink) 
+        {
+          url = autoLink.Url;
+        }
+        else if (descendant is LinkInline linkInline)
+        {
+          url = linkInline.Url;
+        }
+        if (IsUrlAbsolute(url))
+        {
+          descendant.GetAttributes().AddPropertyIfNotExist("target", "_blank");
+        }
+      }
+      using (var writer = new StringWriter())
+      {
+        var renderer = new HtmlRenderer(writer);
+        pipeline.Setup(renderer);
+        renderer.Render(document);
+
+        //Return finalized HTML
+        return writer.ToString();
+      }
+    }
+
+    public static bool IsUrlAbsolute(string url)
+    {
+      Uri outUri;
+      return !string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out outUri)
+        && !url.StartsWith(Settings.Current.ExternalBaseUrl, StringComparison.OrdinalIgnoreCase)
+        && !(new string[] { "file" }).Any(s => s.Equals(outUri.Scheme, StringComparison.OrdinalIgnoreCase));
     }
 
     public static string LogoPath
