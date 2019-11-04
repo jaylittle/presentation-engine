@@ -7,7 +7,7 @@ using PEngine.Core.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -121,10 +121,14 @@ namespace PEngine.Core.Web.Models
 
     public string XSRFToken { get; set; }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false)
+    [JsonIgnore]
+    public ControllerContext ControllerContext { get; set; }
+
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, ControllerContext controllerContext, bool hideSubTitle = false, bool isForum = false)
     {
       _settings = settings;
       _context = context;
+      ControllerContext = controllerContext;
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = null;
@@ -133,10 +137,11 @@ namespace PEngine.Core.Web.Models
       Init();
     }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, ControllerContext controllerContext, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
+      ControllerContext = controllerContext;
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = currentSection;
@@ -145,10 +150,11 @@ namespace PEngine.Core.Web.Models
       UpdateData(viewDataRecord);
     }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, ControllerContext controllerContext, bool hideSubTitle = false, bool isForum = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
+      ControllerContext = controllerContext;
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = currentSection;

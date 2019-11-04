@@ -8,7 +8,7 @@
   @if (Rendering.LogoEnabled)
   {
     <div class="logo-container">
-        <img src="@Html.ContentHashFile(Rendering.LogoPath, true)" alt="logo" />
+        <img src="@Html.ContentHashFile(Rendering.LogoPath, (ControllerContext)Model.State.ControllerContext, true)" alt="logo" />
     </div>
   }
   @if (!Model.Settings.DisableQuotes)

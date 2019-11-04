@@ -84,5 +84,10 @@ namespace PEngine.Core.Shared
       }
       return data;
     }
+
+    public static bool IsUrlAbsolute(this string url)
+    {
+      return Helpers.IsUrlAbsolute(url);
+    }
   }
 }

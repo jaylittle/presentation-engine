@@ -98,7 +98,7 @@ namespace PEngine.Core.Web.Helpers
     {
       if (!string.IsNullOrWhiteSpace(text) && !string.IsNullOrWhiteSpace(url))
       {
-        if (IsUrlAbsolute(url))
+        if (Shared.Helpers.IsUrlAbsolute(url))
         {
           return $"<a class=\"menu-button\" href=\"{url}\" target=\"_blank\">{text}</a>";
         }
@@ -137,7 +137,7 @@ namespace PEngine.Core.Web.Helpers
         {
           url = linkInline.Url;
         }
-        if (IsUrlAbsolute(url))
+        if (Shared.Helpers.IsUrlAbsolute(url))
         {
           descendant.GetAttributes().AddPropertyIfNotExist("target", "_blank");
         }
@@ -151,14 +151,6 @@ namespace PEngine.Core.Web.Helpers
         //Return finalized HTML
         return writer.ToString();
       }
-    }
-
-    public static bool IsUrlAbsolute(string url)
-    {
-      Uri outUri;
-      return !string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out outUri)
-        && !url.StartsWith(Settings.Current.ExternalBaseUrl, StringComparison.OrdinalIgnoreCase)
-        && !(new string[] { "file" }).Any(s => s.Equals(outUri.Scheme, StringComparison.OrdinalIgnoreCase));
     }
 
     public static string LogoPath
@@ -175,7 +167,7 @@ namespace PEngine.Core.Web.Helpers
       {
         if (!string.IsNullOrWhiteSpace(Settings.Current.LogoFrontPage))
         {
-          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", LogoPath, true).Result;
+          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", LogoPath, null, true).Result;
           return hashEntry != null;
         }
         return false;
@@ -196,7 +188,7 @@ namespace PEngine.Core.Web.Helpers
       {
         if (!string.IsNullOrWhiteSpace(Settings.Current.FavIcon))
         {
-          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", FavIconPath, true).Result;
+          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", FavIconPath, null, true).Result;
           return hashEntry != null;
         }
         return false;

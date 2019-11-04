@@ -28,28 +28,33 @@ namespace PEngine.Core.Web.Controllers
       if (_md5HashRegex.Matches(hash).Count == 1 && !string.IsNullOrWhiteSpace(filePath) 
         && !filePath.Contains("..") && _filePathRegex.IsMatch(filePath))
       {
-        var hashEntry = await ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", filePath, true);
+        var hashEntry = await ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", filePath, (h, wp) => GetHashUrl(h, wp), true);
         if (hashEntry != null)
         {
           if (hashEntry.Hash.Equals(hash))
           {
             string contentType;
             new FileExtensionContentTypeProvider().TryGetContentType(hashEntry.FullPath, out contentType);
-            return this.File(System.IO.File.ReadAllBytes(hashEntry.FullPath), contentType);
+            return this.File(hashEntry.Transformable ? hashEntry.Transformation : System.IO.File.ReadAllBytes(hashEntry.FullPath), contentType);
           }
           else
           {
-            var urlHelper = new UrlHelper(ControllerContext);
-            var hashUrl = System.Net.WebUtility.UrlDecode(urlHelper.Action("GetHashedFileName", "hash", new {
-              hash = hashEntry.Hash,
-              filePath = hashEntry.WebPath
-            }));
-            return RedirectPermanent(hashUrl);
+            return RedirectPermanent(GetHashUrl(hashEntry.Hash, hashEntry.WebPath));
           }
         }
         return NotFound();
       }
       return BadRequest();
+    }
+
+    private string GetHashUrl(string hash, string webPath)
+    {
+      var urlHelper = new UrlHelper(ControllerContext);
+      var hashUrl = System.Net.WebUtility.UrlDecode(urlHelper.Action("GetHashedFileName", "hash", new {
+        hash = hash,
+        filePath = webPath
+      }));
+      return hashUrl;
     }
   }
 }

@@ -4,6 +4,8 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace PEngine.Core.Shared
 {
@@ -13,12 +15,22 @@ namespace PEngine.Core.Shared
     public string WebPath { get; set; }
     public string Hash { get; set; }
     public DateTime Modified { get; set; }
+    public bool Transformable
+    {
+      get
+      {
+        return !string.IsNullOrEmpty(FullPath)
+          && FullPath.EndsWith(".css", StringComparison.OrdinalIgnoreCase);
+      }
+    }
+    public byte[] Transformation { get; set; } = null;
   }
 
   public static class ContentHash
   {
     private static ConcurrentDictionary<string, ContentHashEntry> _hashCache = new ConcurrentDictionary<string, ContentHashEntry>();
-    public static async Task<ContentHashEntry> GetContentHashEntryForFile(string contentRootPath, string wwwRootFolder, string webPath, bool checkForExistence = false)
+    public static async Task<ContentHashEntry> GetContentHashEntryForFile(string contentRootPath, string wwwRootFolder
+      , string webPath, Func<string, string, string> GetHashedUrl = null, bool checkForExistence = false)
     {
       return await Task.Run<ContentHashEntry>(() =>
       {
@@ -60,13 +72,24 @@ namespace PEngine.Core.Shared
             var fileInfo = new System.IO.FileInfo(hashEntry.FullPath);
             if (fileInfo.FullName.StartsWith(actualFileRoot, StringComparison.OrdinalIgnoreCase))
             {
-              var md5 = System.Security.Cryptography.MD5.Create();
+              using (var md5 = System.Security.Cryptography.MD5.Create())
               using (var reader = System.IO.File.Open(hashEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
               {
                 var md5Bytes = md5.ComputeHash(reader);
                 hashEntry.Hash = Security.BytesToHex(md5Bytes);
               }
               hashEntry.Modified = System.IO.File.GetLastWriteTimeUtc(hashEntry.FullPath);
+
+              //Check for transformable content
+              if (hashEntry.Transformable)
+              {
+                if (!string.IsNullOrEmpty(hashEntry.FullPath) && hashEntry.FullPath.EndsWith(".css", StringComparison.OrdinalIgnoreCase))
+                {
+                  hashEntry.Transformation = System.Text.Encoding.UTF8.GetBytes(
+                    TransformCSS(contentRootPath, wwwRootFolder, webPath, System.IO.File.ReadAllText(hashEntry.FullPath), GetHashedUrl)
+                  );
+                }
+              }
 
               while (!_hashCache.ContainsKey(webPath) && !_hashCache.TryAdd(webPath, hashEntry));
             }
@@ -78,6 +101,52 @@ namespace PEngine.Core.Shared
         }
         while (_hashCache.ContainsKey(webPath) && !_hashCache.TryGetValue(webPath, out output));
         return output;
+      });
+    }
+
+    //For reference here is the Unescaped Regex string (in case you want to test this in regexr or something): url\("*'*(.[^("'\(\)]+)"*'*\)
+    private static Regex CSS_URL_REGEX = new Regex("url\\(\"*'*(.[^(\"'\\(\\)]+)\"*'*\\)", RegexOptions.Compiled | RegexOptions.CultureInvariant
+      | RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+    private static string TransformCSS(string contentRootPath, string wwwRootFolder, string webPath, string originalCss, Func<string, string, string> GetHashedUrl = null)
+    {
+      var originalAbsoluteDirectory = System.IO.Path.GetDirectoryName(
+        System.IO.Path.Combine(
+          Settings.Current.BasePath,
+          webPath
+        ).Replace('\\', '/')
+      );
+      if (!originalAbsoluteDirectory.EndsWith('/'))
+      {
+        originalAbsoluteDirectory += "/";
+      }
+
+      return CSS_URL_REGEX.Replace(originalCss, (m) => {
+        var fullMatch = m.Groups[0].Value;
+        var matchedUrl = m.Groups[m.Groups.Count - 1].Value;
+        var returnUrl = matchedUrl;
+
+        if (!Helpers.IsUrlAbsolute(matchedUrl))
+        {
+          var matchedAbsoluteUrl = Path.GetFullPath(
+            System.IO.Path.Combine(
+              originalAbsoluteDirectory,
+              matchedUrl).Replace('\\', '/'
+            )
+          );
+          if (matchedAbsoluteUrl.StartsWith(Path.DirectorySeparatorChar))
+          {
+            matchedAbsoluteUrl = matchedAbsoluteUrl.TrimStart(Path.DirectorySeparatorChar);
+          }
+          
+          var matchedHashEntry = GetContentHashEntryForFile(contentRootPath, wwwRootFolder, matchedAbsoluteUrl, GetHashedUrl, true).Result;
+          if (matchedHashEntry != null)
+          {
+            returnUrl = GetHashedUrl(matchedHashEntry.Hash, matchedHashEntry.WebPath);
+          }
+        }
+
+        return fullMatch.Replace(matchedUrl, returnUrl);
       });
     }
   }

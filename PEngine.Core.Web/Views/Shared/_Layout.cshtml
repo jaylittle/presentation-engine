@@ -28,11 +28,11 @@
     <meta name="twitter:image" content="@Model.State.SummaryImage" />
       }
     }
-    <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile("styles/pengine.core.css")"> 
-    <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile((string)Model.State.ThemePath)"> 
+    <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile("styles/pengine.core.css", (ControllerContext)Model.State.ControllerContext)"> 
+    <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile((string)Model.State.ThemePath, (ControllerContext)Model.State.ControllerContext)"> 
     @if (Rendering.LogoEnabled)
     {
-    <link rel="icon" href="@Html.ContentHashFile(Rendering.FavIconPath, true)">
+    <link rel="icon" href="@Html.ContentHashFile(Rendering.FavIconPath, (ControllerContext)Model.State.ControllerContext, true)">
     }
     @if (Rendering.AdditionalHeadersEnabled)
     {
@@ -140,10 +140,10 @@
     <script type="text/javascript">
       window.pengineState = @Html.Raw(Model.State.Json());
     </script>
-    <script src="@Html.ContentHashFile("dist/pengine.core.web.3rdparty.min.js")"></script>
-    <script src="@Html.ContentHashFile("dist/pengine.core.web.main.min.js")"></script>
+    <script src="@Html.ContentHashFile("dist/pengine.core.web.3rdparty.min.js", (ControllerContext)Model.State.ControllerContext)"></script>
+    <script src="@Html.ContentHashFile("dist/pengine.core.web.main.min.js", (ControllerContext)Model.State.ControllerContext)"></script>
     }
-    <script src="@Html.ContentHashFile("dist/pengine.core.web.sitewide.min.js")"></script>
+    <script src="@Html.ContentHashFile("dist/pengine.core.web.sitewide.min.js", (ControllerContext)Model.State.ControllerContext)"></script>
     @RenderSection("scripts", required: false)
   </body>
 </html>
