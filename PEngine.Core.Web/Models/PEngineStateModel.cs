@@ -121,14 +121,12 @@ namespace PEngine.Core.Web.Models
 
     public string XSRFToken { get; set; }
 
-    [JsonIgnore]
-    public ControllerContext ControllerContext { get; set; }
+    public string Version { get; set; }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, ControllerContext controllerContext, bool hideSubTitle = false, bool isForum = false)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false)
     {
       _settings = settings;
       _context = context;
-      ControllerContext = controllerContext;
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = null;
@@ -137,11 +135,10 @@ namespace PEngine.Core.Web.Models
       Init();
     }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, ControllerContext controllerContext, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
-      ControllerContext = controllerContext;
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = currentSection;
@@ -150,11 +147,10 @@ namespace PEngine.Core.Web.Models
       UpdateData(viewDataRecord);
     }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, ControllerContext controllerContext, bool hideSubTitle = false, bool isForum = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
-      ControllerContext = controllerContext;
       HideSubTitle = hideSubTitle;
       IsForum = isForum;
       CurrentSection = currentSection;
@@ -189,6 +185,8 @@ namespace PEngine.Core.Web.Models
       HasForumAdmin = false;
       PEngineUserName = string.Empty;
       PEngineUserType = "Anonymous";
+      Version = Helpers.SystemInfoHelpers.Version;
+      
       Theme = string.Empty;
       var themeList = Helpers.Rendering.ThemeList;
       if (themeList.Any())

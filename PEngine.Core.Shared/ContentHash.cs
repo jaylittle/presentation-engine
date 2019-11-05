@@ -112,7 +112,7 @@ namespace PEngine.Core.Shared
     {
       var originalAbsoluteDirectory = System.IO.Path.GetDirectoryName(
         System.IO.Path.Combine(
-          Settings.Current.BasePath,
+          "/",
           webPath
         ).Replace('\\', '/')
       );

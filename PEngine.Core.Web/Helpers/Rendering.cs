@@ -129,6 +129,7 @@ namespace PEngine.Core.Web.Helpers
       foreach (var descendant in document.Descendants())
       {
         string url = null;
+        bool isImage = false;
         if (descendant is AutolinkInline autoLink) 
         {
           url = autoLink.Url;
@@ -136,8 +137,18 @@ namespace PEngine.Core.Web.Helpers
         else if (descendant is LinkInline linkInline)
         {
           url = linkInline.Url;
+          isImage = linkInline.IsImage;
+          if (isImage && !Shared.Helpers.IsUrlAbsolute(url))
+          {
+            var imageUrl = url.TrimStart('/');
+            var imageHashEntry = ContentHash.GetContentHashEntryForFile(SystemInfoHelpers.ContentRootPath, "wwwroot", imageUrl, Html.GetRelativeHashPath, true).Result;
+            if (imageHashEntry != null)
+            {
+              linkInline.Url = url = Html.GetRelativeHashPath(imageHashEntry.Hash, imageHashEntry.WebPath);
+            }
+          }
         }
-        if (Shared.Helpers.IsUrlAbsolute(url))
+        if (!isImage && Shared.Helpers.IsUrlAbsolute(url))
         {
           descendant.GetAttributes().AddPropertyIfNotExist("target", "_blank");
         }

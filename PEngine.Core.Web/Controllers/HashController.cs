@@ -28,7 +28,7 @@ namespace PEngine.Core.Web.Controllers
       if (_md5HashRegex.Matches(hash).Count == 1 && !string.IsNullOrWhiteSpace(filePath) 
         && !filePath.Contains("..") && _filePathRegex.IsMatch(filePath))
       {
-        var hashEntry = await ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", filePath, (h, wp) => GetHashUrl(h, wp), true);
+        var hashEntry = await ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", filePath, Helpers.Html.GetAbsoluteHashPath, true);
         if (hashEntry != null)
         {
           if (hashEntry.Hash.Equals(hash))
@@ -39,22 +39,12 @@ namespace PEngine.Core.Web.Controllers
           }
           else
           {
-            return RedirectPermanent(GetHashUrl(hashEntry.Hash, hashEntry.WebPath));
+            return RedirectPermanent(Helpers.Html.GetAbsoluteHashPath(hashEntry.Hash, hashEntry.WebPath));
           }
         }
         return NotFound();
       }
       return BadRequest();
-    }
-
-    private string GetHashUrl(string hash, string webPath)
-    {
-      var urlHelper = new UrlHelper(ControllerContext);
-      var hashUrl = System.Net.WebUtility.UrlDecode(urlHelper.Action("GetHashedFileName", "hash", new {
-        hash = hash,
-        filePath = webPath
-      }));
-      return hashUrl;
     }
   }
 }

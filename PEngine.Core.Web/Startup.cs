@@ -21,6 +21,7 @@ using PEngine.Core.Logic;
 using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Shared;
 using PEngine.Core.Web.Middleware;
+using PEngine.Core.Web.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
@@ -182,6 +183,7 @@ namespace PEngine.Core.Web
         }
       });
 
+      SystemInfoHelpers.Init(env.ContentRootPath);
       Security.XSRF.Startup(logFactory);
       PEngine.Core.Data.Database.Startup(env.ContentRootPath, new SQLiteDataProvider()).Wait();
       PEngine.Core.Logic.FeedManager.Startup(env.ContentRootPath, svp.GetRequiredService<IPostService>()).Wait();

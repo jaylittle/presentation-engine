@@ -18,32 +18,26 @@ namespace PEngine.Core.Web.Helpers
   public static class Html
   {
     public static HtmlString ContentHashFile(this IHtmlHelper htmlHelper, string webPath
-      , ControllerContext controllerContext, bool checkForExistence = false)
+      , bool checkForExistence = false)
     {
       var urlHelper = new UrlHelper(htmlHelper.ViewContext);
-      var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath, (h, wp) => {
-        if (controllerContext == null)
-        {
-          return webPath;
-        }
-        
-        var urlHelper = new UrlHelper(controllerContext);
-        var hashUrl = System.Net.WebUtility.UrlDecode(urlHelper.Action("GetHashedFileName", "hash", new {
-          hash = h,
-          filePath = wp
-        }));
-        return hashUrl;
-      }, checkForExistence).Result;
+      var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath, GetAbsoluteHashPath, checkForExistence).Result;
       string hashUrl = string.Empty;
       if (!checkForExistence || hashEntry != null)
       {
-        hashUrl = System.Net.WebUtility.UrlDecode(urlHelper.Action("GetHashedFileName", "hash", new
-        {
-          hash = hashEntry.Hash,
-          filePath = hashEntry.WebPath
-        }));
+        hashUrl = GetRelativeHashPath(hashEntry.Hash, hashEntry.WebPath);
       }
       return new HtmlString(hashUrl.TrimStart('/'));
+    }
+
+    public static string GetRelativeHashPath(string hash, string webPath)
+    {
+      return $"hash/{hash}/{webPath}";
+    }
+
+    public static string GetAbsoluteHashPath(string hash, string webPath)
+    {
+      return System.IO.Path.Combine(Settings.Current.BasePath, GetRelativeHashPath(hash, webPath));
     }
 
     public static IHtmlContent PEPager(this IHtmlHelper htmlHelper, PagingModel paging, object htmlAttributes, string action, object routeValues = null)

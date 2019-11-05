@@ -32,7 +32,7 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("list")]
     public async Task<IActionResult> List([FromQuery]PagingModel paging = null)
     {
-      var model = new PEngineGenericListModel<PostModel>(_svp, HttpContext, ControllerContext, false);
+      var model = new PEngineGenericListModel<PostModel>(_svp, HttpContext, false);
       if (paging != null)
       {
         paging.Count = paging.Count > 0 ? paging.Count : model.Settings.PerPagePostArchived;
@@ -50,7 +50,7 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("view/{year}/{month}/{uniqueName}")]
     public async Task<IActionResult> View(int year, int month, string uniqueName)
     {
-      var model = new PEngineGenericRecordModel<PostModel>(_svp, HttpContext, ControllerContext, false);
+      var model = new PEngineGenericRecordModel<PostModel>(_svp, HttpContext, false);
       model.RecordData = (await _postService.ListPosts(model.State.HasAdmin)).FirstOrDefault(p => p.CreatedUTC.HasValue && p.CreatedYear == year && p.CreatedMonth == month && p.UniqueName.Equals(uniqueName, StringComparison.OrdinalIgnoreCase));
       if (model.RecordData != null)
       {
