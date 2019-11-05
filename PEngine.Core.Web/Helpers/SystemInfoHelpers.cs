@@ -22,7 +22,7 @@ namespace PEngine.Core.Web.Helpers
             var version = textReader.ReadLine();
             if (!string.IsNullOrWhiteSpace(version))
             {
-              Version = version;
+              Version = version.ToLower();
             }
           }
         }
