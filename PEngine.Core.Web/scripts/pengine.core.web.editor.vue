@@ -400,8 +400,26 @@
             </div>
           </div>
           <div class="edit-row">
-            <div class="edit-label">Additional Headers:</div>
-            <div class="edit-field"><textarea rows="20" class="edit-control" v-model="record.data.additionalHeaders"></textarea></div>
+            <div class="edit-label-large">Error Message Title</div>
+            <div class="edit-field">
+              <input type="text" class="edit-control-normal" v-model="record.data.errorMessageTitle" />
+            </div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label-large">Error Messsage - Not Found</div>
+            <div class="edit-field"><textarea rows="5" class="edit-control" v-model="record.data.errorMessageNotFound"></textarea></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label-large">Error Messsage - Forbidden</div>
+            <div class="edit-field"><textarea rows="5" class="edit-control" v-model="record.data.errorMessageForbidden"></textarea></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label-large">Error Messsage - Exception (Generic)</div>
+            <div class="edit-field"><textarea rows="5" class="edit-control" v-model="record.data.errorMessageException"></textarea></div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label-large">Additional Headers:</div>
+            <div class="edit-field"><textarea rows="5" class="edit-control" v-model="record.data.additionalHeaders"></textarea></div>
           </div>
           <div class="edit-row">
             <div class="edit-label-large">Admin UserName:</div>

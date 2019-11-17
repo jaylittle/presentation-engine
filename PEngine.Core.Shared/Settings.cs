@@ -74,6 +74,10 @@ namespace PEngine.Core.Shared
     public string HiddenThemeList { get; set; }
     public string FavIcon { get; set; } = "pengine_icon5.png";
     public string AdditionalHeaders { get; set; } = string.Empty;
+    public string ErrorMessageTitle { get; set; } = "Well This Is Embarassing...";
+    public string ErrorMessageNotFound { get; set; } = "Knock, Knock.\n\nWho is there?\n\nNobody.\n\nNobody Who?\n\nNobody At All.";
+    public string ErrorMessageForbidden { get; set; } = "What's The Password?\n\nBBBBBBZZZZZZTTTTTT!\n\nWRONG!";
+    public string ErrorMessageException { get; set; } = "That Was A Fine Example Of Unexcepted Behavior!\n\nDiagnosis: Your Request Is Dead Jim.";
 
     [JsonIgnore]
     public string CookiePath

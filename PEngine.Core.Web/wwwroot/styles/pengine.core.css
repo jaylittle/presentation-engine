@@ -646,7 +646,7 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
   display: table-row;
 }
 
-.form-container .edit-label, .form-container .edit-label-normal, 
+.form-container .edit-label, .form-container .edit-label-normal,
 .form-container-overflow .edit-label, .form-container-overflow .edit-label-normal
 {
   width: auto;
@@ -655,6 +655,11 @@ body .dialog-container .form-container, body .dialog-container .form-container-o
   text-align: right;
   display: table-cell;
   float: none;
+  vertical-align: top;
+}
+
+.form-container .edit-label-large, .form-container-overflow .edit-label-large
+{
   vertical-align: top;
 }
 

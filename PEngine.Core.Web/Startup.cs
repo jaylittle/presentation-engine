@@ -141,6 +141,10 @@ namespace PEngine.Core.Web
 
       PEngine.Core.Shared.Settings.Startup(env.ContentRootPath);
 
+      // Add Handling for Status Codes and Exceptions
+      app.UseStatusCodePagesWithReExecute("/error/{0}");
+      app.UseExceptionHandler("/error/500");
+
       // Add Support for JWTs passed in cookies
       app.UseMiddleware<TokenCookieMiddleware>();
 
@@ -159,7 +163,10 @@ namespace PEngine.Core.Web
 
       app.Use(async (context, next) =>
       {
-        context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+        if (!context.Response.Headers.ContainsKey("X-Frame-Options"))
+        {
+          context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+        }
         await next();
       });
 
