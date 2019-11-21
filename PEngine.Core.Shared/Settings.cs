@@ -63,7 +63,7 @@ namespace PEngine.Core.Shared
     // app_label_clippy_button,
     public string LabelClippyButton { get; set; } = "Help!";
     public string LabelBackToHomeButton { get; set; } = "Back To Home";
-    public string LabelReadTheRestButton { get; set; } = "Read the Rest";
+    public string LabelReadTheRestButton { get; set; } = "Continue Reading";
     // app_pass_admin,
     public virtual string PasswordAdmin { get; set; } = string.Empty;
     public string ExternalBaseUrl { get; set; } = "http://localhost:5000/";

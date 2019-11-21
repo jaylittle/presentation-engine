@@ -41,12 +41,6 @@
     <span class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(post.CreatedUTC)">@post.CreatedUTC</span>
     <br />
     @Html.Raw(Rendering.MarkupArticle(post.Data, false, true))
-    @if (Rendering.SummaryModeFront)
-    {
-    <p>
-      ...
-    </p>
-    }
     <div class="panel">
       @if (Rendering.SummaryModeFront)
       {
