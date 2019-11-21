@@ -561,11 +561,27 @@ body > .panel > .panel-left
   margin-left: .25em;
 }
 
+.panel > .panel-left.panel-half
+{
+  display: inline-block;
+  width: calc(50% - 0.5em);
+  margin-left: .25em;
+  vertical-align: middle;
+}
+
 body > .panel > .panel-right
 {
   display: inline-block;
   width: calc(70vw - 1.25em);
   margin-right: .25em;
+}
+
+.panel > .panel-right.panel-half
+{
+  display: inline-block;
+  width: calc(50% - 0.5em);
+  margin-right: .25em;
+  vertical-align: middle;
 }
 
 .panel-center

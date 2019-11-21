@@ -58,7 +58,14 @@
   @Html.Raw(Rendering.MarkupArticle(section.Data, false))
 </div>
 <div class="panel">
-  <div class="panel-right">
+  <div class="panel-left panel-half">
+    <a href="@Model.Settings.ExternalBaseUrl" class="list-button post_view_button_back_to_home">
+      [
+        @Model.Settings.LabelBackToHomeButton
+      ]
+    </a>
+  </div>
+  <div class="panel-right panel-half">
     @if (Model.State.HasAdmin)
     {
       <a href="javascript:void(0)" class="list-button article_view_button_edit" data-guid="@article.Guid">[Edit]</a>

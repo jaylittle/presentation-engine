@@ -113,7 +113,7 @@ namespace PEngine.Core.Web.Helpers
       }
     }
 
-    public static string MarkupArticle(string secdata, bool forum)
+    public static string MarkupArticle(string secdata, bool forum, bool frontPage = false)
     {
       var pipelineBuilder = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions();
@@ -160,7 +160,19 @@ namespace PEngine.Core.Web.Helpers
         renderer.Render(document);
 
         //Return finalized HTML
-        return writer.ToString();
+        if (!frontPage || !Settings.Current.SummaryModeFront)
+        {
+          return writer.ToString();
+        }
+        return writer.ToString().DataTruncate(-1);
+      }
+    }
+
+    public static bool SummaryModeFront
+    {
+      get
+      {
+        return Settings.Current.SummaryModeFront;
       }
     }
 

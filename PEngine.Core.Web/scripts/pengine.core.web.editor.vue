@@ -300,6 +300,18 @@
             </div>
           </div>
           <div class="edit-row">
+            <div class="edit-label-large">Back To Home Label:</div>
+            <div class="edit-field">
+              <input type="text" class="edit-control-normal" v-model="record.data.labelBackToHomeButton" />
+            </div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label-large">Read The Rest Label:</div>
+            <div class="edit-field">
+              <input type="text" class="edit-control-normal" v-model="record.data.labelReadTheRestButton" />
+            </div>
+          </div>
+          <div class="edit-row">
             <div class="edit-label-large">Theme Label:</div>
             <div class="edit-field">
               <input type="text" class="edit-control-normal" v-model="record.data.labelThemeButton" />
@@ -354,7 +366,13 @@
             </div>
           </div>
           <div class="edit-row">
-            <div class="edit-label-large">Disabled Features</div>
+            <div class="edit-label-large">Enable Optional Features:</div>
+            <div class="edit-field edit-checkbox-list">
+              <span><input type="checkbox" v-model="record.data.summaryModeFront" /> Front Page Summary Mode</span>
+            </div>
+          </div>
+          <div class="edit-row">
+            <div class="edit-label-large">Disable Default Features</div>
             <div class="edit-field edit-checkbox-list">
               <span><input type="checkbox" v-model="record.data.disableQuotes" /> Quote</span>
               <span><input type="checkbox" v-model="record.data.disableRSS" /> Rss</span>

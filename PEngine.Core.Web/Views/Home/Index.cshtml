@@ -1,4 +1,5 @@
 @using PEngine.Core.Shared.Models
+@using PEngine.Core.Shared
 @using PEngine.Core.Web.Models
 @using PEngine.Core.Web
 @using PEngine.Core.Web.Helpers
@@ -21,7 +22,7 @@
     </div>
   }
 </div>
-@foreach (var post in Model.ListData)
+@foreach (var (post, index) in Model.ListData.WithIndex())
 {
   @Html.Raw(Rendering.MarkupSubheader(Html.RouteLink(post.Name, new { controller = "post", action = "view", year = post.CreatedUTC.Value.Year, month = post.CreatedUTC.Value.Month, uniqueName = post.UniqueName }, new { @class = "invisible-link" }).RelativeHref().GetString(), false))
   if (Model.State.HasAdmin)
@@ -39,11 +40,33 @@
     }
     <span class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(post.CreatedUTC)">@post.CreatedUTC</span>
     <br />
-    @Html.Raw(Rendering.MarkupArticle(post.Data, false))
+    @Html.Raw(Rendering.MarkupArticle(post.Data, false, true))
+    @if (Rendering.SummaryModeFront)
+    {
+    <p>
+      ...
+    </p>
+    }
+    <div class="panel">
+      @if (Rendering.SummaryModeFront)
+      {
+      <div class="panel-left panel-half">
+        @Html.Raw(Html.RouteLink("[" + Model.Settings.LabelReadTheRestButton + "]", new { controller = "post", action = "view", year = post.CreatedUTC.Value.Year, month = post.CreatedUTC.Value.Month, uniqueName = post.UniqueName }, new { @class = "list-button post_view_button_read" }).RelativeHref().GetString())
+      </div>
+        if (index == Model.ListData.Count() - 1)
+        {
+      <div class="panel-right panel-half">
+        @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list", "post").RelativeHref()
+      </div>
+        }
+      } else if (index == Model.ListData.Count() - 1) {
+      <div class="panel-right">
+        @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list", "post").RelativeHref()
+      </div>
+      }
+    </div>
   </div>
 }
 <div class="panel">
-  <div class="panel-right">
-    @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list", "post").RelativeHref()
-  </div>
+  
 </div>

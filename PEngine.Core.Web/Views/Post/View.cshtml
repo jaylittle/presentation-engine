@@ -42,7 +42,14 @@
   @Html.Raw(Rendering.MarkupArticle(post.Data, false))
 </div>
 <div class="panel">
-  <div class="panel-right">
+  <div class="panel-left panel-half">
+    <a href="@Model.Settings.ExternalBaseUrl" class="list-button post_view_button_back_to_home">
+      [
+        @Model.Settings.LabelBackToHomeButton
+      ]
+    </a>
+  </div>
+  <div class="panel-right panel-half">
     @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list").RelativeHref()
   </div>
 </div>

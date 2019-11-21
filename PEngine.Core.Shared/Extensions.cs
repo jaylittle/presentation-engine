@@ -89,5 +89,11 @@ namespace PEngine.Core.Shared
     {
       return Helpers.IsUrlAbsolute(url);
     }
+
+    //Shamelessly borrowed from: https://stackoverflow.com/questions/43021/how-do-you-get-the-index-of-the-current-iteration-of-a-foreach-loop#comment79585489_39997157
+    public static IEnumerable<(T item, int index)> WithIndex<T>(this IEnumerable<T> self)
+    {
+      return self?.Select((item, index) => (item, index)) ?? new List<(T, int)>();
+    }
   }
 }
