@@ -33,34 +33,25 @@
       </div>
     </div>
   }
-  <div class="list-container">
+  <div class="@(Rendering.SummaryModeFront ? "list-container summary-mode" : "list-container")">
     @if (!string.IsNullOrEmpty(post.IconFileName))
     {
       @Html.Raw(Rendering.MarkupIcon(post.IconFileName))
     }
-    <span class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(post.CreatedUTC)">@post.CreatedUTC</span>
-    <br />
+    <p class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(post.CreatedUTC)">@post.CreatedUTC</p>
     @Html.Raw(Rendering.MarkupArticle(post.Data, false, true))
-    <div class="panel">
-      @if (Rendering.SummaryModeFront)
-      {
-      <div class="panel-left panel-half">
-        @Html.Raw(Html.RouteLink("[" + Model.Settings.LabelReadTheRestButton + "]", new { controller = "post", action = "view", year = post.CreatedUTC.Value.Year, month = post.CreatedUTC.Value.Month, uniqueName = post.UniqueName }, new { @class = "list-button post_view_button_read" }).RelativeHref().GetString())
-      </div>
-        if (index == Model.ListData.Count() - 1)
-        {
-      <div class="panel-right panel-half">
-        @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list", "post").RelativeHref()
-      </div>
-        }
-      } else if (index == Model.ListData.Count() - 1) {
-      <div class="panel-right">
-        @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list", "post").RelativeHref()
-      </div>
-      }
-    </div>
+    @if (Rendering.SummaryModeFront)
+    {
+      <form class="summary-footer" method="get" action="@($"/post/view/{post.CreatedUTC.Value.Year}/{post.CreatedUTC.Value.Month}/{post.UniqueName}")">
+        <button type="submit" class="pengine-button-search">
+          @Model.Settings.LabelReadTheRestButton
+        </button>
+      </form>
+    }
   </div>
 }
 <div class="panel">
-  
+  <div class="panel-right">
+    @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list", "post").RelativeHref()
+  </div>
 </div>

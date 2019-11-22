@@ -164,7 +164,7 @@ namespace PEngine.Core.Web.Helpers
         {
           return writer.ToString();
         }
-        return writer.ToString().DataTruncate(-1);
+        return writer.ToString().DataTruncate(-3);
       }
     }
 

@@ -71,11 +71,26 @@ namespace PEngine.Core.Shared
       {
         string[] delimiters = { Environment.NewLine, "\n", "<br>", "</p>" };
         int strptr = -1;
+        int lastptr = -1;
+        int cycle = 0;
+        int maxCycle = length * -1;
         int dptr = 0;
-        while (strptr < 0 && dptr < delimiters.Length)
+        while (cycle < maxCycle)
         {
-          strptr = data.IndexOf(delimiters[dptr]);
-          dptr++;
+          while (strptr <= lastptr + 1 && dptr < delimiters.Length)
+          {
+            strptr = data.IndexOf(delimiters[dptr], lastptr + 1);
+            dptr++;
+          }
+          if (strptr > lastptr)
+          {
+            lastptr = strptr;
+          }
+          else
+          {
+            strptr = lastptr;
+          }
+          cycle++;
         }
         if (strptr >= 0)
         {
