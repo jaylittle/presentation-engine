@@ -10,7 +10,7 @@
     <title>@Model.State.FullTitle</title>
     @if (!Model.Settings.DisableRSS)
     {
-    <link rel="alternate" type="application/rss+xml" title="Posts Feed" href="/feed/rss" />
+    <link rel="alternate" type="application/rss+xml" title="Posts Feed" href="feed/rss" />
     }
     @RenderSection("head", required: false)
     @if (Model.State.HasSummary)
@@ -132,7 +132,7 @@
           @if (!Model.Settings.DisableRSS)
           {
           @Html.Raw("&nbsp;")
-          <a href="/feed/rss" class="list-button">[Rss]</a>
+          <a href="feed/rss" class="list-button">[Rss]</a>
           }
           @if (!string.IsNullOrWhiteSpace(Model.Settings.OwnerEmail))
           {
