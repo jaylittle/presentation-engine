@@ -6,6 +6,19 @@
     document.getElementById('themeSubmit').style.display = 'none';
   }
 
+  if (document.getElementById('scrollToTop'))
+  {
+    document.getElementById('scrollToTop').addEventListener("click", (e) => {
+      window.scrollTo(0, 0);
+      e.preventDefault();
+    });
+  }
+
+  if (document.getElementById('pengine-button-quote-show'))
+  {
+    document.getElementById('pengine-button-quote-show').style.display = 'inline';
+  }
+
   var utcTargets = document.getElementsByClassName('datetime-display');
   for (var idx = 0; idx < utcTargets.length; idx++) {
     var epochTime = utcTargets[idx].getAttribute("data-epoch");

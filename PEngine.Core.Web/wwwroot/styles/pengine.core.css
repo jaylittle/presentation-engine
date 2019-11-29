@@ -622,6 +622,16 @@ body > .panel > .panel-right
   text-align: center;
 }
 
+.panel-center > form + a
+{
+  margin-left: 10px;
+}
+
+.panel-center > a + a
+{
+  margin-left: 10px;
+}
+
 .panel-block
 {
   display: inline-block;
@@ -648,6 +658,11 @@ body > .panel > .panel-right
 }
 
 #quote-text
+{
+  display: none;
+}
+
+#pengine-button-quote-show
 {
   display: none;
 }

@@ -47,7 +47,7 @@
     @Html.Raw(Model.Settings.AdditionalHeaders)
     }
   </head>
-  <body>
+  <body id="top">
     @if (!string.IsNullOrEmpty(Model.State.PEngineUserName))
     {
     <div id="pengine-header"></div>
@@ -129,14 +129,13 @@
             <button type="submit" class="pengine-button-search">Find</button>
           </form>
           }
+          <a id="scrollToTop" href="#top" class="list-button">[Top]</a>
           @if (!Model.Settings.DisableRSS)
           {
-          @Html.Raw("&nbsp;")
           <a href="feed/rss" class="list-button">[Rss]</a>
           }
           @if (!string.IsNullOrWhiteSpace(Model.Settings.OwnerEmail))
           {
-          @Html.Raw("&nbsp;")
           <a href="mailto:@Model.Settings.OwnerEmail" class="list-button">[Email]</a>
           }
         </div>
