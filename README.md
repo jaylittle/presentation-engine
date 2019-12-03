@@ -24,4 +24,4 @@ VS Code is my primary development tool because its free and works great. Beyond 
 
 ### 6. What do I need to have installed to run this?
 
-Node.js, Yarn and the .NET Core 3.0 runtime.  We utilize yarn to pull down node packages we make use of which includes babel and webpack among others.  The .NET Core 3.0 runtime is a no brainer of course.  If you want to hack in the codebase, you'll want to also have the .NET Core 3.0 SDK installed.
+Node.js, Yarn and the .NET Core 3.1 runtime.  We utilize yarn to pull down node packages we make use of which includes babel and webpack among others.  The .NET Core 3.1 runtime is a no brainer of course.  If you want to hack in the codebase, you'll want to also have the .NET Core 3.1 SDK installed.
