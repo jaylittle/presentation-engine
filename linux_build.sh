@@ -4,7 +4,7 @@ BRANCH=`git rev-parse --abbrev-ref HEAD`
 COMMIT=`git log --pretty=format:'%h' -n 1`
 TIMESTAMP=`date +%Y%m%d%H%M`
 CONFIG=Release
-PLATFORM=netcoreapp3.0
+PLATFORM=netcoreapp3.1
 VERSION="${BASE}-${TIMESTAMP}-${BRANCH}-${COMMIT}-${CONFIG}"
 FILENAME="pengine_current.tgz"
 PUBDIR="PEngine.Core.Web/bin/${CONFIG}/${PLATFORM}/publish"
