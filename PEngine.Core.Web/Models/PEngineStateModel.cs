@@ -245,7 +245,7 @@ namespace PEngine.Core.Web.Models
       {
         var articleDal = _svp.GetRequiredService<IArticleDal>();
         var articleCategories = articleDal.ListArticles(null).Result
-          .Where(a => a.VisibleFlag || HasAdmin)
+          .Where(a => (a.VisibleFlag && !a.NoIndexFlag) || HasAdmin)
           .GroupBy(a => $"{a.Category}|{a.ContentURL}", StringComparer.OrdinalIgnoreCase)
           .OrderBy(g => g.Key)
           .Select(g => new { key = g.Key, firstUniqueName = g.First().UniqueName, count = g.Count() });
