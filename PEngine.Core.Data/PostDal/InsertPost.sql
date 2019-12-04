@@ -5,6 +5,7 @@ INSERT INTO Post (
   Data,
   IconFileName,
   VisibleFlag,
+  NoIndexFlag,
   UniqueName,
   CreatedUTC,
   ModifiedUTC
@@ -15,6 +16,7 @@ INSERT INTO Post (
   @Data,
   @IconFileName,
   @VisibleFlag,
+  @NoIndexFlag,
   @UniqueName,
   @CreatedUTC,
   @ModifiedUTC

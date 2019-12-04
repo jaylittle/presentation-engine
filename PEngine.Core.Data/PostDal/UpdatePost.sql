@@ -6,6 +6,7 @@ SET
   Data = @Data,
   IconFileName = @IconFileName,
   VisibleFlag = @VisibleFlag,
+  NoIndexFlag = @NoIndexFlag,
   UniqueName = @UniqueName,
   ModifiedUTC = @ModifiedUTC
 WHERE

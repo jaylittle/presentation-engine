@@ -23,6 +23,10 @@
             <input type="checkbox" v-model="record.data.visibleFlag">
           </div>
           <div class="edit-row">
+            <div class="edit-label">Do Not Index:</div>
+            <input type="checkbox" v-model="record.data.noIndexFlag">
+          </div>
+          <div class="edit-row">
             <div class="edit-label">Icon:</div>
             <div class="edit-field">
               <select class="edit-control-normal" v-model="record.data.iconFileName">
@@ -83,6 +87,10 @@
           <div class="edit-row">
             <div class="edit-label">Visible:</div>
             <input type="checkbox" v-model="record.data.visibleFlag" />
+          </div>
+          <div class="edit-row">
+            <div class="edit-label">Do Not Index:</div>
+            <input type="checkbox" v-model="record.data.noIndexFlag">
           </div>
           <div class="edit-row">
             <div class="edit-label">Hide Buttons:</div>

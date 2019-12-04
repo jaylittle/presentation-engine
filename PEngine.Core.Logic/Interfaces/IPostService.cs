@@ -9,7 +9,7 @@ namespace PEngine.Core.Logic.Interfaces
 {
   public interface IPostService
   {
-    Task<IEnumerable<PostModel>> ListPosts(bool isAdmin);
+    Task<IEnumerable<PostModel>> ListPosts(bool isAdmin, bool isView = false);
     Task<IEnumerable<PostModel>> SearchPosts(string[] searchTerms, bool isAdmin);
     Task<PostModel> GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin);
     Task<OpResult> UpsertPost(PostModel post, bool importFlag = false);

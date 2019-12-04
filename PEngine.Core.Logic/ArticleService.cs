@@ -30,19 +30,19 @@ namespace PEngine.Core.Logic
 
     public async Task<IEnumerable<ArticleModel>> ListArticles(string category, bool isAdmin)
     {
-      return (await _articleDal.ListArticles(category)).Where(a => isAdmin || a.VisibleFlag);
+      return (await _articleDal.ListArticles(category)).Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag));
     }
 
     public async Task<IEnumerable<ArticleModel>> ListArticlesWithSections(string category, bool isAdmin)
     {
-      return (await _articleDal.ListArticlesWithSections(category)).Where(a => isAdmin || a.VisibleFlag);
+      return (await _articleDal.ListArticlesWithSections(category)).Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag));
     }
 
     public async Task<IEnumerable<ArticleModel>> SearchArticles(string[] searchTerms, bool isAdmin)
     {
       var matchingArticles = await _articleDal.ListArticlesWithSections(null);
       return matchingArticles
-        .Where(a => isAdmin || a.VisibleFlag)
+        .Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag))
         .Where(a => searchTerms.All(st => 
           a.Category?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
           a.Name?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||

@@ -16,6 +16,7 @@ namespace PEngine.Core.Shared.Models
     public string ContentURL { get; set; }
     public string DefaultSection { get; set; } = string.Empty;
     public bool VisibleFlag { get; set; }
+    public bool NoIndexFlag { get; set; }
     public string UniqueName { get; set; } = string.Empty;
     public bool HideDropDownFlag { get; set; }
     public bool HideButtonsFlag { get; set; }

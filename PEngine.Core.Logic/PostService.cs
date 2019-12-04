@@ -23,16 +23,16 @@ namespace PEngine.Core.Logic
       _postDal = postDal;
     }
 
-    public async Task<IEnumerable<PostModel>> ListPosts(bool isAdmin)
+    public async Task<IEnumerable<PostModel>> ListPosts(bool isAdmin, bool isView = false)
     {
-      return (await _postDal.ListPosts()).Where(p => isAdmin || p.VisibleFlag);
+      return (await _postDal.ListPosts()).Where(p => isAdmin || (p.VisibleFlag && (isView || !p.NoIndexFlag)));
     }
 
     public async Task<IEnumerable<PostModel>> SearchPosts(string[] searchTerms, bool isAdmin)
     {
       var matchingPosts = await _postDal.ListPosts();
       return matchingPosts
-        .Where(p => isAdmin || p.VisibleFlag)
+        .Where(p => isAdmin || (p.VisibleFlag && !p.NoIndexFlag))
         .Where(p => searchTerms.All(st =>
           p.Name?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
           p.Data?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||

@@ -8,6 +8,7 @@ SET
   ContentURL = @ContentURL,
   DefaultSection = @DefaultSection,
   VisibleFlag = @VisibleFlag,
+  NoIndexFlag = @NoIndexFlag,
   UniqueName = @UniqueName,
   HideButtonsFlag = @HideButtonsFlag,
   HideDropDownFlag = @HideDropDownFlag,
