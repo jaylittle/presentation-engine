@@ -1,5 +1,5 @@
 let path = require('path');
-let UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+let terserPlugin = require('terser-webpack-plugin');
 let webpack = require('webpack');
 let vueloader = require('vue-loader');
 let PROD = (process.env.NODE_ENV === 'production');
@@ -9,7 +9,7 @@ var plugins = [
 ];
 
 if (PROD) {
-  plugins.push(new UglifyJSPlugin({
+  plugins.push(new terserPlugin({
     sourceMap: true,
     include: /\.min\.js$/
   }));

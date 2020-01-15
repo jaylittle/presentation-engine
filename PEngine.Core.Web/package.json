@@ -10,20 +10,19 @@
   "author": "",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@babel/cli": "^7.7.5",
-    "@babel/core": "^7.7.5",
-    "@babel/preset-env": "^7.7.6",
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
     "babel-loader": "^8.0.6",
-    "css-loader": "^3.3.0",
-    "uglify-js": "^3.7.2",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "vue-loader": "^15.7.2",
-    "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.41.2",
+    "css-loader": "^3.4.2",
+    "terser-webpack-plugin": "^2.3.2",
+    "vue-loader": "^15.8.3",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "vue": "^2.6.10",
+    "vue": "^2.6.11",
     "vue-resource": "^1.5.1"
   }
 }
