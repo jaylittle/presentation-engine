@@ -316,7 +316,7 @@ namespace PEngine.Core.Web.Models
               }
             }
             SummaryTitle = !HideSubTitle ? SubTitle : _settings.DefaultTitle;
-            SummaryDescription = Helpers.Rendering.DataTruncate(currentSectionData?.Data ?? articleData.Description, -1);
+            SummaryDescription = Helpers.Rendering.DataTruncate(!string.IsNullOrWhiteSpace(articleData.Description) ? articleData.Description : (currentSectionData?.Data ?? string.Empty), -1);
           }
         }
 
