@@ -1,6 +1,6 @@
 #!/bin/bash
 BASE=pengine-core
-BRANCH=`git rev-parse --abbrev-ref HEAD`
+BRANCH=`git rev-parse --abbrev-ref HEAD | tr '/' '-'`
 COMMIT=`git log --pretty=format:'%h' -n 1`
 TIMESTAMP=`date +%Y%m%d%H%M`
 CONFIG=Release
