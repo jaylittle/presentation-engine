@@ -584,7 +584,8 @@ body .edit-label-large
   margin-right: 10px;
 }
 
-body > .panel > .panel-left
+body > .panel > .panel-left,
+body > .panel-container > .panel > .panel-left
 {
   display: inline-block;
   width: calc(30vw - 1.25em);
@@ -599,7 +600,8 @@ body > .panel > .panel-left
   vertical-align: middle;
 }
 
-body > .panel > .panel-right
+body > .panel > .panel-right,
+body > .panel-container > .panel > .panel-right
 {
   display: inline-block;
   width: calc(70vw - 1.25em);
@@ -934,7 +936,10 @@ pre code
     display: none !important;
   }
 
-  body > div.panel, div.page > div.panel, div.content > div.panel, div.display-container > div.panel
+  body > div.panel, div.page > div.panel,
+  body > div.panel-container > div.panel, div.page > div.panel,
+  div.content > div.panel,
+  div.display-container > div.panel
   {
     display: none !important;
   }

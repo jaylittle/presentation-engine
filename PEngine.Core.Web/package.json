@@ -13,6 +13,7 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.10.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.3",
     "terser-webpack-plugin": "^2.3.6",
@@ -23,6 +24,8 @@
   },
   "dependencies": {
     "vue": "^2.6.11",
-    "vue-resource": "^1.5.1"
+    "vue-resource": "^1.5.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }

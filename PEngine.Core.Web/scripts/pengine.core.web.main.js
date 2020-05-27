@@ -1,6 +1,7 @@
 import pengineHelpers from "./pengine.core.web.helpers";
 Vue.use(VueResource);
-import peHeader from "./pengine.core.web.header.vue";
+//import peHeader from "./pengine.core.web.header.vue";
+import PEHeader from "./pengine.core.web.header.react.js";
 import peEditor from "./pengine.core.web.editor.vue";
 import peUploader from "./pengine.core.web.uploader.vue";
 
@@ -10,11 +11,14 @@ if (xsrfToken) {
   Vue.http.headers.common['xsrf-form-token'] = xsrfToken;
 }
 
-let headerInstance = new Vue({
-  el: '#pengine-header',
-  render: h => h(peHeader)
-});
+/* Load React Components */
+let headerInstance = ReactDOM.render(
+  <PEHeader />,
+  document.getElementById('pengine-header')
+);
 
+
+/* Load Vue Components */
 let editorInstance = new Vue({
   el: '#pengine-editor',
   render: h => h(peEditor)

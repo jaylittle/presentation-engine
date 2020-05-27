@@ -480,7 +480,9 @@ blockquote > p:last-child, div.display-container div.quoted-text > p:last-child
   background-color: #FFFFFF;
 }
 
-body > div.panel, div.page > div.panel
+body > div.panel,
+body > div.panel-container > div.panel,
+div.page > div.panel
 {
   margin-top: 0px;
   margin-bottom: 0px;
@@ -534,7 +536,9 @@ body .edit-label, .edit-label-normal
 
 @media screen and (max-width: 540px)
 {
-  body > div.panel > div.panel-right-inline, div.page > div.panel > div.panel-right-inline
+  body > div.panel > div.panel-right-inline,
+  body > div.panel-container > div.panel > div.panel-right-inline,
+  div.page > div.panel > div.panel-right-inline
   {
     display: none;
   }
@@ -583,7 +587,9 @@ body .edit-label, .edit-label-normal
     min-width: 0px;
   }
 
-  body > div.panel, div.page > div.panel
+  body > div.panel,
+  body > div.panel-container > div.panel,
+  div.page > div.panel
   {
     min-width: 0px;
   }
@@ -602,12 +608,16 @@ body .edit-label, .edit-label-normal
 
 @media screen and (max-width: 1000px)
 {
-  body > div.panel > div.panel-right-inline, div.page > div.panel > div.panel-right.inline
+  body > div.panel > div.panel-right-inline,
+  body > div.panel-container > div.panel > div.panel-right-inline,
+  div.page > div.panel > div.panel-right.inline
   {
     display: inline;
   }
 
-  body > div.panel > div.panel-left-inline, div.page > div.panel > div.panel-left-inline
+  body > div.panel > div.panel-left-inline,
+  body > div.panel-container > div.panel > div.panel-left-inline,
+  div.page > div.panel > div.panel-left-inline
   {
     display: inline;
   }
@@ -719,17 +729,23 @@ body .edit-label, .edit-label-normal
     min-width: 0px;
   }
 
-  body > div.panel, div.page > div.panel
+  body > div.panel,
+  body > div.panel-container > div.panel,
+  div.page > div.panel
   {
     min-width: 0px;
   }
 
-  body > div.panel > div.panel-right-inline, div.page > div.panel > div.panel-right.inline
+  body > div.panel > div.panel-right-inline,
+  body > div.panel-container > div.panel > div.panel-right-inline,
+  div.page > div.panel > div.panel-right.inline
   {
     display: inline;
   }
 
-  body > div.panel > div.panel-left-inline, div.page > div.panel > div.panel-left-inline
+  body > div.panel > div.panel-left-inline,
+  body > div.panel-container > div.panel > div.panel-left-inline,
+  div.page > div.panel > div.panel-left-inline
   {
     display: inline;
   }
