@@ -18,9 +18,9 @@ let headerInstance = ReactDOM.render(
   document.getElementById('pengine-header')
 );
 
-let uploaderInstance2 = ReactDOM.render(
+let uploaderInstance = ReactDOM.render(
   <PEUploader />,
-  document.getElementById('pengine-uploader-react')
+  document.getElementById('pengine-uploader')
 );
 
 
@@ -28,11 +28,6 @@ let uploaderInstance2 = ReactDOM.render(
 let editorInstance = new Vue({
   el: '#pengine-editor',
   render: h => h(peEditor)
-});
-
-let uploaderInstance = new Vue({
-  el: '#pengine-uploader',
-  render: h => h(peUploader)
 });
 
 /* Bind Events to the DOM */

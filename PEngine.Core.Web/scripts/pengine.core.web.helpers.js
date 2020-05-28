@@ -15,9 +15,30 @@ module.exports = {
     var targets = document.getElementsByClassName(className);
     for (var idx = 0; idx < targets.length; idx++) {
       targets[idx].addEventListener("click", (e) => {
-        editorInstance.$children[0].fireEvent(eventName, typeName, e.target.getAttribute("data-guid"));
+        if (editorInstance.$children) {
+          editorInstance.$children[0].fireEvent(eventName, typeName, e.target.getAttribute("data-guid"));
+        } else {
+          editorInstance.fireEvent(eventName, typeName, e.target.getAttribute("data-guid"));
+        }
         e.preventDefault();
       });
     }
+  },
+  getCombinedJsonResponse(response) {
+    return response.json().then(data => ({ response: response, data: data }));
+  },
+  fetchApplyGlobalOptions(options) {
+    const update = { ...options };
+    let xsrfToken = window.pengineState.xsrfToken;
+    if (xsrfToken) {
+      update.headers = {
+        ...update.headers,
+        'xsrf-form-token': xsrfToken,
+      };
+    }
+    return update;
+  },
+  fetch(url, options) {
+    return window.fetch(url, this.fetchApplyGlobalOptions(options));
   }
 };
