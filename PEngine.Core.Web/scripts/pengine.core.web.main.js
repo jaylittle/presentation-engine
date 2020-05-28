@@ -4,6 +4,7 @@ Vue.use(VueResource);
 import PEHeader from "./pengine.core.web.header.react.js";
 import peEditor from "./pengine.core.web.editor.vue";
 import peUploader from "./pengine.core.web.uploader.vue";
+import PEUploader from "./pengine.core.web.uploader.react.js";
 
 /* Configure XSRF Token */
 let xsrfToken = window.pengineState.xsrfToken;
@@ -15,6 +16,11 @@ if (xsrfToken) {
 let headerInstance = ReactDOM.render(
   <PEHeader />,
   document.getElementById('pengine-header')
+);
+
+let uploaderInstance2 = ReactDOM.render(
+  <PEUploader />,
+  document.getElementById('pengine-uploader-react')
 );
 
 
