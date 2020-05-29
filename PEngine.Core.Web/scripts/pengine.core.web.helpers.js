@@ -25,7 +25,9 @@ module.exports = {
     }
   },
   getCombinedJsonResponse(response) {
-    return response.json().then(data => ({ response: response, data: data }));
+    return response.json()
+      .then(data => ({ response: response, data: data }), () => ({ response: response, data: null }))
+      .catch(() => ({ response: response, data: data }));
   },
   fetchApplyGlobalOptions(options) {
     const update = { ...options };

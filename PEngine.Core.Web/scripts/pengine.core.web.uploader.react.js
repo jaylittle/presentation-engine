@@ -142,7 +142,13 @@ class PEngineUploader extends React.Component {
     this.get(breadcrumb.path, true);
   }
 
-  select = (entity, tracker) => {
+  select = (entity, type) => {
+    if (this.state.current.relativePath === './')
+    {
+      return false;
+    }
+
+    let tracker = type === 'file' ? this.state.selectedFilePaths : this.state.selectedFolderPaths;
     let trackerIndex = tracker.indexOf(entity.relativePath);
     if (trackerIndex >= 0) {
       tracker.splice(trackerIndex, 1);
@@ -152,6 +158,10 @@ class PEngineUploader extends React.Component {
       tracker.push(entity.relativePath);
       entity.selected = true;
     }
+    this.setState(prevState => ({
+      selectedFilePaths: type === 'file' ? tracker : prevState.selectedFilePaths,
+      selectedFolderPaths: type === 'folder' ? tracker : prevState.selectedFolderPaths,
+    }));
     if (this.state.current.relativePath === entity.relativePath) {
       this.setState(prevState => ({
         current: {
@@ -160,12 +170,21 @@ class PEngineUploader extends React.Component {
         }
       }));
     }
+
+    return true;
   }
 
-  removeSelectionByPath = (path, tracker) => {
+  removeSelectionByPath = (path, type) => {
+    let tracker = (type === 'file' ? this.state.selectedFilePaths : this.state.selectedFolderPaths);
     let trackerIndex = tracker.indexOf(path);
     if (trackerIndex >= 0) {
       tracker.splice(trackerIndex, 1);
+
+      this.setState(prevState => ({
+        selectedFilePaths: type === 'file' ? tracker : prevState.selectedFilePaths,
+        selectedFolderPaths: type === 'folder' ? tracker : prevState.selectedFolderPaths,
+      }));
+      
       if (this.state.current.relativePath === path) {
         this.setState(prevState => ({
           current: {
@@ -174,16 +193,17 @@ class PEngineUploader extends React.Component {
           }
         }));
       }
+
       this.setState(prevState => ({
         current: {
           ...prevState.current,
-          files: (this.state.current.files).map((file) => {
+          files: (prevState.current.files).map((file) => {
             if (file.relativePath === path) {
               file.selected = false;
             }
             return file;
           }),
-          folders: (this.state.current.folders).map((folder) => {
+          folders: (prevState.current.folders).map((folder) => {
             if (folder.relativePath === path) {
               folder.selected = false;
             }
@@ -378,7 +398,7 @@ class PEngineUploader extends React.Component {
                   this.state.mode === 'browser' ?
                     this.state.breadcrumbs.map((breadcrumb) => 
                       <span key={breadcrumb.title}>
-                        &nbsp;&nbsp;
+                        &nbsp;:&nbsp;
                         <a href="#" onClick={() => this.navigate(breadcrumb)}>{ breadcrumb.title }</a>
                       </span>
                     )
@@ -387,7 +407,8 @@ class PEngineUploader extends React.Component {
                 {
                   this.state.mode === 'selections' ?
                     <span>
-                    File &amp; Folder Selections
+                      &nbsp;:&nbsp;
+                      File &amp; Folder Selections
                     </span>
                   : null
                 }
@@ -402,6 +423,7 @@ class PEngineUploader extends React.Component {
                 {
                   this.state.mode === 'naming' ?
                     <span>
+                      &nbsp;:&nbsp;
                       { this.state.naming.title }
                     </span>
                   : null
@@ -468,7 +490,7 @@ class PEngineUploader extends React.Component {
                                     <td>{ selectedFolderPath }</td>
                                     <td>
                                       <a href="#" className="file-edit-button-view listbutton"
-                                        onClick={() => this.removeSelectionByPath(selectedFolderPath, selectedFolderPaths)}>Remove</a>
+                                        onClick={() => this.removeSelectionByPath(selectedFolderPath, 'folder')}>Remove</a>
                                     </td>
                                   </tr>
                                 )
@@ -480,7 +502,7 @@ class PEngineUploader extends React.Component {
                                     <td>{ selectedFilePath }</td>
                                     <td>
                                       <a href="#" className="file-edit-button-view listbutton"
-                                        onClick={() => this.removeSelectionByPath(selectedFilePath, selectedFilePaths)}>Remove</a>
+                                        onClick={() => this.removeSelectionByPath(selectedFilePath, 'file')}>Remove</a>
                                     </td>
                                   </tr>
                                 )
@@ -517,37 +539,59 @@ class PEngineUploader extends React.Component {
                               }
                               {
                                 this.state.current.folders.map((folder) =>
-                                  <tr key={folder.relativePath} className={ folder.selected ? 'selected' : null } onDoubleClick={() => this.select(folder, this.state.selectedFolderPaths)}>
+                                  <tr key={folder.relativePath} className={ folder.selected ? 'selected' : null }>
                                     <td>Folder</td>
-                                    <td onClick={(e) => this.get(folder.relativePath)}>{ folder.name }</td>
-                                    <td>N/A</td>
-                                    <td>N/A</td>
                                     <td>
-                                      {
-                                        this.state.breadcrumbs.length > 1 ?
-                                          <a href="#" className="file-edit-button-view listbutton" onClick={() => this.prepNaming('folder', folder)}>[Rename]</a>
-                                        : null
-                                      }
+                                      <a href="#" className="file-edit-button-view listbutton" onClick={(e) => this.get(folder.relativePath)}>{ folder.name }</a>
                                     </td>
+                                    <td>N/A</td>
+                                    <td>N/A</td>
+                                    {
+                                      this.state.breadcrumbs.length > 1 ?
+                                      <td>
+                                        <a href="#" className="file-edit-button-view listbutton" onClick={() => this.prepNaming('folder', folder)}>[Rename]</a>
+                                        &nbsp;&nbsp;
+                                        {
+                                          folder.selected ?
+                                            <a href="#" className="file-edit-button-view listbutton"
+                                              onClick={() => this.select(folder, 'folder')}>[Unselect]</a>
+                                          :
+                                            <a href="#" className="file-edit-button-view listbutton"
+                                              onClick={() => this.select(folder, 'folder')}>[Select]</a>
+                                        }
+                                      </td>
+                                      :
+                                      <td></td>
+                                    }
                                   </tr>
                                 )
                               }
                               {
                                 this.state.current.files.map((file) => 
-                                  <tr key={file.relativePath} className={ file.selected ? 'selected' : null } onDoubleClick={() => this.select(file, this.state.selectedFilePaths)}>
+                                  <tr key={file.relativePath} className={ file.selected ? 'selected' : null }>
                                     <td>File</td>
                                     <td>
                                       <a href={file.relativePath} className="file-edit-button-view listbutton" target="_blank">{ file.name }</a>
                                     </td>
                                     <td>{ file.modified }</td>
                                     <td>{ file.size }</td>
-                                    <td>
-                                      {
-                                        this.state.breadcrumbs.length > 1 ?
-                                          <a href="#" className="file-edit-button-view listbutton" onClick={() => this.prepNaming('file', file)}>[Rename]</a>
-                                        : null
-                                      }
-                                    </td>
+                                    {
+                                      this.state.breadcrumbs.length > 1 ?
+                                      <td>
+                                        <a href="#" className="file-edit-button-view listbutton" onClick={() => this.prepNaming('file', file)}>[Rename]</a>
+                                        &nbsp;&nbsp;
+                                        {
+                                          file.selected ?
+                                            <a href="#" className="file-edit-button-view listbutton"
+                                              onClick={() => this.select(file, 'file')}>[Unselect]</a>
+                                          :
+                                            <a href="#" className="file-edit-button-view listbutton"
+                                              onClick={() => this.select(file, 'file')}>[Select]</a>
+                                        }
+                                      </td>
+                                      :
+                                      <td></td>
+                                    }
                                   </tr>
                                 )
                               }
@@ -567,12 +611,12 @@ class PEngineUploader extends React.Component {
                     <button type="button" onClick={() => this.updateMode('multiupload')}>Multi-Upload</button>
                     {
                       (this.state.breadcrumbs.length > 2 && !this.state.current.selected) ?
-                        <button type="button" onClick={() => this.select(this.state.current, this.state.selectedFolderPaths)}>Select Folder</button>
+                        <button type="button" onClick={() => this.select(this.state.current, 'folder')}>Select Folder</button>
                       : null
                     }
                     {
                       (this.state.breadcrumbs.length > 2 && this.state.current.selected) ?
-                        <button type="button" onClick={() => this.select(this.state.current, this.state.selectedFolderPaths)}>Unselect Folder</button>
+                        <button type="button" onClick={() => this.select(this.state.current, 'folder')}>Unselect Folder</button>
                       : null
                     }
                     {
