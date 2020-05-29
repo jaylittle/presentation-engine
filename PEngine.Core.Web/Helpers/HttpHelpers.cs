@@ -28,6 +28,7 @@ namespace PEngine.Core.Web.Helpers
       {
         cookieOptions.Path = Settings.Current.CookiePath;
       }
+      cookieOptions.SameSite = SameSiteMode.Strict;
       return cookieOptions;
     }
   }
