@@ -17,6 +17,7 @@ namespace PEngine.Core.Web.Controllers.Api
   [Security.XSRF.XSRFCheck]
   [Route("api/[controller]")]
   [ResponseCache(CacheProfileName = "None")]
+  [SkipStatusCodePages]
   public class QuotesController : Controller
   {
     private IQuoteService _quoteService;

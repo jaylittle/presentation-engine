@@ -19,6 +19,7 @@ namespace PEngine.Core.Web.Controllers.Api
   [Security.XSRF.XSRFCheck]
   [Route("api/[controller]")]
   [ResponseCache(CacheProfileName = "None")]
+  [SkipStatusCodePages]
   public class ResourceController : Controller
   {
     public string[] RESTRICTED_PATHS = { "dist", "styles", "themes" };
@@ -49,6 +50,10 @@ namespace PEngine.Core.Web.Controllers.Api
         {
           folder.Folders = folder.Folders.Where(f => !IsRestrictedPath(f.RelativePath)).ToList();
           return this.Ok(folder);
+        }
+        else
+        {
+          return this.NotFound();
         }
       }
       return this.BadRequest();
@@ -114,115 +119,136 @@ namespace PEngine.Core.Web.Controllers.Api
     [HttpPost("folder/{*parentFolderPath}")]
     public IActionResult CreateFolder(string parentFolderPath, [FromQuery]string newName)
     {
-      if (!IsRestrictedPath(parentFolderPath))
+      if (IsRestrictedPath(parentFolderPath))
       {
-        var parentFolder = new PEngineFolderModel(parentFolderPath);
-        if (parentFolder.Valid)
-        {
-          var newFolderPath = $"{parentFolder.FullPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}{newName}";
-          if (!System.IO.Directory.Exists(newFolderPath))
-          {
-            System.IO.Directory.CreateDirectory(newFolderPath);
-            return this.Get(parentFolderPath);
-          }
-          return this.BadRequest();
-        }
-        return this.NotFound();
+        return this.BadRequest();
       }
-      return this.BadRequest();
+
+      var parentFolder = new PEngineFolderModel(parentFolderPath);
+      if (parentFolder.Valid)
+      {
+        var newFolderPath = $"{parentFolder.FullPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}{newName}";
+        if (!System.IO.Directory.Exists(newFolderPath))
+        {
+          System.IO.Directory.CreateDirectory(newFolderPath);
+          return this.Get(parentFolderPath);
+        }
+        return this.BadRequest();
+      }
+
+      return this.NotFound();
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPut("folder/{*folderPath}")]
     public IActionResult RenameFolder(string folderPath, [FromQuery]string newName)
     {
-      if (!IsRestrictedPath(folderPath))
+      if (IsReadOnlyPath(folderPath))
       {
-        var folder = new PEngineFolderModel(folderPath);
-        if (folder.Valid)
-        {
-          var parentFolderPath = folderPath.Substring(0, folderPath.Length - folder.Name.Length).TrimEnd(Path.DirectorySeparatorChar);
-          var newFolderPath = $"{folder.Parent.FullPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}{newName}";
-          if (!System.IO.Directory.Exists(newFolderPath))
-          {
-            System.IO.Directory.Move(folder.FullPath, newFolderPath);
-            return this.Get(parentFolderPath);
-          }
-          return this.BadRequest();
-        }
-        return this.NotFound();
+        return this.Conflict();
       }
-      return this.BadRequest();
+      if (IsRestrictedPath(folderPath))
+      {
+        return this.BadRequest();
+      }
+
+      var folder = new PEngineFolderModel(folderPath);
+      if (folder.Valid)
+      {
+        var parentFolderPath = folderPath.Substring(0, folderPath.Length - folder.Name.Length).TrimEnd(Path.DirectorySeparatorChar);
+        var newFolderPath = $"{folder.Parent.FullPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}{newName}";
+        if (!System.IO.Directory.Exists(newFolderPath))
+        {
+          System.IO.Directory.Move(folder.FullPath, newFolderPath);
+          return this.Get(parentFolderPath);
+        }
+        return this.BadRequest();
+      }
+
+      return this.NotFound();
     }
 
     [Authorize(Roles = "PEngineAdmin")]
     [HttpPost("selection/{operation}/{*targetFolderPath}")]
     public IActionResult ProcessSelections(SelectionOperation operation, string targetFolderPath, [FromBody]PEngineResourceSelectionModel selections)
     {
-      if (!IsRestrictedPath(targetFolderPath))
+      var IsTargetReadOnly = IsReadOnlyPath(targetFolderPath);
+      var IsTargetRestricted = IsRestrictedPath(targetFolderPath);
+      if ((IsTargetReadOnly || IsTargetRestricted) && operation != SelectionOperation.Delete)
       {
-        var targetFolder = new PEngineFolderModel(targetFolderPath);
-        if (targetFolder.Valid && selections != null)
+        return this.BadRequest();
+      }
+
+      var targetFolder = new PEngineFolderModel(targetFolderPath);
+      if (targetFolder.Valid && selections != null)
+      {
+        bool valid = false;
+        if (selections.FilePaths != null && selections.FilePaths.Any())
         {
-          bool valid = false;
-          if (selections.FilePaths != null && selections.FilePaths.Any())
+          foreach (var filePath in selections.FilePaths)
           {
-            foreach (var filePath in selections.FilePaths)
+            if (!IsRestrictedPath(filePath))
             {
-              if (!IsRestrictedPath(filePath))
+              var file = new PEngineFileModel(filePath);
+              var targetFullPath = $"{targetFolder.FullPath}{System.IO.Path.DirectorySeparatorChar}{file.Name}";
+              if (file.Valid)
               {
-                var file = new PEngineFileModel(filePath);
-                var targetFullPath = $"{targetFolder.FullPath}{System.IO.Path.DirectorySeparatorChar}{file.Name}";
-                if (file.Valid)
+                switch (operation)
                 {
-                  switch (operation)
-                  {
-                    case SelectionOperation.Copy:
-                      System.IO.File.Copy(file.FullPath, targetFullPath);
-                      break;
-                    case SelectionOperation.Move:
-                      System.IO.File.Move(file.FullPath, targetFullPath);
-                      break;
-                    case SelectionOperation.Delete:
-                      System.IO.File.Delete(file.FullPath);
-                      break;
-                  }
-                  valid = true;
+                  case SelectionOperation.Copy:
+                    System.IO.File.Copy(file.FullPath, targetFullPath);
+                    break;
+                  case SelectionOperation.Move:
+                    System.IO.File.Move(file.FullPath, targetFullPath);
+                    break;
+                  case SelectionOperation.Delete:
+                    System.IO.File.Delete(file.FullPath);
+                    break;
                 }
+                valid = true;
               }
             }
           }
-          if (selections.FolderPaths != null && selections.FolderPaths.Any())
+        }
+
+        if (selections.FolderPaths != null && selections.FolderPaths.Any())
+        {
+          foreach (var folderPath in selections.FolderPaths)
           {
-            foreach (var folderPath in selections.FolderPaths)
+            if (!IsRestrictedPath(folderPath))
             {
-              if (!IsRestrictedPath(folderPath))
+              var folder = new PEngineFolderModel(folderPath);
+              var targetFullPath = $"{targetFolder.FullPath}{System.IO.Path.DirectorySeparatorChar}{folder.Name}";
+              if (folder.Valid)
               {
-                var folder = new PEngineFolderModel(folderPath);
-                var targetFullPath = $"{targetFolder.FullPath}{System.IO.Path.DirectorySeparatorChar}{folder.Name}";
-                if (folder.Valid)
+                switch (operation)
                 {
-                  switch (operation)
-                  {
-                    case SelectionOperation.Copy:
-                      CopyFolder(folder.FullPath, targetFullPath);
-                      break;
-                    case SelectionOperation.Move:
+                  case SelectionOperation.Copy:
+                    CopyFolder(folder.FullPath, targetFullPath);
+                    valid = true;
+                    break;
+                  case SelectionOperation.Move:
+                    if (!IsReadOnlyPath(folderPath))
+                    {
                       System.IO.Directory.Move(folder.FullPath, targetFullPath);
-                      break;
-                    case SelectionOperation.Delete:
+                      valid = true;
+                    }
+                    break;
+                  case SelectionOperation.Delete:
+                    if (!IsReadOnlyPath(folderPath))
+                    {
                       System.IO.Directory.Delete(folder.FullPath, true);
-                      break;
-                  }
-                  valid = true;
+                      valid = true;
+                    }
+                    break;
                 }
               }
             }
           }
-          if (valid)
-          {
-            return Get(targetFolderPath);
-          }
+        }
+        if (valid)
+        {
+          return Get(targetFolderPath);
         }
       }
       return this.BadRequest();
@@ -257,9 +283,20 @@ namespace PEngine.Core.Web.Controllers.Api
       if (path != string.Empty)
       {
         path = path.TrimStart('.').TrimStart('/');
-        return path.Contains("..") || RESTRICTED_PATHS.Any(rp => path.StartsWith($"{rp}", StringComparison.OrdinalIgnoreCase));
+        return path.Contains("..") || 
+          RESTRICTED_PATHS.Any(rp => path.StartsWith($"{rp}", StringComparison.OrdinalIgnoreCase));
       }
       return false;
+    }
+
+    private bool IsReadOnlyPath(string path)
+    {
+      if (path != string.Empty)
+      {
+        path = path.TrimStart('.').TrimStart('/');
+        return path.Split('/', StringSplitOptions.RemoveEmptyEntries).Count() <= 1;
+      }
+      return true;
     }
   }
 }
