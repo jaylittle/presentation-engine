@@ -11,15 +11,13 @@ class PEngineHeader extends React.Component {
       loginText: window.pengineState.loginText,
       loginUrl: pengineHelpers.fixUrl(window.pengineState.loginUrl),
     };
-
-    this.themeUpdate = this.themeUpdate.bind(this);
   }
 
-  formSubmit() {
+  formSubmit = () => {
     document.getElementById('theme').submit();
   }
 
-  themeUpdate(e) {
+  themeUpdate = (e) => {
     if (this.state.theme !== e.target.value) {
       this.setState({
         theme: e.target.value
@@ -28,12 +26,12 @@ class PEngineHeader extends React.Component {
     }
   }
 
-  render() {
+  render = () => {
     return (
       <div className="panel">
         <div className="panel-left">
           <form id="theme" method="GET" action="ui/theme">
-            <select name="selection" onChange={this.themeUpdate} value={this.state.theme}>
+            <select name="selection" onChange={(e) => this.themeUpdate(e)} value={this.state.theme}>
               {
                 this.state.themeList.map(
                   (theme, key) => {
