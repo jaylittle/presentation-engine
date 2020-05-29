@@ -24,7 +24,8 @@ class PEngineUploader extends React.Component {
         type: '',
         entity: null
       },
-      errors: []      
+      errors: [],
+      peState: window.pengineState
     };
   }
 

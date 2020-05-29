@@ -6,9 +6,7 @@ class PEngineHeader extends React.Component {
     super(props);
 
     this.state = {
-      theme: window.pengineState.theme,
-      themeList: window.pengineState.themeList,
-      loginText: window.pengineState.loginText,
+      peState: window.pengineState,
       loginUrl: pengineHelpers.fixUrl(window.pengineState.loginUrl),
     };
   }
@@ -18,10 +16,14 @@ class PEngineHeader extends React.Component {
   }
 
   themeUpdate = (e) => {
-    if (this.state.theme !== e.target.value) {
-      this.setState({
-        theme: e.target.value
-      });
+    if (this.state.peState.theme !== e.target.value) {
+      let newTheme = e.target.value;
+      this.setState(prevState => ({
+        peState: {
+          ...prevState.peState,
+          theme: newTheme
+        }
+      }));
       this.formSubmit();
     }
   }
@@ -31,9 +33,9 @@ class PEngineHeader extends React.Component {
       <div className="panel">
         <div className="panel-left">
           <form id="theme" method="GET" action="ui/theme">
-            <select name="selection" onChange={(e) => this.themeUpdate(e)} value={this.state.theme}>
+            <select name="selection" onChange={(e) => this.themeUpdate(e)} value={this.state.peState.theme}>
               {
-                this.state.themeList.map(
+                this.state.peState.themeList.map(
                   (theme, key) => {
                     return <option key={key} value={theme}>{theme}</option>
                   }
@@ -51,7 +53,7 @@ class PEngineHeader extends React.Component {
           </div>
           <div className="panel-block">
             <form method="get" action={this.state.loginUrl}>
-              <button type="submit" className="pengine-button-search">{this.state.loginText}</button>
+              <button type="submit" className="pengine-button-search">{this.state.peState.loginText}</button>
             </form>
           </div>
         </div>
