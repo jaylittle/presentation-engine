@@ -594,6 +594,7 @@
     },
     methods: {
       fireEvent(eventName, type, guid, data) {
+        console.log('fireEvent old', eventName, type, guid, data);
         switch (eventName || "")  {
           case "edit":
             editorHelpers.updateLocationHash(type, guid);
@@ -756,7 +757,9 @@
       processLocationHash() {
         if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
           let elements = window.location.hash.split('/');
-          this.fireEvent("edit", elements[1], (elements.length > 2 ? elements[2] : null));
+          if (elements[1] !== 'post' && elements[1] !== 'article') {
+            this.fireEvent("edit", elements[1], (elements.length > 2 ? elements[2] : null));
+          }
         }
       }
     },

@@ -1,22 +1,36 @@
 import React from 'react';
 import pengineHelpers from "./pengine.core.web.helpers";
 
-class PEnginePostEditor extends React.Component {
+class PEngineArticleEditor extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      post: {
+      article: {
         legacyID: null,
-        name: 'New Post',
-        data: '',
-        iconFileName: '',
+        name: 'New Article',
+        description: '',
+        category: '',
+        contentUrl: '',
+        defaultSection: '',
         visibleFlag: false,
         noIndexFlag: true,
         uniqueName: null,
+        hideDropDownFlag: false,
+        hideButtonsFlag: false,
         createdUTC: null,
         modifiedUTC: null,
+        sections: [
+          {
+            name: 'New Section',
+            data: '',
+            sortOrder: 0,
+            uniqueName: null,
+            createdUTC: null,
+            modifiedUTC: null,
+          }
+        ]
       },
       visible: false,
       errors: [ ],
@@ -31,7 +45,7 @@ class PEnginePostEditor extends React.Component {
   processLocationHash = () => {
     if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
       let elements = window.location.hash.split('/');
-      if (elements[1] === 'post') {
+      if (elements[1] === 'article') {
         this.fireEvent("edit", elements[1], (elements.length > 2 ? elements[2] : null));
       }
     }
@@ -66,23 +80,37 @@ class PEnginePostEditor extends React.Component {
 
   reset = () => {
     this.setState(prevState => {
-      prevState.post = {
+      prevState.article = {
         legacyID: null,
-        name: 'New Post',
-        data: '',
-        iconFileName: '',
+        name: 'New Article',
+        description: '',
+        category: '',
+        contentUrl: '',
+        defaultSection: '',
         visibleFlag: false,
         noIndexFlag: true,
         uniqueName: null,
+        hideDropDownFlag: false,
+        hideButtonsFlag: false,
         createdUTC: null,
         modifiedUTC: null,
+        sections: [
+          {
+            name: 'New Section',
+            data: '',
+            sortOrder: 0,
+            uniqueName: null,
+            createdUTC: null,
+            modifiedUTC: null,
+          }
+        ]
       };
       return prevState;
     });
   }
 
   getUrl = (guid) => {
-    return guid ? pengineHelpers.fixUrl(`api/posts/${guid}`) : pengineHelpers.fixUrl(`api/posts/`);
+    return guid ? pengineHelpers.fixUrl(`api/articles/${guid}`) : pengineHelpers.fixUrl(`api/articles/`);
   }
 
   load = (guid) => {
@@ -94,28 +122,27 @@ class PEnginePostEditor extends React.Component {
       body: null
     })
     .then(pengineHelpers.getCombinedJsonResponse, () => {
-      this.pushError('A Network error prevented the post from being fetched!');
+      this.pushError('A Network error prevented the article from being fetched!');
     })
     .then(combined => {
       if (combined.response.ok) {
-        combined.data.iconFileName = combined.data.iconFileName || '';
         this.setState(prevState => ({
           ...prevState,
-          post: combined.data
+          article: combined.data
         }));
       } else {
-        this.pushError('An HTTP error prevented the post from being fetched!');
+        this.pushError('An HTTP error prevented the article from being fetched!');
       }
     });
   }
 
-  updatePostField = (e, fieldName) => {
+  updateArticleField = (e, fieldName) => {
     let fieldValue = e.target.value;
     if (e.target.type === 'checkbox' || e.target.type === 'radio') {
       fieldValue = e.target.checked;
     }
     this.setState(prevState => {
-      prevState.post[fieldName] = fieldValue;
+      prevState.article[fieldName] = fieldValue;
       return prevState;
     });
   }
@@ -126,16 +153,16 @@ class PEnginePostEditor extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(this.state.post),
+      body: JSON.stringify(this.state.article),
     })
     .then(pengineHelpers.getCombinedJsonResponse, () => {
-      this.pushError('A Network error prevented the post from being saved!');
+      this.pushError('A Network error prevented the article from being saved!');
     })
     .then(combined => {
       if (combined.response.ok) {
         this.setState(prevState => ({
           ...prevState,
-          post: combined.data
+          article: combined.data
         }));
         window.location.reload();
       } else {
@@ -145,16 +172,16 @@ class PEnginePostEditor extends React.Component {
             errors: combined.data.logMessages
           }));
         } else {
-          this.pushError('An HTTP error prevented the post from being saved!');
+          this.pushError('An HTTP error prevented the article from being saved!');
         }
       }
     });
   }
 
   deleteConfirm = (e) => {
-    let confirmMessage = `Are you sure you want to delete this post?`;
-    if (this.state.post.name) {
-      confirmMessage = `Are you sure you want to delete this post entitled "${this.state.post.name}"?`;
+    let confirmMessage = `Are you sure you want to delete this article?`;
+    if (this.state.article.name) {
+      confirmMessage = `Are you sure you want to delete this article entitled "${this.state.article.name}"?`;
     }
     if (confirm(confirmMessage)) {
       this.delete();
@@ -162,7 +189,7 @@ class PEnginePostEditor extends React.Component {
   }
 
   delete = (e) => {
-    pengineHelpers.fetch(this.getUrl(this.state.post.guid), {
+    pengineHelpers.fetch(this.getUrl(this.state.article.guid), {
       method: 'DELETE',
       headers: { 
         'Content-Type': 'application/json',
@@ -170,14 +197,14 @@ class PEnginePostEditor extends React.Component {
       body: null
     })
     .then(pengineHelpers.getCombinedJsonResponse, () => {
-      this.pushError('A Network error prevented the post from being deleted!');
+      this.pushError('A Network error prevented the article from being deleted!');
     })
     .then(combined => {
       if (combined.response.ok) {
         this.cancel();
         window.location.reload();
       } else {
-        this.pushError('An HTTP error prevented the post from being deleted!');
+        this.pushError('An HTTP error prevented the article from being deleted!');
       }
     });
   }  
@@ -196,19 +223,19 @@ class PEnginePostEditor extends React.Component {
 
   render = () => {
     return (
-      <div id="pengine-post-editor-content">
+      <div id="pengine-article-editor-content">
         {
           this.state.visible ?
             <div className="dialog-container">
               <span className="form-header-text">
-                { this.state.post.guid ? ('Editing Post "' + this.state.post.name + '"') : 'Adding New Post' }
+                { this.state.article.guid ? ('Editing Article "' + this.state.article.name + '"') : 'Adding New Article' }
               </span>
               {
-                (this.state.post.createdUTC || this.state.post.modifiedUTC) ?
+                (this.state.article.createdUTC || this.state.article.modifiedUTC) ?
                 <span className="form-subheader-text">
-                  Created: <span className="datetime-display">{ this.state.post.createdUTC }</span>
+                  Created: <span className="datetime-display">{ this.state.article.createdUTC }</span>
                   &nbsp; | &nbsp;
-                  Modified: <span className="datetime-display">{ this.state.post.modifiedUTC }</span>
+                  Modified: <span className="datetime-display">{ this.state.article.modifiedUTC }</span>
                 </span>
                 : null
               }
@@ -225,47 +252,13 @@ class PEnginePostEditor extends React.Component {
               }
               <div>
                 <div className="form-container">
-                  <div className="edit-row">
-                    <div className="edit-label">Title:</div>
-                    <div className="edit-field">
-                      <input type="text" className="edit-control-large" value={this.state.post.name} onChange={(e) => this.updatePostField(e, 'name')} />
-                    </div>
-                  </div>
-                  <div className="edit-row">
-                    <div className="edit-label">Visible:</div>
-                    <input type="checkbox" checked={this.state.post.visibleFlag} onChange={(e) => this.updatePostField(e, 'visibleFlag')} />
-                  </div>
-                  <div className="edit-row">
-                    <div className="edit-label">Do Not Index:</div>
-                    <input type="checkbox" checked={this.state.post.noIndexFlag} onChange={(e) => this.updatePostField(e, 'noIndexFlag')} />
-                  </div>
-                  <div className="edit-row">
-                    <div className="edit-label">Icon:</div>
-                    <div className="edit-field">
-                      <select className="edit-control-normal" value={this.state.post.iconFileName} onChange={(e) => this.updatePostField(e, 'iconFileName')}>
-                        <option value=""></option>
-                        {
-                          this.state.peState.iconList.map((icon, key) =>
-                            <option key={key} value={icon}>{ icon }</option>
-                          )
-                        }
-                      </select>
-                    </div>
-                  </div>
-                  <div className="edit-row">
-                    <div className="edit-label">Content:</div>
-                    <div className="edit-field">
-                      <textarea rows="20" className="edit-control" value={this.state.post.data} onChange={(e) => this.updatePostField(e, 'data')}>
-                      </textarea>
-                    </div>
-                  </div>
                 </div>
               </div>
               <div className="panel">
                 <div className="panel-right">
                   <button type="button" onClick={(e) => this.save(e)}>Save</button>
                   {
-                    (this.state.post && this.state.post.guid) ?
+                    (this.state.article && this.state.article.guid) ?
                     <button type="button" onClick={(e) => this.deleteConfirm(e)}>Delete</button>
                     : null
                   }
@@ -285,4 +278,4 @@ class PEnginePostEditor extends React.Component {
   }
 }
 
-export default PEnginePostEditor;
+export default PEngineArticleEditor;

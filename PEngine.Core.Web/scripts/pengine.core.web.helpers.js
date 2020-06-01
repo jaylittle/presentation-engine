@@ -42,5 +42,20 @@ module.exports = {
   },
   fetch(url, options) {
     return window.fetch(url, this.fetchApplyGlobalOptions(options));
+  },
+  updateEditorLocationHash(type, guid) {
+    let myHash = '';
+    if (type) {
+      myHash = `#edit/${type}`;
+      if (guid) {
+        myHash += `/${guid}`;
+      }
+    }
+    if (myHash != '' || !history) {
+      window.location.hash = myHash;
+    }
+    else {
+      history.pushState("", document.title, window.location.pathname + window.location.search);
+    }
   }
 };

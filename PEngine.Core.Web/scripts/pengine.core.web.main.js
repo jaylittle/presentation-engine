@@ -5,6 +5,8 @@ import PEHeader from "./pengine.core.web.header.react.js";
 import peEditor from "./pengine.core.web.editor.vue";
 import peUploader from "./pengine.core.web.uploader.vue";
 import PEUploader from "./pengine.core.web.uploader.react.js";
+import PEPostEditor from "./pengine.core.web.post.editor.react.js";
+import PEArticleEditor from "./pengine.core.web.article.editor.react.js";
 
 /* Configure XSRF Token */
 let xsrfToken = window.pengineState.xsrfToken;
@@ -13,7 +15,7 @@ if (xsrfToken) {
 }
 
 /* Load React Components */
-let headerInstance = ReactDOM.render(
+ReactDOM.render(
   <PEHeader />,
   document.getElementById('pengine-header')
 );
@@ -21,6 +23,16 @@ let headerInstance = ReactDOM.render(
 let uploaderInstance = ReactDOM.render(
   <PEUploader />,
   document.getElementById('pengine-uploader')
+);
+
+let postEditorInstance = ReactDOM.render(
+  <PEPostEditor />,
+  document.getElementById('pengine-post-editor')
+);
+
+let articleEditorInstance = ReactDOM.render(
+  <PEArticleEditor />,
+  document.getElementById('pengine-article-editor')
 );
 
 
@@ -31,10 +43,10 @@ let editorInstance = new Vue({
 });
 
 /* Bind Events to the DOM */
-pengineHelpers.assignComponentClickEvent(editorInstance, "post_view_button_edit", "post");
-pengineHelpers.assignComponentClickEvent(editorInstance, "pengine-button-newpost", "post");
-pengineHelpers.assignComponentClickEvent(editorInstance, "article_view_button_edit", "article");
-pengineHelpers.assignComponentClickEvent(editorInstance, "pengine-button-newarticle", "article");
+pengineHelpers.assignComponentClickEvent(postEditorInstance, "post_view_button_edit", "post");
+pengineHelpers.assignComponentClickEvent(postEditorInstance, "pengine-button-newpost", "post");
+pengineHelpers.assignComponentClickEvent(articleEditorInstance, "article_view_button_edit", "article");
+pengineHelpers.assignComponentClickEvent(articleEditorInstance, "pengine-button-newarticle", "article");
 pengineHelpers.assignComponentClickEvent(editorInstance, "resume_view_button_edit", "resume");
 pengineHelpers.assignComponentClickEvent(editorInstance, "pengine-button-setting", "settings");
 pengineHelpers.assignComponentClickEvent(uploaderInstance, "pengine-button-uploader", "settings", "show");
