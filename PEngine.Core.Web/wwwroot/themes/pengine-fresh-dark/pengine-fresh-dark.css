@@ -520,6 +520,17 @@ body .edit-label, .edit-label-normal
   font-size: 16px;
 }
 
+.form-container.border-top > .edit-row:first-child > .edit-field
+{
+  border-top: 3px double #9e97c4;
+  padding-top: 4px;
+}
+
+.form-container.border-top > .edit-row:first-child > .edit-label
+{
+  padding-top: 7px;
+}
+
 @media screen and (max-width: 325px)
 {
   .logo-container

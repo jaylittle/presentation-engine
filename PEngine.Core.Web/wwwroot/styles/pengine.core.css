@@ -392,6 +392,17 @@ body .dialog-container
   text-overflow: ellipsis;
 }
 
+.form-container.border-top > .edit-row:first-child > .edit-field
+{
+  border-top: 3px double black;
+  padding-top: 4px;
+}
+
+.form-container.border-top > .edit-row:first-child > .edit-label
+{
+  padding-top: 7px;
+}
+
 .edit-row
 {
   clear: right;
