@@ -483,7 +483,7 @@ class PEngineResumeEditor extends React.Component {
                           <div className="edit-row">
                             <div className="edit-label">Started:</div>
                             <div className="edit-field">
-                              <input type="text" className="edit-control-normal datepicker" value={education.started} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'started')} />
+                              <input type="date" className="edit-control-normal datepicker" value={education.started} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'started')} />
                             </div>
                           </div>
                           : null
@@ -493,7 +493,7 @@ class PEngineResumeEditor extends React.Component {
                           <div className="edit-row">
                             <div className="edit-label">Completed:</div>
                             <div className="edit-field">
-                              <input type="text" className="edit-control-normal datepicker" value={education.completed} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'completed')} />
+                              <input type="date" className="edit-control-normal datepicker" value={education.completed} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'completed')} />
                             </div>
                           </div>
                           : null
@@ -542,7 +542,7 @@ class PEngineResumeEditor extends React.Component {
                         <div className="edit-row">
                           <div className="edit-label">Started:</div>
                           <div className="edit-field">
-                            <input type="text" className="edit-control-normal datepicker" value={workHistory.started} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'started')} />
+                            <input type="date" className="edit-control-normal datepicker" value={workHistory.started} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'started')} />
                           </div>
                         </div>
                         : null
@@ -552,7 +552,7 @@ class PEngineResumeEditor extends React.Component {
                         <div className="edit-row">
                           <div className="edit-label">Completed:</div>
                           <div className="edit-field">
-                            <input type="text" className="edit-control-normal datepicker" value={workHistory.completed} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'completed')} />
+                            <input type="date" className="edit-control-normal datepicker" value={workHistory.completed} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'completed')} />
                           </div>
                         </div>
                         : null
