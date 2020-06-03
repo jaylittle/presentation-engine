@@ -1,7 +1,7 @@
 import React from 'react';
 import pengineHelpers from "./pengine.core.web.helpers";
 
-class PEngineArticleEditor extends React.Component {
+class PEngineResumeEditor extends React.Component {
 
   constructor(props) {
     super(props);
@@ -41,11 +41,8 @@ class PEngineArticleEditor extends React.Component {
         window.scrollTo(0, 0);
 
         this.reset();
-
-        if (guid) {
-          this.load();
-        }
-
+        this.load();
+        
         this.setState(prevState => ({
           ...prevState,
           visible: true
@@ -90,10 +87,25 @@ class PEngineArticleEditor extends React.Component {
     })
     .then(combined => {
       if (combined.response.ok) {
+        for (let educationIndex in combined.data.educations) {
+          combined.data.educations[educationIndex].started = combined.data.educations[educationIndex].started || '';
+          combined.data.educations[educationIndex].completed = combined.data.educations[educationIndex].completed || '';
+        }
+        for (let workHistoryIndex in combined.data.workHistories) {
+          combined.data.workHistories[workHistoryIndex].started = combined.data.workHistories[workHistoryIndex].started || '';
+          combined.data.workHistories[workHistoryIndex].completed = combined.data.workHistories[workHistoryIndex].completed || '';
+        }
         this.setState(prevState => ({
           ...prevState,
           resume: combined.data
         }));
+        //Add default personal and objective records if payload doesn't contain them
+        if (!combined.data.personals.length) {
+          this.addRecord(null, 'personals');
+        }
+        if (!combined.data.objectives.length) {
+          this.addRecord(null, 'objectives');
+        }
       } else {
         this.pushError('An HTTP error prevented the resume from being fetched!');
       }
@@ -107,12 +119,12 @@ class PEngineArticleEditor extends React.Component {
     }
     this.setState(prevState => {
       if (subGroup && subSubGroup) {
-        prevState[subGroup][subGroupKey][subSubGroup][subSubGroupKey][fieldName] = fieldValue;
+        prevState.resume[subGroup][subGroupKey][subSubGroup][subSubGroupKey][fieldName] = fieldValue;
       } else if (subGroup) {
-        prevState[subGroup][subGroupKey][fieldName] = fieldValue;
+        prevState.resume[subGroup][subGroupKey][fieldName] = fieldValue;
         if (subGroup === 'skillTypes' && fieldName === 'type') {
-         for (let currentSkillIndex in prevState[subGroup][subGroupKey].skills) {
-          prevState[subGroup][subGroupKey].skills[currentSkillIndex].type = fieldValue;
+         for (let currentSkillIndex in prevState.resume[subGroup][subGroupKey].skills) {
+          prevState.resume[subGroup][subGroupKey].skills[currentSkillIndex].type = fieldValue;
          }
         }
       }
@@ -196,7 +208,7 @@ class PEngineArticleEditor extends React.Component {
         } else {
           newObject = {
             legacyID: null,
-            type: '',
+            type: this.state.resume[subGroup][subGroupKey].type,
             name: '',
             hint: '',
             order: -1,
@@ -209,8 +221,8 @@ class PEngineArticleEditor extends React.Component {
           institute: '',
           instituteURL: '',
           program: '',
-          started: null,
-          completed: null,
+          started: '',
+          completed: '',
         };
         break;
       case 'workHistories':
@@ -220,34 +232,26 @@ class PEngineArticleEditor extends React.Component {
           employerURL: '',
           jobTitle: '',
           jobDescription: '',
-          started: null,
-          completed: null,
+          started: '',
+          completed: '',
         };
         break;
     }
+    newObject.expanded = true;
     this.setState((prevState) => {
       if (subGroup && subSubGroup) {
-        prevState[subGroup][subGroupKey][subSubGroup] = prevState[subGroup][subGroupKey][subSubGroup] || [ ];
-        prevState[subGroup][subGroupKey][subSubGroup].push(newobject);
+        prevState.resume[subGroup][subGroupKey][subSubGroup].push(newObject);
       } else if (subGroup) {
-        prevState[subGroup].push(newObject);
+        prevState.resume[subGroup].push(newObject);
       }
       return prevState;
     });
   }
 
-  deleteRecordConfirm = (e, name, subGroup, subGroupKey, subSubGroup, subSubGroupKey) => {
-    let confirmMessage = `Are you sure you want to delete this ${name}?`;
-    if (subGroup && subSubGroup) {
-      if (this.state.resume[subGroup][subGroupkey] && this.state.resume[subGroup][subGroupKey][subSubGroup]
-          && this.state.resume[subGroup][subGroupKey][subSubGroup][subSubGroupKey]
-          && this.state.resume[subGroup][subGroupKey][subSubGroup][subSubGroupKey].name) {
-        confirmMessage = `Are you sure you want to delete this ${name} entitled "${this.state.resume[subGroup][subGroupKey][subSubGroup][subSubGroupKey].name}"?`;
-      }
-    } else if (subGroup) {
-      if (this.state.resume[subGroup][subGroupkey] && this.state.resume[subGroup][subGroupKey].name) {
-        confirmMessage = `Are you sure you want to delete this ${name} entitled "${this.state.resume[subGroup][subGroupKey].name}"?`;
-    }
+  deleteRecordConfirm = (e, type, title, subGroup, subGroupKey, subSubGroup, subSubGroupKey) => {
+    let confirmMessage = `Are you sure you want to delete this ${type}?`;
+    if (title) {
+      confirmMessage = `Are you sure you want to delete this ${type} entitled "${title}"?`;
     }
     if (confirm(confirmMessage)) {
       return this.deleteRecord(e, subGroup, subGroupKey, subSubGroup, subSubGroupKey);
@@ -270,11 +274,11 @@ class PEngineArticleEditor extends React.Component {
       if (subGroup && subSubGroup) {
         let subSubObject = prevState.resume[subGroup][subGroupKey][subSubGroup][subSubGroupKey];
         let newSubSubGroupKey = subSubGroupKey + offset;
-        prevState.resume[subGroup][subGroupkey][subSubGroup].splice(subSubGroupKey, 1);
-        prevState.resume[subGroup][subGroupkey][subSubGroup].splice(newSubSubGroupKey, 0, subSubObject);
+        prevState.resume[subGroup][subGroupKey][subSubGroup].splice(subSubGroupKey, 1);
+        prevState.resume[subGroup][subGroupKey][subSubGroup].splice(newSubSubGroupKey, 0, subSubObject);
         if (subGroup === 'skillTypes' && subSubGroup === 'skills') {
-          for (let currentSubSubGroupKey in prevState.resume[subGroup][subGroupkey][subSubGroup]) {
-            prevState.resume[subGroup][subGroupkey][subSubGroup][currentSubSubGroupKey].order = currentSubSubGroupKey;
+          for (let currentSubSubGroupKey in prevState.resume[subGroup][subGroupKey][subSubGroup]) {
+            prevState.resume[subGroup][subGroupKey][subSubGroup][currentSubSubGroupKey].order = currentSubSubGroupKey;
           }
         }
       } else if (subGroup) {
@@ -289,9 +293,7 @@ class PEngineArticleEditor extends React.Component {
 
   toggleRecord = (e, subGroup, subGroupKey) => {
     this.setState(prevState => {
-      if (sectionIndex >= 0) {
-        prevState.resume[subGroup][subGroupKey].expanded = !prevState.resume[subGroup][subGroupKey].expanded;
-      }
+      prevState.resume[subGroup][subGroupKey].expanded = !prevState.resume[subGroup][subGroupKey].expanded;
       return prevState;
     });
   }
@@ -317,9 +319,19 @@ class PEngineArticleEditor extends React.Component {
                 :null
               }
               <div>
+                <div className="form-container">
+                  <div className="edit-row">
+                    <div className="edit-label">Resume Functions:</div>
+                    <div className="edit-field">
+                      <button type="button" id="skill_type_edit_button_add" onClick={(e) => this.addRecord(e, 'skillTypes')}>Add Skill Type</button>
+                      <button type="button" id="education_edit_button_add" onClick={(e) => this.addRecord(e, 'educations')}>Add Education</button>
+                      <button type="button" id="workhistory_edit_button_add" onClick={(e) => this.addRecord(e, 'workHistories')}>Add Work History</button>
+                    </div>
+                  </div>
+                </div>
                 {
                   this.state.resume.personals.map((personal, key) =>
-                    <div className="form-container" key={key}>
+                    <div className="form-container border-top" key={key}>
                       <div className="edit-row">
                         <div className="edit-label">Full Name:</div>
                         <div className="edit-field">
@@ -385,9 +397,9 @@ class PEngineArticleEditor extends React.Component {
                 }
                 {
                   this.state.resume.objectives.map((objective, key) =>
-                    <div className="form-container" key={key}>
+                    <div className="form-container border-top" key={key}>
                       <div className="edit-row">
-                        <div className="edit-label">Content:</div>
+                        <div className="edit-label">Objective Statement:</div>
                         <div className="edit-field">
                           <textarea className="edit-control" rows="10" value={objective.data} onChange={(e) => this.updateResumeRecordField(e, 'objectives', key, 'data')}></textarea>
                         </div>
@@ -397,106 +409,165 @@ class PEngineArticleEditor extends React.Component {
                 }
                 {
                   this.state.resume.skillTypes.map((skillType, skillTypeKey) =>
-                  <div className="form-container" key={skillTypeKey}>
+                  <div className="form-container border-top" key={skillTypeKey}>
                     <div className="edit-row">
-                      <div className="edit-label">Type:</div>
+                      <div className="edit-label">Skill Type:</div>
                       <div className="edit-field">
                         <input type="text" className="edit-control-large" value={skillType.type} onChange={(e) => this.updateResumeRecordField(e, 'skillTypes', skillTypeKey, 'type')} />
+                        <button type="button" onClick={(e) => this.deleteRecordConfirm(e, 'Skill Type', skillType.type, 'skillTypes', skillTypeKey) }>Delete Skill Type</button>
                         <button type="button" onClick={(e) => this.addRecord(e, 'skillTypes', skillTypeKey, 'skills') }>Add Skill</button>
+                        {
+                          skillType.expanded ?
+                          <button type="button" onClick={(e) => this.toggleRecord(e, 'skillTypes', skillTypeKey)}>Hide</button>
+                          :
+                          <button type="button" onClick={(e) => this.toggleRecord(e, 'skillTypes', skillTypeKey)}>Show</button>
+                        }
                       </div>
                     </div>
                     {
-                      skillType.skills.map((skill, skillKey) =>
-                      <div className="edit-row" key={skillKey}>
-                        <div className="edit-label">Skill {index + 1}:</div>
-                        <div className="edit-field">
-                          <input type="text" className="edit-control-large" value={skill.name} onChange={(e) => this.updateResumeRecordField(e, 'skillTypes', skillTypeKey, 'name', 'skills', skillKey)} />
-                          <button type="button" onClick={(e) => this.deleteRecordConfirm(e, skill.name, 'skillTypes', skillTypeKey, 'skills', skillKey) }>Delete Skill</button>
-                          <button type="button" onClick={(e) => this.moveRecord(e, 'skillTypes', skillTypeKey, 'skills', skillKey, -1)} disabled={skillKey <= 0}>Move Up</button>
-                          <button type="button" onClick={(e) => this.moveRecord(e, 'skillTypes', skillTypeKey, 'skills', skillKey, 1)} disabled={skillKey >= skillType.skills.length - 1}>Move Down</button>
+                      skillType.expanded ? (
+                        skillType.skills.map((skill, skillKey) =>
+                        <div className="edit-row" key={skillKey}>
+                          <div className="edit-label">Skill {skillKey + 1}:</div>
+                          <div className="edit-field">
+                            <input type="text" className="edit-control-large" value={skill.name} onChange={(e) => this.updateResumeRecordField(e, 'skillTypes', skillTypeKey, 'name', 'skills', skillKey)} />
+                            <button type="button" onClick={(e) => this.deleteRecordConfirm(e, 'Skill', skill.type + ' - ' + skill.name, 'skillTypes', skillTypeKey, 'skills', skillKey) }>Delete Skill</button>
+                            <button type="button" onClick={(e) => this.moveRecord(e, 'skillTypes', skillTypeKey, 'skills', skillKey, -1)} disabled={skillKey <= 0}>Move Up</button>
+                            <button type="button" onClick={(e) => this.moveRecord(e, 'skillTypes', skillTypeKey, 'skills', skillKey, 1)} disabled={skillKey >= skillType.skills.length - 1}>Move Down</button>
+                          </div>
                         </div>
-                      </div>
-                      )
+                        )
+                      ) : null
                     }
                   </div>
                   )
                 }
                 {
                   this.state.resume.educations.map((education, key) =>
-                    <div className="form-container" key={key}>
+                    <div className="form-container border-top" key={key}>
                       <div className="edit-row">
-                        <div className="edit-label">Institute:</div>
+                        <div className="edit-label">Education Institute:</div>
                         <div className="edit-field">
                           <input type="text" className="edit-control-large" value={education.institute} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'institute')} />
+                          <button type="button" onClick={(e) => this.deleteRecordConfirm(e, 'Education', education.institute + ' - ' + education.program, 'educations', key) }>Delete Education</button>
+                          {
+                            education.expanded ?
+                            <button type="button" onClick={(e) => this.toggleRecord(e, 'educations', key)}>Hide</button>
+                            :
+                            <button type="button" onClick={(e) => this.toggleRecord(e, 'educations', key)}>Show</button>
+                          }
                         </div>
                       </div>
-                      <div className="edit-row">
-                        <div className="edit-label">Institute URL:</div>
-                        <div className="edit-field">
-                          <input type="text" className="edit-control-large" value={education.instituteUrl} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'instituteUrl')} />
-                        </div>
-                      </div>
-                      <div className="edit-row">
-                        <div className="edit-label">Program:</div>
-                        <div className="edit-field">
-                          <input type="text" className="edit-control-large" value={education.program} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'program')} />
-                        </div>
-                      </div>
-                      <div className="edit-row">
-                        <div className="edit-label">Started:</div>
-                        <div className="edit-field">
-                          <input type="text" className="edit-control-normal datepicker" value={education.started} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'started')} />
-                        </div>
-                      </div>
-                      <div className="edit-row">
-                        <div className="edit-label">Completed:</div>
-                        <div className="edit-field">
-                          <input type="text" className="edit-control-normal datepicker" value={education.completed} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'completed')} />
-                        </div>
-                      </div>
+                      {
+                        education.expanded ?
+                          <div className="edit-row">
+                            <div className="edit-label">Institute URL:</div>
+                            <div className="edit-field">
+                              <input type="text" className="edit-control-large" value={education.instituteURL} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'instituteURL')} />
+                            </div>
+                          </div>
+                          : null
+                        }
+                        {
+                          education.expanded ?
+                          <div className="edit-row">
+                            <div className="edit-label">Program:</div>
+                            <div className="edit-field">
+                              <input type="text" className="edit-control-large" value={education.program} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'program')} />
+                            </div>
+                          </div>
+                          : null
+                        }
+                        {
+                          education.expanded ?
+                          <div className="edit-row">
+                            <div className="edit-label">Started:</div>
+                            <div className="edit-field">
+                              <input type="text" className="edit-control-normal datepicker" value={education.started} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'started')} />
+                            </div>
+                          </div>
+                          : null
+                        }
+                        {
+                          education.expanded ?
+                          <div className="edit-row">
+                            <div className="edit-label">Completed:</div>
+                            <div className="edit-field">
+                              <input type="text" className="edit-control-normal datepicker" value={education.completed} onChange={(e) => this.updateResumeRecordField(e, 'educations', key, 'completed')} />
+                            </div>
+                          </div>
+                          : null
+                        }
                     </div>
                   )
                 }
                 {
                   this.state.resume.workHistories.map((workHistory, key) =>
-                    <div className="form-container" key={key}>
+                    <div className="form-container border-top" key={key}>
                       <div className="edit-row">
-                        <div className="edit-label">Employer:</div>
+                        <div className="edit-label">Work History Employer:</div>
                         <div className="edit-field">
                           <input type="text" className="edit-control-large" value={workHistory.employer} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'employer')} />
+                          <button type="button" onClick={(e) => this.deleteRecordConfirm(e, 'Work History', workHistory.employer + ' - ' + workHistory.jobTitle, 'workHistories', key) }>Delete Work History</button>
+                          {
+                            workHistory.expanded ?
+                            <button type="button" onClick={(e) => this.toggleRecord(e, 'workHistories', key)}>Hide</button>
+                            :
+                            <button type="button" onClick={(e) => this.toggleRecord(e, 'workHistories', key)}>Show</button>
+                          }
                         </div>
                       </div>
-                      <div className="edit-row">
-                        <div className="edit-label">Employer URL:</div>
-                        <div className="edit-field">
-                          <input type="text" className="edit-control-large" value={workHistory.employerUrl} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'employerUrl')} />
+                      {
+                        workHistory.expanded ?
+                        <div className="edit-row">
+                          <div className="edit-label">Employer URL:</div>
+                          <div className="edit-field">
+                            <input type="text" className="edit-control-large" value={workHistory.employerURL} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'employerURL')} />
+                          </div>
                         </div>
-                      </div>
-                      <div className="edit-row">
-                        <div className="edit-label">Job Title:</div>
-                        <div className="edit-field">
-                          <input type="text" className="edit-control-large" value={workHistory.jobTitle} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'jobTitle')} />
+                        : null
+                      }
+                      {
+                        workHistory.expanded ?
+                        <div className="edit-row">
+                          <div className="edit-label">Job Title:</div>
+                          <div className="edit-field">
+                            <input type="text" className="edit-control-large" value={workHistory.jobTitle} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'jobTitle')} />
+                          </div>
                         </div>
-                      </div>
-                      <div className="edit-row">
-                        <div className="edit-label">Started:</div>
-                        <div className="edit-field">
-                          <input type="text" className="edit-control-normal datepicker" value={workHistory.started} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'started')} />
+                        : null
+                      }
+                      {
+                        workHistory.expanded ?
+                        <div className="edit-row">
+                          <div className="edit-label">Started:</div>
+                          <div className="edit-field">
+                            <input type="text" className="edit-control-normal datepicker" value={workHistory.started} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'started')} />
+                          </div>
                         </div>
-                      </div>
-                      <div className="edit-row">
-                        <div className="edit-label">Completed:</div>
-                        <div className="edit-field">
-                          <input type="text" className="edit-control-normal datepicker" value={workHistory.completed} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'completed')} />
+                        : null
+                      }
+                      {
+                        workHistory.expanded ?
+                        <div className="edit-row">
+                          <div className="edit-label">Completed:</div>
+                          <div className="edit-field">
+                            <input type="text" className="edit-control-normal datepicker" value={workHistory.completed} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'completed')} />
+                          </div>
                         </div>
-                      </div>
-                      <div className="edit-row">
-                        <div className="edit-label">Job Description:</div>
-                        <div className="edit-field">
-                          <textarea className="edit-control" rows="10" value={workHistory.jobDescription} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'jobDescription')}></textarea>
+                        : null
+                      }
+                      {
+                        workHistory.expanded ?
+                        <div className="edit-row">
+                          <div className="edit-label">Job Description:</div>
+                          <div className="edit-field">
+                            <textarea className="edit-control" rows="10" value={workHistory.jobDescription} onChange={(e) => this.updateResumeRecordField(e, 'workHistories', key, 'jobDescription')}></textarea>
 
+                          </div>
                         </div>
-                      </div>
+                        : null
+                      }
                     </div>
                   )
                 }
@@ -520,4 +591,4 @@ class PEngineArticleEditor extends React.Component {
   }
 }
 
-export default PEngineArticleEditor;
+export default PEngineResumeEditor;

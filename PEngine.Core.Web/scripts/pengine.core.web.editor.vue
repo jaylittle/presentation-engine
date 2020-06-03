@@ -757,7 +757,7 @@
       processLocationHash() {
         if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
           let elements = window.location.hash.split('/');
-          if (elements[1] !== 'post' && elements[1] !== 'article') {
+          if (elements[1] !== 'post' && elements[1] !== 'article' && elements[1] !== 'resume') {
             this.fireEvent("edit", elements[1], (elements.length > 2 ? elements[2] : null));
           }
         }
