@@ -7,6 +7,7 @@ import peUploader from "./pengine.core.web.uploader.vue";
 import PEUploader from "./pengine.core.web.uploader.react.js";
 import PEPostEditor from "./pengine.core.web.post.editor.react.js";
 import PEArticleEditor from "./pengine.core.web.article.editor.react.js";
+import PEResumeEditor from "./pengine.core.web.resume.editor.react.js";
 
 /* Configure XSRF Token */
 let xsrfToken = window.pengineState.xsrfToken;
@@ -35,6 +36,11 @@ let articleEditorInstance = ReactDOM.render(
   document.getElementById('pengine-article-editor')
 );
 
+let resumeEditorInstance = ReactDOM.render(
+  <PEResumeEditor />,
+  document.getElementById('pengine-resume-editor')
+);
+
 
 /* Load Vue Components */
 let editorInstance = new Vue({
@@ -47,7 +53,7 @@ pengineHelpers.assignComponentClickEvent(postEditorInstance, "post_view_button_e
 pengineHelpers.assignComponentClickEvent(postEditorInstance, "pengine-button-newpost", "post");
 pengineHelpers.assignComponentClickEvent(articleEditorInstance, "article_view_button_edit", "article");
 pengineHelpers.assignComponentClickEvent(articleEditorInstance, "pengine-button-newarticle", "article");
-pengineHelpers.assignComponentClickEvent(editorInstance, "resume_view_button_edit", "resume");
+pengineHelpers.assignComponentClickEvent(resumeEditorInstance, "resume_view_button_edit", "resume");
 pengineHelpers.assignComponentClickEvent(editorInstance, "pengine-button-setting", "settings");
 pengineHelpers.assignComponentClickEvent(uploaderInstance, "pengine-button-uploader", "settings", "show");
 
