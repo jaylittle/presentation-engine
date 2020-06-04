@@ -73,6 +73,7 @@ namespace PEngine.Core.Web
         
         options.EnableEndpointRouting = false;
       }).AddNewtonsoftJson(opt => {
+        opt.SerializerSettings.Converters.Add(new PEngine.Core.Shared.JsonConverters.LooseJsonConverter());
         opt.SerializerSettings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
         opt.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.RoundtripKind;
       });

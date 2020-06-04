@@ -757,7 +757,8 @@
       processLocationHash() {
         if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
           let elements = window.location.hash.split('/');
-          if (elements[1] !== 'post' && elements[1] !== 'article' && elements[1] !== 'resume') {
+          //Fire Event if this legacy control still handles the type in question
+          if (elements[1] !== 'post' && elements[1] !== 'article' && elements[1] !== 'resume' && elements[1] !== 'settings') {
             this.fireEvent("edit", elements[1], (elements.length > 2 ? elements[2] : null));
           }
         }
