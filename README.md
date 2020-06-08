@@ -1,4 +1,4 @@
-# Presentation Engine 5.0
+# Presentation Engine 5.1
 
 This repo is the code which runs my personal website https://jaylittle.com and my business website https://jplcoding.com
 
@@ -8,7 +8,7 @@ It screams like a bat out of hell and is relatively secure. If you don't like th
 
 ### 2. What the hell is this project anyway?
 
-My version of a basic blog.  More info is available here:  https://jaylittle.com/article/view/presentation-engine
+My rendition of a basic blog.  It powers all of my websites.
 
 ### 3. Your previous versions didn't have a license? What gives?
 
