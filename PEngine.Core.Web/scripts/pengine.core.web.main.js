@@ -1,10 +1,10 @@
 import PEHelpers from "./pengine.core.web.helpers";
-import PEHeader from "./pengine.core.web.header.js";
-import PEUploader from "./pengine.core.web.uploader.js";
-import PEPostEditor from "./pengine.core.web.post.editor.js";
-import PEArticleEditor from "./pengine.core.web.article.editor.js";
-import PEResumeEditor from "./pengine.core.web.resume.editor.js";
-import PESettingEditor from "./pengine.core.web.setting.editor.js";
+import PEHeader from "./pengine.core.web.component.header.js";
+import PEUploader from "./pengine.core.web.component.uploader.js";
+import PEPostEditor from "./pengine.core.web.component.post.editor.js";
+import PEArticleEditor from "./pengine.core.web.component.article.editor.js";
+import PEResumeEditor from "./pengine.core.web.component.resume.editor.js";
+import PESettingEditor from "./pengine.core.web.component.setting.editor.js";
 
 /* Load React Components */
 ReactDOM.render(
