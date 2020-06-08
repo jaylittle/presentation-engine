@@ -1,11 +1,9 @@
 let path = require('path');
 let terserPlugin = require('terser-webpack-plugin');
 let webpack = require('webpack');
-let vueloader = require('vue-loader');
 let PROD = (process.env.NODE_ENV === 'production');
 
 var plugins = [
-  new vueloader.VueLoaderPlugin()
 ];
 
 if (PROD) {
@@ -29,21 +27,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
     }
   },
   plugins: plugins,
   module: {
     rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          loaders: {
-          }
-          // other vue-loader options go here
-        }
-      },
       {
         test: /\.js$/,
         exclude: /(node_modules)/,
