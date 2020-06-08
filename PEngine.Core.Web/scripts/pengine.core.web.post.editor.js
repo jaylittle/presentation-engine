@@ -1,5 +1,5 @@
 import React from 'react';
-import pengineHelpers from "./pengine.core.web.helpers";
+import PEHelpers from "./pengine.core.web.helpers";
 
 class PEnginePostEditor extends React.Component {
 
@@ -40,7 +40,7 @@ class PEnginePostEditor extends React.Component {
   fireEvent = (eventName, type, guid, data) => {
     switch (eventName || "")  {
       case "edit":
-        pengineHelpers.updateEditorLocationHash(type, guid);
+        PEHelpers.updateEditorLocationHash(type, guid);
         document.body.style.overflow = 'hidden';
         window.scrollTo(0, 0);
 
@@ -82,18 +82,18 @@ class PEnginePostEditor extends React.Component {
   }
 
   getUrl = (guid) => {
-    return guid ? pengineHelpers.fixUrl(`api/posts/${guid}`) : pengineHelpers.fixUrl(`api/posts/`);
+    return guid ? PEHelpers.fixUrl(`api/posts/${guid}`) : PEHelpers.fixUrl(`api/posts/`);
   }
 
   load = (guid) => {
-    pengineHelpers.fetch(this.getUrl(guid), {
+    PEHelpers.fetch(this.getUrl(guid), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
       body: null
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the post from being fetched!');
     })
     .then(combined => {
@@ -110,25 +110,18 @@ class PEnginePostEditor extends React.Component {
   }
 
   updatePostField = (e, fieldName) => {
-    let fieldValue = e.target.value;
-    if (e.target.type === 'checkbox' || e.target.type === 'radio') {
-      fieldValue = e.target.checked;
-    }
-    this.setState(prevState => {
-      prevState.post[fieldName] = fieldValue;
-      return prevState;
-    });
+    PEHelpers.updateStateField(this, e, [ 'post', fieldName ]);
   }
 
   save = (e) => {
-    pengineHelpers.fetch(this.getUrl(), {
+    PEHelpers.fetch(this.getUrl(), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(this.state.post),
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the post from being saved!');
     })
     .then(combined => {
@@ -162,14 +155,14 @@ class PEnginePostEditor extends React.Component {
   }
 
   delete = (e) => {
-    pengineHelpers.fetch(this.getUrl(this.state.post.guid), {
+    PEHelpers.fetch(this.getUrl(this.state.post.guid), {
       method: 'DELETE',
       headers: { 
         'Content-Type': 'application/json',
       },
       body: null
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the post from being deleted!');
     })
     .then(combined => {
@@ -184,7 +177,7 @@ class PEnginePostEditor extends React.Component {
 
   cancel = (e) => {
     this.reset();
-    pengineHelpers.updateEditorLocationHash();
+    PEHelpers.updateEditorLocationHash();
 
     this.setState(prevState => ({
       ...prevState,

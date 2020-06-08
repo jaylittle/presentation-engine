@@ -1,5 +1,5 @@
 import React from 'react';
-import pengineHelpers from "./pengine.core.web.helpers";
+import PEHelpers from "./pengine.core.web.helpers";
 
 class PEngineUploader extends React.Component {
 
@@ -86,8 +86,8 @@ class PEngineUploader extends React.Component {
       path = path.substr(1);
     }
     let getUrl = `api/resource/folder/${path}`;
-    return pengineHelpers.fetch(getUrl)
-      .then(pengineHelpers.getCombinedJsonResponse, () => {
+    return PEHelpers.fetch(getUrl)
+      .then(PEHelpers.getCombinedJsonResponse, () => {
         this.pushError('An Network error prevented the folder from loading.');
       })
       .then(combined => {
@@ -241,14 +241,14 @@ class PEngineUploader extends React.Component {
       this.pushError('You must select at least one file or folder!');
     }
     if (operation !== 'delete' || confirm(`Are you sure you wish to delete ${selectionCount} files/folders?`)) {
-      pengineHelpers.fetch(operationUrl, {
+      PEHelpers.fetch(operationUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       })
-      .then(pengineHelpers.getCombinedJsonResponse, () => {
+      .then(PEHelpers.getCombinedJsonResponse, () => {
         this.pushError('A Network error prevented your selections from being processed!');
       })
       .then(combined => {
@@ -286,11 +286,11 @@ class PEngineUploader extends React.Component {
       errored = true;
     }
     if (!errored) {
-      pengineHelpers.fetch(this.state.uploadPath, {
+      PEHelpers.fetch(this.state.uploadPath, {
         method: 'POST',
         body: uploadFormData
       })
-      .then(pengineHelpers.getCombinedJsonResponse, () => {
+      .then(PEHelpers.getCombinedJsonResponse, () => {
         this.pushError('A Network error prevented the files from uploading.');
       })
       .then(combined => {
@@ -346,10 +346,10 @@ class PEngineUploader extends React.Component {
     }
     let namingUrl = `api/resource/${this.state.naming.type}/${path}?newName=${this.state.naming.new}`;
     if (!errored) {      
-      pengineHelpers.fetch(namingUrl, {
+      PEHelpers.fetch(namingUrl, {
         method: this.state.naming.entity ? 'PUT' : 'POST'
       })
-      .then(pengineHelpers.getCombinedJsonResponse, () => {
+      .then(PEHelpers.getCombinedJsonResponse, () => {
         this.pushError('A Network error prevented the naming operation from completing.');
       })
       .then(combined => {
@@ -372,19 +372,11 @@ class PEngineUploader extends React.Component {
   }
 
   updateNaming = (e) => {
-    let newNew = e.target.value;
-    this.setState(prevState => ({
-      naming: {
-        ...prevState.naming,
-        new: newNew
-      }
-    }));
+    PEHelpers.updateStateField(this, e, ['naming', 'new']);
   }
 
   updateMode = (newMode) => {
-    this.setState({
-      mode: newMode
-    });
+    PEHelpers.updateStateField(this, newMode, ['mode']);
   }
 
   render = () => {

@@ -57,5 +57,37 @@ module.exports = {
     else {
       history.pushState("", document.title, window.location.pathname + window.location.search);
     }
+  },
+  updateStateField(component, e, subKeys) {
+    let fieldValue = e;
+    if (e.target) {
+      fieldValue = e.target.value;
+      if (e.target.type === 'checkbox' || e.target.type === 'radio') {
+        fieldValue = e.target.checked;
+      }
+    }
+    let subKeyArray = subKeys.filter(subKey => subKey || subKey === 0);
+    component.setState(prevState => {
+      let subKeyPath = '';
+      let errorFlag = false;
+      var prevStatePart = prevState;
+      for (let subKeyIndex = 0; subKeyIndex < subKeyArray.length; subKeyIndex++) {
+        subKeyPath += ((subKeyPath ? '.' : '') + subKeyArray[subKeyIndex]);
+        if (subKeyIndex < subKeyArray.length - 1) {
+          prevStatePart = prevStatePart[subKeyArray[subKeyIndex]];
+        }
+        if (subKeyIndex === subKeyArray.length - 1) {
+          prevStatePart[subKeyArray[subKeyIndex]] = fieldValue;
+          break;
+        } else if (!prevStatePart) {
+          errorFlag = true;
+          break;
+        }
+      }
+      if (errorFlag) {
+        throw `updateStateField cannot find specified state path of ${subKeyPath}`;
+      }
+      return prevState;
+    });
   }
 };

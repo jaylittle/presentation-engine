@@ -1,5 +1,5 @@
 import React from 'react';
-import pengineHelpers from "./pengine.core.web.helpers";
+import PEHelpers from "./pengine.core.web.helpers";
 
 class PEngineArticleEditor extends React.Component {
 
@@ -54,7 +54,7 @@ class PEngineArticleEditor extends React.Component {
   fireEvent = (eventName, type, guid, data) => {
     switch (eventName || "")  {
       case "edit":
-        pengineHelpers.updateEditorLocationHash(type, guid);
+        PEHelpers.updateEditorLocationHash(type, guid);
         document.body.style.overflow = 'hidden';
         window.scrollTo(0, 0);
 
@@ -110,18 +110,18 @@ class PEngineArticleEditor extends React.Component {
   }
 
   getUrl = (guid) => {
-    return guid ? pengineHelpers.fixUrl(`api/articles/${guid}`) : pengineHelpers.fixUrl(`api/articles/`);
+    return guid ? PEHelpers.fixUrl(`api/articles/${guid}`) : PEHelpers.fixUrl(`api/articles/`);
   }
 
   load = (guid) => {
-    pengineHelpers.fetch(this.getUrl(guid), {
+    PEHelpers.fetch(this.getUrl(guid), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
       body: null
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the article from being fetched!');
     })
     .then(combined => {
@@ -136,37 +136,19 @@ class PEngineArticleEditor extends React.Component {
     });
   }
 
-  updateArticleField = (e, fieldName) => {
-    let fieldValue = e.target.value;
-    if (e.target.type === 'checkbox' || e.target.type === 'radio') {
-      fieldValue = e.target.checked;
-    }
-    this.setState(prevState => {
-      prevState.article[fieldName] = fieldValue;
-      return prevState;
-    });
-  }
-
-  updateArticleSectionField = (e, key, fieldName) => {
-    let fieldValue = e.target.value;
-    if (e.target.type === 'checkbox' || e.target.type === 'radio') {
-      fieldValue = e.target.checked;
-    }
-    this.setState(prevState => {
-      prevState.article.sections[key][fieldName] = fieldValue;
-      return prevState;
-    });
+  updateArticleField = (e, fieldName, subGroup, subGroupKey) => {
+    PEHelpers.updateStateField(this, e, [ 'article', subGroup, subGroupKey, fieldName ]);
   }
 
   save = (e) => {
-    pengineHelpers.fetch(this.getUrl(), {
+    PEHelpers.fetch(this.getUrl(), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(this.state.article),
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the article from being saved!');
     })
     .then(combined => {
@@ -200,14 +182,14 @@ class PEngineArticleEditor extends React.Component {
   }
 
   delete = (e) => {
-    pengineHelpers.fetch(this.getUrl(this.state.article.guid), {
+    PEHelpers.fetch(this.getUrl(this.state.article.guid), {
       method: 'DELETE',
       headers: { 
         'Content-Type': 'application/json',
       },
       body: null
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the article from being deleted!');
     })
     .then(combined => {
@@ -222,7 +204,7 @@ class PEngineArticleEditor extends React.Component {
 
   cancel = (e) => {
     this.reset();
-    pengineHelpers.updateEditorLocationHash();
+    PEHelpers.updateEditorLocationHash();
 
     this.setState(prevState => ({
       ...prevState,
@@ -391,7 +373,7 @@ class PEngineArticleEditor extends React.Component {
                       <div className="edit-row">
                         <div className="edit-label">Section Name:</div>
                         <div className="edit-field">
-                          <input type="text" className="edit-control-large" value={section.name} onChange={(e) => this.updateArticleSectionField(e, key, 'name')}  />
+                          <input type="text" className="edit-control-large" value={section.name} onChange={(e) => this.updateArticleField(e, 'name', 'sections', key)}  />
                         </div>
                       </div>
                       <div className="edit-row">
@@ -421,7 +403,7 @@ class PEngineArticleEditor extends React.Component {
                         <div className="edit-row">
                           <div className="edit-label">Content:</div>
                           <div className="edit-field">
-                            <textarea rows="20" className="edit-control" value={section.data} onChange={(e) => this.updateArticleSectionField(e, key, 'data')}></textarea>
+                            <textarea rows="20" className="edit-control" value={section.data} onChange={(e) => this.updateArticleField(e, 'data', 'sections', key)}></textarea>
                           </div>
                         </div>
                         : null

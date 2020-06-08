@@ -63,9 +63,23 @@ function setupAutoTokenRefresh()
 
 function refreshToken()
 {
-  Vue.http.get(PEHelpers.fixUrl('/token/refresh')).then(response => {
-    window.pengineState.tokenExpires = response.body['expires'];
-    window.pengineState.tokenExpiresMilliseconds = response.body['expires_in_milliseconds'];
-    setupAutoTokenRefresh();
+  PEHelpers.fetch(PEHelpers.fixUrl('/token/refresh'), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: null
+  })
+  .then(PEHelpers.getCombinedJsonResponse, () => {
+    this.pushError('A Network error prevented the token from being refreshed!');
+  })
+  .then(combined => {
+    if (combined.response.ok) {
+      window.pengineState.tokenExpires = combined.data['expires'];
+      window.pengineState.tokenExpiresMilliseconds = combined.data['expires_in_milliseconds'];
+      setupAutoTokenRefresh();
+    } else {
+      this.pushError('An HTTP error prevented the token from being refreshed!');
+    }
   });
 }

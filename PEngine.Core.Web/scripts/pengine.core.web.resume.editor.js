@@ -1,5 +1,5 @@
 import React from 'react';
-import pengineHelpers from "./pengine.core.web.helpers";
+import PEHelpers from "./pengine.core.web.helpers";
 
 class PEngineResumeEditor extends React.Component {
 
@@ -36,7 +36,7 @@ class PEngineResumeEditor extends React.Component {
   fireEvent = (eventName, type, guid, data) => {
     switch (eventName || "")  {
       case "edit":
-        pengineHelpers.updateEditorLocationHash(type, guid);
+        PEHelpers.updateEditorLocationHash(type, guid);
         document.body.style.overflow = 'hidden';
         window.scrollTo(0, 0);
 
@@ -71,18 +71,18 @@ class PEngineResumeEditor extends React.Component {
   }
 
   getUrl = () => {
-    return pengineHelpers.fixUrl(`api/resume/`);
+    return PEHelpers.fixUrl(`api/resume/`);
   }
 
   load = () => {
-    pengineHelpers.fetch(this.getUrl(), {
+    PEHelpers.fetch(this.getUrl(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
       body: null
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the resume from being fetched!');
     })
     .then(combined => {
@@ -113,34 +113,23 @@ class PEngineResumeEditor extends React.Component {
   }
 
   updateResumeRecordField = (e, subGroup, subGroupKey, fieldName, subSubGroup, subSubGroupKey) => {
-    let fieldValue = e.target.value;
-    if (e.target.type === 'checkbox' || e.target.type === 'radio') {
-      fieldValue = e.target.checked;
-    }
-    this.setState(prevState => {
-      if (subGroup && subSubGroup) {
-        prevState.resume[subGroup][subGroupKey][subSubGroup][subSubGroupKey][fieldName] = fieldValue;
-      } else if (subGroup) {
-        prevState.resume[subGroup][subGroupKey][fieldName] = fieldValue;
-        if (subGroup === 'skillTypes' && fieldName === 'type') {
-         for (let currentSkillIndex in prevState.resume[subGroup][subGroupKey].skills) {
-          prevState.resume[subGroup][subGroupKey].skills[currentSkillIndex].type = fieldValue;
-         }
-        }
+    PEHelpers.updateStateField(this, e, [ 'resume', subGroup, subGroupKey, subSubGroup, subSubGroupKey, fieldName ]);
+    if (subGroup === 'skillTypes' && fieldName === 'type') {
+      for (let currentSkillIndex in this.state.resume[subGroup][subGroupKey].skills) {
+        PEHelpers.updateStateField(this, e, [ 'resume', subGroup, subGroupKey, 'skills', currentSkillIndex, 'type' ]);
       }
-      return prevState;
-    });
+    }
   }
 
   save = (e) => {
-    pengineHelpers.fetch(this.getUrl(), {
+    PEHelpers.fetch(this.getUrl(), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(this.state.resume),
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the resume from being saved!');
     })
     .then(combined => {
@@ -165,7 +154,7 @@ class PEngineResumeEditor extends React.Component {
 
   cancel = (e) => {
     this.reset();
-    pengineHelpers.updateEditorLocationHash();
+    PEHelpers.updateEditorLocationHash();
 
     this.setState(prevState => ({
       ...prevState,

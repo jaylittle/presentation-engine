@@ -1,5 +1,5 @@
 import React from 'react';
-import pengineHelpers from "./pengine.core.web.helpers";
+import PEHelpers from "./pengine.core.web.helpers";
 
 class PEngineSettingEditor extends React.Component {
 
@@ -68,7 +68,7 @@ class PEngineSettingEditor extends React.Component {
   processLocationHash = () => {
     if (window.location.hash && window.location.hash !== '' && window.location.hash.indexOf('#edit/') === 0) {
       let elements = window.location.hash.split('/');
-      if (elements[1] === 'post') {
+      if (elements[1] === 'settings') {
         this.fireEvent("edit", elements[1], (elements.length > 2 ? elements[2] : null));
       }
     }
@@ -77,7 +77,7 @@ class PEngineSettingEditor extends React.Component {
   fireEvent = (eventName, type, guid, data) => {
     switch (eventName || "")  {
       case "edit":
-        pengineHelpers.updateEditorLocationHash(type, guid);
+        PEHelpers.updateEditorLocationHash(type, guid);
         document.body.style.overflow = 'hidden';
         window.scrollTo(0, 0);
 
@@ -153,18 +153,18 @@ class PEngineSettingEditor extends React.Component {
   }
 
   getUrl = () => {
-    return pengineHelpers.fixUrl(`api/settings/`);
+    return PEHelpers.fixUrl(`api/settings/`);
   }
 
   load = () => {
-    pengineHelpers.fetch(this.getUrl(), {
+    PEHelpers.fetch(this.getUrl(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
       body: null
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the settings from being fetched!');
     })
     .then(combined => {
@@ -185,29 +185,18 @@ class PEngineSettingEditor extends React.Component {
   }
 
   updateField = (e, fieldName, subGroup) => {
-    let fieldValue = e.target.value;
-    if (e.target.type === 'checkbox' || e.target.type === 'radio') {
-      fieldValue = e.target.checked;
-    }
-    this.setState(prevState => {
-      if (!subGroup) {
-        prevState.settings[fieldName] = fieldValue;
-      } else {
-        prevState.settings[subGroup][fieldName] = fieldValue;
-      }
-      return prevState;
-    });
+    PEHelpers.updateStateField(this, e, [ 'settings', subGroup, fieldName ]);
   }
 
   save = (e) => {
-    pengineHelpers.fetch(this.getUrl(), {
+    PEHelpers.fetch(this.getUrl(), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(this.state.settings),
     })
-    .then(pengineHelpers.getCombinedJsonResponse, () => {
+    .then(PEHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the settings from being saved!');
     })
     .then(combined => {
@@ -237,7 +226,7 @@ class PEngineSettingEditor extends React.Component {
 
   cancel = (e) => {
     this.reset();
-    pengineHelpers.updateEditorLocationHash();
+    PEHelpers.updateEditorLocationHash();
 
     this.setState(prevState => ({
       ...prevState,

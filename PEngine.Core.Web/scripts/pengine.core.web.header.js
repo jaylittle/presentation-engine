@@ -1,5 +1,5 @@
 import React from 'react';
-import pengineHelpers from "./pengine.core.web.helpers";
+import PEHelpers from "./pengine.core.web.helpers";
 
 class PEngineHeader extends React.Component {
   constructor(props) {
@@ -7,7 +7,7 @@ class PEngineHeader extends React.Component {
 
     this.state = {
       peState: window.pengineState,
-      loginUrl: pengineHelpers.fixUrl(window.pengineState.loginUrl),
+      loginUrl: PEHelpers.fixUrl(window.pengineState.loginUrl),
     };
   }
 
@@ -17,13 +17,7 @@ class PEngineHeader extends React.Component {
 
   themeUpdate = (e) => {
     if (this.state.peState.theme !== e.target.value) {
-      let newTheme = e.target.value;
-      this.setState(prevState => ({
-        peState: {
-          ...prevState.peState,
-          theme: newTheme
-        }
-      }));
+      PEHelpers.updateStateField(this, e, [ 'peState', 'theme' ]);
       this.formSubmit();
     }
   }
