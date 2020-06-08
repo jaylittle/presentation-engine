@@ -1,10 +1,10 @@
-import pengineHelpers from "./pengine.core.web.helpers";
-import PEHeader from "./pengine.core.web.header.react.js";
-import PEUploader from "./pengine.core.web.uploader.react.js";
-import PEPostEditor from "./pengine.core.web.post.editor.react.js";
-import PEArticleEditor from "./pengine.core.web.article.editor.react.js";
-import PEResumeEditor from "./pengine.core.web.resume.editor.react.js";
-import PESettingEditor from "./pengine.core.web.setting.editor.react.js";
+import PEHelpers from "./pengine.core.web.helpers";
+import PEHeader from "./pengine.core.web.header.js";
+import PEUploader from "./pengine.core.web.uploader.js";
+import PEPostEditor from "./pengine.core.web.post.editor.js";
+import PEArticleEditor from "./pengine.core.web.article.editor.js";
+import PEResumeEditor from "./pengine.core.web.resume.editor.js";
+import PESettingEditor from "./pengine.core.web.setting.editor.js";
 
 /* Load React Components */
 ReactDOM.render(
@@ -38,13 +38,13 @@ let settingEditorInstance = ReactDOM.render(
 );
 
 /* Bind Events to the DOM */
-pengineHelpers.assignComponentClickEvent(postEditorInstance, "post_view_button_edit", "post");
-pengineHelpers.assignComponentClickEvent(postEditorInstance, "pengine-button-newpost", "post");
-pengineHelpers.assignComponentClickEvent(articleEditorInstance, "article_view_button_edit", "article");
-pengineHelpers.assignComponentClickEvent(articleEditorInstance, "pengine-button-newarticle", "article");
-pengineHelpers.assignComponentClickEvent(resumeEditorInstance, "resume_view_button_edit", "resume");
-pengineHelpers.assignComponentClickEvent(settingEditorInstance, "pengine-button-setting", "settings");
-pengineHelpers.assignComponentClickEvent(uploaderInstance, "pengine-button-uploader", "settings", "show");
+PEHelpers.assignComponentClickEvent(postEditorInstance, "post_view_button_edit", "post");
+PEHelpers.assignComponentClickEvent(postEditorInstance, "pengine-button-newpost", "post");
+PEHelpers.assignComponentClickEvent(articleEditorInstance, "article_view_button_edit", "article");
+PEHelpers.assignComponentClickEvent(articleEditorInstance, "pengine-button-newarticle", "article");
+PEHelpers.assignComponentClickEvent(resumeEditorInstance, "resume_view_button_edit", "resume");
+PEHelpers.assignComponentClickEvent(settingEditorInstance, "pengine-button-setting", "settings");
+PEHelpers.assignComponentClickEvent(uploaderInstance, "pengine-button-uploader", "settings", "show");
 
 /* Setup Automatic Token Refresh */
 setupAutoTokenRefresh();
@@ -63,7 +63,7 @@ function setupAutoTokenRefresh()
 
 function refreshToken()
 {
-  Vue.http.get(pengineHelpers.fixUrl('/token/refresh')).then(response => {
+  Vue.http.get(PEHelpers.fixUrl('/token/refresh')).then(response => {
     window.pengineState.tokenExpires = response.body['expires'];
     window.pengineState.tokenExpiresMilliseconds = response.body['expires_in_milliseconds'];
     setupAutoTokenRefresh();

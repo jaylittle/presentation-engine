@@ -6,8 +6,6 @@ class PEngineSettingEditor extends React.Component {
   constructor(props) {
     super(props);
 
-    this.newPasswordAdminValue = React.createRef();
-
     this.state = {
       settings: {
         ownerName: '',
@@ -207,13 +205,7 @@ class PEngineSettingEditor extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ...this.state.settings,
-        newPasswordAdmin: {
-          ...this.state.settings.newPasswordAdmin,
-          value: this.newPasswordAdminValue.current.value
-        }
-      }),
+      body: JSON.stringify(this.state.settings),
     })
     .then(pengineHelpers.getCombinedJsonResponse, () => {
       this.pushError('A Network error prevented the settings from being saved!');
@@ -508,7 +500,7 @@ class PEngineSettingEditor extends React.Component {
                     <div className="edit-label-large">Admin Pass</div>
                     <div className="edit-field edit-checkbox-list">
                       <span>
-                        <input type="password" className="edit-control-normal" ref={this.newPasswordAdminValue} />
+                        <input type="password" className="edit-control-normal" value={this.state.settings.newPasswordAdmin.value} onChange={(e) => this.updateField(e, 'value', 'newPasswordAdmin')} />
                       </span>
                       <span>
                         <input type="checkbox" checked={this.state.settings.newPasswordAdmin.reset} onChange={(e) => this.updateField(e, 'reset', 'newPasswordAdmin')} />
