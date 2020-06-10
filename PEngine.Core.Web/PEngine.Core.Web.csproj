@@ -23,7 +23,6 @@
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
   <Target Name="MyPrePublishTarget" BeforeTargets="BeforePublish">
-    <Exec Command="yarn run build"/>
   </Target>
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.20.0"/>

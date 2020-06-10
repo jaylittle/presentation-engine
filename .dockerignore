@@ -1,0 +1,17 @@
+# directories
+**/bin/
+**/obj/
+**/out/
+**/Postman/
+**/data/
+**/.vscode/
+**/.idea/
+**/pengine-v*/
+**/node_modules/
+
+# files
+Dockerfile*
+**/*.md
+pengine.settings.json
+*.tgz
+*.log

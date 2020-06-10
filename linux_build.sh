@@ -48,6 +48,10 @@ yarn install --force
 if [ $? -ne 0 ]; then
   exit 1
 fi
+NODE_ENV=production yarn run build
+if [ $? -ne 0 ]; then
+  exit 1
+fi
 
 #Clean the build output
 dotnet clean -c $CONFIG
@@ -56,7 +60,7 @@ if [ $? -ne 0 ]; then
 fi
 
 #Publish Release Build
-NODE_ENV=production dotnet publish -c $CONFIG
+dotnet publish -c $CONFIG
 if [ $? -ne 0 ]; then
   exit 1
 fi
