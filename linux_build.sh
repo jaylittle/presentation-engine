@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#NOTE: This script is creates a traditional build of pengine meant for non-container use
+#NOTE: This script creates a traditional build of pengine meant for non-container use
 
 BASE=pengine-core
 BRANCH=`git rev-parse --abbrev-ref HEAD | tr '/' '-'`

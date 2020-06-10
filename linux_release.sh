@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#NOTE: This script is creates a traditional versioned build of pengine meant for non-container use
+#NOTE: This script creates a traditional versioned build of pengine meant for non-container use
 
 if [ $# -eq 0 ]; then
     echo "Must provide version number as an argument"
