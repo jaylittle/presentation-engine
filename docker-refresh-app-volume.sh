@@ -1,6 +1,6 @@
 #!/bin/bash
 NAME="$1"
-TMPNAME=penginecore.base
+TMPNAME="$1.base"
 TMPDIR="/tmp/$TMPNAME"
 TAG="penginecore:latest"
 
@@ -23,4 +23,9 @@ docker create \
 docker cp "$TMPNAME:/app/." "$TMPDIR/"
 docker cp "$TMPDIR/." "$NAME:/app/"
 
+#Clean up
+docker rm $TMPNAME
+rm -rf $TMPDIR
+
+#Restart base
 docker restart $NAME
