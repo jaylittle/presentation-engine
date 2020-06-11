@@ -153,6 +153,9 @@ class PEngineArticleEditor extends React.Component {
     })
     .then(combined => {
       if (combined.response.ok) {
+        if (!this.state.article.guid && combined.data.guid) {
+          PEHelpers.updateEditorLocationHash('article', combined.data.guid);
+        }
         this.setState(prevState => ({
           ...prevState,
           article: combined.data

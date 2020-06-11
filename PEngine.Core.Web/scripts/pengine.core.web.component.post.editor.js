@@ -126,6 +126,9 @@ class PEnginePostEditor extends React.Component {
     })
     .then(combined => {
       if (combined.response.ok) {
+        if (!this.state.post.guid && combined.data.guid) {
+          PEHelpers.updateEditorLocationHash('post', combined.data.guid);
+        }
         this.setState(prevState => ({
           ...prevState,
           post: combined.data
