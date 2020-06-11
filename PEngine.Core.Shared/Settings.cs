@@ -11,7 +11,7 @@ namespace PEngine.Core.Shared
     // app_owner_name,
     public string OwnerName { get; set; } = "PEngine User";
     // app_owner_email,
-    public string OwnerEmail { get; set; } = "pengineuser@pengine.com";
+    public string OwnerEmail { get; set; } = "user@pengine.com";
     // app_default_title,
     public string DefaultTitle { get; set; } = "Presentation Engine 5.1";
     // app_default_theme,
