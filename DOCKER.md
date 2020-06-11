@@ -12,19 +12,17 @@ If you already know Docker, then this will be very easy and you likely don't nee
 
 3. git clone https://github.com/jaylittle/presentation-engine.git
 
-4. cd presentation-engine.git
+4. cd presentation-engine
 
-5. chmod +x *.sh
+5. ./docker-build.sh
 
-6. ./docker-build.sh
-
-7. ./docker-create.sh penginecore.sample 5002
+6. ./docker-create.sh penginecore.sample 5002
    
     Note: feel free to substitute whatever container name you want for the first parameter "penginecore.sample" and whatever port name you want for the second parameter "5002".
 
-8. ./docker-start.sh penginecore.sample
+7. ./docker-start.sh penginecore.sample
 
-9. Open a browser and go to http://localhost:5002
+8. Open a browser and go to http://localhost:5002
 
 ## Updating PEngine Docker Containers with the latest Presentation Engine release
 
@@ -32,7 +30,7 @@ Per docker standard operation, containers are disposable and should be deleted a
 
 1. Open a shell
 
-2. Navigate to the presentation-engine.git directory
+2. Navigate to the presentation-engine git directory
 
 3. git fetch && git pull --ff-only
 
