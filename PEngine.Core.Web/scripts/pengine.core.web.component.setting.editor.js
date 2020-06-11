@@ -1,4 +1,3 @@
-import React from 'react';
 import PEHelpers from "./pengine.core.web.helpers";
 
 class PEngineSettingEditor extends React.Component {
