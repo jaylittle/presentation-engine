@@ -9,6 +9,7 @@ pengine_current.tgz
 pengine-v*.tgz
 pengine-v*/
 logs/
+docker-version.txt
 
 # JetBrains IDE files
 .idea/

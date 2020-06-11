@@ -35,6 +35,7 @@ COPY PEngine.Core.Logic/. ./PEngine.Core.Logic/
 COPY --from=node-build /usr/src/app/PEngine.Core.Web/. ./PEngine.Core.Web/
 COPY PEngine.Core.Tests/. ./PEngine.Core.Tests/
 COPY *.sh ./
+COPY docker-version.txt ./
 WORKDIR /source
 RUN bash ./linux_docker_build.sh
 

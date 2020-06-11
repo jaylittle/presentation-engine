@@ -8,10 +8,6 @@ CONFIG=Release
 PLATFORM=netcoreapp3.1
 PUBDIR="/app"
 
-TIMESTAMP=`date +%Y%m%d%H%M`
-VERSION="${BASE}-${TIMESTAMP}-docker-latest"
-
-echo Building version $VERSION
 echo Publishing from $PUBDIR to $FILENAME
 
 #Clean up leftovers from previous builds
@@ -44,4 +40,4 @@ fi
 cd ..
 
 #Create version.test file
-echo $VERSION > "${PUBDIR}/version.txt"
+cp ./docker-version.txt "${PUBDIR}/version.txt"
