@@ -4,9 +4,6 @@ TMPNAME="$1.base"
 TMPDIR="/tmp/$TMPNAME"
 TAG="penginecore:latest"
 
-echo NAME=$NAME
-echo TMPDIR=$TMPDIR
-
 if [ -d $TMPDIR ]
 then
   rm -rf $TMPDIR
