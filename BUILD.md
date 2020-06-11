@@ -27,9 +27,9 @@ This will produce a tar file called pengine_current.tgz as it's output.  This is
 
 In addition, if you want to deploy a versioned build (which is what I do when uploading a new release to github, you'll want to replace step 5 with the following command):
 
-5. ./linux-release.sh 5.1.100
+5. ./linux_release.sh 5.1.100
 
-The first parameter is the version number of the release you are building.  The release script calls linux-build and produces both a pengine_current.tgz file as well as a pengine-v5.1.100.tgz file.
+The first parameter is the version number of the release you are building.  The release script calls linux_build.sh and produces both a pengine_current.tgz file as well as a pengine-v5.1.100.tgz file.
 
 ## Docker Caveats
 
