@@ -20,6 +20,7 @@ namespace PEngine.Core.Web.Controllers
   [Security.XSRF.XSRFCheck]
   [Route("log")]
   [ResponseCache(CacheProfileName = "None")]
+  [ApiExplorerSettings(IgnoreApi = true)]
   public class LoginController : Controller
   {
     private IServiceProvider _svp;

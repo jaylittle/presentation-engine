@@ -16,6 +16,7 @@ namespace PEngine.Core.Web.Controllers
 {
   [Route("post")]
   [ResponseCache(CacheProfileName = "None")]
+  [ApiExplorerSettings(IgnoreApi = true)]
   public class PostController : Controller
   {
     private IServiceProvider _svp;

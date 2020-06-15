@@ -16,6 +16,7 @@ namespace PEngine.Core.Web.Controllers
 {
   [Route("article")]
   [ResponseCache(CacheProfileName = "None")]
+  [ApiExplorerSettings(IgnoreApi = true)]
   public class ArticleController : Controller
   {
     private IArticleDal _articleDal;

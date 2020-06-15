@@ -16,6 +16,7 @@ namespace PEngine.Core.Web.Controllers
 {
   [Route("search")]
   [ResponseCache(CacheProfileName = "None")]
+  [ApiExplorerSettings(IgnoreApi = true)]
   public class SearchController : Controller
   {
     private IServiceProvider _svp;

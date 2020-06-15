@@ -15,6 +15,7 @@ using PEngine.Core.Web.Models;
 namespace PEngine.Core.Web.Controllers
 {
   [ResponseCache(CacheProfileName = "None")]
+  [ApiExplorerSettings(IgnoreApi = true)]
   public class ResumeController : Controller
   {
     private IServiceProvider _svp;

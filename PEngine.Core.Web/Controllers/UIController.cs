@@ -20,6 +20,7 @@ namespace PEngine.Core.Web.Controllers
 {
   [Route("ui")]
   [ResponseCache(CacheProfileName = "None")]
+  [ApiExplorerSettings(IgnoreApi = true)]
   public class UIController : Controller
   {
     private IServiceProvider _svp;

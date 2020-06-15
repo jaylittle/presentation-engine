@@ -16,6 +16,7 @@ namespace PEngine.Core.Web.Controllers
 {
   [Route("feed")]
   [ResponseCache(CacheProfileName = "None")]
+  [ApiExplorerSettings(IgnoreApi = true)]
   public class FeedController : Controller
   {
     public FeedController()

@@ -16,6 +16,7 @@ namespace PEngine.Core.Web.Controllers
 {
   [Route("error")]
   [ResponseCache(CacheProfileName = "None")]
+  [ApiExplorerSettings(IgnoreApi = true)]
   public class ErrorController : Controller
   {
     private IServiceProvider _svp;
