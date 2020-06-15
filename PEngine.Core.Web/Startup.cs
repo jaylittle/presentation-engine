@@ -163,6 +163,21 @@ namespace PEngine.Core.Web
               }
             }
           });
+
+          c.AddSecurityRequirement(new OpenApiSecurityRequirement
+          {
+            { 
+              new OpenApiSecurityScheme
+              {
+                Reference = new OpenApiReference()
+                {
+                  Id = "Bearer",
+                  Type = ReferenceType.SecurityScheme
+                }
+              },
+              Array.Empty<string>()
+            }
+          });
         });
       }
     }
