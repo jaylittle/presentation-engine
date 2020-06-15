@@ -52,7 +52,8 @@ class PEngineSettingEditor extends React.Component {
         newPasswordAdmin: {
           value: '',
           reset: false
-        }
+        },
+        disableSwagger: true
       },
       visible: false,
       errors: [ ],
@@ -145,7 +146,8 @@ class PEngineSettingEditor extends React.Component {
         newPasswordAdmin: {
           value: '',
           reset: false
-        }
+        },
+        disableSwagger: true
       };
       return prevState;
     });
@@ -409,6 +411,10 @@ class PEngineSettingEditor extends React.Component {
                       <span>
                         <input type="checkbox" checked={this.state.settings.disableSearch} onChange={(e) => this.updateField(e, 'disableSearch')} />
                         Search
+                      </span>
+                      <span>
+                        <input type="checkbox" checked={this.state.settings.disableSwagger} onChange={(e) => this.updateField(e, 'disableSwagger')} />
+                        Swagger
                       </span>
                     </div>
                   </div>

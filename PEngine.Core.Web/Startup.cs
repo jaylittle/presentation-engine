@@ -131,52 +131,55 @@ namespace PEngine.Core.Web
         options.MultipartHeadersLengthLimit = 1024 * 1024 * 1;
       });
 
-      // Register the Swagger generator, defining 1 or more Swagger documents
-      services.AddSwaggerGen(c =>
+      if (!Settings.Current.DisableSwagger)
       {
-        c.SwaggerDoc("v1", new OpenApiInfo {
-          Title = "Presentation Engine API",
-          Version = "v1",
-          Description = "Presentation Engine Web API"
-        });
-
-        // Set the comments path for the Swagger JSON and UI.
-        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-        c.IncludeXmlComments(xmlPath);
-
-        // Add security definitions
-        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+        // Register the Swagger generator, defining 1 or more Swagger documents
+        services.AddSwaggerGen(c =>
         {
-          Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
-          Name = "Authorization",
-          In = ParameterLocation.Header,
-          Type = SecuritySchemeType.OAuth2,
-          Flows = new OpenApiOAuthFlows()
+          c.SwaggerDoc("v1", new OpenApiInfo {
+            Title = "Presentation Engine API",
+            Version = "v1",
+            Description = "Presentation Engine Web API"
+          });
+
+          // Set the comments path for the Swagger JSON and UI.
+          var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+          var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+          c.IncludeXmlComments(xmlPath);
+
+          // Add security definitions
+          c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
           {
-            Password = new OpenApiOAuthFlow() {
-              TokenUrl = new Uri($"{Settings.Current.ExternalBaseUrl}token/pengine"),
-              RefreshUrl = new Uri($"{Settings.Current.ExternalBaseUrl}token/refresh"),
-              Scopes = new Dictionary<string, string>()
-            }
-          }
-        });
-
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-          { 
-            new OpenApiSecurityScheme
+            Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.OAuth2,
+            Flows = new OpenApiOAuthFlows()
             {
-              Reference = new OpenApiReference()
-              {
-                Id = "Bearer",
-                Type = ReferenceType.SecurityScheme
+              Password = new OpenApiOAuthFlow() {
+                TokenUrl = new Uri($"{Settings.Current.ExternalBaseUrl}token/pengine"),
+                RefreshUrl = new Uri($"{Settings.Current.ExternalBaseUrl}token/refresh"),
+                Scopes = new Dictionary<string, string>()
               }
-            },
-            Array.Empty<string>()
-          }
+            }
+          });
+
+          c.AddSecurityRequirement(new OpenApiSecurityRequirement
+          {
+            { 
+              new OpenApiSecurityScheme
+              {
+                Reference = new OpenApiReference()
+                {
+                  Id = "Bearer",
+                  Type = ReferenceType.SecurityScheme
+                }
+              },
+              Array.Empty<string>()
+            }
+          });
         });
-      });
+      }
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -221,15 +224,18 @@ namespace PEngine.Core.Web
         await next();
       });
 
-      // Enable middleware to serve generated Swagger as a JSON endpoint.
-      app.UseSwagger();
-
-      // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-      // specifying the Swagger JSON endpoint.
-      app.UseSwaggerUI(c =>
+      if (!Settings.Current.DisableSwagger)
       {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Presentation Engine API V1");
-      });
+        // Enable middleware to serve generated Swagger as a JSON endpoint.
+        app.UseSwagger();
+
+        // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+        // specifying the Swagger JSON endpoint.
+        app.UseSwaggerUI(c =>
+        {
+          c.SwaggerEndpoint("/swagger/v1/swagger.json", "Presentation Engine API V1");
+        });
+      }
 
       app.UseMvc(m => {
         m.MapRoute(
