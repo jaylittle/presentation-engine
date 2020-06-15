@@ -20,6 +20,10 @@ namespace PEngine.Core.Web.Security
   {
     public static readonly string[] XSRF_HTTP_METHODS = { "POST", "PUT", "PATCH", "DELETE" };
 
+    public static readonly string[] XSRF_EXCLUDE_REFERERS_ENDING_WITH = {
+      "/swagger/index.html"
+    };
+
     private static ILoggerFactory _logFactory;
 
     public static void Startup(ILoggerFactory logFactory)
@@ -66,8 +70,9 @@ namespace PEngine.Core.Web.Security
     private static bool IsNotXsrf(ActionExecutingContext context, out string message)
     {
       var logger = _logFactory.CreateLogger<XSRF>();
-      
-      if (XSRF_HTTP_METHODS.Contains(context.HttpContext.Request.Method, StringComparer.OrdinalIgnoreCase))
+      var referrer = context.HttpContext.Request.Headers.ContainsKey("Referer") ? (string) context.HttpContext.Request.Headers["Referer"] : string.Empty;
+      if (XSRF_HTTP_METHODS.Contains(context.HttpContext.Request.Method, StringComparer.OrdinalIgnoreCase)
+        && !XSRF_EXCLUDE_REFERERS_ENDING_WITH.Any(xerew => referrer.EndsWith(xerew, StringComparison.OrdinalIgnoreCase)))
       {
         var xsrfCookieValue = context.HttpContext.Request.Cookies[Middleware.TokenCookieMiddleware.COOKIE_XSRF_COOKIE_TOKEN];
         var xsrfFormValue = string.Empty;
