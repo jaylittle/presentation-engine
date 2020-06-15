@@ -151,7 +151,15 @@ namespace PEngine.Core.Web
           Description = "Please enter into field the word 'Bearer' followed by a space and the JWT value",
           Name = "Authorization",
           In = ParameterLocation.Header,
-          Type = SecuritySchemeType.ApiKey,
+          Type = SecuritySchemeType.OAuth2,
+          Flows = new OpenApiOAuthFlows()
+          {
+            Password = new OpenApiOAuthFlow() {
+              TokenUrl = new Uri($"{Settings.Current.ExternalBaseUrl}token/pengine"),
+              RefreshUrl = new Uri($"{Settings.Current.ExternalBaseUrl}token/refresh"),
+              Scopes = new Dictionary<string, string>()
+            }
+          }
         });
 
         c.AddSecurityRequirement(new OpenApiSecurityRequirement
