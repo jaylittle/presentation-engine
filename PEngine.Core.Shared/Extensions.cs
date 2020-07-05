@@ -69,7 +69,7 @@ namespace PEngine.Core.Shared
       }
       else
       {
-        string[] delimiters = { Environment.NewLine, "\n", "<br>", "</p>" };
+        string[] delimiters = { "</div>", "</p>", Environment.NewLine, "\n", "<br>" };
         int strptr = -1;
         int lastptr = -1;
         int cycle = 0;

@@ -231,7 +231,7 @@ namespace PEngine.Core.Web.Helpers
       return data.DataTruncate(length);
     }
 
-    public static string DataRenderAndTruncate(string data, int length =75)
+    public static string DataRenderAndTruncate(string data, int length = 75)
     {
       var pipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions();
