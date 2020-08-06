@@ -14,13 +14,13 @@ If you already know Docker, then this will be very easy and you likely don't nee
 
 4. cd presentation-engine
 
-5. ./docker-build.sh
+5. ./Scripts/docker-build.sh
 
-6. ./docker-create.sh penginecore.sample 5002
+6. ./Scripts/docker-create.sh penginecore.sample 5002
    
     Note: feel free to substitute whatever container name you want for the first parameter "penginecore.sample" and whatever port name you want for the second parameter "5002".
 
-7. ./docker-start.sh penginecore.sample
+7. ./Scripts/docker-start.sh penginecore.sample
 
 8. Open a browser and go to http://localhost:5002
 
@@ -34,9 +34,9 @@ Per docker standard operation, containers are disposable and should be deleted a
 
 3. git fetch && git pull --ff-only
 
-4. ./docker-build.sh
+4. ./Scripts/docker-build.sh
 
-5. ./docker-recreate.sh penginecore.sample 5002
+5. ./Scripts/docker-recreate.sh penginecore.sample 5002
 
     Note: feel free to substitute whatever container name you want for the first parameter "penginecore.sample" and whatever port name you want for the second parameter "5002".
 
@@ -44,11 +44,11 @@ Per docker standard operation, containers are disposable and should be deleted a
 
 Two scripts have been provided to facilitate this activity.  
 
-1. ./docker-backup.sh penginecore.sample /home/pengine/backups/sample
+1. ./Scripts/docker-backup.sh penginecore.sample /home/pengine/backups/sample
 
     Note: feel free to substitute whatever container name you want for the first parameter "penginecore.sample" and whatever directory you want to backup the data to for the third parameter.
 
-2. ./docker-restore.sh penginecore.sample 5002 /home/pengine/backups/sample
+2. ./Scripts/docker-restore.sh penginecore.sample 5002 /home/pengine/backups/sample
 
     Note: feel free to substitute whatever container name you want for the first parameter "penginecore.sample" and whatever port name you want for the second parameter "5002" and whatever directory you want to restore data from for the third parameter.
 

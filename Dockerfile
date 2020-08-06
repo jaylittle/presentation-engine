@@ -34,10 +34,10 @@ COPY PEngine.Core.Data/. ./PEngine.Core.Data/
 COPY PEngine.Core.Logic/. ./PEngine.Core.Logic/
 COPY --from=node-build /usr/src/app/PEngine.Core.Web/. ./PEngine.Core.Web/
 COPY PEngine.Core.Tests/. ./PEngine.Core.Tests/
-COPY *.sh ./
+COPY Scripts/. ./Scripts/
 COPY docker-version.txt ./
 WORKDIR /source
-RUN bash ./linux_docker_build.sh
+RUN bash ./Scripts/linux_docker_build.sh
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1

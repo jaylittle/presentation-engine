@@ -15,3 +15,5 @@ fi
 echo $VERSION > docker-version.txt
 
 docker build -t $TAG .
+
+rm docker-version.txt

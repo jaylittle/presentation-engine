@@ -28,7 +28,7 @@ VS Code is my primary development tool because its free and works great. Beyond 
 
 ### 7. What do I need to have installed to run this?
 
-Depending on how you want to build and deploy this application, system requirements will vary.  For a traditional build and deployment process [read this document](BUILD.md).  For a more modernized container approach [read this document instead](DOCKER.md).
+Depending on how you want to build and deploy this application, system requirements will vary.  For a traditional build and deployment process [read this document](Docs/BUILD.md).  For a more modernized container approach [read this document instead](Docs/DOCKER.md).
 
 ### 8. Do I need a webserver to host this app?
 

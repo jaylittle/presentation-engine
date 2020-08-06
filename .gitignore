@@ -10,6 +10,7 @@ pengine-v*.tgz
 pengine-v*/
 logs/
 docker-version.txt
+Builds/
 
 # JetBrains IDE files
 .idea/

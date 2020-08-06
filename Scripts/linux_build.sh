@@ -73,4 +73,4 @@ cd ..
 #Create version.test file
 echo $VERSION > "${PUBDIR}/version.txt"
 
-tar -C $PUBDIR -czvf $FILENAME ./
+tar -C $PUBDIR -czvf Builds/$FILENAME .
