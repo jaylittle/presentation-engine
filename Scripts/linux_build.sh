@@ -15,6 +15,10 @@ PUBDIR="PEngine.Core.Web/bin/${CONFIG}/${PLATFORM}/publish"
 echo Building version $VERSION
 echo Publishing from $PUBDIR to $FILENAME
 
+if [ ! -d "./Builds" ]; then
+  mkdir ./Builds
+fi
+
 #Clean up leftovers from previous builds
 if [ -d $PUBDIR ]
 then
