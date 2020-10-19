@@ -6,10 +6,11 @@ let PROD = (process.env.NODE_ENV === 'production');
 var plugins = [
 ];
 
+var minimizers = [ ];
+
 if (PROD) {
-  plugins.push(new terserPlugin({
-    sourceMap: true,
-    include: /\.min\.js$/
+  minimizers.push(new terserPlugin({
+    include: /\.min\.js$/,
   }));
 }
 
@@ -44,5 +45,9 @@ module.exports = {
         }
       }
     ]
+  },
+  optimization: {
+    minimize: PROD,
+    minimizer: minimizers
   }
 };
