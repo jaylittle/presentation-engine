@@ -89,8 +89,7 @@ namespace PEngine.Core.Web
       }
       catch (Exception ex)
       {
-        Log.Fatal(ex, "Host Configuration Failed!");
-        throw ex;
+        throw new Exception("Host Configuration Failed!", ex);
       }
 
       var launchKestrelFlag = true;
