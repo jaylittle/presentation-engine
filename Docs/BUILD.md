@@ -5,7 +5,7 @@ If you choose to utilize this project for a more traditional build and deploymen
 ## Requirements
 
 1. Git
-2. DotNetCore SDK 3.1
+2. DotNet SDK 5.0
 3. NodeJS and NPM
 4. Yarn installed via NPM globally
 
