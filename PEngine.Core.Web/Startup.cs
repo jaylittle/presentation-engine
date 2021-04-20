@@ -221,6 +221,11 @@ namespace PEngine.Core.Web
         {
           context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
         }
+        //Disable Google FLoC tracking
+        if (!context.Response.Headers.ContainsKey("Permissions-Policy"))
+        {
+          context.Response.Headers.Add("Permissions-Policy", "interest-cohort=()");
+        }
         await next();
       });
 
