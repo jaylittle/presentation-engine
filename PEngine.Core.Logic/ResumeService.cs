@@ -43,11 +43,25 @@ namespace PEngine.Core.Logic
     public async Task<ResumeModel> GetResume()
     {
       var retvalue = new ResumeModel() {
-        Personals = (await _resumeDal.ListResumePersonals()).ToList(),
-        Objectives = (await _resumeDal.ListResumeObjectives()).ToList(),
-        SkillTypes = (await _resumeDal.ListResumeSkills()).GroupBy(s => s.Type, StringComparer.OrdinalIgnoreCase).Select(g => new ResumeSkillTypeModel(g.Key, g.OrderBy(s => s.Order).ToList())).ToList(),
-        Educations = (await _resumeDal.ListResumeEducations()).OrderByDescending(ed => ed.Started).ThenBy(ed => ed.Institute).ThenBy(ed => ed.Program).ToList(),
-        WorkHistories = (await _resumeDal.ListResumeWorkHistories()).OrderByDescending(wh => wh.Started).ThenBy(wh => wh.Employer).ThenBy(wh => wh.JobTitle).ToList()
+        Personals = (await _resumeDal.ListResumePersonals())
+          .ToList(),
+        Objectives = (await _resumeDal.ListResumeObjectives())
+          .ToList(),
+        SkillTypes = (await _resumeDal.ListResumeSkills())
+          .GroupBy(s => s.Type, StringComparer.OrdinalIgnoreCase)
+          .OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase)
+          .Select(g => new ResumeSkillTypeModel(g.Key, g.OrderBy(s => s.Order).ToList()))
+          .ToList(),
+        Educations = (await _resumeDal.ListResumeEducations())
+          .OrderByDescending(ed => ed.Started)
+          .ThenBy(ed => ed.Institute)
+          .ThenBy(ed => ed.Program)
+          .ToList(),
+        WorkHistories = (await _resumeDal.ListResumeWorkHistories())
+          .OrderByDescending(wh => wh.Started)
+          .ThenBy(wh => wh.Employer)
+          .ThenBy(wh => wh.JobTitle)
+          .ToList()
       };
       return retvalue;
     }
