@@ -16,7 +16,7 @@ RUN NODE_ENV=production yarn build
 
 
 # https://hub.docker.com/_/microsoft-dotnet-core
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS dotnet-build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS dotnet-build
 WORKDIR /source
 
 # copy csproj and restore as distinct layers
@@ -40,7 +40,7 @@ WORKDIR /source
 RUN bash ./Scripts/linux_docker_build.sh
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=dotnet-build /app ./
 VOLUME /app
