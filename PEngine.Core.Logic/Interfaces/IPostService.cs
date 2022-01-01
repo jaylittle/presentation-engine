@@ -10,7 +10,7 @@ namespace PEngine.Core.Logic.Interfaces
   public interface IPostService
   {
     Task<IEnumerable<PostModel>> ListPosts(bool isAdmin, bool isView = false);
-    Task<IEnumerable<PostModel>> SearchPosts(string[] searchTerms, bool isAdmin);
+    Task<(IEnumerable<PostModel> exact, IEnumerable<PostModel> fuzzy)> SearchPosts(string searchQuery, string[] searchTerms, bool isAdmin);
     Task<PostModel> GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin);
     Task<OpResult> UpsertPost(PostModel post, bool importFlag = false);
   }

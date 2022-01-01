@@ -14,6 +14,9 @@
     <thead>
       <tr>
         <th>
+          @Html.PEPagerLinkWithText("Exact?", "index", "ExactMatch", Model.Paging, new { query = Model.State.CurrentSection })
+        </th>
+        <th>
           @Html.PEPagerLinkWithText("Type", "index", "Type", Model.Paging, new { query = Model.State.CurrentSection })
         </th>
         <th>
@@ -35,6 +38,16 @@
     @foreach (var item in Model.ListData)
     {
       <tr class='@((i++)%2!=0 ? "alt" : string.Empty)'>
+        <td>
+          @if (item.ExactMatch)
+          {
+            @Html.Raw("Yes")
+          }
+          else
+          {
+            @Html.Raw("No")
+          }
+        </td>
         <td>@item.Type</td>
         <td>
           <a href="@item.Link" class="invisible-link">

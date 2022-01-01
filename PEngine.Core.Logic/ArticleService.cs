@@ -38,10 +38,26 @@ namespace PEngine.Core.Logic
       return (await _articleDal.ListArticlesWithSections(category)).Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag));
     }
 
-    public async Task<IEnumerable<ArticleModel>> SearchArticles(string[] searchTerms, bool isAdmin)
+    public async Task<(IEnumerable<ArticleModel> exact, IEnumerable<ArticleModel> fuzzy)> SearchArticles(string searchQuery, string[] searchTerms, bool isAdmin)
     {
-      var matchingArticles = await _articleDal.ListArticlesWithSections(null);
-      return matchingArticles
+      var allArticles = await _articleDal.ListArticlesWithSections(null);
+
+      var exactMatches = allArticles
+        .Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag))
+        .Where(a =>
+          a.Category?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          a.Name?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          a.Description?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          a.ContentURL?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >=0 ||
+          a.Sections.Any(s =>
+            s.Data.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+            s.Name.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0
+          )
+        );
+      var exactMatchIndex = exactMatches.ToDictionary(em => em.Guid, em => true);
+
+      var fuzzyMatches = allArticles
+        .Where(a => !exactMatchIndex.ContainsKey(a.Guid))
         .Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag))
         .Where(a => searchTerms.All(st => 
           a.Category?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -53,6 +69,8 @@ namespace PEngine.Core.Logic
             s.Name.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0
           )
         ));
+
+      return (exactMatches, fuzzyMatches);
     }
 
     public async Task<ArticleModel> GetArticleById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)

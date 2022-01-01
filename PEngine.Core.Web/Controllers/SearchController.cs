@@ -40,18 +40,20 @@ namespace PEngine.Core.Web.Controllers
         var results = new List<PEngineSearchResultModel>();
         string[] searchTerms = !string.IsNullOrWhiteSpace(query) ? query.Split(' ') : new string[] {};
         
-        results.AddRange((await _articleService.SearchArticles(searchTerms, model.State.HasAdmin))
-          .Select(a => new PEngineSearchResultModel(a)));
+        var articleResults = (await _articleService.SearchArticles(query, searchTerms, model.State.HasAdmin));
+        results.AddRange(articleResults.exact.Select(a => new PEngineSearchResultModel(a, true)));
+        results.AddRange(articleResults.fuzzy.Select(a => new PEngineSearchResultModel(a, false)));
 
-        results.AddRange((await _postService.SearchPosts(searchTerms, model.State.HasAdmin))
-          .Select(p => new PEngineSearchResultModel(p)));
+        var postResults = (await _postService.SearchPosts(query, searchTerms, model.State.HasAdmin));
+        results.AddRange(postResults.exact.Select(p => new PEngineSearchResultModel(p, true)));
+        results.AddRange(postResults.fuzzy.Select(p => new PEngineSearchResultModel(p, false)));
 
         if (paging != null)
         {
           paging.Count = paging.Count > 0 ? paging.Count : model.Settings.PerPageSearchResults;
           if (string.IsNullOrEmpty(paging.SortField))
           {
-            paging.SortField = "CreatedUTC";
+            paging.SortField = "ExactMatch DESC, CreatedUTC";
             paging.SortAscending = false;
           }
         }

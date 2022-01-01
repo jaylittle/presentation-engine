@@ -28,16 +28,29 @@ namespace PEngine.Core.Logic
       return (await _postDal.ListPosts()).Where(p => isAdmin || (p.VisibleFlag && (isView || !p.NoIndexFlag)));
     }
 
-    public async Task<IEnumerable<PostModel>> SearchPosts(string[] searchTerms, bool isAdmin)
+    public async Task<(IEnumerable<PostModel> exact, IEnumerable<PostModel> fuzzy)> SearchPosts(string searchQuery, string[] searchTerms, bool isAdmin)
     {
-      var matchingPosts = await _postDal.ListPosts();
-      return matchingPosts
+      var allPosts = await _postDal.ListPosts();
+
+      var exactMatches = allPosts
+        .Where(p => isAdmin || (p.VisibleFlag && !p.NoIndexFlag))
+        .Where(p =>
+          p.Name?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          p.Data?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
+          p.IconFileName?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0
+        );
+      var exactMatchIndex = exactMatches.ToDictionary(em => em.Guid, em => true);
+
+      var fuzzyMatches = allPosts
+        .Where(a => !exactMatchIndex.ContainsKey(a.Guid))
         .Where(p => isAdmin || (p.VisibleFlag && !p.NoIndexFlag))
         .Where(p => searchTerms.All(st =>
           p.Name?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
           p.Data?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
           p.IconFileName?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0
         ));
+
+      return (exactMatches, fuzzyMatches);
     }
 
     public async Task<PostModel> GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)

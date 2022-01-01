@@ -19,8 +19,9 @@ namespace PEngine.Core.Web.Models
     public DateTime? CreatedUTC { get; set; }
     public string Creator { get; set; }
     public string Link { get; set; }
+    public bool ExactMatch { get; set; }
 
-    public PEngineSearchResultModel(PostModel post)
+    public PEngineSearchResultModel(PostModel post, bool exactMatch = false)
     {
       Type = "Post";
       Title = post.Name;
@@ -28,9 +29,10 @@ namespace PEngine.Core.Web.Models
       CreatedUTC = post.CreatedUTC;
       Creator = "Admin";
       Link = $"post/view/{post.CreatedYear}/{post.CreatedMonth}/{post.UniqueName}";
+      ExactMatch = exactMatch;
     }
 
-    public PEngineSearchResultModel(ArticleModel article)
+    public PEngineSearchResultModel(ArticleModel article, bool exactMatch = false)
     {
       Type = "Article";
       Title = article.Name;
@@ -38,6 +40,7 @@ namespace PEngine.Core.Web.Models
       CreatedUTC = article.CreatedUTC;
       Creator = "Admin";
       Link = $"article/view/{article.UniqueName}";
+      ExactMatch = exactMatch;
     }
 
     public PEngineSearchResultModel(ForumThreadPostModel forumThreadPost)
