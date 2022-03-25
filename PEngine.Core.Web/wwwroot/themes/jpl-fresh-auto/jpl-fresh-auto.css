@@ -1,0 +1,3 @@
+@import url(../jpl-fresh/jpl-fresh.css) (prefers-color-scheme: no-preference);
+@import url(../jpl-fresh/jpl-fresh.css) (prefers-color-scheme: light);
+@import url(../jpl-fresh-dark/jpl-fresh-dark.css) (prefers-color-scheme: dark);

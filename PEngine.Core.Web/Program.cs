@@ -82,9 +82,9 @@ namespace PEngine.Core.Web
 
             webHostBuilder
               .UseStartup<Startup>()
-              .UseSerilog()
               .UseDefaultServiceProvider(options => options.ValidateScopes = false);
           })
+          .UseSerilog()
           .Build();
       }
       catch (Exception ex)

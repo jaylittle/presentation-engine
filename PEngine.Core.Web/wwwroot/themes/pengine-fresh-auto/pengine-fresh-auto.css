@@ -1,0 +1,3 @@
+@import url(../pengine-fresh/pengine-fresh.css) (prefers-color-scheme: no-preference);
+@import url(../pengine-fresh/pengine-fresh.css) (prefers-color-scheme: light);
+@import url(../pengine-fresh-dark/pengine-fresh-dark.css) (prefers-color-scheme: dark);
