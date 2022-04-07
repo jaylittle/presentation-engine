@@ -82,6 +82,7 @@ namespace PEngine.Core.Shared
     public string ErrorMessageException { get; set; } = "That Was A Fine Example Of Unexcepted Behavior!\n\nDiagnosis: Your Request Is Dead Jim.";
     public bool SummaryModeFront { get; set; } = false;
     public bool DisableSwagger { get; set; } = true;
+    public bool DisableResponseCompression { get; set; } = false;
 
     [JsonIgnore]
     public string CookiePath

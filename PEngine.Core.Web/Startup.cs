@@ -51,6 +51,12 @@ namespace PEngine.Core.Web
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      //Add Response Compression
+      services.AddResponseCompression(options =>
+      {
+        options.EnableForHttps = true;
+      });
+
       // Add framework services.
       services.AddMvc(options => {
         options.CacheProfiles.Add("None",
@@ -203,6 +209,12 @@ namespace PEngine.Core.Web
       app.UseMiddleware<TokenCookieMiddleware>();
 
       app.UseAuthentication();
+
+      // Add Response Compression
+      if (!Settings.Current.DisableResponseCompression)
+      {
+        app.UseResponseCompression();
+      }
 
       // Add JWT generation
       var secretKey = PEngine.Core.Shared.Settings.Current.SecretKey.ToString();

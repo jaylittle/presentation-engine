@@ -53,7 +53,8 @@ class PEngineSettingEditor extends React.Component {
           value: '',
           reset: false
         },
-        disableSwagger: true
+        disableSwagger: true,
+        disableResponseCompression: true
       },
       visible: false,
       errors: [ ],
@@ -147,7 +148,8 @@ class PEngineSettingEditor extends React.Component {
           value: '',
           reset: false
         },
-        disableSwagger: true
+        disableSwagger: true,
+        disableResponseCompression: true
       };
       return prevState;
     });
@@ -415,6 +417,10 @@ class PEngineSettingEditor extends React.Component {
                       <span>
                         <input type="checkbox" checked={this.state.settings.disableSwagger} onChange={(e) => this.updateField(e, 'disableSwagger')} />
                         Swagger
+                      </span>
+                      <span>
+                        <input type="checkbox" checked={this.state.settings.disableResponseCompression} onChange={(e) => this.updateField(e, 'disableResponseCompression')} />
+                        Response Compression
                       </span>
                     </div>
                   </div>
