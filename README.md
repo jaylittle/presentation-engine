@@ -1,4 +1,4 @@
-![Presentation Engine 5.1 Logo](./PEngine.Core.Web/wwwroot/images/system/pengine_logo5.png)
+![Presentation Engine 5.1 Logo](./PEngine.Core.Web/wwwroot/images/system/pengine_logo5.webp)
 
 This repo is the code which runs my personal website https://jaylittle.com and my business website https://jplcoding.com
 
