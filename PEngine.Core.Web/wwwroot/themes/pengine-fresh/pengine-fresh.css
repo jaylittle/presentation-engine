@@ -1,7 +1,7 @@
 ﻿@font-face
 {
   font-family: 'Webly Sleek UI Regular';
-  src: url(../../fonts/weblysleekui.ttf);
+  src: url(../../fonts/weblysleekui.woff2);
 }
 
 body
@@ -102,7 +102,7 @@ b
 {
   min-width: 810px;
   background-color: white;
-  background-image: url(./btopmid.png);
+  background-image: url(./btopmid.webp);
   background-repeat: repeat-x;
 }
 

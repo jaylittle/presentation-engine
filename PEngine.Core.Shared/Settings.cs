@@ -17,7 +17,7 @@ namespace PEngine.Core.Shared
     // app_default_theme,
     public string DefaultTheme { get; set; } = "pengine-fresh-dark";
     // app_logo_frontpage,
-    public string LogoFrontPage { get; set; } = "pengine_logo5.png";
+    public string LogoFrontPage { get; set; } = "pengine_logo5.webp";
     // app_recpage_news_summary,
     public int PerPagePostArchived { get; set; } = 10;
     // app_recpage_news,

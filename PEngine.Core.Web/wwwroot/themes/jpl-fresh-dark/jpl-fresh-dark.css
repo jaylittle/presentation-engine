@@ -1,7 +1,7 @@
 ﻿@font-face
 {
   font-family: 'Webly Sleek UI Regular';
-  src: url(../../fonts/weblysleekui.ttf);
+  src: url(../../fonts/weblysleekui.woff2);
 }
 
 body
@@ -128,7 +128,7 @@ b
 .header-left
 {
   width: 190px;
-  background-image: url(./btopleft.png);
+  background-image: url(./btopleft.webp);
   background-position: left top;
   background-repeat: no-repeat;
   float: left;
@@ -138,7 +138,7 @@ b
 {
   width: 190px;
   vertical-align: middle;
-  background-image: url(./btopright.png);
+  background-image: url(./btopright.webp);
   background-position: right top;
   background-repeat: no-repeat;
   float: right;
