@@ -83,6 +83,7 @@ namespace PEngine.Core.Shared
     public bool SummaryModeFront { get; set; } = false;
     public bool DisableSwagger { get; set; } = true;
     public bool DisableResponseCompression { get; set; } = false;
+    public bool DisableInlineContent { get; set; } = false;
 
     [JsonIgnore]
     public string CookiePath

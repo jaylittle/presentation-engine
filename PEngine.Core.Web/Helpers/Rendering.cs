@@ -197,6 +197,19 @@ namespace PEngine.Core.Web.Helpers
       }
     }
 
+    public static bool IconEnabled
+    {
+      get
+      {
+        if (!string.IsNullOrWhiteSpace(Settings.Current.FavIcon))
+        {
+          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", LogoPath, null, true).Result;
+          return hashEntry != null;
+        }
+        return false;
+      }
+    }
+
     public static string FavIconPath
     {
       get

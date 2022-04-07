@@ -36,9 +36,19 @@
     <meta name="author" content="@Model.Settings.OwnerName" />
     }
     <meta name="generator" content="@Model.State.Version" />
+    @if(Model.Settings.DisableInlineContent)
+    {
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile("styles/pengine.core.css")"> 
     <link rel="stylesheet" type="text/css" href="@Html.ContentHashFile((string)Model.State.ThemePath)"> 
-    @if (Rendering.LogoEnabled)
+    } else {
+    <style>
+      @Html.InlineContent("styles/pengine.core.css")
+    </style>
+    <style>
+      @Html.InlineContent((string)Model.State.ThemePath)
+    </style>
+    }
+    @if (Rendering.IconEnabled)
     {
     <link rel="icon" href="@Html.ContentHashFile(Rendering.FavIconPath, true)">
     }
@@ -153,7 +163,14 @@
     <script src="@Html.ContentHashFile("dist/pengine.core.web.3rdparty.min.js")"></script>
     <script src="@Html.ContentHashFile("dist/pengine.core.web.main.min.js")"></script>
     }
+    @if(Model.Settings.DisableInlineContent)
+    {
     <script src="@Html.ContentHashFile("dist/pengine.core.web.sitewide.min.js")"></script>
+    } else {
+    <script type="text/javascript">
+      @Html.InlineContent("dist/pengine.core.web.sitewide.min.js")
+    </script>
+    }
     @RenderSection("scripts", required: false)
   </body>
 </html>

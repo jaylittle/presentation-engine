@@ -54,7 +54,8 @@ class PEngineSettingEditor extends React.Component {
           reset: false
         },
         disableSwagger: true,
-        disableResponseCompression: true
+        disableResponseCompression: false,
+        disableInlineContent: false,
       },
       visible: false,
       errors: [ ],
@@ -149,7 +150,8 @@ class PEngineSettingEditor extends React.Component {
           reset: false
         },
         disableSwagger: true,
-        disableResponseCompression: true
+        disableResponseCompression: false,
+        disableInlineContent: false,
       };
       return prevState;
     });
@@ -421,6 +423,10 @@ class PEngineSettingEditor extends React.Component {
                       <span>
                         <input type="checkbox" checked={this.state.settings.disableResponseCompression} onChange={(e) => this.updateField(e, 'disableResponseCompression')} />
                         Response Compression
+                      </span>
+                      <span>
+                        <input type="checkbox" checked={this.state.settings.disableInlineContent} onChange={(e) => this.updateField(e, 'disableInlineContent')} />
+                        Inline Content
                       </span>
                     </div>
                   </div>

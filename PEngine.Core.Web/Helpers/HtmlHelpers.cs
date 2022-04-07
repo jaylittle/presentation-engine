@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.StaticFiles;
 using PEngine.Core.Shared;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -28,6 +29,20 @@ namespace PEngine.Core.Web.Helpers
         hashUrl = GetRelativeHashPath(hashEntry.Hash, hashEntry.WebPath);
       }
       return new HtmlString(hashUrl.TrimStart('/'));
+    }
+
+    public static HtmlString InlineContent(this IHtmlHelper htmlHelper, string filePath)
+    {
+      filePath = System.Net.WebUtility.UrlDecode(filePath);
+      if (!string.IsNullOrWhiteSpace(filePath))
+      {
+        var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", filePath, Helpers.Html.GetAbsoluteHashPath, true).Result;
+
+        string contentType;
+        new FileExtensionContentTypeProvider().TryGetContentType(hashEntry.FullPath, out contentType);
+        return new HtmlString(Encoding.UTF8.GetString(hashEntry.Transformable ? hashEntry.Transformation : System.IO.File.ReadAllBytes(hashEntry.FullPath)));
+      }
+      return new HtmlString(string.Empty);
     }
 
     public static string GetRelativeHashPath(string hash, string webPath)
