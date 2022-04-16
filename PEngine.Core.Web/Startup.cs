@@ -132,9 +132,9 @@ namespace PEngine.Core.Web
         });
 
       services.Configure<FormOptions>(options => {
-        options.ValueLengthLimit = 1024 * 1024 * 10;
-        options.MultipartBodyLengthLimit = 1024 * 1024 * 20;
-        options.MultipartHeadersLengthLimit = 1024 * 1024 * 1;
+        options.ValueLengthLimit = int.MaxValue;
+        options.MultipartBodyLengthLimit = int.MaxValue;
+        options.MultipartHeadersLengthLimit = int.MaxValue;
       });
 
       if (!Settings.Current.DisableSwagger)
