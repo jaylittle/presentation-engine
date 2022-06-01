@@ -38,6 +38,8 @@ class PEngineArticleEditor extends React.Component {
   }
 
   componentDidMount = () => {
+    PEHelpers.assignComponentClickEvent(this, "article_view_button_edit", "article");
+    PEHelpers.assignComponentClickEvent(this, "pengine-button-newarticle", "article");
     this.processLocationHash();
   }
 

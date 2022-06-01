@@ -28,6 +28,10 @@ class PEngineUploader extends React.Component {
     };
   }
 
+  componentDidMount = () => {
+    PEHelpers.assignComponentClickEvent(this, "pengine-button-uploader", "settings", "show");
+  }
+
   reset = () => {
     this.setState({
       breadcrumbs: [],

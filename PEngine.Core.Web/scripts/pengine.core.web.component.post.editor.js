@@ -24,6 +24,8 @@ class PEnginePostEditor extends React.Component {
   }
 
   componentDidMount = () => {
+    PEHelpers.assignComponentClickEvent(this, "post_view_button_edit", "post");
+    PEHelpers.assignComponentClickEvent(this, "pengine-button-newpost", "post");
     this.processLocationHash();
   }
 

@@ -7,44 +7,23 @@ import PEResumeEditor from "./pengine.core.web.component.resume.editor.js";
 import PESettingEditor from "./pengine.core.web.component.setting.editor.js";
 
 /* Load React Components */
-ReactDOM.render(
-  <PEHeader />,
-  document.getElementById('pengine-header')
-);
+const headerRoot = ReactDOM.createRoot(document.getElementById('pengine-header'));
+headerRoot.render(<PEHeader />);
 
-let uploaderInstance = ReactDOM.render(
-  <PEUploader />,
-  document.getElementById('pengine-uploader')
-);
+const uploaderRoot = ReactDOM.createRoot(document.getElementById('pengine-uploader'));
+uploaderRoot.render(<PEUploader />);
 
-let postEditorInstance = ReactDOM.render(
-  <PEPostEditor />,
-  document.getElementById('pengine-post-editor')
-);
+const postEditorRoot = ReactDOM.createRoot(document.getElementById('pengine-post-editor'));
+postEditorRoot.render(<PEPostEditor />);
 
-let articleEditorInstance = ReactDOM.render(
-  <PEArticleEditor />,
-  document.getElementById('pengine-article-editor')
-);
+const articleEditorRoot = ReactDOM.createRoot(document.getElementById('pengine-article-editor'));
+articleEditorRoot.render(<PEArticleEditor />);
 
-let resumeEditorInstance = ReactDOM.render(
-  <PEResumeEditor />,
-  document.getElementById('pengine-resume-editor')
-);
+const resumeEditorRoot = ReactDOM.createRoot(document.getElementById('pengine-resume-editor'));
+resumeEditorRoot.render(<PEResumeEditor />);
 
-let settingEditorInstance = ReactDOM.render(
-  <PESettingEditor />,
-  document.getElementById('pengine-setting-editor')
-);
-
-/* Bind Events to the DOM */
-PEHelpers.assignComponentClickEvent(postEditorInstance, "post_view_button_edit", "post");
-PEHelpers.assignComponentClickEvent(postEditorInstance, "pengine-button-newpost", "post");
-PEHelpers.assignComponentClickEvent(articleEditorInstance, "article_view_button_edit", "article");
-PEHelpers.assignComponentClickEvent(articleEditorInstance, "pengine-button-newarticle", "article");
-PEHelpers.assignComponentClickEvent(resumeEditorInstance, "resume_view_button_edit", "resume");
-PEHelpers.assignComponentClickEvent(settingEditorInstance, "pengine-button-setting", "settings");
-PEHelpers.assignComponentClickEvent(uploaderInstance, "pengine-button-uploader", "settings", "show");
+const settingEditorRoot = ReactDOM.createRoot(document.getElementById('pengine-setting-editor'));
+settingEditorRoot.render(<PESettingEditor />);
 
 /* Setup Automatic Token Refresh */
 setupAutoTokenRefresh();

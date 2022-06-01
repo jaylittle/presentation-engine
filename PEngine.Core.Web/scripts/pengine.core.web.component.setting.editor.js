@@ -64,6 +64,7 @@ class PEngineSettingEditor extends React.Component {
   }
 
   componentDidMount = () => {
+    PEHelpers.assignComponentClickEvent(this, "pengine-button-setting", "settings");
     this.processLocationHash();
   }
 

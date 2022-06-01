@@ -20,6 +20,7 @@ class PEngineResumeEditor extends React.Component {
   }
 
   componentDidMount = () => {
+    PEHelpers.assignComponentClickEvent(this, "resume_view_button_edit", "resume");
     this.processLocationHash();
   }
 
