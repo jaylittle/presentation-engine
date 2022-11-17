@@ -1,4 +1,4 @@
-FROM node:current-slim as node-build
+FROM node:lts-slim as node-build
 
 WORKDIR /usr/src/app
 # copy package.json and restore as distinct layers
