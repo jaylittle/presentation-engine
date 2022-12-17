@@ -94,17 +94,18 @@ namespace PEngine.Core.Web.Helpers
         : string.Empty;
     }
 
-    public static string MarkupMenuButton(string text, string url)
+    public static string MarkupMenuButton(string text, string url, string linkAttributes)
     {
+      linkAttributes = !string.IsNullOrWhiteSpace(linkAttributes) ? $" {linkAttributes}" : string.Empty;
       if (!string.IsNullOrWhiteSpace(text) && !string.IsNullOrWhiteSpace(url))
       {
         if (Shared.Helpers.IsUrlAbsolute(url))
         {
-          return $"<a class=\"menu-button\" href=\"{url}\" target=\"_blank\">{text}</a>";
+          return $"<a class=\"menu-button\" href=\"{url}\" target=\"_blank\"{linkAttributes}>{text}</a>";
         }
         else
         {
-          return $"<a class=\"menu-button\" href=\"{url}\">{text}</a>";
+          return $"<a class=\"menu-button\" href=\"{url}\"{linkAttributes}>{text}</a>";
         }
       }
       else

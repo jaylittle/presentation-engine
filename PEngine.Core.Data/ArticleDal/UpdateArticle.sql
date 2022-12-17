@@ -6,6 +6,7 @@ SET
   Description = @Description,
   Category = @Category,
   ContentURL = @ContentURL,
+  ContentLinkAttributes = @ContentLinkAttributes,
   DefaultSection = @DefaultSection,
   VisibleFlag = @VisibleFlag,
   NoIndexFlag = @NoIndexFlag,

@@ -42,9 +42,9 @@ namespace PEngine.Core.Web.Models
       }
     }
     [JsonIgnore]
-    public List<KeyValuePair<string, string>> TopMenuButtons { get; set; }
+    public List<PEngineMenuButtonModel> TopMenuButtons { get; set; }
     [JsonIgnore]
-    public List<KeyValuePair<string, string>> SubMenuButtons { get; set; }
+    public List<PEngineMenuButtonModel> SubMenuButtons { get; set; }
     [JsonIgnore]
     public Dictionary<string, string> Links { get; set; }
 
@@ -227,49 +227,48 @@ namespace PEngine.Core.Web.Models
 
       //Process Record
       SubTitle = null;
-      TopMenuButtons = new List<KeyValuePair<string, string>>();
-      SubMenuButtons = new List<KeyValuePair<string, string>>();
+      TopMenuButtons = new List<PEngineMenuButtonModel>();
+      SubMenuButtons = new List<PEngineMenuButtonModel>();
       Links = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-      TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelHomeButton, _settings.BasePath));
-      if (!IsForum && !_settings.DisableResume)
+      TopMenuButtons.Add(new PEngineMenuButtonModel(_settings.LabelHomeButton, _settings.BasePath));
+      if (!_settings.DisableResume)
       {
-        TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelResumeButton, "resume"));
+        TopMenuButtons.Add(new PEngineMenuButtonModel(_settings.LabelResumeButton, "resume"));
       }
-      //if (!_settings.DisableForum)
-      //{
-      //  TopMenuButtons.Add(new KeyValuePair<string, string>(_settings.LabelForumButton, "forum"));
-      //}
 
-      if (!IsForum)
+      var articleDal = _svp.GetRequiredService<IArticleDal>();
+      var articleCategories = articleDal.ListArticles(null).Result
+        .Where(a => (a.VisibleFlag && !a.NoIndexFlag) || HasAdmin)
+        .GroupBy(a => $"{a.Category}|{a.ContentURL}", StringComparer.OrdinalIgnoreCase)
+        .OrderBy(g => g.Key)
+        .Select(g => new {
+          key = g.Key,
+          firstArticle = g.First(),
+          count = g.Count()
+        });
+
+      foreach (var articleCategory in articleCategories)
       {
-        var articleDal = _svp.GetRequiredService<IArticleDal>();
-        var articleCategories = articleDal.ListArticles(null).Result
-          .Where(a => (a.VisibleFlag && !a.NoIndexFlag) || HasAdmin)
-          .GroupBy(a => $"{a.Category}|{a.ContentURL}", StringComparer.OrdinalIgnoreCase)
-          .OrderBy(g => g.Key)
-          .Select(g => new { key = g.Key, firstUniqueName = g.First().UniqueName, count = g.Count() });
+        var categoryElements = articleCategory.key.Split('|');
+        var categoryUrl = $"article/category/{categoryElements[0]}";
+        var categoryLinkAttributes = string.Empty;
 
-        foreach (var articleCategory in articleCategories)
+        //Override Category URL if appropriate
+        if (!HasAdmin)
         {
-          var categoryElements = articleCategory.key.Split('|');
-          var categoryUrl = $"article/category/{categoryElements[0]}";
-
-          //Override Category URL if appropriate
-          if (!HasAdmin)
+          if (!string.IsNullOrWhiteSpace(categoryElements[1]))
           {
-            if (!string.IsNullOrWhiteSpace(categoryElements[1]))
-            {
-              categoryUrl = categoryElements[1];
-            }
-            else if (articleCategory.count == 1)
-            {
-              categoryUrl = $"article/view/{articleCategory.firstUniqueName}";
-            }
+            categoryUrl = categoryElements[1];
+            categoryLinkAttributes = articleCategory.firstArticle.ContentLinkAttributes ?? string.Empty;
           }
-
-          TopMenuButtons.Add(new KeyValuePair<string, string>(categoryElements[0], categoryUrl));
+          else if (articleCategory.count == 1)
+          {
+            categoryUrl = $"article/view/{articleCategory.firstArticle.UniqueName}";
+          }
         }
+
+        TopMenuButtons.Add(new PEngineMenuButtonModel(categoryElements[0], categoryUrl, categoryLinkAttributes));
       }
 
       var requestUri = new Uri(_context.Request.GetDisplayUrl());
@@ -311,8 +310,9 @@ namespace PEngine.Core.Web.Models
                   Links.Add("Next", $"article/view/{articleData.UniqueName}/{articleSections[sectionPtr + 1].UniqueName}");
                 }
               }
-              if (!articleData.HideButtonsFlag) {
-                SubMenuButtons.Add(new KeyValuePair<string, string>(section.Name, sectionUrl));
+              if (!articleData.HideButtonsFlag)
+              {
+                SubMenuButtons.Add(new PEngineMenuButtonModel(section.Name, sectionUrl));
               }
             }
             SummaryTitle = !HideSubTitle ? SubTitle : _settings.DefaultTitle;

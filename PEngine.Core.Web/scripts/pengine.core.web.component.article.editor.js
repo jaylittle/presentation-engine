@@ -12,6 +12,7 @@ class PEngineArticleEditor extends React.Component {
         description: '',
         category: '',
         contentURL: '',
+        contentLinkAttributes: '',
         defaultSection: '',
         visibleFlag: false,
         noIndexFlag: true,
@@ -87,6 +88,7 @@ class PEngineArticleEditor extends React.Component {
         description: '',
         category: '',
         contentURL: '',
+        contentLinkAttributes: '',
         defaultSection: '',
         visibleFlag: false,
         noIndexFlag: true,
@@ -327,6 +329,12 @@ class PEngineArticleEditor extends React.Component {
                     <div className="edit-label">Content URL:</div>
                     <div className="edit-field">
                       <input type="text" className="edit-control-large" value={this.state.article.contentURL} onChange={(e) => this.updateArticleField(e, 'contentURL')} />
+                    </div>
+                  </div>
+                  <div className="edit-row">
+                    <div className="edit-label">Content Link Attributes:</div>
+                    <div className="edit-field">
+                      <input type="text" className="edit-control-large" value={this.state.article.contentLinkAttributes} onChange={(e) => this.updateArticleField(e, 'contentLinkAttributes')} />
                     </div>
                   </div>
                   <div className="edit-row">

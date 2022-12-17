@@ -112,14 +112,14 @@
         <div class="menu">
           @foreach (var menuButton in Model.State.TopMenuButtons)
           {
-            @Html.Raw(Rendering.MarkupMenuButton(menuButton.Key, menuButton.Value))
+            @Html.Raw(Rendering.MarkupMenuButton(menuButton.Text, menuButton.Url, menuButton.Attributes))
           }
           @if (Model.State.SubMenuButtons.Count > 0)
           {
             <div class="menu-separator"></div>
             foreach (var menuButton in Model.State.SubMenuButtons)
             {
-              @Html.Raw(Rendering.MarkupMenuButton(menuButton.Key, menuButton.Value))
+              @Html.Raw(Rendering.MarkupMenuButton(menuButton.Text, menuButton.Url, menuButton.Attributes))
             }
           }
         </div>

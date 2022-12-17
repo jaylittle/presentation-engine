@@ -14,6 +14,7 @@ namespace PEngine.Core.Shared.Models
     public string Description { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
     public string ContentURL { get; set; }
+    public string ContentLinkAttributes { get; set; } = string.Empty;
     public string DefaultSection { get; set; } = string.Empty;
     public bool VisibleFlag { get; set; }
     public bool NoIndexFlag { get; set; }
