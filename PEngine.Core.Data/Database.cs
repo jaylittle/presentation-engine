@@ -13,8 +13,7 @@ namespace PEngine.Core.Data
   public enum DatabaseType
   {
     PEngine,
-    Misc,
-    Forum
+    Misc
   }
 
   public static class Database
@@ -29,8 +28,8 @@ namespace PEngine.Core.Data
       var databaseTypes = Enum.GetValues(typeof(DatabaseType));
       foreach (var databaseType in databaseTypes)
       {
-       _singleWriteQueue.Add((DatabaseType)databaseType, new ConcurrentQueue<int?>());
-       _singleWriteQueueCurrentThreadId.Add((DatabaseType)databaseType, null);
+        _singleWriteQueue.Add((DatabaseType)databaseType, new ConcurrentQueue<int?>());
+        _singleWriteQueueCurrentThreadId.Add((DatabaseType)databaseType, null);
       }
       _dataProvider = dataProvider;
       dataProvider.Init(dataProvider.RequiresFolder ? DatabaseFolderPath : null);
@@ -183,8 +182,6 @@ namespace PEngine.Core.Data
           return $"{databaseUpdatePath}pengine{System.IO.Path.DirectorySeparatorChar}";
         case DatabaseType.Misc:
           return $"{databaseUpdatePath}misc{System.IO.Path.DirectorySeparatorChar}";
-        case DatabaseType.Forum:
-          return $"{databaseUpdatePath}forum{System.IO.Path.DirectorySeparatorChar}";
       }
       return null;
     }

@@ -42,7 +42,7 @@ namespace PEngine.Core.Web.Controllers
       }
 
       var error = new ErrorModel(Settings.Current.ErrorMessageTitle, errorMessage, errorCode);
-      var model = new PEngineGenericRecordModel<ErrorModel>(_svp, HttpContext, false, false, error);
+      var model = new PEngineGenericRecordModel<ErrorModel>(_svp, HttpContext, false, error);
 
       return View("View", model);
     }

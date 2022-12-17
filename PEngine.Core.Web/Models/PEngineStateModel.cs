@@ -55,7 +55,6 @@ namespace PEngine.Core.Web.Models
     public DateTime? TokenExpires { get; set; }
     public long? TokenExpiresMilliseconds { get; set; }
     public string CurrentSection { get; set; }
-    public bool IsForum { get; set; }
     public string Theme { get; set; }
     public string ThemePath
     {
@@ -83,7 +82,7 @@ namespace PEngine.Core.Web.Models
       {
         if (PEngineUserType.Equals("Anonymous", StringComparison.OrdinalIgnoreCase))
         {
-          return (IsForum ? "log/in/forum" : "log/in/pengine");
+          return "log/in/pengine";
         }
         return "log/out";
       }
@@ -95,7 +94,7 @@ namespace PEngine.Core.Web.Models
       {
         if (PEngineUserType.Equals("Anonymous", StringComparison.OrdinalIgnoreCase))
         {
-          return (IsForum ? "Forum Login" : "Login");
+          return "Login";
         }
         return "Logout";
       }
@@ -123,36 +122,33 @@ namespace PEngine.Core.Web.Models
 
     public string Version { get; set; }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false)
     {
       _settings = settings;
       _context = context;
       HideSubTitle = hideSubTitle;
-      IsForum = isForum;
       CurrentSection = null;
       _svp = svp;
 
       Init();
     }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
       HideSubTitle = hideSubTitle;
-      IsForum = isForum;
       CurrentSection = currentSection;
       _svp = svp;
 
       UpdateData(viewDataRecord);
     }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, bool isForum = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
       HideSubTitle = hideSubTitle;
-      IsForum = isForum;
       CurrentSection = currentSection;
       _svp = svp;
 

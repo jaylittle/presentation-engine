@@ -71,7 +71,7 @@ namespace PEngine.Core.Web.Controllers
     [Route("view/{uniqueName}/{sectionUniqueName}")]
     public async Task<IActionResult> ViewArticleSection(string uniqueName, string sectionUniqueName)
     {
-      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false, false, null, sectionUniqueName);
+      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false, null, sectionUniqueName);
       var article = await _articleService.GetArticleById(null, null, uniqueName, model.State.HasAdmin);
       if (article == null || article.Guid == Guid.Empty)
       {
@@ -90,14 +90,14 @@ namespace PEngine.Core.Web.Controllers
     [HttpPost("view/{uniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, [FromForm] string newSectionUniqueName)
     {
-      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false, false);
+      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false);
       return Redirect($"{Settings.Current.BasePath}article/view/{uniqueName}/{newSectionUniqueName}");
     }
 
     [HttpPost("view/{uniqueName}/{sectionUniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, string sectionUniqueName, [FromForm] string newSectionUniqueName)
     {
-      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false, false);
+      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false);
       return Redirect($"{Settings.Current.BasePath}article/view/{uniqueName}/{newSectionUniqueName}");
     }
   }

@@ -119,9 +119,6 @@ namespace PEngine.Core.Data.Providers
         case DatabaseType.Misc:
           databasePath = $"{_databaseFolderPath}misc.db";
           break;
-        case DatabaseType.Forum:
-          databasePath = $"{_databaseFolderPath}forum.db";
-          break;
       }
       return $"Data Source={databasePath}";
     }

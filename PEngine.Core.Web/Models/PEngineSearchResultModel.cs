@@ -43,16 +43,6 @@ namespace PEngine.Core.Web.Models
       ExactMatch = exactMatch;
     }
 
-    public PEngineSearchResultModel(ForumThreadPostModel forumThreadPost)
-    {
-      Type = "Forum";
-      Title = forumThreadPost.ForumThreadName;
-      Content = Helpers.Rendering.DataRenderAndTruncate(forumThreadPost.Data, 255);
-      CreatedUTC = forumThreadPost.CreatedUTC;
-      Creator = forumThreadPost.ForumUserId;
-      Link = $"forum/thread/{forumThreadPost.ForumUniqueName}/{forumThreadPost.ForumThreadUniqueName}";
-    }
-
     public string GetSubTitle(bool inList, string currentSection)
     {
       return $"Search Results for \"{currentSection}\"";

@@ -33,7 +33,7 @@ namespace PEngine.Core.Web.Controllers
     [HttpGet("theme")]
     public IActionResult ChangeTheme([FromQuery]string selection)
     {
-      var state = new PEngineStateModel(_svp, Settings.Current, HttpContext, false, false);
+      var state = new PEngineStateModel(_svp, Settings.Current, HttpContext, false);
       if (!Settings.Current.DisableThemeSelection)
       {
         if (state.ThemeList.Any(t => t.Equals(selection, StringComparison.OrdinalIgnoreCase)))
