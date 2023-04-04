@@ -40,6 +40,7 @@ namespace PEngine.Core.Logic
 
     public async Task<(IEnumerable<ArticleModel> exact, IEnumerable<ArticleModel> fuzzy)> SearchArticles(string searchQuery, string[] searchTerms, bool isAdmin)
     {
+      searchQuery = searchQuery ?? string.Empty;
       var allArticles = await _articleDal.ListArticlesWithSections(null);
 
       var exactMatches = allArticles
