@@ -22,6 +22,9 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("favicon.ico")]
+    [HttpHead("favicon.ico")]
+    [HttpGet("favico.ico")]
+    [HttpHead("favico.ico")]
     public IActionResult FavIcon()
     {
       if (!string.IsNullOrWhiteSpace(Settings.Current.FavIcon))
@@ -40,6 +43,9 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("apple-touch-icon.png")]
+    [HttpHead("apple-touch-icon.png")]
+    [HttpGet("apple-touch-icon-precomposed.png")]
+    [HttpHead("apple-touch-icon-precomposed.png")]
     public IActionResult AppleTouchIcon()
     {
       return FavIcon();

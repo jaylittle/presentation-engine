@@ -27,6 +27,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("{errorCode}")]
+    [HttpHead("{errorCode}")]
     public IActionResult Error(string errorCode)
     {
       string errorMessage = Settings.Current.ErrorMessageException;

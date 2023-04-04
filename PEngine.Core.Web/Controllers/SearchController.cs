@@ -30,6 +30,8 @@ namespace PEngine.Core.Web.Controllers
       _articleService = articleService;
     }
 
+    [HttpGet]
+    [HttpHead]
     public async Task<IActionResult> Index([FromQuery]string query, [FromQuery]PagingModel paging = null)
     {
       var model = new PEngineGenericListModel<PEngineSearchResultModel>(_svp, HttpContext, false);

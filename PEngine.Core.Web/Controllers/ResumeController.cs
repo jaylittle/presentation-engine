@@ -29,6 +29,8 @@ namespace PEngine.Core.Web.Controllers
       _resumeService = resumeService;
     }
 
+    [HttpGet]
+    [HttpHead]
     public async Task<IActionResult> Index()
     {
       var model = new PEngineGenericRecordModel<ResumeModel>(_svp, HttpContext, false);

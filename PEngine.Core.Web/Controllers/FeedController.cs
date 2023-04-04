@@ -24,6 +24,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("rss")]
+    [HttpHead("rss")]
     public async Task<IActionResult> RSS()
     {
       if (!Settings.Current.DisableRSS)

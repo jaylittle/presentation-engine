@@ -33,12 +33,14 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("in")]
+    [HttpHead("in")]
     public IActionResult Index([FromQuery]bool authFailed)
     {
       return Index("PEngine", authFailed);
     }
 
     [HttpGet("in/{userType}")]
+    [HttpHead("in/{userType}")]
     public IActionResult Index(string userType, [FromQuery]bool authFailed)
     {
       Middleware.TokenCookieMiddleware.RemoveJwtCookie(_httpAccessor.HttpContext);
@@ -64,6 +66,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("out")]
+    [HttpHead("out")]
     public void Logout()
     {
       Middleware.TokenCookieMiddleware.RemoveJwtCookie(_httpAccessor.HttpContext);

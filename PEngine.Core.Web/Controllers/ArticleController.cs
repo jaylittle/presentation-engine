@@ -31,6 +31,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("category/{category}")]
+    [HttpHead("category/{category}")]
     public async Task<IActionResult> Category(string category, [FromQuery]PagingModel paging = null)
     {
       var model = new PEngineGenericListModel<ArticleModel>(_svp, HttpContext, false);
@@ -61,6 +62,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet]
+    [HttpHead]
     [Route("view/{uniqueName}")]
     public async Task<IActionResult> ViewArticle(string uniqueName)
     {
@@ -68,6 +70,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet]
+    [HttpHead]
     [Route("view/{uniqueName}/{sectionUniqueName}")]
     public async Task<IActionResult> ViewArticleSection(string uniqueName, string sectionUniqueName)
     {
@@ -88,6 +91,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpPost("view/{uniqueName}")]
+    [HttpHead("view/{uniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, [FromForm] string newSectionUniqueName)
     {
       var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false);
@@ -95,6 +99,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpPost("view/{uniqueName}/{sectionUniqueName}")]
+    [HttpHead("view/{uniqueName}/{sectionUniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, string sectionUniqueName, [FromForm] string newSectionUniqueName)
     {
       var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false);

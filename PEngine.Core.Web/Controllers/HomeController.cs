@@ -29,6 +29,8 @@ namespace PEngine.Core.Web.Controllers
       _quoteService = quoteService;
     }
 
+    [HttpGet]
+    [HttpHead]
     public async Task<IActionResult> Index()
     {
       var model = new PEngineGenericListModel<PostModel>(_svp, HttpContext, true);

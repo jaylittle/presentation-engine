@@ -31,6 +31,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("list")]
+    [HttpHead("list")]
     public async Task<IActionResult> List([FromQuery]PagingModel paging = null)
     {
       var model = new PEngineGenericListModel<PostModel>(_svp, HttpContext, false);
@@ -49,6 +50,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("view/{year}/{month}/{uniqueName}")]
+    [HttpHead("view/{year}/{month}/{uniqueName}")]
     public async Task<IActionResult> View(int year, int month, string uniqueName)
     {
       var model = new PEngineGenericRecordModel<PostModel>(_svp, HttpContext, false);

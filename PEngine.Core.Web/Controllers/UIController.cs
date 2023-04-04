@@ -31,6 +31,7 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpGet("theme")]
+    [HttpHead("theme")]
     public IActionResult ChangeTheme([FromQuery]string selection)
     {
       var state = new PEngineStateModel(_svp, Settings.Current, HttpContext, false);
