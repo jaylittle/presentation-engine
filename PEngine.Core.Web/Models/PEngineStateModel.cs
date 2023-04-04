@@ -6,6 +6,7 @@ using PEngine.Core.Shared.Models;
 using PEngine.Core.Data.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -24,6 +25,7 @@ namespace PEngine.Core.Web.Models
     private IEnumerable<ISubTitleModel> _viewDataList;
     private bool _viewDataInList;
     private IServiceProvider _svp;
+    private ILoggerFactory _logFactory;
 
     public string Url { get; set; }
     public string Title { get; set; }
@@ -182,6 +184,13 @@ namespace PEngine.Core.Web.Models
       PEngineUserName = string.Empty;
       PEngineUserType = "Anonymous";
       Version = Helpers.SystemInfoHelpers.Version;
+
+      ILogger logger = null;
+      if (_svp != null)
+      {
+        _logFactory = _svp.GetRequiredService<ILoggerFactory>();
+        logger = _logFactory.CreateLogger<PEngineStateModel>();
+      }
       
       Theme = string.Empty;
       var themeList = Helpers.Rendering.ThemeList;
@@ -267,10 +276,22 @@ namespace PEngine.Core.Web.Models
         TopMenuButtons.Add(new PEngineMenuButtonModel(categoryElements[0], categoryUrl, categoryLinkAttributes));
       }
 
-      var requestUri = new Uri(_context.Request.GetDisplayUrl());
+      Uri requestUri = null;
+      string displayUrl = _context.Request.GetDisplayUrl();
+      if (Uri.TryCreate(displayUrl, UriKind.Absolute, out requestUri))
+      {
+        SummaryUrl = $"{_settings.ExternalBaseUrl.TrimEnd('/')}{requestUri.PathAndQuery}";
+      }
+      else
+      {
+        if (logger != null)
+        {
+          logger.LogError($"AspNetCost GetDisplayUrl returned invalid Uri: {displayUrl}");
+        }
+        SummaryUrl = string.Empty;
+      }
       SummaryTitle = string.Empty;
       SummaryDescription = string.Empty;
-      SummaryUrl = $"{_settings.ExternalBaseUrl.TrimEnd('/')}{requestUri.PathAndQuery}";
       SummarySite = _settings.DefaultTitle;
       SummaryImage = $"{_settings.ExternalBaseUrl.TrimEnd('/')}/images/system/{_settings.LogoFrontPage}";
 
