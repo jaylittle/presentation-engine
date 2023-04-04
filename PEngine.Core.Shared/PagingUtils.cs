@@ -52,9 +52,17 @@ namespace PEngine.Core.Shared
       foreach (string prop in props)
       {
         // use reflection (not ComponentModel) to mirror LINQ
-        PropertyInfo pi = type.GetTypeInfo().DeclaredProperties.Single(p => p.Name.Equals(prop, StringComparison.OrdinalIgnoreCase));
-        expr = Expression.Property(expr, pi);
-        type = pi.PropertyType;
+        PropertyInfo pi = type.GetTypeInfo().DeclaredProperties.FirstOrDefault(p => p.Name.Equals(prop, StringComparison.OrdinalIgnoreCase));
+        if (pi != null)
+        {
+          expr = Expression.Property(expr, pi);
+          type = pi.PropertyType;
+        }
+        else
+        {
+          //Property Name Invalid, dump out
+          return collection;
+        }
       }
       Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
       LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
