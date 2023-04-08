@@ -33,7 +33,7 @@ namespace PEngine.Core.Web.Controllers
     [HttpHead]
     public async Task<IActionResult> Index()
     {
-      var model = new PEngineGenericRecordModel<ResumeModel>(_svp, HttpContext, false);
+      var model = new PEngineGenericRecordModel<ResumeModel>(_svp, HttpContext, PEnginePage.Resume, false);
       if (!Settings.Current.DisableResume)
       {
         model.RecordData = await _resumeService.GetResume();

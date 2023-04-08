@@ -34,7 +34,7 @@ namespace PEngine.Core.Web.Controllers
     [HttpHead]
     public async Task<IActionResult> Index([FromQuery]string query, [FromQuery]PagingModel paging = null)
     {
-      var model = new PEngineGenericListModel<PEngineSearchResultModel>(_svp, HttpContext, false);
+      var model = new PEngineGenericListModel<PEngineSearchResultModel>(_svp, HttpContext, PEnginePage.Search, false);
       if (!Settings.Current.DisableSearch)
       {
         model.State.CurrentSection = query;

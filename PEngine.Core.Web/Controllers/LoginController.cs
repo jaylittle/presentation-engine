@@ -46,7 +46,7 @@ namespace PEngine.Core.Web.Controllers
       Middleware.TokenCookieMiddleware.RemoveJwtCookie(_httpAccessor.HttpContext);
       Middleware.TokenCookieMiddleware.RemoveXsrfCookie(_httpAccessor.HttpContext);
 
-      var model = new PEngineGenericRecordModel<PEngineLoginModel>(_svp, HttpContext, true);
+      var model = new PEngineGenericRecordModel<PEngineLoginModel>(_svp, HttpContext, PEnginePage.Login, false);
       model.RecordData = new PEngineLoginModel();
       model.RecordData.AuthFailed = authFailed;
       switch (userType.ToLower().Trim())

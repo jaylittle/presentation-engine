@@ -31,19 +31,22 @@ namespace PEngine.Core.Web.Controllers
     public IActionResult Error(string errorCode)
     {
       string errorMessage = Settings.Current.ErrorMessageException;
+      PEnginePage page = PEnginePage.Error;
 
       switch (errorCode ?? string.Empty)
       {
         case "404":
           errorMessage = Settings.Current.ErrorMessageNotFound;
+          page = PEnginePage.NotFound;
           break;
         case "401":
           errorMessage = Settings.Current.ErrorMessageForbidden;
+          page = PEnginePage.Forbidden;
           break;
       }
 
       var error = new ErrorModel(Settings.Current.ErrorMessageTitle, errorMessage, errorCode);
-      var model = new PEngineGenericRecordModel<ErrorModel>(_svp, HttpContext, false, error);
+      var model = new PEngineGenericRecordModel<ErrorModel>(_svp, HttpContext, page, false, error);
 
       return View("View", model);
     }

@@ -14,6 +14,21 @@ using Newtonsoft.Json.Serialization;
 
 namespace PEngine.Core.Web.Models
 {
+  public enum PEnginePage
+  {
+    None,
+    Home,
+    Posts,
+    Articles,
+    Post,
+    Article,
+    Resume,
+    Login,
+    Search,
+    Error,
+    NotFound,
+    Forbidden
+  }
   public class PEngineStateModel
   {
     public const string COOKIE_THEME = "theme";
@@ -77,6 +92,8 @@ namespace PEngine.Core.Web.Models
     public string SummarySite { get; set; }
     [JsonIgnore]
     public bool HasSummary { get; set; }
+    [JsonIgnore]
+    public string Description { get; set; }
 
     public string LoginUrl
     {
@@ -124,34 +141,40 @@ namespace PEngine.Core.Web.Models
 
     public string Version { get; set; }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false)
+    public PEnginePage Page { get; set; }
+    public string PageLanguageCode { get; set; }
+
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, PEnginePage page, bool hideSubTitle = false)
     {
       _settings = settings;
       _context = context;
       HideSubTitle = hideSubTitle;
       CurrentSection = null;
+      Page = page;
       _svp = svp;
 
       Init();
     }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, PEnginePage page, bool hideSubTitle = false, ISubTitleModel viewDataRecord = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
       HideSubTitle = hideSubTitle;
       CurrentSection = currentSection;
+      Page = page;
       _svp = svp;
 
       UpdateData(viewDataRecord);
     }
 
-    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, bool hideSubTitle = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
+    public PEngineStateModel(IServiceProvider svp, SettingsData settings, HttpContext context, PEnginePage page, bool hideSubTitle = false, IEnumerable<ISubTitleModel> viewDataList = null, string currentSection = null, int? currentPage = null)
     {
       _settings = settings;
       _context = context;
       HideSubTitle = hideSubTitle;
       CurrentSection = currentSection;
+      Page = page;
       _svp = svp;
 
       UpdateData(viewDataList);
@@ -179,6 +202,7 @@ namespace PEngine.Core.Web.Models
     {
       Url = _context.Request.Path;
       Title = _settings.DefaultTitle;
+      Description = _settings.DefaultDescription;
       HasAdmin = false;
       HasForumAdmin = false;
       PEngineUserName = string.Empty;
@@ -351,8 +375,66 @@ namespace PEngine.Core.Web.Models
           SummaryDescription = resumeData.Objectives?.FirstOrDefault()?.Data ?? string.Empty;
         }
       }
+      if (string.IsNullOrWhiteSpace(SummaryTitle))
+      {
+        switch (Page)
+        {
+          case PEnginePage.Home:
+            SummaryTitle = _settings.LabelHomeButton;
+            break;
+          case PEnginePage.Articles:
+            SummaryTitle = "Articles";
+            if (_viewDataInList && _viewDataRecord is ArticleModel)
+            {
+              var articleCategory = ((ArticleModel)_viewDataRecord)?.Category;
+              if (!string.IsNullOrWhiteSpace(articleCategory))
+              {
+                SummaryTitle = articleCategory + " " + SummaryTitle;
+              }
+            }
+            break;
+          case PEnginePage.Posts:
+            SummaryTitle = _settings.LabelArchivedPostsButton;
+            break;
+          case PEnginePage.Search:
+            SummaryTitle = "Search Results";
+            break;
+          case PEnginePage.Login:
+            SummaryTitle = "Login";
+            break;
+          case PEnginePage.NotFound:
+            SummaryTitle = "Not Found";
+            break;
+          case PEnginePage.Error:
+            SummaryTitle = "Error";
+            break;
+          case PEnginePage.Forbidden:
+            SummaryTitle = "Forbidden";
+            break;
+        }
+        if (!HideSubTitle && string.IsNullOrWhiteSpace(SubTitle))
+        {
+          SubTitle = SummaryTitle;
+        }
+      }
+
+      //Override Default Description with Summary Description if Available
+      if (!string.IsNullOrWhiteSpace(SummaryDescription))
+      {
+        Description = SummaryDescription;
+      }
+      else
+      {
+        //If Summary Title has been set without a description
+        //use Default Description as Summary Description
+        if (!string.IsNullOrWhiteSpace(SummaryTitle))
+        {
+          SummaryDescription = _settings.DefaultDescription;
+        }
+      }
 
       HasSummary = !String.IsNullOrWhiteSpace(SummaryTitle);
+      PageLanguageCode = _settings.PageLanguageCode;
     }
 
     public void ThemeChange(string requestedTheme)

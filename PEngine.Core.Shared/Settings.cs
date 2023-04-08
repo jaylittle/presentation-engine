@@ -14,6 +14,8 @@ namespace PEngine.Core.Shared
     public string OwnerEmail { get; set; } = "user@pengine.com";
     // app_default_title,
     public string DefaultTitle { get; set; } = "Presentation Engine 5.1";
+    public string DefaultDescription { get; set; } = "";
+    public string PageLanguageCode { get; set; } = "en-US";
     // app_default_theme,
     public string DefaultTheme { get; set; } = "pengine-fresh-dark";
     // app_logo_frontpage,

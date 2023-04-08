@@ -2,12 +2,16 @@
 @using PEngine.Core.Web
 @using PEngine.Core.Web.Helpers
 <!DOCTYPE html>
-<html>
+<html lang="@Model.State.PageLanguageCode">
   <head>
     <base href="@Model.Settings.BasePath">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@Model.State.FullTitle</title>
+    @if (!string.IsNullOrWhiteSpace(Model.State.Description))
+    {
+    <meta name="description" content="@Model.State.Description" />
+    }
     @if (!Model.Settings.DisableRSS)
     {
     <link rel="alternate" type="application/rss+xml" title="Posts Feed" href="feed/rss" />
@@ -15,7 +19,6 @@
     @RenderSection("head", required: false)
     @if (Model.State.HasSummary)
     {
-    <meta name="description" content="@Model.State.SummaryDescription" />
     <meta property="og:title" content="@Model.State.SummaryTitle" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="@Model.State.SummaryUrl" />
@@ -73,7 +76,7 @@
       <div class="panel-left">
         @if (!Model.Settings.DisableThemeSelection) {
         <form id="theme" method="GET" action="ui/theme">
-          <select name="selection" onchange="this.form.submit()">
+          <select name="selection" onchange="this.form.submit()" aria-label="Theme Selector">
             @foreach (var theme in Model.State.ThemeList)
             {
               if (theme.Equals(Model.State.Theme, StringComparison.OrdinalIgnoreCase))
@@ -138,7 +141,7 @@
           {
           <form method="get" action="search">
             <span class="buttonrowlabel">Search:</span>
-            <input type="text" class="pengine-search-query edit-control-large" name="query" />
+            <input type="text" class="pengine-search-query edit-control-large" name="query" aria-label="Search Query" />
             <button type="submit" class="pengine-button-search">Find</button>
           </form>
           }

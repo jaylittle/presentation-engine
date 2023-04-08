@@ -10,6 +10,8 @@ class PEngineSettingEditor extends React.Component {
         ownerName: '',
         ownerEmail: '',
         defaultTitle: '',
+        defaultDescription: '',
+        pageLanguageCode: '',
         defaultTheme: '',
         logoFrontPage: '',
         perPagePostArchived: 0,
@@ -107,6 +109,8 @@ class PEngineSettingEditor extends React.Component {
         ownerName: '',
         ownerEmail: '',
         defaultTitle: '',
+        defaultDescription: '',
+        pageLanguageCode: '',
         defaultTheme: '',
         logoFrontPage: '',
         perPagePostArchived: 0,
@@ -267,13 +271,14 @@ class PEngineSettingEditor extends React.Component {
                   <div className="edit-row">
                     <div className="edit-label-large">Owner Name / Email:</div>
                     <div className="edit-field">
-                      <input type="text" className="edit-control-large" value={this.state.settings.ownerName} onChange={(e) => this.updateField(e, 'ownerName')} />
+                      <input type="text" className="edit-control-normal" value={this.state.settings.ownerName} onChange={(e) => this.updateField(e, 'ownerName')} />
+                      <input type="text" className="edit-control-normal" value={this.state.settings.ownerEmail} onChange={(e) => this.updateField(e, 'ownerEmail')} />
                     </div>
                   </div>
                   <div className="edit-row">
-                    <div className="edit-label-large">Owner Email:</div>
+                    <div className="edit-label-large">Language Code:</div>
                     <div className="edit-field">
-                      <input type="text" className="edit-control-large" value={this.state.settings.ownerEmail} onChange={(e) => this.updateField(e, 'ownerEmail')} />
+                    <input type="text" className="edit-control-large" value={this.state.settings.pageLanguageCode} onChange={(e) => this.updateField(e, 'pageLanguageCode')} />
                     </div>
                   </div>
                   <div className="edit-row">
@@ -287,6 +292,12 @@ class PEngineSettingEditor extends React.Component {
                           )
                         }
                       </select>
+                    </div>
+                  </div>
+                  <div className="edit-row">
+                    <div className="edit-label-large">Default Description:</div>
+                    <div className="edit-field">
+                      <textarea rows="3" className="edit-control" value={this.state.settings.defaultDescription} onChange={(e) => this.updateField(e, 'defaultDescription')}></textarea>
                     </div>
                   </div>
                   <div className="edit-row">

@@ -34,7 +34,7 @@ namespace PEngine.Core.Web.Controllers
     [HttpHead("category/{category}")]
     public async Task<IActionResult> Category(string category, [FromQuery]PagingModel paging = null)
     {
-      var model = new PEngineGenericListModel<ArticleModel>(_svp, HttpContext, false);
+      var model = new PEngineGenericListModel<ArticleModel>(_svp, HttpContext, PEnginePage.Articles, false);
       if (paging != null)
       {
         paging.Count = paging.Count > 0 ? paging.Count : model.Settings.PerPagePostArchived;
@@ -74,7 +74,7 @@ namespace PEngine.Core.Web.Controllers
     [Route("view/{uniqueName}/{sectionUniqueName}")]
     public async Task<IActionResult> ViewArticleSection(string uniqueName, string sectionUniqueName)
     {
-      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false, null, sectionUniqueName);
+      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, PEnginePage.Article, false, null, sectionUniqueName);
       var article = await _articleService.GetArticleById(null, null, uniqueName, model.State.HasAdmin);
       if (article == null || article.Guid == Guid.Empty)
       {
@@ -94,7 +94,7 @@ namespace PEngine.Core.Web.Controllers
     [HttpHead("view/{uniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, [FromForm] string newSectionUniqueName)
     {
-      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false);
+      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, PEnginePage.Article, false);
       return Redirect($"{Settings.Current.BasePath}article/view/{uniqueName}/{newSectionUniqueName}");
     }
 
@@ -102,7 +102,7 @@ namespace PEngine.Core.Web.Controllers
     [HttpHead("view/{uniqueName}/{sectionUniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, string sectionUniqueName, [FromForm] string newSectionUniqueName)
     {
-      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, false);
+      var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, PEnginePage.Article, false);
       return Redirect($"{Settings.Current.BasePath}article/view/{uniqueName}/{newSectionUniqueName}");
     }
   }
