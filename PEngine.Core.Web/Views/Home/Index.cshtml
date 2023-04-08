@@ -15,7 +15,7 @@
   @if (!Model.Settings.DisableQuotes)
   {
     <div class="quote-control">
-        <a id="pengine-button-quote-show" href="javascript:void(0)" onclick="window.showQuote()">[@Model.Settings.LabelQuoteButton]</a>
+        <a id="pengine-button-quote-show" onclick="window.showQuote()">[@Model.Settings.LabelQuoteButton]</a>
         <div id="quote-text" class="quoted-text">
           @Html.Raw(Model.State.QuoteText)
         </div>
@@ -29,7 +29,7 @@
   {
     <div class="panel">
       <div class="panel-right">
-        <a href="javascript:void(0)" class="list-button post_view_button_edit" data-guid="@post.Guid">[Edit]</a>
+        <a class="list-button post_view_button_edit" data-guid="@post.Guid">[Edit]</a>
       </div>
     </div>
   }

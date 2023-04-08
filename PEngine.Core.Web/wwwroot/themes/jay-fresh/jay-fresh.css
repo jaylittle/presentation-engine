@@ -57,6 +57,13 @@ blockquote, div.quoted-text
 	border-radius: 3px;
 }
 
+a:not(:link, :visited, :active)
+{
+  color: #524a7b;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 a:link 
 {
   color: #524a7b;

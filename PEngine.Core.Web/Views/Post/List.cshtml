@@ -5,7 +5,7 @@
 @model PEngineGenericListModel<PostModel>
 
 @{
-    int i = 0;
+    int postIndex = 0;
 }
 
 <div class="list-container">
@@ -26,7 +26,7 @@
     <tbody>
     @foreach (var item in Model.ListData)
     {
-      <tr class='@((i++)%2!=0 ? "alt" : string.Empty)'>
+      <tr class='@((postIndex++) % 2 != 0 ? "alt" : string.Empty)'>
         <td>
           @Html.RouteLink(item.Name, new { controller = "post", action = "view", year = item.CreatedUTC.Value.Year, month = item.CreatedUTC.Value.Month, uniqueName = item.UniqueName }, new { @class = "invisible-link" }).RelativeHref()
         </td>
@@ -48,7 +48,7 @@
           @if (Model.State.HasAdmin)
           {
             @Html.Raw("&nbsp;|&nbsp;")
-            <a href="javascript:void(0)" class="list-button post_view_button_edit" data-guid="@item.Guid">[Edit]</a>
+            <a class="list-button post_view_button_edit" data-guid="@item.Guid">[Edit]</a>
           }
         </td>
       </tr>

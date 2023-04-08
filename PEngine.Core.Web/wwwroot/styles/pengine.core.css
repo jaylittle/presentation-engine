@@ -30,6 +30,13 @@ textarea
   font-weight: bold;
 }
 
+a:not(:link, :visited, :active)
+{
+  color: #2b4873;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 a:link 
 {
   color: #2b4873
