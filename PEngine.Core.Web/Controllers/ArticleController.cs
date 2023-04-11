@@ -81,6 +81,10 @@ namespace PEngine.Core.Web.Controllers
         return model.State.HasAdmin ? (IActionResult)this.Redirect(Settings.Current.BasePath) : this.NotFound();
       }
       model.RecordData = article;
+      if (!string.IsNullOrWhiteSpace(model.RecordData.ContentURL))
+      {
+        return Redirect(model.RecordData.ContentURL);
+      }
 
       if (!string.IsNullOrWhiteSpace(sectionUniqueName) && !model.State.CurrentSection.Equals(sectionUniqueName))
       {
@@ -91,7 +95,6 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpPost("view/{uniqueName}")]
-    [HttpHead("view/{uniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, [FromForm] string newSectionUniqueName)
     {
       var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, PEnginePage.Article, false);
@@ -99,7 +102,6 @@ namespace PEngine.Core.Web.Controllers
     }
 
     [HttpPost("view/{uniqueName}/{sectionUniqueName}")]
-    [HttpHead("view/{uniqueName}/{sectionUniqueName}")]
     public IActionResult SwitchArticleSection(string uniqueName, string sectionUniqueName, [FromForm] string newSectionUniqueName)
     {
       var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, PEnginePage.Article, false);
