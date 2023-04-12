@@ -106,12 +106,18 @@ namespace PEngine.Core.Shared
         string[] pair = item.Trim().Split(' ');
 
         if (pair.Length > 2)
-          throw new ArgumentException(String.Format("Invalid OrderBy string '{0}'. Order By Format: Property, Property2 ASC, Property2 DESC",item));
+        {
+          //throw new ArgumentException(String.Format("Invalid OrderBy string '{0}'. Order By Format: Property, Property2 ASC, Property2 DESC",item));
+          continue;
+        }
 
         string prop = pair[0].Trim();
 
         if(String.IsNullOrEmpty(prop))
-          throw new ArgumentException("Invalid Property. Order By Format: Property, Property2 ASC, Property2 DESC");
+        {
+          //throw new ArgumentException("Invalid Property. Order By Format: Property, Property2 ASC, Property2 DESC");
+          continue;
+        }
                 
         SortDirection dir = SortDirection.Ascending;
                 
