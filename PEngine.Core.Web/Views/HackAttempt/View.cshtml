@@ -1,0 +1,27 @@
+@using PEngine.Core.Shared.Models
+@using PEngine.Core.Web.Models
+@using PEngine.Core.Web
+@using PEngine.Core.Web.Helpers
+@model PEngineGenericRecordModel<HackAttemptModel>
+
+@{
+  var hackAttempt = Model.RecordData;
+}
+<div class="display-container">
+  @if (Rendering.LogoEnabled)
+  {
+    <div class="logo-container">
+        <img src="@Html.ContentHashFile(Rendering.LogoPath, true)" alt="logo" />
+    </div>
+  }
+  @if (!Model.Settings.DisableQuotes)
+  {
+    <div class="quote-control">
+        <!-- TODO Add Quote Text Here -->
+    </div>
+  }
+</div>
+@Html.Raw(Rendering.MarkupSubheader(hackAttempt.Title))
+<div class="list-container">
+  @Html.Raw(Rendering.MarkupArticle(hackAttempt.Data, false))
+</div>

@@ -50,6 +50,8 @@ class PEngineSettingEditor extends React.Component {
         errorMessageNotFound: '',
         errorMessageForbidden: '',
         errorMessageException: '',
+        hackAttemptTitle: '',
+        hackAttemptMessage: '',
         summaryModeFront: true,
         newPasswordAdmin: {
           value: '',
@@ -149,6 +151,8 @@ class PEngineSettingEditor extends React.Component {
         errorMessageNotFound: '',
         errorMessageForbidden: '',
         errorMessageException: '',
+        hackAttemptTitle: '',
+        hackAttemptMessage: '',
         summaryModeFront: true,
         newPasswordAdmin: {
           value: '',
@@ -500,6 +504,18 @@ class PEngineSettingEditor extends React.Component {
                     <div className="edit-label-large">Error Messsage - Exception (Generic)</div>
                     <div className="edit-field">
                       <textarea rows="5" className="edit-control" value={this.state.settings.errorMessageException} onChange={(e) => this.updateField(e, 'errorMessageException')}></textarea>
+                    </div>
+                  </div>
+                  <div className="edit-row">
+                    <div className="edit-label-large">Hack Attempt Title</div>
+                    <div className="edit-field">
+                      <input type="text" className="edit-control-normal" value={this.state.settings.hackAttemptTitle} onChange={(e) => this.updateField(e, 'hackAttemptTitle')} />
+                    </div>
+                  </div>
+                  <div className="edit-row">
+                    <div className="edit-label-large">Hack Attempt Messsage</div>
+                    <div className="edit-field">
+                      <textarea rows="5" className="edit-control" value={this.state.settings.hackAttemptMessage} onChange={(e) => this.updateField(e, 'hackAttemptMessage')}></textarea>
                     </div>
                   </div>
                   <div className="edit-row">

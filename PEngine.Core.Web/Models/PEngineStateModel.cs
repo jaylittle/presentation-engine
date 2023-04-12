@@ -27,7 +27,8 @@ namespace PEngine.Core.Web.Models
     Search,
     Error,
     NotFound,
-    Forbidden
+    Forbidden,
+    HackAttempt
   }
   public class PEngineStateModel
   {
@@ -410,6 +411,9 @@ namespace PEngine.Core.Web.Models
             break;
           case PEnginePage.Forbidden:
             SummaryTitle = "Forbidden";
+            break;
+          case PEnginePage.HackAttempt:
+            SummaryTitle = "Hack Attempt";
             break;
         }
         if (!HideSubTitle && string.IsNullOrWhiteSpace(SubTitle))

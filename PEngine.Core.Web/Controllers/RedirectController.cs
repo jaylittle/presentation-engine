@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PEngine.Core.Shared;
 using PEngine.Core.Web.Helpers;
+using PEngine.Core.Shared.Models;
 
 namespace PEngine.Core.Web.Controllers
 {
@@ -49,6 +50,62 @@ namespace PEngine.Core.Web.Controllers
     public IActionResult AppleTouchIcon()
     {
       return FavIcon();
+    }
+
+    [HttpGet("wp-login.php")]
+    [HttpHead("wp-login.php")]
+    public IActionResult WrongCMS()
+    {
+      return Redirect($"{Settings.Current.BasePath}hack/detected/"
+        + HackAttemptType.WrongCMS.ToString());
+    }
+
+    [HttpGet("xmlrpc.php")]
+    [HttpHead("xmlrpc.php")]
+    [HttpGet("admin.php")]
+    [HttpHead("admin.php")]
+    [HttpGet("global.asa")]
+    [HttpHead("global.asa")]
+    [HttpGet("global.asax")]
+    [HttpHead("global.asax")]
+    public IActionResult WrongTechStack()
+    {
+      return Redirect($"{Settings.Current.BasePath}hack/detected/"
+        + HackAttemptType.WrongTechStack.ToString());
+    }
+
+    [HttpGet(".env")]
+    [HttpHead(".env")]
+    [HttpGet("passwd")]
+    [HttpHead("passwd")]
+    [HttpGet("shadow")]
+    [HttpHead("shadow")]
+    [HttpGet(".htaccess")]
+    [HttpHead(".htaccess")]
+    public IActionResult SensitiveFile()
+    {
+      return Redirect($"{Settings.Current.BasePath}hack/detected/"
+        + HackAttemptType.SensitiveFile.ToString());
+    }
+
+    [HttpGet("/admin/{*filePath}")]
+    [HttpHead("/admin/{*filePath}")]
+    [HttpGet("/administrator/{*filePath}")]
+    [HttpHead("/administrator/{*filePath}")]
+    [HttpGet("/wp-admin/{*filePath}")]
+    [HttpHead("/wp-admin/{*filePath}")]
+    [HttpGet("/phpmyadmin/{*filePath}")]
+    [HttpHead("/phpmyadmin/{*filePath}")]
+    [HttpGet("/.git/{*filePath}")]
+    [HttpHead("/.git/{*filePath}")]
+    [HttpGet("/wp-includes/{*filePath}")]
+    [HttpHead("/wp-includes/{*filePath}")]
+    [HttpGet("/.vs-code/{*filePath}")]
+    [HttpHead("/.vs-code/{*filePath}")]
+    public IActionResult SensitiveFolder(string filePath)
+    {
+      return Redirect($"{Settings.Current.BasePath}hack/detected/"
+        + HackAttemptType.SensitiveFolder.ToString());
     }
   }
 }

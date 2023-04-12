@@ -82,6 +82,8 @@ namespace PEngine.Core.Shared
     public string ErrorMessageNotFound { get; set; } = "Knock, Knock.\n\nWho is there?\n\nNobody.\n\nNobody Who?\n\nNobody At All.";
     public string ErrorMessageForbidden { get; set; } = "What's The Password?\n\nBBBBBBZZZZZZTTTTTT!\n\nWRONG!";
     public string ErrorMessageException { get; set; } = "That Was A Fine Example Of Unexcepted Behavior!\n\nDiagnosis: Your Request Is Dead Jim.";
+    public string HackAttemptTitle { get; set; } = "Get More l33t n00b";
+    public string HackAttemptMessage { get; set; } = "Dear little script kiddie,\n\nLet us count the ways,\n\nThat you have failed to hack me,\n\nOver how many wasted days?";
     public bool SummaryModeFront { get; set; } = false;
     public bool DisableSwagger { get; set; } = true;
     public bool DisableResponseCompression { get; set; } = false;
