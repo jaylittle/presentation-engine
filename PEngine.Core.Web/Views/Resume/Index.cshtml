@@ -1,9 +1,13 @@
+@using System;
 @using PEngine.Core.Shared.Models
 @using PEngine.Core.Web.Models
 @using PEngine.Core.Web
 @using PEngine.Core.Web.Helpers
 @model PEngineGenericRecordModel<ResumeModel>
 
+@{
+  int displayPropertyIndex = 0;
+}
 @if (Model.State.HasAdmin)
 {
 <div class="panel">
@@ -17,30 +21,25 @@
   {
   <div class="resume-container">
     <span class="form-header-text">@personal.FullName</span>
-    <div class="resume-row">
-      <div class="resume-label">Email:</div>
-      <div class="resume-disp-col-1"><a href='mailto:@personal.Email'>@personal.Email</a></div>
-      <div class="resume-label">Web:</div>
-      <div class="resume-disp-col-2"><a href='@personal.WebsiteURL' target='_blank'>@personal.WebsiteURL</a></div>
-    </div>
-    <div class="resume-row">
-      <div class="resume-label">Phone:</div>
-      <div class="resume-disp-col-1">@personal.Phone</div>
-      <div class="resume-label">Fax:</div>
-      <div class="resume-disp-col-2">@personal.Fax</div>
-    </div>
-    <div class="resume-row">
-      <div class="resume-label">Address:</div>
-      <div class="resume-disp-col-1">@personal.Address1</div>
-      <div class="resume-label">City:</div>
-      <div class="resume-disp-col-2">@personal.City</div>
-    </div>
-    <div class="resume-row">
-      <div class="resume-label">State:</div>
-      <div class="resume-disp-col-1">@personal.State</div>
-      <div class="resume-label">Zip:</div>
-      <div class="resume-disp-col-2">@personal.Zip</div>
-    </div>
+    @foreach (var displayProperty in personal.DisplayProperties)
+    {
+      displayPropertyIndex++;
+    @(((displayPropertyIndex % 2 == 1) && displayPropertyIndex > 1) ? @Html.Raw("</div>") : "")
+    @(((displayPropertyIndex % 2 == 1) && displayPropertyIndex > 0) ? @Html.Raw("<div class=\"resume-row\">") : "")
+      <div class="resume-label">@displayProperty.Key</div>
+      @switch (displayProperty.Key)
+      {
+        case "Email":
+      <div class="resume-disp-col"><a href='mailto:@displayProperty.Value'>@displayProperty.Value</a></div>
+          break;
+        case "Web":
+      <div class="resume-disp-col"><a href='@displayProperty.Value' target='_blank'>@displayProperty.Value</a></div>
+          break;
+        default:
+      <div class="resume-disp-col">@displayProperty.Value</div>
+          break;
+      }
+    }
   </div>
   }
 </div>

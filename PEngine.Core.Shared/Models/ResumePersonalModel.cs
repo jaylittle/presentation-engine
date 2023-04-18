@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using PEngine.Core.Shared.Interfaces;
 
 namespace PEngine.Core.Shared.Models
@@ -19,5 +21,24 @@ namespace PEngine.Core.Shared.Models
     public string WebsiteURL { get; set; } = string.Empty;
     public DateTime? CreatedUTC { get; set; }
     public DateTime? ModifiedUTC { get; set; }
+
+    private List<string> _displayLabels = new List<string> {
+      "Email", "Web", "Phone", "Fax", "Address", "Address 2", "City", "State", "Zip"
+    };
+
+    public List<KeyValuePair<string, string>> DisplayProperties
+    {
+      get
+      {
+        var displayValues = new List<string> {
+          Email, WebsiteURL, Phone, Fax, Address1, Address2, City, State, Zip
+        };
+
+        return displayValues
+          .Select((displayValue, index) => new KeyValuePair<string, string>(_displayLabels[index], displayValue))
+          .Where(dv => !string.IsNullOrWhiteSpace(dv.Value))
+          .ToList();
+      }
+    }
   }
 }

@@ -508,15 +508,7 @@ body .edit-label-large
   border-bottom: solid transparent 3px;
 }
 
-.resume-disp-col-1
-{
-  font-size: 16px;
-  display: table-cell;
-  clear: none;
-  border-bottom: solid transparent 3px;
-}
-
-.resume-disp-col-2
+.resume-disp-col
 {
   font-size: 16px;
   display: table-cell;
@@ -856,7 +848,7 @@ pre code
     display: block;
   }
 
-  .resume-container .resume-label, .resume-container .resume-disp-col-1, .resume-container .resume-disp-col-2
+  .resume-container .resume-label, .resume-container .resume-disp-col
   {
     display: inline-block;
     width: 45%;
