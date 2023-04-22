@@ -1,6 +1,6 @@
 ![Presentation Engine 5.1 Logo](./PEngine.Core.Web/wwwroot/images/system/pengine_logo5.webp)
 
-This repo is the code which runs my personal website https://jaylittle.com and my business website https://jplcoding.com
+This repo is the code which runs my personal website https://jaylittle.com
 
 ### 1. Would you recommend using this right now?
 
@@ -8,7 +8,7 @@ It screams like a bat out of hell and is relatively secure. If you don't like th
 
 ### 2. What the hell is this project anyway?
 
-My rendition of a basic blog.  It powers all of my websites.
+My rendition of a basic blog.  It powers my primary websites.
 
 ### 3. Your previous versions didn't have a license? What gives?
 
@@ -20,7 +20,7 @@ Yeah this port is being developed 100% on Linux.  The goal is for it to be able 
 
 ### 5. What tools will I need?
 
-VS Code is my primary development tool because its free and works great. Beyond that I've continued to use Gimp for the graphical work.
+VS Code is my primary development tool because its free and works great. Beyond that I use Krita for the graphical work.
 
 ### 6. What changed in the most recent major build?
 
@@ -64,7 +64,7 @@ Regardless of whatever deployment method you choose to utilize, I strongly urge 
         rewrite ^/domain/(.*)$ /$1 permanent;
 
         location / {
-            proxy_pass http://localhost:5001;
+            proxy_pass http://127.0.0.1:5001;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection keep-alive;
