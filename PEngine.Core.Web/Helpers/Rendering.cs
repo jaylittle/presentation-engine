@@ -142,7 +142,7 @@ namespace PEngine.Core.Web.Helpers
           if (isImage && !Shared.Helpers.IsUrlAbsolute(url))
           {
             var imageUrl = url.TrimStart('/');
-            var imageHashEntry = ContentHash.GetContentHashEntryForFile(SystemInfoHelpers.ContentRootPath, "wwwroot", imageUrl, Html.GetRelativeHashPath, true).Result;
+            var imageHashEntry = ContentHash.GetContentHashEntryForFile(SystemInfoHelpers.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, imageUrl, Html.GetRelativeHashPath).Result;
             if (imageHashEntry != null)
             {
               linkInline.Url = url = Html.GetRelativeHashPath(imageHashEntry.Hash, imageHashEntry.WebPath);
@@ -191,7 +191,7 @@ namespace PEngine.Core.Web.Helpers
       {
         if (!string.IsNullOrWhiteSpace(Settings.Current.LogoFrontPage))
         {
-          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", LogoPath, null, true).Result;
+          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, LogoPath, null).Result;
           return hashEntry != null;
         }
         return false;
@@ -204,7 +204,7 @@ namespace PEngine.Core.Web.Helpers
       {
         if (!string.IsNullOrWhiteSpace(Settings.Current.FavIcon))
         {
-          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", LogoPath, null, true).Result;
+          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, LogoPath, null).Result;
           return hashEntry != null;
         }
         return false;
@@ -225,7 +225,7 @@ namespace PEngine.Core.Web.Helpers
       {
         if (!string.IsNullOrWhiteSpace(Settings.Current.FavIcon))
         {
-          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", FavIconPath, null, true).Result;
+          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, FavIconPath, null).Result;
           return hashEntry != null;
         }
         return false;
@@ -257,16 +257,32 @@ namespace PEngine.Core.Web.Helpers
     {
       get
       {
-        var themePath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwroot{Path.DirectorySeparatorChar}themes{Path.DirectorySeparatorChar}");
-        if (System.IO.Directory.Exists(themePath))
+        var themePaths = new string[] { 
+          System.IO.Path.Combine(Startup.ContentRootPath, $"wwwoverlay{Path.DirectorySeparatorChar}themes{Path.DirectorySeparatorChar}"),
+          System.IO.Path.Combine(Startup.ContentRootPath, $"wwwroot{Path.DirectorySeparatorChar}themes{Path.DirectorySeparatorChar}")
+        };
+
+        var themeDirs = new List<string>();
+
+        foreach(var themePath in themePaths)
         {
-          return new DirectoryInfo(themePath).GetDirectories()
-            .Where(d => System.IO.File.Exists($"{d.FullName}{Path.DirectorySeparatorChar}{d.Name}.css"))
-            .Select(d => d.Name)
-            .Where(t => !Settings.Current.IsThemeHidden(t))
-            .OrderBy(d => d);
+          if (System.IO.Directory.Exists(themePath))
+          {
+            themeDirs.AddRange(
+              new DirectoryInfo(themePath).GetDirectories()
+                .Where(d => System.IO.File.Exists($"{d.FullName}{Path.DirectorySeparatorChar}{d.Name}.css"))
+                .Select(d => d.Name)
+                .Where(t => !Settings.Current.IsThemeHidden(t))
+            );
+          }
         }
-        return new List<string>();
+
+        themeDirs = themeDirs
+          .OrderBy(d => d)
+          .Distinct()
+          .ToList();
+        
+        return themeDirs.Any() ? themeDirs : new List<string>();
       }
     }
 
@@ -274,14 +290,31 @@ namespace PEngine.Core.Web.Helpers
     {
       get
       {
-        var iconPath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwroot{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}icons{Path.DirectorySeparatorChar}");
-        if (System.IO.Directory.Exists(iconPath))
+        var iconPaths = new string[] {
+          System.IO.Path.Combine(Startup.ContentRootPath, $"wwwoverlay{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}icons{Path.DirectorySeparatorChar}"),
+          System.IO.Path.Combine(Startup.ContentRootPath, $"wwwroot{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}icons{Path.DirectorySeparatorChar}")
+        };
+
+        var iconFiles = new List<string>();
+
+        foreach(var iconPath in iconPaths)
         {
-          return new DirectoryInfo(iconPath).GetFiles()
-            .Select(f => f.Name)
-            .OrderBy(f => f);
+          if (System.IO.Directory.Exists(iconPath))
+          {
+            iconFiles.AddRange(
+              new DirectoryInfo(iconPath).GetFiles()
+                .Where(f => !string.Equals(f.Name, "placeholder.txt", StringComparison.OrdinalIgnoreCase))
+                .Select(f => f.Name)
+            );
+          }
         }
-        return new List<string>();
+
+        iconFiles = iconFiles
+          .OrderBy(f => f)
+          .Distinct()
+          .ToList();
+        
+        return iconFiles.Any() ? iconFiles : new List<string>();
       }
     }
   }

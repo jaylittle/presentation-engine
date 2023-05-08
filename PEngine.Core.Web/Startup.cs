@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using PEngine.Core.Data;
@@ -43,6 +44,8 @@ namespace PEngine.Core.Web
     }
 
     public static string ContentRootPath { get; private set; }
+
+    public static string WebRootOverlayPath { get; private set; }
 
     public Startup()
     {
@@ -193,6 +196,11 @@ namespace PEngine.Core.Web
     {
       _httpContextAccessor = svp.GetRequiredService<IHttpContextAccessor>();
       ContentRootPath = env.ContentRootPath;
+      WebRootOverlayPath = $"{ContentRootPath}{System.IO.Path.DirectorySeparatorChar}wwwoverlay";
+      if (!System.IO.Directory.Exists(WebRootOverlayPath))
+      {
+        System.IO.Directory.CreateDirectory(WebRootOverlayPath);
+      }
 
       app.UseForwardedHeaders(new ForwardedHeadersOptions()
       {
@@ -263,6 +271,10 @@ namespace PEngine.Core.Web
       app.UseStaticFiles(new StaticFileOptions() {
         DefaultContentType = "application/octet-stream",
         ServeUnknownFileTypes = true,
+        FileProvider = new CompositeFileProvider(
+          new PhysicalFileProvider(WebRootOverlayPath),
+          new PhysicalFileProvider(env.WebRootPath)
+        ),
         OnPrepareResponse = ctx =>
         {
           var contentCacheDuration = 86400;

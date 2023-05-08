@@ -30,7 +30,7 @@ namespace PEngine.Core.Web.Controllers
       if (_md5HashRegex.Matches(hash).Count == 1 && !string.IsNullOrWhiteSpace(filePath) 
         && !filePath.Contains("..") && _filePathRegex.IsMatch(filePath))
       {
-        var hashEntry = await ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", filePath, Helpers.Html.GetAbsoluteHashPath, true);
+        var hashEntry = await ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, filePath, Helpers.Html.GetAbsoluteHashPath);
         if (hashEntry != null)
         {
           if (hashEntry.Hash.Equals(hash))

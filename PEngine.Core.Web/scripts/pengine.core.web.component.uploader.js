@@ -147,11 +147,6 @@ class PEngineUploader extends React.Component {
   }
 
   select = (entity, type) => {
-    if (this.state.current.relativePath === './')
-    {
-      return false;
-    }
-
     let tracker = type === 'file' ? this.state.selectedFilePaths : this.state.selectedFolderPaths;
     let trackerIndex = tracker.indexOf(entity.relativePath);
     if (trackerIndex >= 0) {
@@ -543,7 +538,7 @@ class PEngineUploader extends React.Component {
                                     <td>N/A</td>
                                     <td>N/A</td>
                                     {
-                                      this.state.breadcrumbs.length > 1 ?
+                                      this.state.breadcrumbs.length >= 1 ?
                                       <td>
                                         <a href="#" className="file-edit-button-view listbutton" onClick={() => this.prepNaming('folder', folder)}>[Rename]</a>
                                         &nbsp;&nbsp;
@@ -572,7 +567,7 @@ class PEngineUploader extends React.Component {
                                     <td>{ file.modified }</td>
                                     <td>{ file.size }</td>
                                     {
-                                      this.state.breadcrumbs.length > 1 ?
+                                      this.state.breadcrumbs.length >= 1 ?
                                       <td>
                                         <a href="#" className="file-edit-button-view listbutton" onClick={() => this.prepNaming('file', file)}>[Rename]</a>
                                         &nbsp;&nbsp;
@@ -601,17 +596,17 @@ class PEngineUploader extends React.Component {
               </div>
               <div className="panel">
                 {
-                  (this.state.breadcrumbs.length > 1 && this.state.mode === 'browser') ?
+                  (this.state.breadcrumbs.length >= 1 && this.state.mode === 'browser') ?
                   <div className="panel-right">
                     <button type="button" onClick={() => this.updateMode('selections')}>Selections</button>
                     <button type="button" onClick={() => this.updateMode('multiupload')}>Multi-Upload</button>
                     {
-                      (this.state.breadcrumbs.length > 2 && !this.state.current.selected) ?
+                      (this.state.breadcrumbs.length > 1 && !this.state.current.selected) ?
                         <button type="button" onClick={() => this.select(this.state.current, 'folder')}>Select Folder</button>
                       : null
                     }
                     {
-                      (this.state.breadcrumbs.length > 2 && this.state.current.selected) ?
+                      (this.state.breadcrumbs.length > 1 && this.state.current.selected) ?
                         <button type="button" onClick={() => this.select(this.state.current, 'folder')}>Unselect Folder</button>
                       : null
                     }
@@ -631,7 +626,7 @@ class PEngineUploader extends React.Component {
                   : null
                 }
                 {
-                  (this.state.breadcrumbs.length > 1 && this.state.mode === 'selections') ?
+                  (this.state.breadcrumbs.length >= 1 && this.state.mode === 'selections') ?
                     <div className="panel-right">
                       <button type="button" onClick={() => this.updateMode('browser')}>Browser</button>
                       <button type="button" onClick={() => this.updateMode('multiupload')}>Multi-Upload</button>
@@ -654,7 +649,7 @@ class PEngineUploader extends React.Component {
                   : null
                 }
                 {
-                  (this.state.breadcrumbs.length > 1 && this.state.mode === 'naming') ?
+                  (this.state.breadcrumbs.length >= 1 && this.state.mode === 'naming') ?
                   <div className="panel-right">
                     <button type="button" onClick={() => this.updateMode('selections')}>Selections</button>
                     <button type="button" onClick={() => this.updateMode('browser')}>Browser</button>

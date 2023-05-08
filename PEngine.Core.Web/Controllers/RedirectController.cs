@@ -33,7 +33,7 @@ namespace PEngine.Core.Web.Controllers
         var filePath = System.Net.WebUtility.UrlDecode(Rendering.FavIconPath);
         if (!string.IsNullOrWhiteSpace(filePath))
         {
-          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", filePath, Helpers.Html.GetAbsoluteHashPath, true).Result;
+          var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, filePath, Helpers.Html.GetAbsoluteHashPath).Result;
           if (hashEntry != null)
           {
             return RedirectPermanent(Html.GetAbsoluteHashPath(hashEntry.Hash, hashEntry.WebPath));

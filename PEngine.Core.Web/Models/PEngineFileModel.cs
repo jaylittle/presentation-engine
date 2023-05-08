@@ -20,7 +20,7 @@ namespace PEngine.Core.Web.Models
     {
       get
       {
-        var rootPath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwroot{Path.DirectorySeparatorChar}");
+        var rootPath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwoverlay{Path.DirectorySeparatorChar}");
         var relativePath = FullPath.Substring(rootPath.TrimEnd(Path.DirectorySeparatorChar).Length).Replace(Path.DirectorySeparatorChar, '/');
         return $"{Settings.Current.ExternalBaseUrl.TrimEnd('/')}/{relativePath.TrimStart('/')}";
       } 
@@ -29,7 +29,7 @@ namespace PEngine.Core.Web.Models
     {
       get
       {
-        var rootPath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwroot{Path.DirectorySeparatorChar}");
+        var rootPath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwoverlay{Path.DirectorySeparatorChar}");
         return $".{FullPath.Substring(rootPath.TrimEnd(Path.DirectorySeparatorChar).Length).Replace(Path.DirectorySeparatorChar, '/')}";
       } 
     }
@@ -37,7 +37,7 @@ namespace PEngine.Core.Web.Models
     public PEngineFileModel(string webFilePath)
     {
       var relativePath = webFilePath.TrimStart('.').TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
-      var fullFilePath = $"{Startup.ContentRootPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}wwwroot{Path.DirectorySeparatorChar}{relativePath}";
+      var fullFilePath = $"{Startup.ContentRootPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}wwwoverlay{Path.DirectorySeparatorChar}{relativePath}";
       if (System.IO.File.Exists(fullFilePath))
       {
         Init(new FileInfo(fullFilePath));

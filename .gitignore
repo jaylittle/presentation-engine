@@ -11,6 +11,20 @@ pengine-v*/
 logs/
 docker-version.txt
 Builds/
+PEngine.Core.Web/wwwoverlay/*
+PEngine.Core.Web/wwwoverlay/**/*
+!PEngine.Core.Web/wwwoverlay/downloads/
+!PEngine.Core.Web/wwwoverlay/downloads/placeholder.txt
+!PEngine.Core.Web/wwwoverlay/themes/
+!PEngine.Core.Web/wwwoverlay/themes/placeholder.txt
+!PEngine.Core.Web/wwwoverlay/images/
+!PEngine.Core.Web/wwwoverlay/images/placeholder.txt
+!PEngine.Core.Web/wwwoverlay/images/articles/
+!PEngine.Core.Web/wwwoverlay/images/articles/placeholder.txt
+!PEngine.Core.Web/wwwoverlay/images/icons/
+!PEngine.Core.Web/wwwoverlay/images/icons/placeholder.txt
+!PEngine.Core.Web/wwwoverlay/images/system/
+!PEngine.Core.Web/wwwoverlay/images/system/placeholder.txt
 
 # JetBrains IDE files
 .idea/

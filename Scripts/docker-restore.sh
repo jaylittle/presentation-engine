@@ -7,7 +7,7 @@ BACKUPDIR="$3"
 ./Scripts/docker-create.sh $NAME $PORT
 
 docker cp "$BACKUPDIR/pengine.settings.json" "$NAME:/app/"
-docker cp "$BACKUPDIR/wwwroot/." "$NAME:/app/wwwroot/"
+docker cp "$BACKUPDIR/wwwoverlay/." "$NAME:/app/wwwoverlay/"
 docker cp "$BACKUPDIR/data/." "$NAME:/app/data/"
 
 ./Scripts/docker-refresh-app-volume.sh $NAME

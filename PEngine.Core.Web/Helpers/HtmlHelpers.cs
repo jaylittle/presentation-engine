@@ -18,13 +18,12 @@ namespace PEngine.Core.Web.Helpers
 {
   public static class Html
   {
-    public static HtmlString ContentHashFile(this IHtmlHelper htmlHelper, string webPath
-      , bool checkForExistence = false)
+    public static HtmlString ContentHashFile(this IHtmlHelper htmlHelper, string webPath)
     {
       var urlHelper = new UrlHelper(htmlHelper.ViewContext);
-      var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", webPath, GetAbsoluteHashPath, checkForExistence).Result;
+      var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, webPath, GetAbsoluteHashPath).Result;
       string hashUrl = string.Empty;
-      if (!checkForExistence || hashEntry != null)
+      if (hashEntry != null)
       {
         hashUrl = GetRelativeHashPath(hashEntry.Hash, hashEntry.WebPath);
       }
@@ -36,7 +35,7 @@ namespace PEngine.Core.Web.Helpers
       filePath = System.Net.WebUtility.UrlDecode(filePath);
       if (!string.IsNullOrWhiteSpace(filePath))
       {
-        var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, "wwwroot", filePath, Helpers.Html.GetAbsoluteHashPath, true).Result;
+        var hashEntry = ContentHash.GetContentHashEntryForFile(Startup.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, filePath, Helpers.Html.GetAbsoluteHashPath).Result;
 
         string contentType;
         new FileExtensionContentTypeProvider().TryGetContentType(hashEntry.FullPath, out contentType);

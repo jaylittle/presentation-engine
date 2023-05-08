@@ -1,0 +1,3 @@
+Note: This file exists only to make sure this directory is automatically created.
+
+Note: Should contain custom article images

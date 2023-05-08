@@ -29,77 +29,84 @@ namespace PEngine.Core.Shared
   public static class ContentHash
   {
     private static ConcurrentDictionary<string, ContentHashEntry> _hashCache = new ConcurrentDictionary<string, ContentHashEntry>();
-    public static async Task<ContentHashEntry> GetContentHashEntryForFile(string contentRootPath, string wwwRootFolder
-      , string webPath, Func<string, string, string> GetHashedUrl = null, bool checkForExistence = false)
+    public static async Task<ContentHashEntry> GetContentHashEntryForFile(string contentRootPath, string[] wwwRootFolders
+      , string webPath, Func<string, string, string> GetHashedUrl = null)
     {
       return await Task.Run<ContentHashEntry>(() =>
       {
-        if (!string.IsNullOrEmpty(wwwRootFolder) && !wwwRootFolder.EndsWith(Path.DirectorySeparatorChar.ToString()))
-        {
-          wwwRootFolder += Path.DirectorySeparatorChar.ToString();
-        }
-        var actualFileRoot = System.IO.Path.Combine(contentRootPath, wwwRootFolder);
         ContentHashEntry output = null;
-        if (_hashCache.ContainsKey(webPath))
+        foreach (var wwwRootFolderRaw in wwwRootFolders)
         {
-          while (_hashCache.ContainsKey(webPath) && !_hashCache.TryGetValue(webPath, out output));
-
-          //If Cache Entry was found - check file last write time to determine whether or not its valid
-          if (output != null 
-              && (!checkForExistence || System.IO.File.Exists(output.FullPath))
-              && output.Modified != System.IO.File.GetLastWriteTimeUtc(output.FullPath))
+          var wwwRootFolder = wwwRootFolderRaw;
+          if (!string.IsNullOrEmpty(wwwRootFolder) && !wwwRootFolder.EndsWith(Path.DirectorySeparatorChar.ToString()))
           {
-            output = null;
-            ContentHashEntry removed = null;
-            while (_hashCache.ContainsKey(webPath) && !_hashCache.TryRemove(webPath, out removed));
+            wwwRootFolder += Path.DirectorySeparatorChar.ToString();
           }
-        }
-        if (output == null)
-        {
-          var hashEntry = new ContentHashEntry() {
-            WebPath = webPath
-          };
-
-          var oppDirectorySeperatorChar = Path.DirectorySeparatorChar == '/' ? '\\' : '/';
-
-          hashEntry.FullPath = System.IO.Path.Combine(
-            actualFileRoot,
-            webPath).Replace(oppDirectorySeperatorChar, Path.DirectorySeparatorChar);
-
-          if (!checkForExistence || System.IO.File.Exists(hashEntry.FullPath))
+          var actualFileRoot = System.IO.Path.Combine(contentRootPath, wwwRootFolder);
+          if (_hashCache.ContainsKey(webPath))
           {
-            // Make sure target file's full path lives within the location we want to restrict users to
-            var fileInfo = new System.IO.FileInfo(hashEntry.FullPath);
-            if (fileInfo.FullName.StartsWith(actualFileRoot, StringComparison.OrdinalIgnoreCase))
-            {
-              using (var md5 = System.Security.Cryptography.MD5.Create())
-              using (var reader = System.IO.File.Open(hashEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-              {
-                var md5Bytes = md5.ComputeHash(reader);
-                hashEntry.Hash = Security.BytesToHex(md5Bytes);
-              }
-              hashEntry.Modified = System.IO.File.GetLastWriteTimeUtc(hashEntry.FullPath);
+            while (_hashCache.ContainsKey(webPath) && !_hashCache.TryGetValue(webPath, out output));
 
-              //Check for transformable content
-              if (hashEntry.Transformable)
+            //If Cache Entry was found - check file last write time to determine whether or not its valid
+            if (output != null  && System.IO.File.Exists(output.FullPath)
+                && output.Modified != System.IO.File.GetLastWriteTimeUtc(output.FullPath))
+            {
+              output = null;
+              ContentHashEntry removed = null;
+              while (_hashCache.ContainsKey(webPath) && !_hashCache.TryRemove(webPath, out removed));
+            }
+          }
+          if (output == null)
+          {
+            var hashEntry = new ContentHashEntry() {
+              WebPath = webPath
+            };
+
+            var oppDirectorySeperatorChar = Path.DirectorySeparatorChar == '/' ? '\\' : '/';
+
+            hashEntry.FullPath = System.IO.Path.Combine(
+              actualFileRoot,
+              webPath).Replace(oppDirectorySeperatorChar, Path.DirectorySeparatorChar);
+
+            if (System.IO.File.Exists(hashEntry.FullPath))
+            {
+              // Make sure target file's full path lives within the location we want to restrict users to
+              var fileInfo = new System.IO.FileInfo(hashEntry.FullPath);
+              if (fileInfo.FullName.StartsWith(actualFileRoot, StringComparison.OrdinalIgnoreCase))
               {
-                if (!string.IsNullOrEmpty(hashEntry.FullPath) && hashEntry.FullPath.EndsWith(".css", StringComparison.OrdinalIgnoreCase))
+                using (var md5 = System.Security.Cryptography.MD5.Create())
+                using (var reader = System.IO.File.Open(hashEntry.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                  hashEntry.Transformation = System.Text.Encoding.UTF8.GetBytes(
-                    TransformCSS(contentRootPath, wwwRootFolder, webPath, System.IO.File.ReadAllText(hashEntry.FullPath), GetHashedUrl)
-                  );
+                  var md5Bytes = md5.ComputeHash(reader);
+                  hashEntry.Hash = Security.BytesToHex(md5Bytes);
                 }
-              }
+                hashEntry.Modified = System.IO.File.GetLastWriteTimeUtc(hashEntry.FullPath);
 
-              while (!_hashCache.ContainsKey(webPath) && !_hashCache.TryAdd(webPath, hashEntry));
-            }
-            else
-            {
-              throw new Exception("Requested File Path exists outside the specified root location!");
+                //Check for transformable content
+                if (hashEntry.Transformable)
+                {
+                  if (!string.IsNullOrEmpty(hashEntry.FullPath) && hashEntry.FullPath.EndsWith(".css", StringComparison.OrdinalIgnoreCase))
+                  {
+                    hashEntry.Transformation = System.Text.Encoding.UTF8.GetBytes(
+                      TransformCSS(contentRootPath, wwwRootFolders, webPath, System.IO.File.ReadAllText(hashEntry.FullPath), GetHashedUrl)
+                    );
+                  }
+                }
+
+                while (!_hashCache.ContainsKey(webPath) && !_hashCache.TryAdd(webPath, hashEntry));
+              }
+              else
+              {
+                throw new Exception("Requested File Path exists outside the specified root location!");
+              }
             }
           }
+          while (_hashCache.ContainsKey(webPath) && !_hashCache.TryGetValue(webPath, out output));
+          if (output != null)
+          {
+            break;
+          }
         }
-        while (_hashCache.ContainsKey(webPath) && !_hashCache.TryGetValue(webPath, out output));
         return output;
       });
     }
@@ -108,7 +115,7 @@ namespace PEngine.Core.Shared
     private static Regex CSS_URL_REGEX = new Regex("url\\(\"*'*(.[^(\"'\\(\\)]+)\"*'*\\)", RegexOptions.Compiled | RegexOptions.CultureInvariant
       | RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-    private static string TransformCSS(string contentRootPath, string wwwRootFolder, string webPath, string originalCss, Func<string, string, string> GetHashedUrl = null)
+    private static string TransformCSS(string contentRootPath, string[] wwwRootFolders, string webPath, string originalCss, Func<string, string, string> GetHashedUrl = null)
     {
       var originalAbsoluteDirectory = System.IO.Path.GetDirectoryName(
         System.IO.Path.Combine(
@@ -139,7 +146,7 @@ namespace PEngine.Core.Shared
             matchedAbsoluteUrl = matchedAbsoluteUrl.TrimStart(Path.DirectorySeparatorChar);
           }
           
-          var matchedHashEntry = GetContentHashEntryForFile(contentRootPath, wwwRootFolder, matchedAbsoluteUrl, GetHashedUrl, true).Result;
+          var matchedHashEntry = GetContentHashEntryForFile(contentRootPath, wwwRootFolders, matchedAbsoluteUrl, GetHashedUrl).Result;
           if (matchedHashEntry != null)
           {
             returnUrl = GetHashedUrl(matchedHashEntry.Hash, matchedHashEntry.WebPath);

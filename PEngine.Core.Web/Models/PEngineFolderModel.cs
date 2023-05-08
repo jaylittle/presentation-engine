@@ -20,7 +20,7 @@ namespace PEngine.Core.Web.Models
     {
       get
       {
-        var rootPath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwroot{Path.DirectorySeparatorChar}");
+        var rootPath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwoverlay{Path.DirectorySeparatorChar}");
         var relativePath = FullPath.Substring(rootPath.TrimEnd(Path.DirectorySeparatorChar).Length).Replace(Path.DirectorySeparatorChar, '/');
         return $"{Settings.Current.ExternalBaseUrl.TrimEnd('/')}/{relativePath.TrimStart('/')}";
       } 
@@ -29,7 +29,7 @@ namespace PEngine.Core.Web.Models
     {
       get
       {
-        var rootPath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwroot{Path.DirectorySeparatorChar}");
+        var rootPath = System.IO.Path.Combine(Startup.ContentRootPath, $"wwwoverlay{Path.DirectorySeparatorChar}");
         return $".{FullPath.Substring(rootPath.TrimEnd(Path.DirectorySeparatorChar).Length).Replace(Path.DirectorySeparatorChar, '/')}";
       } 
     }
@@ -38,8 +38,9 @@ namespace PEngine.Core.Web.Models
 
     public PEngineFolderModel(string webFolderPath, bool populateChildren = true)
     {
+      webFolderPath = webFolderPath ?? string.Empty;
       var relativePath = webFolderPath.TrimStart('.').TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
-      var fullFolderPath = $"{Startup.ContentRootPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}wwwroot{Path.DirectorySeparatorChar}{relativePath}";
+      var fullFolderPath = $"{Startup.ContentRootPath.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}wwwoverlay{Path.DirectorySeparatorChar}{relativePath}";
       if (System.IO.Directory.Exists(fullFolderPath))
       {
         Init(new DirectoryInfo(fullFolderPath), populateChildren);
@@ -57,7 +58,7 @@ namespace PEngine.Core.Web.Models
 
     private void Init (DirectoryInfo current, bool populateChildren = true)
     {
-      Name = current.Name.Equals("wwwroot", StringComparison.OrdinalIgnoreCase) ? "[Root]" : current.Name;
+      Name = current.Name.Equals("wwwoverlay", StringComparison.OrdinalIgnoreCase) ? "[Root]" : current.Name;
       FullPath = current.FullName;
       if (populateChildren)
       {

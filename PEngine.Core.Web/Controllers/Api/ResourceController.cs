@@ -22,7 +22,7 @@ namespace PEngine.Core.Web.Controllers.Api
   [SkipStatusCodePages]
   public class ResourceController : Controller
   {
-    public string[] RESTRICTED_PATHS = { "dist", "styles", "themes" };
+    public string[] RESTRICTED_PATHS = { };
 
     public enum SelectionOperation
     {
@@ -280,6 +280,7 @@ namespace PEngine.Core.Web.Controllers.Api
 
     private bool IsRestrictedPath(string path)
     {
+      path = path ?? string.Empty;
       if (path != string.Empty)
       {
         path = path.TrimStart('.').TrimStart('/');
@@ -291,12 +292,7 @@ namespace PEngine.Core.Web.Controllers.Api
 
     private bool IsReadOnlyPath(string path)
     {
-      if (path != string.Empty)
-      {
-        path = path.TrimStart('.').TrimStart('/');
-        return path.Split('/', StringSplitOptions.RemoveEmptyEntries).Count() <= 1;
-      }
-      return true;
+      return false;
     }
   }
 }
