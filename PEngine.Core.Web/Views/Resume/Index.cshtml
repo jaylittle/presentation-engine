@@ -51,7 +51,7 @@
   {
   <div class="resume-container">
     <div class="resume-row">
-      <div class="resume-disp">@objective.Data</div>
+      <div class="resume-disp">@Html.Raw(Rendering.MarkupArticle(objective.Data, false))</div>
     </div>
   </div>
   }
@@ -73,32 +73,6 @@
     <div class="resume-row">
       <div class="resume-skill-container">
         @(string.Join(", ", skillType.Skills.Select(s => s.Name)))
-      </div>
-    </div>
-  </div>
-  }
-</div>
-}
-@if (Model.RecordData.Educations != null && Model.RecordData.Educations.Count > 0)
-{
-<div class="resume-container">
-  @Html.Raw(Rendering.MarkupSubheader("Education"))
-  @foreach (var education in Model.RecordData.Educations)
-  {
-  <div class="resume-container">
-    <div class="resume-row">
-      <div class="resume-disp"><a href='@education.InstituteURL' target='_blank'>@education.Institute</a></div>
-    </div>
-    <div class="resume-row">
-      <div class="resume-label resume-disp">
-        @education.Program
-      </div>
-    </div>
-    <div class="resume-row">
-      <div class="resume-disp">
-        @Rendering.FormatDate(education.Started, false, true)
-        <span>&nbsp;-&nbsp;</span>
-        @Rendering.FormatDate(education.Completed, false, true)
       </div>
     </div>
   </div>
@@ -131,12 +105,39 @@
     </div>
     <div class="resume-row">
       <div class="resume-disp">
-        @workHistory.JobDescription
+        @Html.Raw(Rendering.MarkupArticle(workHistory.JobDescription, false))
       </div>
     </div>
   </div>
   }
 </div>
+}
+@if (Model.RecordData.Educations != null && Model.RecordData.Educations.Count > 0)
+{
+<div class="resume-container">
+  @Html.Raw(Rendering.MarkupSubheader("Education"))
+  @foreach (var education in Model.RecordData.Educations)
+  {
+  <div class="resume-container">
+    <div class="resume-row">
+      <div class="resume-disp"><a href='@education.InstituteURL' target='_blank'>@education.Institute</a></div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-label resume-disp">
+        @education.Program
+      </div>
+    </div>
+    <div class="resume-row">
+      <div class="resume-disp">
+        @Rendering.FormatDate(education.Started, false, true)
+        <span>&nbsp;-&nbsp;</span>
+        @Rendering.FormatDate(education.Completed, false, true)
+      </div>
+    </div>
+  </div>
+  }
+</div>
+}
 <div class="panel">
   <div class="panel-left panel-half">
     <a href="@Model.Settings.ExternalBaseUrl" class="list-button post_view_button_back_to_home">
@@ -146,4 +147,3 @@
     </a>
   </div>
 </div>
-}
