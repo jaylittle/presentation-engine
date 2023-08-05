@@ -33,7 +33,7 @@
       <div class="resume-disp-col"><a href='mailto:@displayProperty.Value'>@displayProperty.Value</a></div>
           break;
         case "Web":
-      <div class="resume-disp-col"><a href='@displayProperty.Value' target='_blank'>@displayProperty.Value</a></div>
+      <div class="resume-disp-col"><a href='@Rendering.GetAbsolutePath(displayProperty.Value)' target='_blank'>@displayProperty.Value</a></div>
           break;
         default:
       <div class="resume-disp-col">@displayProperty.Value</div>

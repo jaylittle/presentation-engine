@@ -50,7 +50,7 @@
         </td>
         <td>@item.Type</td>
         <td>
-          <a href="@item.Link" class="invisible-link">
+          <a href="@Rendering.GetAbsolutePath(item.Link)" class="invisible-link">
             @item.Title
           </a>
         </td>
@@ -62,7 +62,7 @@
         <td nowrap class="datetime-display" data-epoch="@Rendering.FormatDateForJavascript(item.CreatedUTC)">@Rendering.FormatDate(item.CreatedUTC)</td>
         <td>@item.Creator</td>
         <td nowrap>
-          <a href="@item.Link" class="list-button">[View]</a>
+          <a href="@Rendering.GetAbsolutePath(item.Link)" class="list-button">[View]</a>
         </td>
       </tr>
     }

@@ -14,7 +14,7 @@
     }
     @if (!Model.Settings.DisableRSS)
     {
-    <link rel="alternate" type="application/rss+xml" title="Posts Feed" href="feed/rss" />
+    <link rel="alternate" type="application/rss+xml" title="Posts Feed" href="@Rendering.GetAbsolutePath("feed/rss")" />
     }
     @RenderSection("head", required: false)
     @if (Model.State.HasSummary)
@@ -75,7 +75,7 @@
     <div class="panel">
       <div class="panel-left">
         @if (!Model.Settings.DisableThemeSelection) {
-        <form id="theme" method="GET" action="ui/theme">
+        <form id="theme" method="GET" action="@Rendering.GetAbsolutePath("ui/theme")">
           <select name="selection" onchange="this.form.submit()" aria-label="Theme Selector">
             @foreach (var theme in Model.State.ThemeList)
             {
@@ -94,7 +94,7 @@
         }
       </div>
       <div class="panel-right">
-        <form method="get" action="@Model.State.LoginUrl">
+        <form method="get" action="@Rendering.GetAbsolutePath(Model.State.LoginUrl)">
           <button type="submit" class="pengine-button-search">@Model.State.LoginText</button>
         </form>
       </div>
@@ -139,7 +139,7 @@
         <div class="panel-center">
           @if (!Model.Settings.DisableSearch)
           {
-          <form method="get" action="search">
+          <form method="get" action="@Rendering.GetAbsolutePath("search")">
             <span class="buttonrowlabel">Search:</span>
             <input type="text" class="pengine-search-query edit-control-large" name="query" aria-label="Search Query" />
             <button type="submit" class="pengine-button-search">Find</button>
@@ -148,7 +148,7 @@
           <a id="scrollToTop" href="#top" class="list-button">[Top]</a>
           @if (!Model.Settings.DisableRSS)
           {
-          <a href="feed/rss" class="list-button">[Rss]</a>
+          <a href="@Rendering.GetAbsolutePath("feed/rss")" class="list-button">[Rss]</a>
           }
           @if (!string.IsNullOrWhiteSpace(Model.Settings.OwnerEmail))
           {

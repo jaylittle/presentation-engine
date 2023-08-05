@@ -71,6 +71,11 @@ namespace PEngine.Core.Web.Helpers
       }
     }
 
+    public static string GetAbsolutePath(string relativePath)
+    {
+      return System.IO.Path.Combine(Settings.Current.BasePath, relativePath);
+    }
+
     public static string MarkupSubheader(string text)
     {
       return MarkupSubheader(text, true);
@@ -105,7 +110,7 @@ namespace PEngine.Core.Web.Helpers
         }
         else
         {
-          return $"<a class=\"menu-button\" href=\"{url}\"{linkAttributes}>{text}</a>";
+          return $"<a class=\"menu-button\" href=\"{Rendering.GetAbsolutePath(url)}\"{linkAttributes}>{text}</a>";
         }
       }
       else
@@ -142,10 +147,10 @@ namespace PEngine.Core.Web.Helpers
           if (isImage && !Shared.Helpers.IsUrlAbsolute(url))
           {
             var imageUrl = url.TrimStart('/');
-            var imageHashEntry = ContentHash.GetContentHashEntryForFile(SystemInfoHelpers.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, imageUrl, Html.GetRelativeHashPath).Result;
+            var imageHashEntry = ContentHash.GetContentHashEntryForFile(SystemInfoHelpers.ContentRootPath, new string[] { "wwwoverlay", "wwwroot" }, imageUrl, Html.GetAbsoluteHashPath).Result;
             if (imageHashEntry != null)
             {
-              linkInline.Url = url = Html.GetRelativeHashPath(imageHashEntry.Hash, imageHashEntry.WebPath);
+              linkInline.Url = url = Html.GetAbsoluteHashPath(imageHashEntry.Hash, imageHashEntry.WebPath);
             }
           }
         }

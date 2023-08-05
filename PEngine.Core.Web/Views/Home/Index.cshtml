@@ -24,7 +24,7 @@
 </div>
 @foreach (var (post, index) in Model.ListData.WithIndex())
 {
-  @Html.Raw(Rendering.MarkupSubheader(Html.RouteLink(post.Name, new { controller = "post", action = "view", year = post.CreatedUTC.Value.Year, month = post.CreatedUTC.Value.Month, uniqueName = post.UniqueName }, new { @class = "invisible-link" }).RelativeHref().GetString(), false))
+  @Html.Raw(Rendering.MarkupSubheader(Html.RouteLink(post.Name, new { controller = "post", action = "view", year = post.CreatedUTC.Value.Year, month = post.CreatedUTC.Value.Month, uniqueName = post.UniqueName }, new { @class = "invisible-link" }).AbsoluteHref().GetString(), false))
   if (Model.State.HasAdmin)
   {
     <div class="panel">
@@ -42,7 +42,7 @@
     @Html.Raw(Rendering.MarkupArticle(post.Data, false, true))
     @if (Rendering.SummaryModeFront)
     {
-      <form class="summary-footer" method="get" action="@($"/post/view/{post.CreatedUTC.Value.Year}/{post.CreatedUTC.Value.Month}/{post.UniqueName}")">
+      <form class="summary-footer" method="get" action="@(Rendering.GetAbsolutePath($"post/view/{post.CreatedUTC.Value.Year}/{post.CreatedUTC.Value.Month}/{post.UniqueName}"))">
         <button type="submit" class="pengine-button-search">
           @Model.Settings.LabelReadTheRestButton
         </button>
@@ -52,6 +52,6 @@
 }
 <div class="panel">
   <div class="panel-right">
-    @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list", "post").RelativeHref()
+    @Html.ActionLink($"[{Model.Settings.LabelArchivedPostsButton}]", "list", "post").AbsoluteHref()
   </div>
 </div>

@@ -28,7 +28,7 @@
     {
       <tr class='@((postIndex++) % 2 != 0 ? "alt" : string.Empty)'>
         <td>
-          @Html.RouteLink(item.Name, new { controller = "post", action = "view", year = item.CreatedUTC.Value.Year, month = item.CreatedUTC.Value.Month, uniqueName = item.UniqueName }, new { @class = "invisible-link" }).RelativeHref()
+          @Html.RouteLink(item.Name, new { controller = "post", action = "view", year = item.CreatedUTC.Value.Year, month = item.CreatedUTC.Value.Month, uniqueName = item.UniqueName }, new { @class = "invisible-link" }).AbsoluteHref()
         </td>
         @if (item.CreatedUTC.HasValue)
         {
@@ -44,7 +44,7 @@
           </div>
         </td>
         <td nowrap>
-          @Html.RouteLink("[View]", new { controller = "post", action = "view", year = item.CreatedUTC.Value.Year, month = item.CreatedUTC.Value.Month, uniqueName = item.UniqueName }, new { @class = "list-button" }).RelativeHref()
+          @Html.RouteLink("[View]", new { controller = "post", action = "view", year = item.CreatedUTC.Value.Year, month = item.CreatedUTC.Value.Month, uniqueName = item.UniqueName }, new { @class = "list-button" }).AbsoluteHref()
           @if (Model.State.HasAdmin)
           {
             @Html.Raw("&nbsp;|&nbsp;")

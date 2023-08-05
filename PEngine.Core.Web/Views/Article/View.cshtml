@@ -18,7 +18,7 @@
   <div class="panel-right">
     @if (Model.State.Links.ContainsKey("Previous"))
     {
-      <a href="@Model.State.Links["Previous"]" class="list-button article_view_button_prev">[Prev]</a>
+      <a href="@Rendering.GetAbsolutePath(Model.State.Links["Previous"])" class="list-button article_view_button_prev">[Prev]</a>
     }
     else
     {
@@ -40,7 +40,7 @@
     @Html.Raw("&nbsp;")
     @if (Model.State.Links.ContainsKey("Next"))
     {
-      <a href="@Model.State.Links["Next"]" class="list-button article_view_button_next">[Next]</a>
+      <a href="@Rendering.GetAbsolutePath(Model.State.Links["Next"])" class="list-button article_view_button_next">[Next]</a>
     }
     else
     {
@@ -75,7 +75,7 @@
       @Html.Raw("&nbsp;")
       if (Model.State.Links.ContainsKey("Previous"))
       {
-        <a href="@Model.State.Links["Previous"]" class="list-button article_view_button_prev">[Prev]</a>
+        <a href="@Rendering.GetAbsolutePath(Model.State.Links["Previous"])" class="list-button article_view_button_prev">[Prev]</a>
         @Html.Raw("&nbsp;")
       }
       <form method="POST">
@@ -90,7 +90,7 @@
       @Html.Raw("&nbsp;")
       if (Model.State.Links.ContainsKey("Next"))
       {
-        <a href="@Model.State.Links["Next"]" class="list-button article_view_button_next">[Next]</a>
+        <a href="@Rendering.GetAbsolutePath(Model.State.Links["Next"])" class="list-button article_view_button_next">[Next]</a>
       }
       else
       {
