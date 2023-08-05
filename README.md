@@ -30,6 +30,8 @@ VS Code is my primary development tool because its free and works great. Beyond 
 
 Depending on how you want to build and deploy this application, system requirements will vary.  For a traditional build and deployment process [read this document](Docs/BUILD.md).  For a more modernized container approach [read this document instead](Docs/DOCKER.md).
 
+_Note: As of 8/5/2023, I have made the decision to longer produce traditional release builds for this project.  That means the releases section of the Github will no longer be maintained.  I strongly suggest all users either migrate to using the docker version or take the time to generate your own builds.  The build script will continue to be maintained._
+
 ### 8. Do I need a webserver to host this app?
 
 Regardless of whatever deployment method you choose to utilize, I strongly urge you to host this application using a reverse proxy via nginx as exposing ASP.NET Core apps hosted via Kestrel directly is not the best practice.  While this is not a topic, I'm prepared to cover in vast amounts of detail, I've included a sample nginx site configuration below to assist you in this.  Note this configuration redirects all HTTP users to HTTPS and it redirects www.domain.com requests to domain.com.  Feel free to tweak this appropriately per your specific needs.
