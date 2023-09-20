@@ -237,9 +237,10 @@ namespace PEngine.Core.Web
 
       app.Use(async (context, next) =>
       {
-        if (!context.Response.Headers.ContainsKey("X-Frame-Options"))
+        //Prevent Clickjacking (instead of X-Frame-Options)
+        if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
         {
-          context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+          context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self'");
         }
         //Disable Google FLoC tracking
         if (!context.Response.Headers.ContainsKey("Permissions-Policy"))
