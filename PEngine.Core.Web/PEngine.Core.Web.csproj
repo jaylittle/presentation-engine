@@ -28,7 +28,7 @@
   </PropertyGroup>
   <Target Name="MyPrePublishTarget" BeforeTargets="BeforePublish" />
   <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.32.0" />
+    <PackageReference Include="Markdig" Version="0.33.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.*" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.*" />
     <PackageReference Include="CommandLine.Options" Version="0.0.3" />
