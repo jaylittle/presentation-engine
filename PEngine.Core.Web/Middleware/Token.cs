@@ -231,7 +231,14 @@ namespace PEngine.Core.Web.Middleware
         }
         else
         {
-          context.Response.Redirect($"{failUrl}?authFailed=true");
+          if (!failUrl.Contains("?"))
+          {
+            context.Response.Redirect($"{failUrl}?authFailed=true");
+          }
+          else
+          {
+            context.Response.Redirect($"{failUrl}&authFailed=true");
+          }
           return;
         }
       }

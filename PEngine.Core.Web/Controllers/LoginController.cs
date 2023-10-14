@@ -14,6 +14,7 @@ using PEngine.Core.Logic.Interfaces;
 using PEngine.Core.Web.Constraints;
 using PEngine.Core.Web.Models;
 using Microsoft.AspNetCore.Http;
+using System.Text.Encodings.Web;
 
 namespace PEngine.Core.Web.Controllers
 {
@@ -34,17 +35,35 @@ namespace PEngine.Core.Web.Controllers
 
     [HttpGet("in")]
     [HttpHead("in")]
-    public IActionResult Index([FromQuery]bool authFailed)
+    public IActionResult Index([FromQuery]bool authFailed = false, [FromQuery]string previousUrl = null)
     {
-      return Index("PEngine", authFailed);
+      return Index("PEngine", authFailed, previousUrl);
     }
 
     [HttpGet("in/{userType}")]
     [HttpHead("in/{userType}")]
-    public IActionResult Index(string userType, [FromQuery]bool authFailed)
+    public IActionResult Index(string userType, [FromQuery]bool authFailed = false, [FromQuery]string previousUrl = null)
     {
       Middleware.TokenCookieMiddleware.RemoveJwtCookie(_httpAccessor.HttpContext);
       Middleware.TokenCookieMiddleware.RemoveXsrfCookie(_httpAccessor.HttpContext);
+
+      string refererUrl = HttpContext.Request.GetTypedHeaders().Referer.ToString();
+
+      //Nuke Invalid Previous URL values
+      if (string.IsNullOrWhiteSpace(previousUrl)
+        || !previousUrl.StartsWith(Settings.Current.ExternalBaseUrl, StringComparison.OrdinalIgnoreCase))
+      {
+        previousUrl = string.Empty;
+      }
+
+      //If Valid Previous Url not provided, fill in referer (unless it is not valud)
+      if (string.IsNullOrEmpty(previousUrl) && !string.IsNullOrWhiteSpace(refererUrl)
+        && refererUrl.StartsWith(Settings.Current.ExternalBaseUrl, StringComparison.OrdinalIgnoreCase))
+      {
+        previousUrl = refererUrl;
+      }
+      Console.WriteLine("Referer Url: " + refererUrl);
+      Console.WriteLine("Previous Url: " + previousUrl);
 
       var model = new PEngineGenericRecordModel<PEngineLoginModel>(_svp, HttpContext, PEnginePage.Login, false);
       model.RecordData = new PEngineLoginModel();
@@ -53,13 +72,21 @@ namespace PEngine.Core.Web.Controllers
       {
         case "pengine":
           model.RecordData.ActionUrl = $"{Settings.Current.BasePath}token/pengine";
-          model.RecordData.SuccessUrl = Settings.Current.BasePath;
+          model.RecordData.SuccessUrl = previousUrl ?? Settings.Current.BasePath;
           model.RecordData.FailUrl = $"{Settings.Current.BasePath}log/in/pengine";
+          if (!string.IsNullOrWhiteSpace(previousUrl))
+          {
+            model.RecordData.FailUrl += "?previousUrl=" + System.Net.WebUtility.UrlEncode(previousUrl);
+          }
           break;
         case "forum":
           model.RecordData.ActionUrl = $"{Settings.Current.BasePath}token/forum";
-          model.RecordData.SuccessUrl = $"{Settings.Current.BasePath}forum";
+          model.RecordData.SuccessUrl = previousUrl ?? $"{Settings.Current.BasePath}forum";
           model.RecordData.FailUrl = $"{Settings.Current.BasePath}log/in/forum";
+          if (!string.IsNullOrWhiteSpace(previousUrl))
+          {
+            model.RecordData.FailUrl += "?previousUrl=" + System.Net.WebUtility.UrlEncode(previousUrl);
+          }
           break;
       }
       return View(model);
