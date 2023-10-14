@@ -53,7 +53,7 @@ namespace PEngine.Core.Web.Controllers
       if (string.IsNullOrWhiteSpace(previousUrl)
         || !previousUrl.StartsWith(Settings.Current.ExternalBaseUrl, StringComparison.OrdinalIgnoreCase))
       {
-        previousUrl = string.Empty;
+        previousUrl = null;
       }
 
       //If Valid Previous Url not provided, fill in referer (unless it is not valud)
@@ -62,8 +62,6 @@ namespace PEngine.Core.Web.Controllers
       {
         previousUrl = refererUrl;
       }
-      Console.WriteLine("Referer Url: " + refererUrl);
-      Console.WriteLine("Previous Url: " + previousUrl);
 
       var model = new PEngineGenericRecordModel<PEngineLoginModel>(_svp, HttpContext, PEnginePage.Login, false);
       model.RecordData = new PEngineLoginModel();
@@ -94,11 +92,28 @@ namespace PEngine.Core.Web.Controllers
 
     [HttpGet("out")]
     [HttpHead("out")]
-    public void Logout()
+    public void Logout([FromQuery]string previousUrl = null)
     {
       Middleware.TokenCookieMiddleware.RemoveJwtCookie(_httpAccessor.HttpContext);
       Middleware.TokenCookieMiddleware.RemoveXsrfCookie(_httpAccessor.HttpContext);
-      this.Response.Redirect(Settings.Current.BasePath);
+
+      string refererUrl = HttpContext.Request.GetTypedHeaders().Referer.ToString();
+
+      //Nuke Invalid Previous URL values
+      if (string.IsNullOrWhiteSpace(previousUrl)
+        || !previousUrl.StartsWith(Settings.Current.ExternalBaseUrl, StringComparison.OrdinalIgnoreCase))
+      {
+        previousUrl = null;
+      }
+
+      //If Valid Previous Url not provided, fill in referer (unless it is not valud)
+      if (string.IsNullOrEmpty(previousUrl) && !string.IsNullOrWhiteSpace(refererUrl)
+        && refererUrl.StartsWith(Settings.Current.ExternalBaseUrl, StringComparison.OrdinalIgnoreCase))
+      {
+        previousUrl = refererUrl;
+      }
+
+      this.Response.Redirect(previousUrl ?? Settings.Current.BasePath);
     }
   }
 }
