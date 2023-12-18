@@ -40,7 +40,7 @@ WORKDIR /source
 RUN bash ./Scripts/linux_docker_build.sh
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=dotnet-build /app ./
 VOLUME /app
