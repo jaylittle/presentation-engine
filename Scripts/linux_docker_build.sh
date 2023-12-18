@@ -5,7 +5,7 @@
 
 BASE=pengine-core
 CONFIG=Release
-PLATFORM=netcoreapp6.0
+PLATFORM=netcoreapp8.0
 PUBDIR="/app"
 
 echo Publishing from $PUBDIR to $FILENAME

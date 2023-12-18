@@ -240,12 +240,12 @@ namespace PEngine.Core.Web
         //Prevent Clickjacking (instead of X-Frame-Options)
         if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
         {
-          context.Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self'");
+          context.Response.Headers.Append("Content-Security-Policy", "frame-ancestors 'self'");
         }
         //Disable Google FLoC tracking
         if (!context.Response.Headers.ContainsKey("Permissions-Policy"))
         {
-          context.Response.Headers.Add("Permissions-Policy", "interest-cohort=()");
+          context.Response.Headers.Append("Permissions-Policy", "interest-cohort=()");
         }
         await next();
       });

@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp6.0</TargetFramework>
+    <TargetFramework>netcoreapp8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PEngine.Core.Shared\PEngine.Core.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.24" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.*" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.*" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
     <EmbeddedResource Include="**\*.sql" />
   </ItemGroup>
