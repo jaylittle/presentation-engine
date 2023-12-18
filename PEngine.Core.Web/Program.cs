@@ -73,11 +73,15 @@ namespace PEngine.Core.Web
           .ConfigureWebHostDefaults(webHostBuilder => {
             if (isDevMode)
             {
-              webHostBuilder = webHostBuilder.UseKestrel();
+              webHostBuilder = webHostBuilder
+                .UseKestrel()
+                .UseUrls("http://*:5000");
             }
             else
             {
-              webHostBuilder = webHostBuilder.UseIISIntegration();
+              webHostBuilder = webHostBuilder
+                .UseIISIntegration()
+                .UseUrls("http://*:80");;
             }
 
             webHostBuilder
