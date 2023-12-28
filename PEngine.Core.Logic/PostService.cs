@@ -30,8 +30,7 @@ namespace PEngine.Core.Logic
           isAdmin ||
           (!isLockedDown && (p.VisibleFlag && (isView || !p.NoIndexFlag))) ||
           (isLockedDown && (p.LockDownVisibleFlag && (isView || !p.NoIndexFlag)))
-        )
-        .Where(p => isAdmin || (p.VisibleFlag && (isView || !p.NoIndexFlag)));
+        );
     }
 
     public async Task<(IEnumerable<PostModel> exact, IEnumerable<PostModel> fuzzy)> SearchPosts(string searchQuery, string[] searchTerms, bool isAdmin, bool isLockedDown)
