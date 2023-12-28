@@ -28,23 +28,35 @@ namespace PEngine.Core.Logic
       _articleDal = articleDal;
     }
 
-    public async Task<IEnumerable<ArticleModel>> ListArticles(string category, bool isAdmin)
+    public async Task<IEnumerable<ArticleModel>> ListArticles(string category, bool isAdmin, bool isLockedDown)
     {
-      return (await _articleDal.ListArticles(category)).Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag));
+      return (await _articleDal.ListArticles(category)).Where(a =>
+        isAdmin ||
+        (!isLockedDown && a.VisibleFlag && !a.NoIndexFlag) ||
+        (isLockedDown && a.LockDownVisibleFlag && !a.NoIndexFlag)
+      );
     }
 
-    public async Task<IEnumerable<ArticleModel>> ListArticlesWithSections(string category, bool isAdmin)
+    public async Task<IEnumerable<ArticleModel>> ListArticlesWithSections(string category, bool isAdmin, bool isLockedDown)
     {
-      return (await _articleDal.ListArticlesWithSections(category)).Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag));
+      return (await _articleDal.ListArticlesWithSections(category)).Where(a =>
+        isAdmin ||
+        (!isLockedDown && a.VisibleFlag && !a.NoIndexFlag) ||
+        (isLockedDown && a.LockDownVisibleFlag && !a.NoIndexFlag)
+      );
     }
 
-    public async Task<(IEnumerable<ArticleModel> exact, IEnumerable<ArticleModel> fuzzy)> SearchArticles(string searchQuery, string[] searchTerms, bool isAdmin)
+    public async Task<(IEnumerable<ArticleModel> exact, IEnumerable<ArticleModel> fuzzy)> SearchArticles(string searchQuery, string[] searchTerms, bool isAdmin, bool isLockedDown)
     {
       searchQuery = searchQuery ?? string.Empty;
       var allArticles = await _articleDal.ListArticlesWithSections(null);
 
       var exactMatches = allArticles
-        .Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag))
+        .Where(a =>
+          isAdmin ||
+          (!isLockedDown && a.VisibleFlag && !a.NoIndexFlag) ||
+          (isLockedDown && a.LockDownVisibleFlag && !a.NoIndexFlag)
+        )
         .Where(a =>
           a.Category?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
           a.Name?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -59,7 +71,11 @@ namespace PEngine.Core.Logic
 
       var fuzzyMatches = allArticles
         .Where(a => !exactMatchIndex.ContainsKey(a.Guid))
-        .Where(a => isAdmin || (a.VisibleFlag && !a.NoIndexFlag))
+        .Where(a =>
+          isAdmin ||
+          (!isLockedDown && a.VisibleFlag && !a.NoIndexFlag) ||
+          (isLockedDown && a.LockDownVisibleFlag && !a.NoIndexFlag)
+        )
         .Where(a => searchTerms.All(st => 
           a.Category?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
           a.Name?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -74,10 +90,15 @@ namespace PEngine.Core.Logic
       return (exactMatches, fuzzyMatches);
     }
 
-    public async Task<ArticleModel> GetArticleById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
+    public async Task<ArticleModel> GetArticleById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin, bool isLockedDown)
     {
       var article = await _articleDal.GetArticleById(guid, legacyId, uniqueName);
-      return (article == null || isAdmin || article.VisibleFlag) ? article : null;
+      return (
+        article == null ||
+        isAdmin ||
+        (!isLockedDown && article.VisibleFlag) ||
+        (isLockedDown && article.LockDownVisibleFlag)
+      ) ? article : null;
     }
 
     public async Task<OpResult> UpsertArticle(ArticleModel article, bool importFlag = false)

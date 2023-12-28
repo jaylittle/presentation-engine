@@ -6,6 +6,7 @@ SET
   Data = @Data,
   IconFileName = @IconFileName,
   VisibleFlag = @VisibleFlag,
+  LockDownVisibleFlag = @LockDownVisibleFlag,
   NoIndexFlag = @NoIndexFlag,
   UniqueName = @UniqueName,
   ModifiedUTC = @ModifiedUTC

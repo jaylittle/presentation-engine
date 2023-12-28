@@ -82,7 +82,7 @@ namespace PEngine.Core.Logic
         rssfeed.LoadXml(frameXml.ToString());
         var rssChannel = rssfeed.SelectSingleNode("/rss/channel");
 
-        var posts = (await _postService.ListPosts(false))
+        var posts = (await _postService.ListPosts(false, Settings.Current.IsLockedDown))
           .OrderByDescending(p => p.CreatedUTC)
           .Take(count.Value)
           .ToList();

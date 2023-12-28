@@ -17,6 +17,7 @@ namespace PEngine.Core.Shared.Models
     public string ContentLinkAttributes { get; set; } = string.Empty;
     public string DefaultSection { get; set; } = string.Empty;
     public bool VisibleFlag { get; set; }
+    public bool LockDownVisibleFlag { get; set; }
     public bool NoIndexFlag { get; set; }
     public string UniqueName { get; set; } = string.Empty;
     public bool HideDropDownFlag { get; set; }

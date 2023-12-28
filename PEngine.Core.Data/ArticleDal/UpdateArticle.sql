@@ -9,6 +9,7 @@ SET
   ContentLinkAttributes = @ContentLinkAttributes,
   DefaultSection = @DefaultSection,
   VisibleFlag = @VisibleFlag,
+  LockDownVisibleFlag = @LockDownVisibleFlag,
   NoIndexFlag = @NoIndexFlag,
   UniqueName = @UniqueName,
   HideButtonsFlag = @HideButtonsFlag,

@@ -12,6 +12,7 @@ class PEnginePostEditor extends React.Component {
         data: '',
         iconFileName: '',
         visibleFlag: false,
+        lockDownVisibleFlag: false,
         noIndexFlag: true,
         uniqueName: null,
         createdUTC: null,
@@ -73,6 +74,7 @@ class PEnginePostEditor extends React.Component {
         data: '',
         iconFileName: '',
         visibleFlag: false,
+        lockDownVisibleFlag: false,
         noIndexFlag: true,
         uniqueName: null,
         createdUTC: null,
@@ -231,6 +233,10 @@ class PEnginePostEditor extends React.Component {
                   <div className="edit-row">
                     <div className="edit-label">Visible:</div>
                     <input type="checkbox" checked={this.state.post.visibleFlag} onChange={(e) => this.updatePostField(e, 'visibleFlag')} />
+                  </div>
+                  <div className="edit-row">
+                    <div className="edit-label">Visible In Lock Down:</div>
+                    <input type="checkbox" checked={this.state.post.lockDownVisibleFlag} onChange={(e) => this.updatePostField(e, 'lockDownVisibleFlag')} />
                   </div>
                   <div className="edit-row">
                     <div className="edit-label">Do Not Index:</div>

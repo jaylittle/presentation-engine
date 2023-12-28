@@ -23,18 +23,28 @@ namespace PEngine.Core.Logic
       _postDal = postDal;
     }
 
-    public async Task<IEnumerable<PostModel>> ListPosts(bool isAdmin, bool isView = false)
+    public async Task<IEnumerable<PostModel>> ListPosts(bool isAdmin, bool isLockedDown, bool isView = false)
     {
-      return (await _postDal.ListPosts()).Where(p => isAdmin || (p.VisibleFlag && (isView || !p.NoIndexFlag)));
+      return (await _postDal.ListPosts())
+        .Where(p => 
+          isAdmin ||
+          (!isLockedDown && (p.VisibleFlag && (isView || !p.NoIndexFlag))) ||
+          (isLockedDown && (p.LockDownVisibleFlag && (isView || !p.NoIndexFlag)))
+        )
+        .Where(p => isAdmin || (p.VisibleFlag && (isView || !p.NoIndexFlag)));
     }
 
-    public async Task<(IEnumerable<PostModel> exact, IEnumerable<PostModel> fuzzy)> SearchPosts(string searchQuery, string[] searchTerms, bool isAdmin)
+    public async Task<(IEnumerable<PostModel> exact, IEnumerable<PostModel> fuzzy)> SearchPosts(string searchQuery, string[] searchTerms, bool isAdmin, bool isLockedDown)
     {
       searchQuery = searchQuery ?? string.Empty;
       var allPosts = await _postDal.ListPosts();
 
       var exactMatches = allPosts
-        .Where(p => isAdmin || (p.VisibleFlag && !p.NoIndexFlag))
+        .Where(p => 
+          isAdmin ||
+          (!isLockedDown && p.VisibleFlag && !p.NoIndexFlag) ||
+          (isLockedDown && p.LockDownVisibleFlag && !p.NoIndexFlag)
+        )
         .Where(p =>
           p.Name?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
           p.Data?.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -44,7 +54,11 @@ namespace PEngine.Core.Logic
 
       var fuzzyMatches = allPosts
         .Where(a => !exactMatchIndex.ContainsKey(a.Guid))
-        .Where(p => isAdmin || (p.VisibleFlag && !p.NoIndexFlag))
+        .Where(p => 
+          isAdmin ||
+          (!isLockedDown && p.VisibleFlag && !p.NoIndexFlag) ||
+          (isLockedDown && p.LockDownVisibleFlag && !p.NoIndexFlag)
+        )
         .Where(p => searchTerms.All(st =>
           p.Name?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
           p.Data?.IndexOf(st, StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -54,10 +68,15 @@ namespace PEngine.Core.Logic
       return (exactMatches, fuzzyMatches);
     }
 
-    public async Task<PostModel> GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin)
+    public async Task<PostModel> GetPostById(Guid? guid, int? legacyId, string uniqueName, bool isAdmin, bool isLockedDown)
     {
       var post = await _postDal.GetPostById(guid, legacyId, uniqueName);
-      return (post == null || isAdmin || post.VisibleFlag) ? post : null;
+      return (
+        post == null ||
+        isAdmin ||
+        (!isLockedDown && post.VisibleFlag) ||
+        (isLockedDown && post.LockDownVisibleFlag) 
+      ) ? post : null;
     }
 
     public async Task<OpResult> UpsertPost(PostModel post, bool importFlag = false)

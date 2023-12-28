@@ -44,7 +44,7 @@ namespace PEngine.Core.Web.Controllers
           paging.SortAscending = false;
         }
       }
-      var articles = (await _articleService.ListArticles(category, model.State.HasAdmin)).ToList();
+      var articles = (await _articleService.ListArticles(category, model.State.HasAdmin, model.State.IsLockedDown)).ToList();
       if (!articles.Any())
       {
         return model.State.HasAdmin ? (IActionResult)this.Redirect(Settings.Current.BasePath) : this.NotFound();
@@ -75,7 +75,7 @@ namespace PEngine.Core.Web.Controllers
     public async Task<IActionResult> ViewArticleSection(string uniqueName, string sectionUniqueName)
     {
       var model = new PEngineGenericRecordModel<ArticleModel>(_svp, HttpContext, PEnginePage.Article, false, null, sectionUniqueName);
-      var article = await _articleService.GetArticleById(null, null, uniqueName, model.State.HasAdmin);
+      var article = await _articleService.GetArticleById(null, null, uniqueName, model.State.HasAdmin, model.State.IsLockedDown);
       if (article == null || article.Guid == Guid.Empty)
       {
         return model.State.HasAdmin ? (IActionResult)this.Redirect(Settings.Current.BasePath) : this.NotFound();

@@ -15,6 +15,7 @@ class PEngineArticleEditor extends React.Component {
         contentLinkAttributes: '',
         defaultSection: '',
         visibleFlag: false,
+        lockDownVisibleFlag: false,
         noIndexFlag: true,
         uniqueName: null,
         hideDropDownFlag: false,
@@ -91,6 +92,7 @@ class PEngineArticleEditor extends React.Component {
         contentLinkAttributes: '',
         defaultSection: '',
         visibleFlag: false,
+        lockDownVisibleFlag: false,
         noIndexFlag: true,
         uniqueName: null,
         hideDropDownFlag: false,
@@ -359,6 +361,10 @@ class PEngineArticleEditor extends React.Component {
                   <div className="edit-row">
                     <div className="edit-label">Visible:</div>
                     <input type="checkbox" checked={this.state.article.visibleFlag} onChange={(e) => this.updateArticleField(e, 'visibleFlag')} />
+                  </div>
+                  <div className="edit-row">
+                    <div className="edit-label">Visible In Lock Down:</div>
+                    <input type="checkbox" checked={this.state.article.lockDownVisibleFlag} onChange={(e) => this.updateArticleField(e, 'lockDownVisibleFlag')} />
                   </div>
                   <div className="edit-row">
                     <div className="edit-label">Do Not Index:</div>

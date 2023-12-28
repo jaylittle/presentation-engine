@@ -141,6 +141,14 @@ namespace PEngine.Core.Web.Models
     public string XSRFToken { get; set; }
 
     public string Version { get; set; }
+    
+    public bool IsLockedDown
+    {
+      get
+      {
+        return _settings?.IsLockedDown ?? false;
+      }
+    }
 
     public PEnginePage Page { get; set; }
     public string PageLanguageCode { get; set; }
@@ -269,7 +277,11 @@ namespace PEngine.Core.Web.Models
 
       var articleDal = _svp.GetRequiredService<IArticleDal>();
       var articleCategories = articleDal.ListArticles(null).Result
-        .Where(a => (a.VisibleFlag && !a.NoIndexFlag) || HasAdmin)
+        .Where(a => 
+          HasAdmin ||
+          (!_settings.IsLockedDown && a.VisibleFlag && !a.NoIndexFlag) ||
+          (_settings.IsLockedDown && a.LockDownVisibleFlag && !a.NoIndexFlag)
+        )
         .GroupBy(a => $"{a.Category}|{a.ContentURL}", StringComparer.OrdinalIgnoreCase)
         .OrderBy(g => g.Key)
         .Select(g => new {

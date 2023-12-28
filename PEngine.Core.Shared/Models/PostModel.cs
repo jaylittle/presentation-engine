@@ -11,6 +11,7 @@ namespace PEngine.Core.Shared.Models
     public string Data { get; set; }
     public string IconFileName { get; set; }
     public bool VisibleFlag { get; set; }
+    public bool LockDownVisibleFlag { get; set; }
     public bool NoIndexFlag { get; set; }
     public string UniqueName { get; set; }
     public DateTime? CreatedUTC { get; set; }

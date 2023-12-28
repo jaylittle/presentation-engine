@@ -43,26 +43,26 @@ namespace PEngine.Core.Tests
     public async Task ArticleService_List_NonVisibleRecordsAreFiltered()
     {
       //Verify that non-admin users only get visible records
-      Assert.Single(await articleService.ListArticles(null, false));
+      Assert.Single(await articleService.ListArticles(null, false, false));
 
       //Verify that admin users get all the records
-      Assert.True((await articleService.ListArticles(null, true)).Count() == 2);
+      Assert.True((await articleService.ListArticles(null, true, false)).Count() == 2);
     }
 
     [Fact]
     public async Task ArticleService_Get_NonVisibleRecordsAreFiltered()
     {
       //Verify that non-admin users can get visible records
-      Assert.NotNull(await articleService.GetArticleById(visibleGuid, null, null, false));
+      Assert.NotNull(await articleService.GetArticleById(visibleGuid, null, null, false, false));
 
       //Verify that non-admin users cannot get hidden records
-      Assert.Null(await articleService.GetArticleById(hiddenGuid, null, null, false));
+      Assert.Null(await articleService.GetArticleById(hiddenGuid, null, null, false, false));
 
       //Verify that admin users can get visible records
-      Assert.NotNull(await articleService.GetArticleById(visibleGuid, null, null, true));
+      Assert.NotNull(await articleService.GetArticleById(visibleGuid, null, null, true, false));
 
       //Verify that admin users can get hidden records
-      Assert.NotNull(await articleService.GetArticleById(hiddenGuid, null, null, true));
+      Assert.NotNull(await articleService.GetArticleById(hiddenGuid, null, null, true, false));
     }
 
     [Fact]

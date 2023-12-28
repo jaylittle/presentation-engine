@@ -34,7 +34,7 @@ namespace PEngine.Core.Web.Controllers
     public async Task<IActionResult> Index()
     {
       var model = new PEngineGenericListModel<PostModel>(_svp, HttpContext, PEnginePage.Home, true);
-      model.ListData = PagingUtils.Paginate(1, model.Settings.PerPagePostFront, "CreatedUTC", false, await _postService.ListPosts(model.State.HasAdmin));
+      model.ListData = PagingUtils.Paginate(1, model.Settings.PerPagePostFront, "CreatedUTC", false, await _postService.ListPosts(model.State.HasAdmin, model.State.IsLockedDown));
       model.State.QuoteText = (await _quoteService.GetRandom()).Data;
       return View(model);
     }

@@ -42,11 +42,11 @@ namespace PEngine.Core.Web.Controllers
         var results = new List<PEngineSearchResultModel>();
         string[] searchTerms = !string.IsNullOrWhiteSpace(query) ? query.Split(' ') : new string[] {};
         
-        var articleResults = (await _articleService.SearchArticles(query, searchTerms, model.State.HasAdmin));
+        var articleResults = (await _articleService.SearchArticles(query, searchTerms, model.State.HasAdmin, model.State.IsLockedDown));
         results.AddRange(articleResults.exact.Select(a => new PEngineSearchResultModel(a, true)));
         results.AddRange(articleResults.fuzzy.Select(a => new PEngineSearchResultModel(a, false)));
 
-        var postResults = (await _postService.SearchPosts(query, searchTerms, model.State.HasAdmin));
+        var postResults = (await _postService.SearchPosts(query, searchTerms, model.State.HasAdmin, model.State.IsLockedDown));
         results.AddRange(postResults.exact.Select(p => new PEngineSearchResultModel(p, true)));
         results.AddRange(postResults.fuzzy.Select(p => new PEngineSearchResultModel(p, false)));
 

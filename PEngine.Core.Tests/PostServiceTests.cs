@@ -43,26 +43,26 @@ namespace PEngine.Core.Tests
     public async Task PostService_List_NonVisibleRecordsAreFiltered()
     {
       //Verify that non-admin users only get visible records
-      Assert.Single(await postService.ListPosts(false));
+      Assert.Single(await postService.ListPosts(false, false));
 
       //Verify that dmin users get all the records
-      Assert.True((await postService.ListPosts(true)).Count() == 2);
+      Assert.True((await postService.ListPosts(true, false)).Count() == 2);
     }
 
     [Fact]
     public async Task PostService_Get_NonVisibleRecordsAreFiltered()
     {
       //Verify that non-admin users can get visible records
-      Assert.NotNull(await postService.GetPostById(visibleGuid, null, null, false));
+      Assert.NotNull(await postService.GetPostById(visibleGuid, null, null, false, false));
 
       //Verify that non-admin users cannot get hidden records
-      Assert.Null(await postService.GetPostById(hiddenGuid, null, null, false));
+      Assert.Null(await postService.GetPostById(hiddenGuid, null, null, false, false));
 
       //Verify that admin users can get visible records
-      Assert.NotNull(await postService.GetPostById(visibleGuid, null, null, true));
+      Assert.NotNull(await postService.GetPostById(visibleGuid, null, null, true, false));
 
       //Verify that admin users can get hidden records
-      Assert.NotNull(await postService.GetPostById(hiddenGuid, null, null, true));
+      Assert.NotNull(await postService.GetPostById(hiddenGuid, null, null, true, false));
     }
 
     [Fact]

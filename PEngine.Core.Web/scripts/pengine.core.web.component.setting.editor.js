@@ -60,6 +60,7 @@ class PEngineSettingEditor extends React.Component {
         disableSwagger: true,
         disableResponseCompression: false,
         disableInlineContent: false,
+        isLockedDown: false,
       },
       visible: false,
       errors: [ ],
@@ -161,6 +162,7 @@ class PEngineSettingEditor extends React.Component {
         disableSwagger: true,
         disableResponseCompression: false,
         disableInlineContent: false,
+        isLockedDown: false,
       };
       return prevState;
     });
@@ -406,6 +408,10 @@ class PEngineSettingEditor extends React.Component {
                       <span>
                         <input type="checkbox" checked={this.state.settings.summaryModeFront} onChange={(e) => this.updateField(e, 'summaryModeFront')} />
                         Front Page Summary Mode
+                      </span>
+                      <span>
+                        <input type="checkbox" checked={this.state.settings.isLockedDown} onChange={(e) => this.updateField(e, 'isLockedDown')} />
+                        Lock Down Mode
                       </span>
                     </div>
                   </div>

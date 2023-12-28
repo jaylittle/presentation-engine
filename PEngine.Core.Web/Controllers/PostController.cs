@@ -44,7 +44,7 @@ namespace PEngine.Core.Web.Controllers
           paging.SortAscending = false;
         }
       }
-      model.ListData = PagingUtils.Paginate<PostModel>(ref paging, await _postService.ListPosts(model.State.HasAdmin, false));
+      model.ListData = PagingUtils.Paginate<PostModel>(ref paging, await _postService.ListPosts(model.State.HasAdmin, model.State.IsLockedDown, false));
       model.Paging = paging;
       return View(model);
     }
@@ -54,7 +54,7 @@ namespace PEngine.Core.Web.Controllers
     public async Task<IActionResult> View(int year, int month, string uniqueName)
     {
       var model = new PEngineGenericRecordModel<PostModel>(_svp, HttpContext, PEnginePage.Post, false);
-      model.RecordData = (await _postService.ListPosts(model.State.HasAdmin, true)).FirstOrDefault(p => p.CreatedUTC.HasValue && p.CreatedYear == year && p.CreatedMonth == month && p.UniqueName.Equals(uniqueName, StringComparison.OrdinalIgnoreCase));
+      model.RecordData = (await _postService.ListPosts(model.State.HasAdmin, model.State.IsLockedDown, true)).FirstOrDefault(p => p.CreatedUTC.HasValue && p.CreatedYear == year && p.CreatedMonth == month && p.UniqueName.Equals(uniqueName, StringComparison.OrdinalIgnoreCase));
       if (model.RecordData != null)
       {
         return View(model);
