@@ -7,7 +7,7 @@
     <ProjectReference Include="..\PEngine.Core.Data\PEngine.Core.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.36.2" />
+    <PackageReference Include="Markdig" Version="0.37.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.*" />
     <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
   </ItemGroup>
