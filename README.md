@@ -1,3 +1,11 @@
+# This Project Is No Longer Being Maintained
+
+Presentation Engine has been a core part of my web presence for over 20 years, but alas its time has come to an end.  If you wish to take over this project, you may absolutely create your own fork.  If you'd like that fork listed here as the recommended transition path, please reach out to me as I am more than willing to discuss that with a properly motivated developer.
+
+However that having been said, my current recommendation is that CMS systems are more trouble than they are worth due to the fact they are obvious targets for hackers and rarely do anything better and quicker than a static website.  That having been said, I recommend any current users strongly consider adopting a superior security posture by transitioning to a static site generator like [Hugo](https://gohugo.io/).  That is what I have done for my remaining personal websites.
+
+# Original Read Me
+
 ![Presentation Engine 5.1 Logo](./PEngine.Core.Web/wwwroot/images/system/pengine_logo5.webp)
 
 This repo is the code which runs my personal website https://jaylittle.com
